@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -10,40 +9,52 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/tanapon395/playlist-video/controllers"
-	"github.com/tanapon395/playlist-video/ent"
-	"github.com/tanapon395/playlist-video/ent/user"
+	"github.com/team15/app/controllers"
+	_ "github.com/team15/app/docs"
+	"github.com/team15/app/ent"
 )
 
-type Users struct {
-	User []User
+type Quantitys struct {
+	Quantity []Quantity
 }
 
-type User struct {
-	Name  string
-	Email string
+type Quantity struct {
+	Quantity int
 }
 
-type Playlists struct {
-	Playlist []Playlist
+type StayTypes struct {
+	StayType []StayType
 }
 
-type Playlist struct {
-	Title string
-	Owner int
+type StayType struct {
+	StayType string
 }
 
-type Videos struct {
-	Video []Video
+type Equipments struct {
+	Equipment []Equipment
 }
 
-type Video struct {
-	Name  string
-	Url   string
-	Owner int
+type Equipment struct {
+	Equipment string
 }
 
-// @title SUT SA Example API Playlist Vidoe
+type Facilitys struct {
+	Facility []Facility
+}
+
+type Facility struct {
+	Facility string
+}
+
+type NearbyPlaces struct {
+	NearbyPlace []NearbyPlace
+}
+
+type NearbyPlace struct {
+	Placename string
+}
+
+// @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
 // @termsOfService http://swagger.io/terms/
@@ -51,7 +62,6 @@ type Video struct {
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
-
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -88,7 +98,7 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.Default())
 
-	client, err := ent.Open("sqlite3", "file:ent.db?cache=shared&_fk=1")
+	client, err := ent.Open("sqlite3", "file:team15.db?&cache=shared&_fk=1")
 	if err != nil {
 		log.Fatalf("fail to open sqlite3: %v", err)
 	}
@@ -97,92 +107,85 @@ func main() {
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
-
 	v1 := router.Group("/api/v1")
-	controllers.NewUserController(v1, client)
-	controllers.NewVideoController(v1, client)
-	controllers.NewResolutionController(v1, client)
-	controllers.NewPlaylistController(v1, client)
-	controllers.NewPlaylistVideoController(v1, client)
+	controllers.NewRoomController(v1, client)
+	controllers.NewQuantityController(v1, client)
+	controllers.NewStayTypeController(v1, client)
+	controllers.NewFacilityController(v1, client)
+	controllers.NewEquipmentController(v1, client)
+	controllers.NewNearbyPlaceController(v1, client)
 
-	// Set Users Data
-	users := Users{
-		User: []User{
-			User{"Chanwit Kaewkasi", "chanwit@gmail.com"},
-			User{"Name Surname", "me@example.com"},
+	// Set Quantity Data
+	quantitys := Quantitys{
+		Quantity: []Quantity{
+			Quantity{2},
+			Quantity{4},
+			Quantity{6},
 		},
 	}
-
-	for _, u := range users.User {
-		client.User.
+	for _, q := range quantitys.Quantity {
+		client.Quantity.
 			Create().
-			SetEmail(u.Email).
-			SetName(u.Name).
+			SetQuantity(q.Quantity).
 			Save(context.Background())
 	}
 
-	// Set Resolutions Data
-	resolutions := []int{240, 360, 480, 720, 1080}
-	for _, r := range resolutions {
-		client.Resolution.
+	// Set StayType Data
+	staytypes := StayTypes{
+		StayType: []StayType{
+			StayType{"Days"},
+			StayType{"Month"},
+			StayType{"Days & Month"},
+		},
+	}
+	for _, st := range staytypes.StayType {
+		client.StayType.
 			Create().
-			SetValue(r).
+			SetStaytype(st.StayType).
 			Save(context.Background())
 	}
 
-	// Set Playlist Data
-	playlists := Playlists{
-		Playlist: []Playlist{
-			Playlist{"Watched", 1},
-			Playlist{"Watch Later", 1},
-			Playlist{"Watch Later", 2},
+	// Set Equipment Data
+	equipments := Equipments{
+		Equipment: []Equipment{
+			Equipment{"Bed"},
+			Equipment{"Wardrobe"},
+			Equipment{"Hot kettle"},
 		},
 	}
-
-	for _, p := range playlists.Playlist {
-
-		u, err := client.User.
-			Query().
-			Where(user.IDEQ(int(p.Owner))).
-			Only(context.Background())
-
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-
-		client.Playlist.
+	for _, eq := range equipments.Equipment {
+		client.Equipment.
 			Create().
-			SetTitle(p.Title).
-			SetOwner(u).
+			SetEquipment(eq.Equipment).
+			Save(context.Background())
+	}
+	// Set Facility Data
+	facilitys := Facilitys{
+		Facility: []Facility{
+			Facility{"Swimming pool"},
+			Facility{"Breakfast"},
+			Facility{"Fitness"},
+		},
+	}
+	for _, fa := range facilitys.Facility {
+		client.Facility.
+			Create().
+			SetFacility(fa.Facility).
 			Save(context.Background())
 	}
 
-	// Set Videos Data
-	videos := Videos{
-		Video: []Video{
-			Video{"SA Lecture 4", "http://google.con", 1},
-			Video{"React and TypeScript - Getting Started", "https://www.youtube.com/watch?v=I9jfsIRnySs&ab_channel=JamesQQuick", 2},
+	// Set NearbyPlace Data
+	nearbyplaces := NearbyPlaces{
+		NearbyPlace: []NearbyPlace{
+			NearbyPlace{"Shopping mall"},
+			NearbyPlace{"Supermarket"},
+			NearbyPlace{"BTS"},
 		},
 	}
-
-	for _, v := range videos.Video {
-
-		u, err := client.User.
-			Query().
-			Where(user.IDEQ(int(v.Owner))).
-			Only(context.Background())
-
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
-
-		client.Video.
+	for _, np := range nearbyplaces.NearbyPlace {
+		client.NearbyPlace.
 			Create().
-			SetName(v.Name).
-			SetURL(v.Url).
-			SetOwner(u).
+			SetPlacename(np.Placename).
 			Save(context.Background())
 	}
 

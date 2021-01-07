@@ -6,22 +6,24 @@ import (
 	"context"
 	"sync"
 
-	"github.com/facebook/ent/dialect"
+	"github.com/facebookincubator/ent/dialect"
 )
 
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
-	// Playlist is the client for interacting with the Playlist builders.
-	Playlist *PlaylistClient
-	// Playlist_Video is the client for interacting with the Playlist_Video builders.
-	Playlist_Video *Playlist_VideoClient
-	// Resolution is the client for interacting with the Resolution builders.
-	Resolution *ResolutionClient
-	// User is the client for interacting with the User builders.
-	User *UserClient
-	// Video is the client for interacting with the Video builders.
-	Video *VideoClient
+	// Equipment is the client for interacting with the Equipment builders.
+	Equipment *EquipmentClient
+	// Facility is the client for interacting with the Facility builders.
+	Facility *FacilityClient
+	// NearbyPlace is the client for interacting with the NearbyPlace builders.
+	NearbyPlace *NearbyPlaceClient
+	// Quantity is the client for interacting with the Quantity builders.
+	Quantity *QuantityClient
+	// Room is the client for interacting with the Room builders.
+	Room *RoomClient
+	// StayType is the client for interacting with the StayType builders.
+	StayType *StayTypeClient
 
 	// lazily loaded.
 	client     *Client
@@ -157,11 +159,12 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
-	tx.Playlist = NewPlaylistClient(tx.config)
-	tx.Playlist_Video = NewPlaylist_VideoClient(tx.config)
-	tx.Resolution = NewResolutionClient(tx.config)
-	tx.User = NewUserClient(tx.config)
-	tx.Video = NewVideoClient(tx.config)
+	tx.Equipment = NewEquipmentClient(tx.config)
+	tx.Facility = NewFacilityClient(tx.config)
+	tx.NearbyPlace = NewNearbyPlaceClient(tx.config)
+	tx.Quantity = NewQuantityClient(tx.config)
+	tx.Room = NewRoomClient(tx.config)
+	tx.StayType = NewStayTypeClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
@@ -171,7 +174,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Playlist.QueryXXX(), the query will be executed
+// applies a query, for example: Equipment.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

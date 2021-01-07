@@ -3,20 +3,23 @@
 package predicate
 
 import (
-	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql"
 )
 
-// Playlist is the predicate function for playlist builders.
-type Playlist func(*sql.Selector)
+// Equipment is the predicate function for equipment builders.
+type Equipment func(*sql.Selector)
 
-// Playlist_Video is the predicate function for playlist_video builders.
-type Playlist_Video func(*sql.Selector)
+// Facility is the predicate function for facility builders.
+type Facility func(*sql.Selector)
 
-// Resolution is the predicate function for resolution builders.
-type Resolution func(*sql.Selector)
+// NearbyPlace is the predicate function for nearbyplace builders.
+type NearbyPlace func(*sql.Selector)
 
-// User is the predicate function for user builders.
-type User func(*sql.Selector)
+// Quantity is the predicate function for quantity builders.
+type Quantity func(*sql.Selector)
 
-// Video is the predicate function for video builders.
-type Video func(*sql.Selector)
+// Room is the predicate function for room builders.
+type Room func(*sql.Selector)
+
+// StayType is the predicate function for staytype builders.
+type StayType func(*sql.Selector)

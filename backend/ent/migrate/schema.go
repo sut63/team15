@@ -3,130 +3,203 @@
 package migrate
 
 import (
-	"github.com/facebook/ent/dialect/sql/schema"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql/schema"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 var (
-	// PlaylistsColumns holds the columns for the "playlists" table.
-	PlaylistsColumns = []*schema.Column{
+	// EquipmentColumns holds the columns for the "equipment" table.
+	EquipmentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "title", Type: field.TypeString},
-		{Name: "owner_id", Type: field.TypeInt, Nullable: true},
+		{Name: "equipment", Type: field.TypeString, Unique: true},
 	}
-	// PlaylistsTable holds the schema information for the "playlists" table.
-	PlaylistsTable = &schema.Table{
-		Name:       "playlists",
-		Columns:    PlaylistsColumns,
-		PrimaryKey: []*schema.Column{PlaylistsColumns[0]},
+	// EquipmentTable holds the schema information for the "equipment" table.
+	EquipmentTable = &schema.Table{
+		Name:        "equipment",
+		Columns:     EquipmentColumns,
+		PrimaryKey:  []*schema.Column{EquipmentColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// FacilitiesColumns holds the columns for the "facilities" table.
+	FacilitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "facility", Type: field.TypeString, Unique: true},
+	}
+	// FacilitiesTable holds the schema information for the "facilities" table.
+	FacilitiesTable = &schema.Table{
+		Name:        "facilities",
+		Columns:     FacilitiesColumns,
+		PrimaryKey:  []*schema.Column{FacilitiesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// NearbyPlacesColumns holds the columns for the "nearby_places" table.
+	NearbyPlacesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "placename", Type: field.TypeString, Unique: true},
+	}
+	// NearbyPlacesTable holds the schema information for the "nearby_places" table.
+	NearbyPlacesTable = &schema.Table{
+		Name:        "nearby_places",
+		Columns:     NearbyPlacesColumns,
+		PrimaryKey:  []*schema.Column{NearbyPlacesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// QuantitiesColumns holds the columns for the "quantities" table.
+	QuantitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "quantity", Type: field.TypeInt},
+	}
+	// QuantitiesTable holds the schema information for the "quantities" table.
+	QuantitiesTable = &schema.Table{
+		Name:        "quantities",
+		Columns:     QuantitiesColumns,
+		PrimaryKey:  []*schema.Column{QuantitiesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// RoomsColumns holds the columns for the "rooms" table.
+	RoomsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "roomprice", Type: field.TypeInt},
+		{Name: "roomtypename", Type: field.TypeString, Unique: true},
+		{Name: "room_quantity", Type: field.TypeInt, Nullable: true},
+		{Name: "room_staytype", Type: field.TypeInt, Nullable: true},
+	}
+	// RoomsTable holds the schema information for the "rooms" table.
+	RoomsTable = &schema.Table{
+		Name:       "rooms",
+		Columns:    RoomsColumns,
+		PrimaryKey: []*schema.Column{RoomsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "playlists_users_playlists",
-				Columns: []*schema.Column{PlaylistsColumns[2]},
+				Symbol:  "rooms_quantities_quantity",
+				Columns: []*schema.Column{RoomsColumns[3]},
 
-				RefColumns: []*schema.Column{UsersColumns[0]},
+				RefColumns: []*schema.Column{QuantitiesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "rooms_stay_types_staytype",
+				Columns: []*schema.Column{RoomsColumns[4]},
+
+				RefColumns: []*schema.Column{StayTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
-	// PlaylistVideosColumns holds the columns for the "playlist_videos" table.
-	PlaylistVideosColumns = []*schema.Column{
+	// StayTypesColumns holds the columns for the "stay_types" table.
+	StayTypesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "added_time", Type: field.TypeTime},
-		{Name: "playlist_id", Type: field.TypeInt, Nullable: true},
-		{Name: "resolution_id", Type: field.TypeInt, Nullable: true},
-		{Name: "video_id", Type: field.TypeInt, Nullable: true},
+		{Name: "staytype", Type: field.TypeString, Unique: true},
 	}
-	// PlaylistVideosTable holds the schema information for the "playlist_videos" table.
-	PlaylistVideosTable = &schema.Table{
-		Name:       "playlist_videos",
-		Columns:    PlaylistVideosColumns,
-		PrimaryKey: []*schema.Column{PlaylistVideosColumns[0]},
+	// StayTypesTable holds the schema information for the "stay_types" table.
+	StayTypesTable = &schema.Table{
+		Name:        "stay_types",
+		Columns:     StayTypesColumns,
+		PrimaryKey:  []*schema.Column{StayTypesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// RoomFacilitiesColumns holds the columns for the "room_facilities" table.
+	RoomFacilitiesColumns = []*schema.Column{
+		{Name: "room_id", Type: field.TypeInt},
+		{Name: "facility_id", Type: field.TypeInt},
+	}
+	// RoomFacilitiesTable holds the schema information for the "room_facilities" table.
+	RoomFacilitiesTable = &schema.Table{
+		Name:       "room_facilities",
+		Columns:    RoomFacilitiesColumns,
+		PrimaryKey: []*schema.Column{RoomFacilitiesColumns[0], RoomFacilitiesColumns[1]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "playlist_videos_playlists_playlist_videos",
-				Columns: []*schema.Column{PlaylistVideosColumns[2]},
+				Symbol:  "room_facilities_room_id",
+				Columns: []*schema.Column{RoomFacilitiesColumns[0]},
 
-				RefColumns: []*schema.Column{PlaylistsColumns[0]},
-				OnDelete:   schema.SetNull,
+				RefColumns: []*schema.Column{RoomsColumns[0]},
+				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:  "playlist_videos_resolutions_playlist_videos",
-				Columns: []*schema.Column{PlaylistVideosColumns[3]},
+				Symbol:  "room_facilities_facility_id",
+				Columns: []*schema.Column{RoomFacilitiesColumns[1]},
 
-				RefColumns: []*schema.Column{ResolutionsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "playlist_videos_videos_playlist_videos",
-				Columns: []*schema.Column{PlaylistVideosColumns[4]},
-
-				RefColumns: []*schema.Column{VideosColumns[0]},
-				OnDelete:   schema.SetNull,
+				RefColumns: []*schema.Column{FacilitiesColumns[0]},
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
-	// ResolutionsColumns holds the columns for the "resolutions" table.
-	ResolutionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "value", Type: field.TypeInt},
+	// RoomEquipmentsColumns holds the columns for the "room_equipments" table.
+	RoomEquipmentsColumns = []*schema.Column{
+		{Name: "room_id", Type: field.TypeInt},
+		{Name: "equipment_id", Type: field.TypeInt},
 	}
-	// ResolutionsTable holds the schema information for the "resolutions" table.
-	ResolutionsTable = &schema.Table{
-		Name:        "resolutions",
-		Columns:     ResolutionsColumns,
-		PrimaryKey:  []*schema.Column{ResolutionsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
-		{Name: "email", Type: field.TypeString},
-	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:        "users",
-		Columns:     UsersColumns,
-		PrimaryKey:  []*schema.Column{UsersColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
-	// VideosColumns holds the columns for the "videos" table.
-	VideosColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
-		{Name: "url", Type: field.TypeString},
-		{Name: "owner_id", Type: field.TypeInt, Nullable: true},
-	}
-	// VideosTable holds the schema information for the "videos" table.
-	VideosTable = &schema.Table{
-		Name:       "videos",
-		Columns:    VideosColumns,
-		PrimaryKey: []*schema.Column{VideosColumns[0]},
+	// RoomEquipmentsTable holds the schema information for the "room_equipments" table.
+	RoomEquipmentsTable = &schema.Table{
+		Name:       "room_equipments",
+		Columns:    RoomEquipmentsColumns,
+		PrimaryKey: []*schema.Column{RoomEquipmentsColumns[0], RoomEquipmentsColumns[1]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "videos_users_videos",
-				Columns: []*schema.Column{VideosColumns[3]},
+				Symbol:  "room_equipments_room_id",
+				Columns: []*schema.Column{RoomEquipmentsColumns[0]},
 
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
+				RefColumns: []*schema.Column{RoomsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "room_equipments_equipment_id",
+				Columns: []*schema.Column{RoomEquipmentsColumns[1]},
+
+				RefColumns: []*schema.Column{EquipmentColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// RoomNearbyplaceColumns holds the columns for the "room_nearbyplace" table.
+	RoomNearbyplaceColumns = []*schema.Column{
+		{Name: "room_id", Type: field.TypeInt},
+		{Name: "nearby_place_id", Type: field.TypeInt},
+	}
+	// RoomNearbyplaceTable holds the schema information for the "room_nearbyplace" table.
+	RoomNearbyplaceTable = &schema.Table{
+		Name:       "room_nearbyplace",
+		Columns:    RoomNearbyplaceColumns,
+		PrimaryKey: []*schema.Column{RoomNearbyplaceColumns[0], RoomNearbyplaceColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "room_nearbyplace_room_id",
+				Columns: []*schema.Column{RoomNearbyplaceColumns[0]},
+
+				RefColumns: []*schema.Column{RoomsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "room_nearbyplace_nearby_place_id",
+				Columns: []*schema.Column{RoomNearbyplaceColumns[1]},
+
+				RefColumns: []*schema.Column{NearbyPlacesColumns[0]},
+				OnDelete:   schema.Cascade,
 			},
 		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		PlaylistsTable,
-		PlaylistVideosTable,
-		ResolutionsTable,
-		UsersTable,
-		VideosTable,
+		EquipmentTable,
+		FacilitiesTable,
+		NearbyPlacesTable,
+		QuantitiesTable,
+		RoomsTable,
+		StayTypesTable,
+		RoomFacilitiesTable,
+		RoomEquipmentsTable,
+		RoomNearbyplaceTable,
 	}
 )
 
 func init() {
-	PlaylistsTable.ForeignKeys[0].RefTable = UsersTable
-	PlaylistVideosTable.ForeignKeys[0].RefTable = PlaylistsTable
-	PlaylistVideosTable.ForeignKeys[1].RefTable = ResolutionsTable
-	PlaylistVideosTable.ForeignKeys[2].RefTable = VideosTable
-	VideosTable.ForeignKeys[0].RefTable = UsersTable
+	RoomsTable.ForeignKeys[0].RefTable = QuantitiesTable
+	RoomsTable.ForeignKeys[1].RefTable = StayTypesTable
+	RoomFacilitiesTable.ForeignKeys[0].RefTable = RoomsTable
+	RoomFacilitiesTable.ForeignKeys[1].RefTable = FacilitiesTable
+	RoomEquipmentsTable.ForeignKeys[0].RefTable = RoomsTable
+	RoomEquipmentsTable.ForeignKeys[1].RefTable = EquipmentTable
+	RoomNearbyplaceTable.ForeignKeys[0].RefTable = RoomsTable
+	RoomNearbyplaceTable.ForeignKeys[1].RefTable = NearbyPlacesTable
 }

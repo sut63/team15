@@ -6,70 +6,83 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/tanapon395/playlist-video/ent"
+	"github.com/team15/app/ent"
 )
 
-// The PlaylistFunc type is an adapter to allow the use of ordinary
-// function as Playlist mutator.
-type PlaylistFunc func(context.Context, *ent.PlaylistMutation) (ent.Value, error)
+// The EquipmentFunc type is an adapter to allow the use of ordinary
+// function as Equipment mutator.
+type EquipmentFunc func(context.Context, *ent.EquipmentMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f PlaylistFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.PlaylistMutation)
+func (f EquipmentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.EquipmentMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PlaylistMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EquipmentMutation", m)
 	}
 	return f(ctx, mv)
 }
 
-// The Playlist_VideoFunc type is an adapter to allow the use of ordinary
-// function as Playlist_Video mutator.
-type Playlist_VideoFunc func(context.Context, *ent.PlaylistVideoMutation) (ent.Value, error)
+// The FacilityFunc type is an adapter to allow the use of ordinary
+// function as Facility mutator.
+type FacilityFunc func(context.Context, *ent.FacilityMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f Playlist_VideoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.PlaylistVideoMutation)
+func (f FacilityFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.FacilityMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PlaylistVideoMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FacilityMutation", m)
 	}
 	return f(ctx, mv)
 }
 
-// The ResolutionFunc type is an adapter to allow the use of ordinary
-// function as Resolution mutator.
-type ResolutionFunc func(context.Context, *ent.ResolutionMutation) (ent.Value, error)
+// The NearbyPlaceFunc type is an adapter to allow the use of ordinary
+// function as NearbyPlace mutator.
+type NearbyPlaceFunc func(context.Context, *ent.NearbyPlaceMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f ResolutionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.ResolutionMutation)
+func (f NearbyPlaceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.NearbyPlaceMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ResolutionMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.NearbyPlaceMutation", m)
 	}
 	return f(ctx, mv)
 }
 
-// The UserFunc type is an adapter to allow the use of ordinary
-// function as User mutator.
-type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
+// The QuantityFunc type is an adapter to allow the use of ordinary
+// function as Quantity mutator.
+type QuantityFunc func(context.Context, *ent.QuantityMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.UserMutation)
+func (f QuantityFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.QuantityMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.QuantityMutation", m)
 	}
 	return f(ctx, mv)
 }
 
-// The VideoFunc type is an adapter to allow the use of ordinary
-// function as Video mutator.
-type VideoFunc func(context.Context, *ent.VideoMutation) (ent.Value, error)
+// The RoomFunc type is an adapter to allow the use of ordinary
+// function as Room mutator.
+type RoomFunc func(context.Context, *ent.RoomMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f VideoFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.VideoMutation)
+func (f RoomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.RoomMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.VideoMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoomMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The StayTypeFunc type is an adapter to allow the use of ordinary
+// function as StayType mutator.
+type StayTypeFunc func(context.Context, *ent.StayTypeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f StayTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.StayTypeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StayTypeMutation", m)
 	}
 	return f(ctx, mv)
 }
