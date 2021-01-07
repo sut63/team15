@@ -7,17 +7,18 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/tanapon395/playlist-video/ent/migrate"
+	"github.com/team15/app/ent/migrate"
 
-	"github.com/tanapon395/playlist-video/ent/playlist"
-	"github.com/tanapon395/playlist-video/ent/playlist_video"
-	"github.com/tanapon395/playlist-video/ent/resolution"
-	"github.com/tanapon395/playlist-video/ent/user"
-	"github.com/tanapon395/playlist-video/ent/video"
+	"github.com/team15/app/ent/equipment"
+	"github.com/team15/app/ent/facility"
+	"github.com/team15/app/ent/nearbyplace"
+	"github.com/team15/app/ent/quantity"
+	"github.com/team15/app/ent/room"
+	"github.com/team15/app/ent/staytype"
 
-	"github.com/facebook/ent/dialect"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/dialect"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -25,16 +26,18 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Playlist is the client for interacting with the Playlist builders.
-	Playlist *PlaylistClient
-	// Playlist_Video is the client for interacting with the Playlist_Video builders.
-	Playlist_Video *Playlist_VideoClient
-	// Resolution is the client for interacting with the Resolution builders.
-	Resolution *ResolutionClient
-	// User is the client for interacting with the User builders.
-	User *UserClient
-	// Video is the client for interacting with the Video builders.
-	Video *VideoClient
+	// Equipment is the client for interacting with the Equipment builders.
+	Equipment *EquipmentClient
+	// Facility is the client for interacting with the Facility builders.
+	Facility *FacilityClient
+	// NearbyPlace is the client for interacting with the NearbyPlace builders.
+	NearbyPlace *NearbyPlaceClient
+	// Quantity is the client for interacting with the Quantity builders.
+	Quantity *QuantityClient
+	// Room is the client for interacting with the Room builders.
+	Room *RoomClient
+	// StayType is the client for interacting with the StayType builders.
+	StayType *StayTypeClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -48,11 +51,12 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Playlist = NewPlaylistClient(c.config)
-	c.Playlist_Video = NewPlaylist_VideoClient(c.config)
-	c.Resolution = NewResolutionClient(c.config)
-	c.User = NewUserClient(c.config)
-	c.Video = NewVideoClient(c.config)
+	c.Equipment = NewEquipmentClient(c.config)
+	c.Facility = NewFacilityClient(c.config)
+	c.NearbyPlace = NewNearbyPlaceClient(c.config)
+	c.Quantity = NewQuantityClient(c.config)
+	c.Room = NewRoomClient(c.config)
+	c.StayType = NewStayTypeClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -83,13 +87,14 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		Playlist:       NewPlaylistClient(cfg),
-		Playlist_Video: NewPlaylist_VideoClient(cfg),
-		Resolution:     NewResolutionClient(cfg),
-		User:           NewUserClient(cfg),
-		Video:          NewVideoClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		Equipment:   NewEquipmentClient(cfg),
+		Facility:    NewFacilityClient(cfg),
+		NearbyPlace: NewNearbyPlaceClient(cfg),
+		Quantity:    NewQuantityClient(cfg),
+		Room:        NewRoomClient(cfg),
+		StayType:    NewStayTypeClient(cfg),
 	}, nil
 }
 
@@ -104,19 +109,20 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config:         cfg,
-		Playlist:       NewPlaylistClient(cfg),
-		Playlist_Video: NewPlaylist_VideoClient(cfg),
-		Resolution:     NewResolutionClient(cfg),
-		User:           NewUserClient(cfg),
-		Video:          NewVideoClient(cfg),
+		config:      cfg,
+		Equipment:   NewEquipmentClient(cfg),
+		Facility:    NewFacilityClient(cfg),
+		NearbyPlace: NewNearbyPlaceClient(cfg),
+		Quantity:    NewQuantityClient(cfg),
+		Room:        NewRoomClient(cfg),
+		StayType:    NewStayTypeClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Playlist.
+//		Equipment.
 //		Query().
 //		Count(ctx)
 //
@@ -138,345 +144,481 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Playlist.Use(hooks...)
-	c.Playlist_Video.Use(hooks...)
-	c.Resolution.Use(hooks...)
-	c.User.Use(hooks...)
-	c.Video.Use(hooks...)
+	c.Equipment.Use(hooks...)
+	c.Facility.Use(hooks...)
+	c.NearbyPlace.Use(hooks...)
+	c.Quantity.Use(hooks...)
+	c.Room.Use(hooks...)
+	c.StayType.Use(hooks...)
 }
 
-// PlaylistClient is a client for the Playlist schema.
-type PlaylistClient struct {
+// EquipmentClient is a client for the Equipment schema.
+type EquipmentClient struct {
 	config
 }
 
-// NewPlaylistClient returns a client for the Playlist from the given config.
-func NewPlaylistClient(c config) *PlaylistClient {
-	return &PlaylistClient{config: c}
+// NewEquipmentClient returns a client for the Equipment from the given config.
+func NewEquipmentClient(c config) *EquipmentClient {
+	return &EquipmentClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `playlist.Hooks(f(g(h())))`.
-func (c *PlaylistClient) Use(hooks ...Hook) {
-	c.hooks.Playlist = append(c.hooks.Playlist, hooks...)
+// A call to `Use(f, g, h)` equals to `equipment.Hooks(f(g(h())))`.
+func (c *EquipmentClient) Use(hooks ...Hook) {
+	c.hooks.Equipment = append(c.hooks.Equipment, hooks...)
 }
 
-// Create returns a create builder for Playlist.
-func (c *PlaylistClient) Create() *PlaylistCreate {
-	mutation := newPlaylistMutation(c.config, OpCreate)
-	return &PlaylistCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Equipment.
+func (c *EquipmentClient) Create() *EquipmentCreate {
+	mutation := newEquipmentMutation(c.config, OpCreate)
+	return &EquipmentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Playlist entities.
-func (c *PlaylistClient) CreateBulk(builders ...*PlaylistCreate) *PlaylistCreateBulk {
-	return &PlaylistCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Playlist.
-func (c *PlaylistClient) Update() *PlaylistUpdate {
-	mutation := newPlaylistMutation(c.config, OpUpdate)
-	return &PlaylistUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Equipment.
+func (c *EquipmentClient) Update() *EquipmentUpdate {
+	mutation := newEquipmentMutation(c.config, OpUpdate)
+	return &EquipmentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *PlaylistClient) UpdateOne(pl *Playlist) *PlaylistUpdateOne {
-	mutation := newPlaylistMutation(c.config, OpUpdateOne, withPlaylist(pl))
-	return &PlaylistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *EquipmentClient) UpdateOne(e *Equipment) *EquipmentUpdateOne {
+	mutation := newEquipmentMutation(c.config, OpUpdateOne, withEquipment(e))
+	return &EquipmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *PlaylistClient) UpdateOneID(id int) *PlaylistUpdateOne {
-	mutation := newPlaylistMutation(c.config, OpUpdateOne, withPlaylistID(id))
-	return &PlaylistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *EquipmentClient) UpdateOneID(id int) *EquipmentUpdateOne {
+	mutation := newEquipmentMutation(c.config, OpUpdateOne, withEquipmentID(id))
+	return &EquipmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Playlist.
-func (c *PlaylistClient) Delete() *PlaylistDelete {
-	mutation := newPlaylistMutation(c.config, OpDelete)
-	return &PlaylistDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Equipment.
+func (c *EquipmentClient) Delete() *EquipmentDelete {
+	mutation := newEquipmentMutation(c.config, OpDelete)
+	return &EquipmentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *PlaylistClient) DeleteOne(pl *Playlist) *PlaylistDeleteOne {
-	return c.DeleteOneID(pl.ID)
+func (c *EquipmentClient) DeleteOne(e *Equipment) *EquipmentDeleteOne {
+	return c.DeleteOneID(e.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *PlaylistClient) DeleteOneID(id int) *PlaylistDeleteOne {
-	builder := c.Delete().Where(playlist.ID(id))
+func (c *EquipmentClient) DeleteOneID(id int) *EquipmentDeleteOne {
+	builder := c.Delete().Where(equipment.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &PlaylistDeleteOne{builder}
+	return &EquipmentDeleteOne{builder}
 }
 
-// Query returns a query builder for Playlist.
-func (c *PlaylistClient) Query() *PlaylistQuery {
-	return &PlaylistQuery{config: c.config}
+// Create returns a query builder for Equipment.
+func (c *EquipmentClient) Query() *EquipmentQuery {
+	return &EquipmentQuery{config: c.config}
 }
 
-// Get returns a Playlist entity by its id.
-func (c *PlaylistClient) Get(ctx context.Context, id int) (*Playlist, error) {
-	return c.Query().Where(playlist.ID(id)).Only(ctx)
+// Get returns a Equipment entity by its id.
+func (c *EquipmentClient) Get(ctx context.Context, id int) (*Equipment, error) {
+	return c.Query().Where(equipment.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *PlaylistClient) GetX(ctx context.Context, id int) *Playlist {
-	pl, err := c.Get(ctx, id)
+func (c *EquipmentClient) GetX(ctx context.Context, id int) *Equipment {
+	e, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return pl
+	return e
 }
 
-// QueryOwner queries the owner edge of a Playlist.
-func (c *PlaylistClient) QueryOwner(pl *Playlist) *UserQuery {
-	query := &UserQuery{config: c.config}
+// QueryRoom queries the room edge of a Equipment.
+func (c *EquipmentClient) QueryRoom(e *Equipment) *RoomQuery {
+	query := &RoomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pl.ID
+		id := e.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist.Table, playlist.FieldID, id),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist.OwnerTable, playlist.OwnerColumn),
+			sqlgraph.From(equipment.Table, equipment.FieldID, id),
+			sqlgraph.To(room.Table, room.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, equipment.RoomTable, equipment.RoomPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryPlaylistVideos queries the playlist_videos edge of a Playlist.
-func (c *PlaylistClient) QueryPlaylistVideos(pl *Playlist) *PlaylistVideoQuery {
-	query := &PlaylistVideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pl.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist.Table, playlist.FieldID, id),
-			sqlgraph.To(playlist_video.Table, playlist_video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, playlist.PlaylistVideosTable, playlist.PlaylistVideosColumn),
-		)
-		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *PlaylistClient) Hooks() []Hook {
-	return c.hooks.Playlist
+func (c *EquipmentClient) Hooks() []Hook {
+	return c.hooks.Equipment
 }
 
-// Playlist_VideoClient is a client for the Playlist_Video schema.
-type Playlist_VideoClient struct {
+// FacilityClient is a client for the Facility schema.
+type FacilityClient struct {
 	config
 }
 
-// NewPlaylist_VideoClient returns a client for the Playlist_Video from the given config.
-func NewPlaylist_VideoClient(c config) *Playlist_VideoClient {
-	return &Playlist_VideoClient{config: c}
+// NewFacilityClient returns a client for the Facility from the given config.
+func NewFacilityClient(c config) *FacilityClient {
+	return &FacilityClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `playlist_video.Hooks(f(g(h())))`.
-func (c *Playlist_VideoClient) Use(hooks ...Hook) {
-	c.hooks.Playlist_Video = append(c.hooks.Playlist_Video, hooks...)
+// A call to `Use(f, g, h)` equals to `facility.Hooks(f(g(h())))`.
+func (c *FacilityClient) Use(hooks ...Hook) {
+	c.hooks.Facility = append(c.hooks.Facility, hooks...)
 }
 
-// Create returns a create builder for Playlist_Video.
-func (c *Playlist_VideoClient) Create() *PlaylistVideoCreate {
-	mutation := newPlaylistVideoMutation(c.config, OpCreate)
-	return &PlaylistVideoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Facility.
+func (c *FacilityClient) Create() *FacilityCreate {
+	mutation := newFacilityMutation(c.config, OpCreate)
+	return &FacilityCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Playlist_Video entities.
-func (c *Playlist_VideoClient) CreateBulk(builders ...*PlaylistVideoCreate) *PlaylistVideoCreateBulk {
-	return &PlaylistVideoCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Playlist_Video.
-func (c *Playlist_VideoClient) Update() *PlaylistVideoUpdate {
-	mutation := newPlaylistVideoMutation(c.config, OpUpdate)
-	return &PlaylistVideoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Facility.
+func (c *FacilityClient) Update() *FacilityUpdate {
+	mutation := newFacilityMutation(c.config, OpUpdate)
+	return &FacilityUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *Playlist_VideoClient) UpdateOne(pv *Playlist_Video) *PlaylistVideoUpdateOne {
-	mutation := newPlaylistVideoMutation(c.config, OpUpdateOne, withPlaylist_Video(pv))
-	return &PlaylistVideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *FacilityClient) UpdateOne(f *Facility) *FacilityUpdateOne {
+	mutation := newFacilityMutation(c.config, OpUpdateOne, withFacility(f))
+	return &FacilityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *Playlist_VideoClient) UpdateOneID(id int) *PlaylistVideoUpdateOne {
-	mutation := newPlaylistVideoMutation(c.config, OpUpdateOne, withPlaylist_VideoID(id))
-	return &PlaylistVideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *FacilityClient) UpdateOneID(id int) *FacilityUpdateOne {
+	mutation := newFacilityMutation(c.config, OpUpdateOne, withFacilityID(id))
+	return &FacilityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Playlist_Video.
-func (c *Playlist_VideoClient) Delete() *PlaylistVideoDelete {
-	mutation := newPlaylistVideoMutation(c.config, OpDelete)
-	return &PlaylistVideoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Facility.
+func (c *FacilityClient) Delete() *FacilityDelete {
+	mutation := newFacilityMutation(c.config, OpDelete)
+	return &FacilityDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *Playlist_VideoClient) DeleteOne(pv *Playlist_Video) *PlaylistVideoDeleteOne {
-	return c.DeleteOneID(pv.ID)
+func (c *FacilityClient) DeleteOne(f *Facility) *FacilityDeleteOne {
+	return c.DeleteOneID(f.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *Playlist_VideoClient) DeleteOneID(id int) *PlaylistVideoDeleteOne {
-	builder := c.Delete().Where(playlist_video.ID(id))
+func (c *FacilityClient) DeleteOneID(id int) *FacilityDeleteOne {
+	builder := c.Delete().Where(facility.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &PlaylistVideoDeleteOne{builder}
+	return &FacilityDeleteOne{builder}
 }
 
-// Query returns a query builder for Playlist_Video.
-func (c *Playlist_VideoClient) Query() *PlaylistVideoQuery {
-	return &PlaylistVideoQuery{config: c.config}
+// Create returns a query builder for Facility.
+func (c *FacilityClient) Query() *FacilityQuery {
+	return &FacilityQuery{config: c.config}
 }
 
-// Get returns a Playlist_Video entity by its id.
-func (c *Playlist_VideoClient) Get(ctx context.Context, id int) (*Playlist_Video, error) {
-	return c.Query().Where(playlist_video.ID(id)).Only(ctx)
+// Get returns a Facility entity by its id.
+func (c *FacilityClient) Get(ctx context.Context, id int) (*Facility, error) {
+	return c.Query().Where(facility.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *Playlist_VideoClient) GetX(ctx context.Context, id int) *Playlist_Video {
-	pv, err := c.Get(ctx, id)
+func (c *FacilityClient) GetX(ctx context.Context, id int) *Facility {
+	f, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return pv
+	return f
 }
 
-// QueryPlaylist queries the playlist edge of a Playlist_Video.
-func (c *Playlist_VideoClient) QueryPlaylist(pv *Playlist_Video) *PlaylistQuery {
-	query := &PlaylistQuery{config: c.config}
+// QueryRoom queries the room edge of a Facility.
+func (c *FacilityClient) QueryRoom(f *Facility) *RoomQuery {
+	query := &RoomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pv.ID
+		id := f.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist_video.Table, playlist_video.FieldID, id),
-			sqlgraph.To(playlist.Table, playlist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist_video.PlaylistTable, playlist_video.PlaylistColumn),
+			sqlgraph.From(facility.Table, facility.FieldID, id),
+			sqlgraph.To(room.Table, room.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, facility.RoomTable, facility.RoomPrimaryKey...),
 		)
-		fromV = sqlgraph.Neighbors(pv.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryVideo queries the video edge of a Playlist_Video.
-func (c *Playlist_VideoClient) QueryVideo(pv *Playlist_Video) *VideoQuery {
-	query := &VideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pv.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist_video.Table, playlist_video.FieldID, id),
-			sqlgraph.To(video.Table, video.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist_video.VideoTable, playlist_video.VideoColumn),
-		)
-		fromV = sqlgraph.Neighbors(pv.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryResolution queries the resolution edge of a Playlist_Video.
-func (c *Playlist_VideoClient) QueryResolution(pv *Playlist_Video) *ResolutionQuery {
-	query := &ResolutionQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pv.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist_video.Table, playlist_video.FieldID, id),
-			sqlgraph.To(resolution.Table, resolution.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist_video.ResolutionTable, playlist_video.ResolutionColumn),
-		)
-		fromV = sqlgraph.Neighbors(pv.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *Playlist_VideoClient) Hooks() []Hook {
-	return c.hooks.Playlist_Video
+func (c *FacilityClient) Hooks() []Hook {
+	return c.hooks.Facility
 }
 
-// ResolutionClient is a client for the Resolution schema.
-type ResolutionClient struct {
+// NearbyPlaceClient is a client for the NearbyPlace schema.
+type NearbyPlaceClient struct {
 	config
 }
 
-// NewResolutionClient returns a client for the Resolution from the given config.
-func NewResolutionClient(c config) *ResolutionClient {
-	return &ResolutionClient{config: c}
+// NewNearbyPlaceClient returns a client for the NearbyPlace from the given config.
+func NewNearbyPlaceClient(c config) *NearbyPlaceClient {
+	return &NearbyPlaceClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `resolution.Hooks(f(g(h())))`.
-func (c *ResolutionClient) Use(hooks ...Hook) {
-	c.hooks.Resolution = append(c.hooks.Resolution, hooks...)
+// A call to `Use(f, g, h)` equals to `nearbyplace.Hooks(f(g(h())))`.
+func (c *NearbyPlaceClient) Use(hooks ...Hook) {
+	c.hooks.NearbyPlace = append(c.hooks.NearbyPlace, hooks...)
 }
 
-// Create returns a create builder for Resolution.
-func (c *ResolutionClient) Create() *ResolutionCreate {
-	mutation := newResolutionMutation(c.config, OpCreate)
-	return &ResolutionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for NearbyPlace.
+func (c *NearbyPlaceClient) Create() *NearbyPlaceCreate {
+	mutation := newNearbyPlaceMutation(c.config, OpCreate)
+	return &NearbyPlaceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Resolution entities.
-func (c *ResolutionClient) CreateBulk(builders ...*ResolutionCreate) *ResolutionCreateBulk {
-	return &ResolutionCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Resolution.
-func (c *ResolutionClient) Update() *ResolutionUpdate {
-	mutation := newResolutionMutation(c.config, OpUpdate)
-	return &ResolutionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for NearbyPlace.
+func (c *NearbyPlaceClient) Update() *NearbyPlaceUpdate {
+	mutation := newNearbyPlaceMutation(c.config, OpUpdate)
+	return &NearbyPlaceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ResolutionClient) UpdateOne(r *Resolution) *ResolutionUpdateOne {
-	mutation := newResolutionMutation(c.config, OpUpdateOne, withResolution(r))
-	return &ResolutionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *NearbyPlaceClient) UpdateOne(np *NearbyPlace) *NearbyPlaceUpdateOne {
+	mutation := newNearbyPlaceMutation(c.config, OpUpdateOne, withNearbyPlace(np))
+	return &NearbyPlaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ResolutionClient) UpdateOneID(id int) *ResolutionUpdateOne {
-	mutation := newResolutionMutation(c.config, OpUpdateOne, withResolutionID(id))
-	return &ResolutionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *NearbyPlaceClient) UpdateOneID(id int) *NearbyPlaceUpdateOne {
+	mutation := newNearbyPlaceMutation(c.config, OpUpdateOne, withNearbyPlaceID(id))
+	return &NearbyPlaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Resolution.
-func (c *ResolutionClient) Delete() *ResolutionDelete {
-	mutation := newResolutionMutation(c.config, OpDelete)
-	return &ResolutionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for NearbyPlace.
+func (c *NearbyPlaceClient) Delete() *NearbyPlaceDelete {
+	mutation := newNearbyPlaceMutation(c.config, OpDelete)
+	return &NearbyPlaceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *ResolutionClient) DeleteOne(r *Resolution) *ResolutionDeleteOne {
+func (c *NearbyPlaceClient) DeleteOne(np *NearbyPlace) *NearbyPlaceDeleteOne {
+	return c.DeleteOneID(np.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *NearbyPlaceClient) DeleteOneID(id int) *NearbyPlaceDeleteOne {
+	builder := c.Delete().Where(nearbyplace.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &NearbyPlaceDeleteOne{builder}
+}
+
+// Create returns a query builder for NearbyPlace.
+func (c *NearbyPlaceClient) Query() *NearbyPlaceQuery {
+	return &NearbyPlaceQuery{config: c.config}
+}
+
+// Get returns a NearbyPlace entity by its id.
+func (c *NearbyPlaceClient) Get(ctx context.Context, id int) (*NearbyPlace, error) {
+	return c.Query().Where(nearbyplace.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *NearbyPlaceClient) GetX(ctx context.Context, id int) *NearbyPlace {
+	np, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return np
+}
+
+// QueryRoom queries the room edge of a NearbyPlace.
+func (c *NearbyPlaceClient) QueryRoom(np *NearbyPlace) *RoomQuery {
+	query := &RoomQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := np.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(nearbyplace.Table, nearbyplace.FieldID, id),
+			sqlgraph.To(room.Table, room.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, nearbyplace.RoomTable, nearbyplace.RoomPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(np.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *NearbyPlaceClient) Hooks() []Hook {
+	return c.hooks.NearbyPlace
+}
+
+// QuantityClient is a client for the Quantity schema.
+type QuantityClient struct {
+	config
+}
+
+// NewQuantityClient returns a client for the Quantity from the given config.
+func NewQuantityClient(c config) *QuantityClient {
+	return &QuantityClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `quantity.Hooks(f(g(h())))`.
+func (c *QuantityClient) Use(hooks ...Hook) {
+	c.hooks.Quantity = append(c.hooks.Quantity, hooks...)
+}
+
+// Create returns a create builder for Quantity.
+func (c *QuantityClient) Create() *QuantityCreate {
+	mutation := newQuantityMutation(c.config, OpCreate)
+	return &QuantityCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Quantity.
+func (c *QuantityClient) Update() *QuantityUpdate {
+	mutation := newQuantityMutation(c.config, OpUpdate)
+	return &QuantityUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *QuantityClient) UpdateOne(q *Quantity) *QuantityUpdateOne {
+	mutation := newQuantityMutation(c.config, OpUpdateOne, withQuantity(q))
+	return &QuantityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *QuantityClient) UpdateOneID(id int) *QuantityUpdateOne {
+	mutation := newQuantityMutation(c.config, OpUpdateOne, withQuantityID(id))
+	return &QuantityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Quantity.
+func (c *QuantityClient) Delete() *QuantityDelete {
+	mutation := newQuantityMutation(c.config, OpDelete)
+	return &QuantityDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *QuantityClient) DeleteOne(q *Quantity) *QuantityDeleteOne {
+	return c.DeleteOneID(q.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *QuantityClient) DeleteOneID(id int) *QuantityDeleteOne {
+	builder := c.Delete().Where(quantity.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &QuantityDeleteOne{builder}
+}
+
+// Create returns a query builder for Quantity.
+func (c *QuantityClient) Query() *QuantityQuery {
+	return &QuantityQuery{config: c.config}
+}
+
+// Get returns a Quantity entity by its id.
+func (c *QuantityClient) Get(ctx context.Context, id int) (*Quantity, error) {
+	return c.Query().Where(quantity.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *QuantityClient) GetX(ctx context.Context, id int) *Quantity {
+	q, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return q
+}
+
+// QueryRoom queries the room edge of a Quantity.
+func (c *QuantityClient) QueryRoom(q *Quantity) *RoomQuery {
+	query := &RoomQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := q.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(quantity.Table, quantity.FieldID, id),
+			sqlgraph.To(room.Table, room.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, quantity.RoomTable, quantity.RoomColumn),
+		)
+		fromV = sqlgraph.Neighbors(q.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *QuantityClient) Hooks() []Hook {
+	return c.hooks.Quantity
+}
+
+// RoomClient is a client for the Room schema.
+type RoomClient struct {
+	config
+}
+
+// NewRoomClient returns a client for the Room from the given config.
+func NewRoomClient(c config) *RoomClient {
+	return &RoomClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `room.Hooks(f(g(h())))`.
+func (c *RoomClient) Use(hooks ...Hook) {
+	c.hooks.Room = append(c.hooks.Room, hooks...)
+}
+
+// Create returns a create builder for Room.
+func (c *RoomClient) Create() *RoomCreate {
+	mutation := newRoomMutation(c.config, OpCreate)
+	return &RoomCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Room.
+func (c *RoomClient) Update() *RoomUpdate {
+	mutation := newRoomMutation(c.config, OpUpdate)
+	return &RoomUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RoomClient) UpdateOne(r *Room) *RoomUpdateOne {
+	mutation := newRoomMutation(c.config, OpUpdateOne, withRoom(r))
+	return &RoomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RoomClient) UpdateOneID(id int) *RoomUpdateOne {
+	mutation := newRoomMutation(c.config, OpUpdateOne, withRoomID(id))
+	return &RoomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Room.
+func (c *RoomClient) Delete() *RoomDelete {
+	mutation := newRoomMutation(c.config, OpDelete)
+	return &RoomDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *RoomClient) DeleteOne(r *Room) *RoomDeleteOne {
 	return c.DeleteOneID(r.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *ResolutionClient) DeleteOneID(id int) *ResolutionDeleteOne {
-	builder := c.Delete().Where(resolution.ID(id))
+func (c *RoomClient) DeleteOneID(id int) *RoomDeleteOne {
+	builder := c.Delete().Where(room.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &ResolutionDeleteOne{builder}
+	return &RoomDeleteOne{builder}
 }
 
-// Query returns a query builder for Resolution.
-func (c *ResolutionClient) Query() *ResolutionQuery {
-	return &ResolutionQuery{config: c.config}
+// Create returns a query builder for Room.
+func (c *RoomClient) Query() *RoomQuery {
+	return &RoomQuery{config: c.config}
 }
 
-// Get returns a Resolution entity by its id.
-func (c *ResolutionClient) Get(ctx context.Context, id int) (*Resolution, error) {
-	return c.Query().Where(resolution.ID(id)).Only(ctx)
+// Get returns a Room entity by its id.
+func (c *RoomClient) Get(ctx context.Context, id int) (*Room, error) {
+	return c.Query().Where(room.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ResolutionClient) GetX(ctx context.Context, id int) *Resolution {
+func (c *RoomClient) GetX(ctx context.Context, id int) *Room {
 	r, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -484,15 +626,79 @@ func (c *ResolutionClient) GetX(ctx context.Context, id int) *Resolution {
 	return r
 }
 
-// QueryPlaylistVideos queries the playlist_videos edge of a Resolution.
-func (c *ResolutionClient) QueryPlaylistVideos(r *Resolution) *PlaylistVideoQuery {
-	query := &PlaylistVideoQuery{config: c.config}
+// QueryQuantity queries the quantity edge of a Room.
+func (c *RoomClient) QueryQuantity(r *Room) *QuantityQuery {
+	query := &QuantityQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(resolution.Table, resolution.FieldID, id),
-			sqlgraph.To(playlist_video.Table, playlist_video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, resolution.PlaylistVideosTable, resolution.PlaylistVideosColumn),
+			sqlgraph.From(room.Table, room.FieldID, id),
+			sqlgraph.To(quantity.Table, quantity.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, room.QuantityTable, room.QuantityColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryStaytype queries the staytype edge of a Room.
+func (c *RoomClient) QueryStaytype(r *Room) *StayTypeQuery {
+	query := &StayTypeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(room.Table, room.FieldID, id),
+			sqlgraph.To(staytype.Table, staytype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, room.StaytypeTable, room.StaytypeColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryFacilities queries the facilities edge of a Room.
+func (c *RoomClient) QueryFacilities(r *Room) *FacilityQuery {
+	query := &FacilityQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(room.Table, room.FieldID, id),
+			sqlgraph.To(facility.Table, facility.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, room.FacilitiesTable, room.FacilitiesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryEquipments queries the equipments edge of a Room.
+func (c *RoomClient) QueryEquipments(r *Room) *EquipmentQuery {
+	query := &EquipmentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(room.Table, room.FieldID, id),
+			sqlgraph.To(equipment.Table, equipment.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, room.EquipmentsTable, room.EquipmentsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryNearbyplace queries the nearbyplace edge of a Room.
+func (c *RoomClient) QueryNearbyplace(r *Room) *NearbyPlaceQuery {
+	query := &NearbyPlaceQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(room.Table, room.FieldID, id),
+			sqlgraph.To(nearbyplace.Table, nearbyplace.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, room.NearbyplaceTable, room.NearbyplacePrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -501,246 +707,105 @@ func (c *ResolutionClient) QueryPlaylistVideos(r *Resolution) *PlaylistVideoQuer
 }
 
 // Hooks returns the client hooks.
-func (c *ResolutionClient) Hooks() []Hook {
-	return c.hooks.Resolution
+func (c *RoomClient) Hooks() []Hook {
+	return c.hooks.Room
 }
 
-// UserClient is a client for the User schema.
-type UserClient struct {
+// StayTypeClient is a client for the StayType schema.
+type StayTypeClient struct {
 	config
 }
 
-// NewUserClient returns a client for the User from the given config.
-func NewUserClient(c config) *UserClient {
-	return &UserClient{config: c}
+// NewStayTypeClient returns a client for the StayType from the given config.
+func NewStayTypeClient(c config) *StayTypeClient {
+	return &StayTypeClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `user.Hooks(f(g(h())))`.
-func (c *UserClient) Use(hooks ...Hook) {
-	c.hooks.User = append(c.hooks.User, hooks...)
+// A call to `Use(f, g, h)` equals to `staytype.Hooks(f(g(h())))`.
+func (c *StayTypeClient) Use(hooks ...Hook) {
+	c.hooks.StayType = append(c.hooks.StayType, hooks...)
 }
 
-// Create returns a create builder for User.
-func (c *UserClient) Create() *UserCreate {
-	mutation := newUserMutation(c.config, OpCreate)
-	return &UserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for StayType.
+func (c *StayTypeClient) Create() *StayTypeCreate {
+	mutation := newStayTypeMutation(c.config, OpCreate)
+	return &StayTypeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of User entities.
-func (c *UserClient) CreateBulk(builders ...*UserCreate) *UserCreateBulk {
-	return &UserCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for User.
-func (c *UserClient) Update() *UserUpdate {
-	mutation := newUserMutation(c.config, OpUpdate)
-	return &UserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for StayType.
+func (c *StayTypeClient) Update() *StayTypeUpdate {
+	mutation := newStayTypeMutation(c.config, OpUpdate)
+	return &StayTypeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
-	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *StayTypeClient) UpdateOne(st *StayType) *StayTypeUpdateOne {
+	mutation := newStayTypeMutation(c.config, OpUpdateOne, withStayType(st))
+	return &StayTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *UserClient) UpdateOneID(id int) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUserID(id))
-	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *StayTypeClient) UpdateOneID(id int) *StayTypeUpdateOne {
+	mutation := newStayTypeMutation(c.config, OpUpdateOne, withStayTypeID(id))
+	return &StayTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for User.
-func (c *UserClient) Delete() *UserDelete {
-	mutation := newUserMutation(c.config, OpDelete)
-	return &UserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for StayType.
+func (c *StayTypeClient) Delete() *StayTypeDelete {
+	mutation := newStayTypeMutation(c.config, OpDelete)
+	return &StayTypeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *StayTypeClient) DeleteOne(st *StayType) *StayTypeDeleteOne {
+	return c.DeleteOneID(st.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
-	builder := c.Delete().Where(user.ID(id))
+func (c *StayTypeClient) DeleteOneID(id int) *StayTypeDeleteOne {
+	builder := c.Delete().Where(staytype.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &UserDeleteOne{builder}
+	return &StayTypeDeleteOne{builder}
 }
 
-// Query returns a query builder for User.
-func (c *UserClient) Query() *UserQuery {
-	return &UserQuery{config: c.config}
+// Create returns a query builder for StayType.
+func (c *StayTypeClient) Query() *StayTypeQuery {
+	return &StayTypeQuery{config: c.config}
 }
 
-// Get returns a User entity by its id.
-func (c *UserClient) Get(ctx context.Context, id int) (*User, error) {
-	return c.Query().Where(user.ID(id)).Only(ctx)
+// Get returns a StayType entity by its id.
+func (c *StayTypeClient) Get(ctx context.Context, id int) (*StayType, error) {
+	return c.Query().Where(staytype.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *UserClient) GetX(ctx context.Context, id int) *User {
-	u, err := c.Get(ctx, id)
+func (c *StayTypeClient) GetX(ctx context.Context, id int) *StayType {
+	st, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return u
+	return st
 }
 
-// QueryPlaylists queries the playlists edge of a User.
-func (c *UserClient) QueryPlaylists(u *User) *PlaylistQuery {
-	query := &PlaylistQuery{config: c.config}
+// QueryRoom queries the room edge of a StayType.
+func (c *StayTypeClient) QueryRoom(st *StayType) *RoomQuery {
+	query := &RoomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := st.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(playlist.Table, playlist.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.PlaylistsTable, user.PlaylistsColumn),
+			sqlgraph.From(staytype.Table, staytype.FieldID, id),
+			sqlgraph.To(room.Table, room.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, staytype.RoomTable, staytype.RoomColumn),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryVideos queries the videos edge of a User.
-func (c *UserClient) QueryVideos(u *User) *VideoQuery {
-	query := &VideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(video.Table, video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.VideosTable, user.VideosColumn),
-		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(st.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *UserClient) Hooks() []Hook {
-	return c.hooks.User
-}
-
-// VideoClient is a client for the Video schema.
-type VideoClient struct {
-	config
-}
-
-// NewVideoClient returns a client for the Video from the given config.
-func NewVideoClient(c config) *VideoClient {
-	return &VideoClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `video.Hooks(f(g(h())))`.
-func (c *VideoClient) Use(hooks ...Hook) {
-	c.hooks.Video = append(c.hooks.Video, hooks...)
-}
-
-// Create returns a create builder for Video.
-func (c *VideoClient) Create() *VideoCreate {
-	mutation := newVideoMutation(c.config, OpCreate)
-	return &VideoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// BulkCreate returns a builder for creating a bulk of Video entities.
-func (c *VideoClient) CreateBulk(builders ...*VideoCreate) *VideoCreateBulk {
-	return &VideoCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Video.
-func (c *VideoClient) Update() *VideoUpdate {
-	mutation := newVideoMutation(c.config, OpUpdate)
-	return &VideoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *VideoClient) UpdateOne(v *Video) *VideoUpdateOne {
-	mutation := newVideoMutation(c.config, OpUpdateOne, withVideo(v))
-	return &VideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *VideoClient) UpdateOneID(id int) *VideoUpdateOne {
-	mutation := newVideoMutation(c.config, OpUpdateOne, withVideoID(id))
-	return &VideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Video.
-func (c *VideoClient) Delete() *VideoDelete {
-	mutation := newVideoMutation(c.config, OpDelete)
-	return &VideoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *VideoClient) DeleteOne(v *Video) *VideoDeleteOne {
-	return c.DeleteOneID(v.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *VideoClient) DeleteOneID(id int) *VideoDeleteOne {
-	builder := c.Delete().Where(video.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &VideoDeleteOne{builder}
-}
-
-// Query returns a query builder for Video.
-func (c *VideoClient) Query() *VideoQuery {
-	return &VideoQuery{config: c.config}
-}
-
-// Get returns a Video entity by its id.
-func (c *VideoClient) Get(ctx context.Context, id int) (*Video, error) {
-	return c.Query().Where(video.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *VideoClient) GetX(ctx context.Context, id int) *Video {
-	v, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// QueryOwner queries the owner edge of a Video.
-func (c *VideoClient) QueryOwner(v *Video) *UserQuery {
-	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := v.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(video.Table, video.FieldID, id),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, video.OwnerTable, video.OwnerColumn),
-		)
-		fromV = sqlgraph.Neighbors(v.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryPlaylistVideos queries the playlist_videos edge of a Video.
-func (c *VideoClient) QueryPlaylistVideos(v *Video) *PlaylistVideoQuery {
-	query := &PlaylistVideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := v.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(video.Table, video.FieldID, id),
-			sqlgraph.To(playlist_video.Table, playlist_video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, video.PlaylistVideosTable, video.PlaylistVideosColumn),
-		)
-		fromV = sqlgraph.Neighbors(v.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *VideoClient) Hooks() []Hook {
-	return c.hooks.Video
+func (c *StayTypeClient) Hooks() []Hook {
+	return c.hooks.StayType
 }

@@ -33,556 +33,18 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/playlist-videos": {
-            "get": {
-                "description": "list playlist-video entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List playlist-video entities",
-                "operationId": "list-playlist-video",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Playlist_Video"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create playlist-video",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create playlist-video",
-                "operationId": "create-playlist-video",
-                "parameters": [
-                    {
-                        "description": "Playlist_Video entity",
-                        "name": "playlist-video",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist_Video"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist_Video"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/playlists": {
-            "get": {
-                "description": "list playlist entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List playlist entities",
-                "operationId": "list-playlist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Playlist"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create playlist",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create playlist",
-                "operationId": "create-playlist",
-                "parameters": [
-                    {
-                        "description": "Playlist entity",
-                        "name": "playlist",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/playlists/{id}": {
-            "get": {
-                "description": "get playlist by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a playlist entity by ID",
-                "operationId": "get-playlist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Playlist ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/resolutions": {
-            "get": {
-                "description": "list resolution entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List resolution entities",
-                "operationId": "list-resolution",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Resolution"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create resolution",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create resolution",
-                "operationId": "create-resolution",
-                "parameters": [
-                    {
-                        "description": "Resolution entity",
-                        "name": "resolution",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Resolution"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Resolution"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/resolutions/{id}": {
-            "get": {
-                "description": "get resolution by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a resolution entity by ID",
-                "operationId": "get-resolution",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Resolution ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Resolution"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/users": {
-            "get": {
-                "description": "list user entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List user entities",
-                "operationId": "list-user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.User"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create user",
-                "operationId": "create-user",
-                "parameters": [
-                    {
-                        "description": "User entity",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "get user by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a user entity by ID",
-                "operationId": "get-user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "update user by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a user entity by ID",
-                "operationId": "update-user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User entity",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
+        "/equipment/{id}": {
             "delete": {
-                "description": "get user by ID",
+                "description": "get equipment by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a user entity by ID",
-                "operationId": "delete-user",
+                "summary": "Delete a equipment entity by ID",
+                "operationId": "delete-equipment",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "User ID",
+                        "description": "Equipment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -616,14 +78,14 @@ var doc = `{
                 }
             }
         },
-        "/videos": {
+        "/equipments": {
             "get": {
-                "description": "list video entities",
+                "description": "list equipment entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List video entities",
-                "operationId": "list-video",
+                "summary": "List equipment entities",
+                "operationId": "list-equipment",
                 "parameters": [
                     {
                         "type": "integer",
@@ -644,7 +106,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Video"
+                                "$ref": "#/definitions/ent.Equipment"
                             }
                         }
                     },
@@ -663,23 +125,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create video",
+                "description": "Create equipment",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create video",
-                "operationId": "create-video",
+                "summary": "Create equipment",
+                "operationId": "create-equipment",
                 "parameters": [
                     {
-                        "description": "Video entity",
-                        "name": "video",
+                        "description": "Equipment entity",
+                        "name": "equipment",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
+                            "$ref": "#/definitions/ent.Equipment"
                         }
                     }
                 ],
@@ -687,7 +149,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
+                            "$ref": "#/definitions/ent.Equipment"
                         }
                     },
                     "400": {
@@ -705,18 +167,18 @@ var doc = `{
                 }
             }
         },
-        "/videos/{id}": {
+        "/equipments/{id}": {
             "get": {
-                "description": "get video by ID",
+                "description": "get equipment by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a video entity by ID",
-                "operationId": "get-video",
+                "summary": "Get a equipment entity by ID",
+                "operationId": "get-equipment",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Video ID",
+                        "description": "Equipment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -726,7 +188,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
+                            "$ref": "#/definitions/ent.Equipment"
                         }
                     },
                     "400": {
@@ -748,40 +210,83 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "put": {
-                "description": "update video by ID",
-                "consumes": [
-                    "application/json"
-                ],
+            }
+        },
+        "/facility/{id}": {
+            "delete": {
+                "description": "get facility by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update a video entity by ID",
-                "operationId": "update-video",
+                "summary": "Delete a facility entity by ID",
+                "operationId": "delete-facility",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Video ID",
+                        "description": "Facility ID",
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "description": "Video entity",
-                        "name": "video",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Video"
-                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/facilitys": {
+            "get": {
+                "description": "list facility entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List facility entities",
+                "operationId": "list-facility",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Facility"
+                            }
                         }
                     },
                     "400": {
@@ -798,17 +303,106 @@ var doc = `{
                     }
                 }
             },
-            "delete": {
-                "description": "get video by ID",
+            "post": {
+                "description": "Create facility",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a video entity by ID",
-                "operationId": "delete-video",
+                "summary": "Create facility",
+                "operationId": "create-facility",
+                "parameters": [
+                    {
+                        "description": "Facility entity",
+                        "name": "facility",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Facility"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Facility"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/facilitys/{id}": {
+            "get": {
+                "description": "get facility by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a facility entity by ID",
+                "operationId": "get-facility",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Video ID",
+                        "description": "Facility ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Facility"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/nearbyplace/{id}": {
+            "delete": {
+                "description": "get nearbyplace by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a nearbyplace entity by ID",
+                "operationId": "delete-nearbyplace",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "NearbyPlace ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -819,6 +413,632 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/nearbyplaces": {
+            "get": {
+                "description": "list nearbyplace entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List nearbyplace entities",
+                "operationId": "list-nearbyplace",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.NearbyPlace"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create nearbyplace",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create nearbyplace",
+                "operationId": "create-nearbyplace",
+                "parameters": [
+                    {
+                        "description": "NearbyPlace entity",
+                        "name": "nearbyplace",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.NearbyPlace"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.NearbyPlace"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/nearbyplaces/{id}": {
+            "get": {
+                "description": "get nearbyplace by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a nearbyplace entity by ID",
+                "operationId": "get-nearbyplace",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "NearbyPlace ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.NearbyPlace"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/quantity/{id}": {
+            "delete": {
+                "description": "get quantity by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a quantity entity by ID",
+                "operationId": "delete-quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Quantity ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/quantitys": {
+            "get": {
+                "description": "list quantity entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List quantity entities",
+                "operationId": "list-quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Quantity"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create quantity",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create quantity",
+                "operationId": "create-quantity",
+                "parameters": [
+                    {
+                        "description": "Quantity entity",
+                        "name": "quantity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Quantity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Quantity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/quantitys/{id}": {
+            "get": {
+                "description": "get quantity by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a quantity entity by ID",
+                "operationId": "get-quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Quantity ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Quantity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms": {
+            "get": {
+                "description": "list room entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List room entities",
+                "operationId": "list-room",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Room"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create room",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create room",
+                "operationId": "create-room",
+                "parameters": [
+                    {
+                        "description": "Room entity",
+                        "name": "room",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Room"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Room"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms/{id}": {
+            "delete": {
+                "description": "get room by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a room entity by ID",
+                "operationId": "delete-room",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/staytype/{id}": {
+            "delete": {
+                "description": "get staytype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a staytype entity by ID",
+                "operationId": "delete-staytype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "StayType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/staytypes": {
+            "get": {
+                "description": "list staytype entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List staytype entities",
+                "operationId": "list-staytype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.StayType"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create staytype",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create staytype",
+                "operationId": "create-staytype",
+                "parameters": [
+                    {
+                        "description": "StayType entity",
+                        "name": "staytype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.StayType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.StayType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/staytypes/{id}": {
+            "get": {
+                "description": "get staytype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a staytype entity by ID",
+                "operationId": "get-staytype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "StayType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.StayType"
                         }
                     },
                     "400": {
@@ -844,185 +1064,236 @@ var doc = `{
         }
     },
     "definitions": {
-        "ent.Playlist": {
+        "controllers.Room": {
+            "type": "object",
+            "properties": {
+                "equipment": {
+                    "type": "integer"
+                },
+                "facility": {
+                    "type": "integer"
+                },
+                "nearbyPlace": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "roomprice": {
+                    "type": "integer"
+                },
+                "roomtypename": {
+                    "type": "string"
+                },
+                "stayType": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.Equipment": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PlaylistQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EquipmentQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.PlaylistEdges"
+                    "$ref": "#/definitions/ent.EquipmentEdges"
+                },
+                "equipment": {
+                    "description": "Equipment holds the value of the \"equipment\" field.",
+                    "type": "string"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
-                },
-                "title": {
-                    "description": "Title holds the value of the \"title\" field.",
-                    "type": "string"
                 }
             }
         },
-        "ent.PlaylistEdges": {
+        "ent.EquipmentEdges": {
             "type": "object",
             "properties": {
-                "owner": {
-                    "description": "Owner holds the value of the owner edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.User"
-                },
-                "playlistVideos": {
-                    "description": "PlaylistVideos holds the value of the playlist_videos edge.",
+                "room": {
+                    "description": "Room holds the value of the room edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Playlist_Video"
+                        "$ref": "#/definitions/ent.Room"
                     }
                 }
             }
         },
-        "ent.Playlist_Video": {
+        "ent.Facility": {
             "type": "object",
             "properties": {
-                "added_time": {
-                    "description": "AddedTime holds the value of the \"added_time\" field.",
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the FacilityQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.FacilityEdges"
+                },
+                "facility": {
+                    "description": "Facility holds the value of the \"facility\" field.",
                     "type": "string"
                 },
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the Playlist_VideoQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Playlist_VideoEdges"
-                },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 }
             }
         },
-        "ent.Playlist_VideoEdges": {
+        "ent.FacilityEdges": {
             "type": "object",
             "properties": {
-                "playlist": {
-                    "description": "Playlist holds the value of the playlist edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Playlist"
-                },
-                "resolution": {
-                    "description": "Resolution holds the value of the resolution edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Resolution"
-                },
-                "video": {
-                    "description": "Video holds the value of the video edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Video"
-                }
-            }
-        },
-        "ent.Resolution": {
-            "type": "object",
-            "properties": {
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the ResolutionQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.ResolutionEdges"
-                },
-                "id": {
-                    "description": "ID of the ent.",
-                    "type": "integer"
-                },
-                "value": {
-                    "description": "Value holds the value of the \"value\" field.",
-                    "type": "integer"
-                }
-            }
-        },
-        "ent.ResolutionEdges": {
-            "type": "object",
-            "properties": {
-                "playlistVideos": {
-                    "description": "PlaylistVideos holds the value of the playlist_videos edge.",
+                "room": {
+                    "description": "Room holds the value of the room edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Playlist_Video"
+                        "$ref": "#/definitions/ent.Room"
                     }
                 }
             }
         },
-        "ent.User": {
+        "ent.NearbyPlace": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the UserQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the NearbyPlaceQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.UserEdges"
-                },
-                "email": {
-                    "description": "Email holds the value of the \"email\" field.",
-                    "type": "string"
+                    "$ref": "#/definitions/ent.NearbyPlaceEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "name": {
-                    "description": "Name holds the value of the \"name\" field.",
+                "placename": {
+                    "description": "Placename holds the value of the \"placename\" field.",
                     "type": "string"
                 }
             }
         },
-        "ent.UserEdges": {
+        "ent.NearbyPlaceEdges": {
             "type": "object",
             "properties": {
-                "playlists": {
-                    "description": "Playlists holds the value of the playlists edge.",
+                "room": {
+                    "description": "Room holds the value of the room edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Playlist"
-                    }
-                },
-                "videos": {
-                    "description": "Videos holds the value of the videos edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Video"
+                        "$ref": "#/definitions/ent.Room"
                     }
                 }
             }
         },
-        "ent.Video": {
+        "ent.Quantity": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the VideoQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the QuantityQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.VideoEdges"
+                    "$ref": "#/definitions/ent.QuantityEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "name": {
-                    "description": "Name holds the value of the \"name\" field.",
-                    "type": "string"
+                "quantity": {
+                    "description": "Quantity holds the value of the \"quantity\" field.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.QuantityEdges": {
+            "type": "object",
+            "properties": {
+                "room": {
+                    "description": "Room holds the value of the room edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Room"
+                    }
+                }
+            }
+        },
+        "ent.Room": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RoomQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.RoomEdges"
                 },
-                "url": {
-                    "description": "URL holds the value of the \"url\" field.",
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "roomprice": {
+                    "description": "Roomprice holds the value of the \"roomprice\" field.",
+                    "type": "integer"
+                },
+                "roomtypename": {
+                    "description": "Roomtypename holds the value of the \"roomtypename\" field.",
                     "type": "string"
                 }
             }
         },
-        "ent.VideoEdges": {
+        "ent.RoomEdges": {
             "type": "object",
             "properties": {
-                "owner": {
-                    "description": "Owner holds the value of the owner edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.User"
-                },
-                "playlistVideos": {
-                    "description": "PlaylistVideos holds the value of the playlist_videos edge.",
+                "equipments": {
+                    "description": "Equipments holds the value of the equipments edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Playlist_Video"
+                        "$ref": "#/definitions/ent.Equipment"
+                    }
+                },
+                "facilities": {
+                    "description": "Facilities holds the value of the facilities edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Facility"
+                    }
+                },
+                "nearbyplace": {
+                    "description": "Nearbyplace holds the value of the nearbyplace edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.NearbyPlace"
+                    }
+                },
+                "quantity": {
+                    "description": "Quantity holds the value of the quantity edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Quantity"
+                },
+                "staytype": {
+                    "description": "Staytype holds the value of the staytype edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.StayType"
+                }
+            }
+        },
+        "ent.StayType": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the StayTypeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.StayTypeEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "staytype": {
+                    "description": "Staytype holds the value of the \"staytype\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.StayTypeEdges": {
+            "type": "object",
+            "properties": {
+                "room": {
+                    "description": "Room holds the value of the room edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Room"
                     }
                 }
             }
@@ -1053,6 +1324,7 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -1071,6 +1343,7 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -1096,7 +1369,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "localhost:8080",
 	BasePath:    "/api/v1",
 	Schemes:     []string{},
-	Title:       "SUT SA Example API Playlist Vidoe",
+	Title:       "SUT SA Example API",
 	Description: "This is a sample server for SUT SE 2563",
 }
 
