@@ -18,6 +18,274 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
+        "/deposits": {
+            "get": {
+                "description": "list deposit entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List deposit entities",
+                "operationId": "list-deposit",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Deposit"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create deposit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create deposit",
+                "operationId": "create-deposit",
+                "parameters": [
+                    {
+                        "description": "Deposit entity",
+                        "name": "deposit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Deposit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Deposit"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/employee/{id}": {
+            "delete": {
+                "description": "get employee by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a employee entity by ID",
+                "operationId": "delete-employee",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Employee ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/employees": {
+            "get": {
+                "description": "list employee entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List employee entities",
+                "operationId": "list-employee",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Employee"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create employee",
+                "operationId": "create-employee",
+                "parameters": [
+                    {
+                        "description": "Employee entity",
+                        "name": "employee",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Employee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Employee"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/{id}": {
+            "get": {
+                "description": "get employee by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a employee entity by ID",
+                "operationId": "get-employee",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Employee ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Employee"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/equipment/{id}": {
             "delete": {
                 "description": "get equipment by ID",
@@ -868,6 +1136,185 @@
                 }
             }
         },
+        "/statusd/{id}": {
+            "delete": {
+                "description": "get statusd by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a statusd entity by ID",
+                "operationId": "delete-statusd",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Statusd ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/statusds": {
+            "get": {
+                "description": "list statusd entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List statusd entities",
+                "operationId": "list-statusd",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Statusd"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create statusd",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create statusd",
+                "operationId": "create-statusd",
+                "parameters": [
+                    {
+                        "description": "Statusd entity",
+                        "name": "statusd",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Statusd"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Statusd"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/statusds/{id}": {
+            "get": {
+                "description": "get statusd by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a statusd entity by ID",
+                "operationId": "get-statusd",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Statusd ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Statusd"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/staytype/{id}": {
             "delete": {
                 "description": "get staytype by ID",
@@ -1049,6 +1496,23 @@
         }
     },
     "definitions": {
+        "controllers.Deposit": {
+            "type": "object",
+            "properties": {
+                "added": {
+                    "type": "string"
+                },
+                "employee": {
+                    "type": "integer"
+                },
+                "info": {
+                    "type": "string"
+                },
+                "statusd": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Room": {
             "type": "object",
             "properties": {
@@ -1072,6 +1536,81 @@
                 },
                 "stayType": {
                     "type": "integer"
+                }
+            }
+        },
+        "ent.Deposit": {
+            "type": "object",
+            "properties": {
+                "addedtime": {
+                    "description": "Addedtime holds the value of the \"addedtime\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the DepositQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.DepositEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "info": {
+                    "description": "Info holds the value of the \"info\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.DepositEdges": {
+            "type": "object",
+            "properties": {
+                "employee": {
+                    "description": "Employee holds the value of the Employee edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Employee"
+                },
+                "statusd": {
+                    "description": "Statusd holds the value of the Statusd edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Statusd"
+                }
+            }
+        },
+        "ent.Employee": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EmployeeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.EmployeeEdges"
+                },
+                "employeeemail": {
+                    "description": "Employeeemail holds the value of the \"employeeemail\" field.",
+                    "type": "string"
+                },
+                "employeename": {
+                    "description": "Employeename holds the value of the \"employeename\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "Password holds the value of the \"password\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.EmployeeEdges": {
+            "type": "object",
+            "properties": {
+                "employees": {
+                    "description": "Employees holds the value of the employees edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Deposit"
+                    }
                 }
             }
         },
@@ -1250,6 +1789,36 @@
                     "description": "Staytype holds the value of the staytype edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.StayType"
+                }
+            }
+        },
+        "ent.Statusd": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the StatusdQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.StatusdEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "statusdname": {
+                    "description": "Statusdname holds the value of the \"statusdname\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.StatusdEdges": {
+            "type": "object",
+            "properties": {
+                "statusds": {
+                    "description": "Statusds holds the value of the statusds edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Deposit"
+                    }
                 }
             }
         },

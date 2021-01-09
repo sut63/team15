@@ -9,11 +9,14 @@ import (
 
 	"github.com/team15/app/ent/migrate"
 
+	"github.com/team15/app/ent/deposit"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facility"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/room"
+	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/staytype"
 
 	"github.com/facebookincubator/ent/dialect"
@@ -26,6 +29,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Deposit is the client for interacting with the Deposit builders.
+	Deposit *DepositClient
+	// Employee is the client for interacting with the Employee builders.
+	Employee *EmployeeClient
 	// Equipment is the client for interacting with the Equipment builders.
 	Equipment *EquipmentClient
 	// Facility is the client for interacting with the Facility builders.
@@ -36,6 +43,8 @@ type Client struct {
 	Quantity *QuantityClient
 	// Room is the client for interacting with the Room builders.
 	Room *RoomClient
+	// Statusd is the client for interacting with the Statusd builders.
+	Statusd *StatusdClient
 	// StayType is the client for interacting with the StayType builders.
 	StayType *StayTypeClient
 }
@@ -51,11 +60,14 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Deposit = NewDepositClient(c.config)
+	c.Employee = NewEmployeeClient(c.config)
 	c.Equipment = NewEquipmentClient(c.config)
 	c.Facility = NewFacilityClient(c.config)
 	c.NearbyPlace = NewNearbyPlaceClient(c.config)
 	c.Quantity = NewQuantityClient(c.config)
 	c.Room = NewRoomClient(c.config)
+	c.Statusd = NewStatusdClient(c.config)
 	c.StayType = NewStayTypeClient(c.config)
 }
 
@@ -89,11 +101,14 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:         ctx,
 		config:      cfg,
+		Deposit:     NewDepositClient(cfg),
+		Employee:    NewEmployeeClient(cfg),
 		Equipment:   NewEquipmentClient(cfg),
 		Facility:    NewFacilityClient(cfg),
 		NearbyPlace: NewNearbyPlaceClient(cfg),
 		Quantity:    NewQuantityClient(cfg),
 		Room:        NewRoomClient(cfg),
+		Statusd:     NewStatusdClient(cfg),
 		StayType:    NewStayTypeClient(cfg),
 	}, nil
 }
@@ -110,11 +125,14 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
 		config:      cfg,
+		Deposit:     NewDepositClient(cfg),
+		Employee:    NewEmployeeClient(cfg),
 		Equipment:   NewEquipmentClient(cfg),
 		Facility:    NewFacilityClient(cfg),
 		NearbyPlace: NewNearbyPlaceClient(cfg),
 		Quantity:    NewQuantityClient(cfg),
 		Room:        NewRoomClient(cfg),
+		Statusd:     NewStatusdClient(cfg),
 		StayType:    NewStayTypeClient(cfg),
 	}, nil
 }
@@ -122,7 +140,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Equipment.
+//		Deposit.
 //		Query().
 //		Count(ctx)
 //
@@ -144,12 +162,229 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Deposit.Use(hooks...)
+	c.Employee.Use(hooks...)
 	c.Equipment.Use(hooks...)
 	c.Facility.Use(hooks...)
 	c.NearbyPlace.Use(hooks...)
 	c.Quantity.Use(hooks...)
 	c.Room.Use(hooks...)
+	c.Statusd.Use(hooks...)
 	c.StayType.Use(hooks...)
+}
+
+// DepositClient is a client for the Deposit schema.
+type DepositClient struct {
+	config
+}
+
+// NewDepositClient returns a client for the Deposit from the given config.
+func NewDepositClient(c config) *DepositClient {
+	return &DepositClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `deposit.Hooks(f(g(h())))`.
+func (c *DepositClient) Use(hooks ...Hook) {
+	c.hooks.Deposit = append(c.hooks.Deposit, hooks...)
+}
+
+// Create returns a create builder for Deposit.
+func (c *DepositClient) Create() *DepositCreate {
+	mutation := newDepositMutation(c.config, OpCreate)
+	return &DepositCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Deposit.
+func (c *DepositClient) Update() *DepositUpdate {
+	mutation := newDepositMutation(c.config, OpUpdate)
+	return &DepositUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DepositClient) UpdateOne(d *Deposit) *DepositUpdateOne {
+	mutation := newDepositMutation(c.config, OpUpdateOne, withDeposit(d))
+	return &DepositUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DepositClient) UpdateOneID(id int) *DepositUpdateOne {
+	mutation := newDepositMutation(c.config, OpUpdateOne, withDepositID(id))
+	return &DepositUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Deposit.
+func (c *DepositClient) Delete() *DepositDelete {
+	mutation := newDepositMutation(c.config, OpDelete)
+	return &DepositDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *DepositClient) DeleteOne(d *Deposit) *DepositDeleteOne {
+	return c.DeleteOneID(d.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *DepositClient) DeleteOneID(id int) *DepositDeleteOne {
+	builder := c.Delete().Where(deposit.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DepositDeleteOne{builder}
+}
+
+// Create returns a query builder for Deposit.
+func (c *DepositClient) Query() *DepositQuery {
+	return &DepositQuery{config: c.config}
+}
+
+// Get returns a Deposit entity by its id.
+func (c *DepositClient) Get(ctx context.Context, id int) (*Deposit, error) {
+	return c.Query().Where(deposit.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DepositClient) GetX(ctx context.Context, id int) *Deposit {
+	d, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return d
+}
+
+// QueryEmployee queries the Employee edge of a Deposit.
+func (c *DepositClient) QueryEmployee(d *Deposit) *EmployeeQuery {
+	query := &EmployeeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(deposit.Table, deposit.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, deposit.EmployeeTable, deposit.EmployeeColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryStatusd queries the Statusd edge of a Deposit.
+func (c *DepositClient) QueryStatusd(d *Deposit) *StatusdQuery {
+	query := &StatusdQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(deposit.Table, deposit.FieldID, id),
+			sqlgraph.To(statusd.Table, statusd.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, deposit.StatusdTable, deposit.StatusdColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *DepositClient) Hooks() []Hook {
+	return c.hooks.Deposit
+}
+
+// EmployeeClient is a client for the Employee schema.
+type EmployeeClient struct {
+	config
+}
+
+// NewEmployeeClient returns a client for the Employee from the given config.
+func NewEmployeeClient(c config) *EmployeeClient {
+	return &EmployeeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `employee.Hooks(f(g(h())))`.
+func (c *EmployeeClient) Use(hooks ...Hook) {
+	c.hooks.Employee = append(c.hooks.Employee, hooks...)
+}
+
+// Create returns a create builder for Employee.
+func (c *EmployeeClient) Create() *EmployeeCreate {
+	mutation := newEmployeeMutation(c.config, OpCreate)
+	return &EmployeeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Employee.
+func (c *EmployeeClient) Update() *EmployeeUpdate {
+	mutation := newEmployeeMutation(c.config, OpUpdate)
+	return &EmployeeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *EmployeeClient) UpdateOne(e *Employee) *EmployeeUpdateOne {
+	mutation := newEmployeeMutation(c.config, OpUpdateOne, withEmployee(e))
+	return &EmployeeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *EmployeeClient) UpdateOneID(id int) *EmployeeUpdateOne {
+	mutation := newEmployeeMutation(c.config, OpUpdateOne, withEmployeeID(id))
+	return &EmployeeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Employee.
+func (c *EmployeeClient) Delete() *EmployeeDelete {
+	mutation := newEmployeeMutation(c.config, OpDelete)
+	return &EmployeeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *EmployeeClient) DeleteOne(e *Employee) *EmployeeDeleteOne {
+	return c.DeleteOneID(e.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *EmployeeClient) DeleteOneID(id int) *EmployeeDeleteOne {
+	builder := c.Delete().Where(employee.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &EmployeeDeleteOne{builder}
+}
+
+// Create returns a query builder for Employee.
+func (c *EmployeeClient) Query() *EmployeeQuery {
+	return &EmployeeQuery{config: c.config}
+}
+
+// Get returns a Employee entity by its id.
+func (c *EmployeeClient) Get(ctx context.Context, id int) (*Employee, error) {
+	return c.Query().Where(employee.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *EmployeeClient) GetX(ctx context.Context, id int) *Employee {
+	e, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return e
+}
+
+// QueryEmployees queries the employees edge of a Employee.
+func (c *EmployeeClient) QueryEmployees(e *Employee) *DepositQuery {
+	query := &DepositQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(deposit.Table, deposit.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeesTable, employee.EmployeesColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *EmployeeClient) Hooks() []Hook {
+	return c.hooks.Employee
 }
 
 // EquipmentClient is a client for the Equipment schema.
@@ -709,6 +944,105 @@ func (c *RoomClient) QueryNearbyplace(r *Room) *NearbyPlaceQuery {
 // Hooks returns the client hooks.
 func (c *RoomClient) Hooks() []Hook {
 	return c.hooks.Room
+}
+
+// StatusdClient is a client for the Statusd schema.
+type StatusdClient struct {
+	config
+}
+
+// NewStatusdClient returns a client for the Statusd from the given config.
+func NewStatusdClient(c config) *StatusdClient {
+	return &StatusdClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `statusd.Hooks(f(g(h())))`.
+func (c *StatusdClient) Use(hooks ...Hook) {
+	c.hooks.Statusd = append(c.hooks.Statusd, hooks...)
+}
+
+// Create returns a create builder for Statusd.
+func (c *StatusdClient) Create() *StatusdCreate {
+	mutation := newStatusdMutation(c.config, OpCreate)
+	return &StatusdCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Statusd.
+func (c *StatusdClient) Update() *StatusdUpdate {
+	mutation := newStatusdMutation(c.config, OpUpdate)
+	return &StatusdUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *StatusdClient) UpdateOne(s *Statusd) *StatusdUpdateOne {
+	mutation := newStatusdMutation(c.config, OpUpdateOne, withStatusd(s))
+	return &StatusdUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *StatusdClient) UpdateOneID(id int) *StatusdUpdateOne {
+	mutation := newStatusdMutation(c.config, OpUpdateOne, withStatusdID(id))
+	return &StatusdUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Statusd.
+func (c *StatusdClient) Delete() *StatusdDelete {
+	mutation := newStatusdMutation(c.config, OpDelete)
+	return &StatusdDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *StatusdClient) DeleteOne(s *Statusd) *StatusdDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *StatusdClient) DeleteOneID(id int) *StatusdDeleteOne {
+	builder := c.Delete().Where(statusd.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &StatusdDeleteOne{builder}
+}
+
+// Create returns a query builder for Statusd.
+func (c *StatusdClient) Query() *StatusdQuery {
+	return &StatusdQuery{config: c.config}
+}
+
+// Get returns a Statusd entity by its id.
+func (c *StatusdClient) Get(ctx context.Context, id int) (*Statusd, error) {
+	return c.Query().Where(statusd.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *StatusdClient) GetX(ctx context.Context, id int) *Statusd {
+	s, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return s
+}
+
+// QueryStatusds queries the statusds edge of a Statusd.
+func (c *StatusdClient) QueryStatusds(s *Statusd) *DepositQuery {
+	query := &DepositQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(statusd.Table, statusd.FieldID, id),
+			sqlgraph.To(deposit.Table, deposit.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, statusd.StatusdsTable, statusd.StatusdsColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *StatusdClient) Hooks() []Hook {
+	return c.hooks.Statusd
 }
 
 // StayTypeClient is a client for the StayType schema.
