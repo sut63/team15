@@ -6,6 +6,12 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
+// Deposit is the predicate function for deposit builders.
+type Deposit func(*sql.Selector)
+
+// Employee is the predicate function for employee builders.
+type Employee func(*sql.Selector)
+
 // Equipment is the predicate function for equipment builders.
 type Equipment func(*sql.Selector)
 
@@ -20,6 +26,9 @@ type Quantity func(*sql.Selector)
 
 // Room is the predicate function for room builders.
 type Room func(*sql.Selector)
+
+// Statusd is the predicate function for statusd builders.
+type Statusd func(*sql.Selector)
 
 // StayType is the predicate function for staytype builders.
 type StayType func(*sql.Selector)

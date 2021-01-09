@@ -24,11 +24,14 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
+	Deposit     []ent.Hook
+	Employee    []ent.Hook
 	Equipment   []ent.Hook
 	Facility    []ent.Hook
 	NearbyPlace []ent.Hook
 	Quantity    []ent.Hook
 	Room        []ent.Hook
+	Statusd     []ent.Hook
 	StayType    []ent.Hook
 }
 

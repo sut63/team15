@@ -12,6 +12,10 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Deposit is the client for interacting with the Deposit builders.
+	Deposit *DepositClient
+	// Employee is the client for interacting with the Employee builders.
+	Employee *EmployeeClient
 	// Equipment is the client for interacting with the Equipment builders.
 	Equipment *EquipmentClient
 	// Facility is the client for interacting with the Facility builders.
@@ -22,6 +26,8 @@ type Tx struct {
 	Quantity *QuantityClient
 	// Room is the client for interacting with the Room builders.
 	Room *RoomClient
+	// Statusd is the client for interacting with the Statusd builders.
+	Statusd *StatusdClient
 	// StayType is the client for interacting with the StayType builders.
 	StayType *StayTypeClient
 
@@ -159,11 +165,14 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Deposit = NewDepositClient(tx.config)
+	tx.Employee = NewEmployeeClient(tx.config)
 	tx.Equipment = NewEquipmentClient(tx.config)
 	tx.Facility = NewFacilityClient(tx.config)
 	tx.NearbyPlace = NewNearbyPlaceClient(tx.config)
 	tx.Quantity = NewQuantityClient(tx.config)
 	tx.Room = NewRoomClient(tx.config)
+	tx.Statusd = NewStatusdClient(tx.config)
 	tx.StayType = NewStayTypeClient(tx.config)
 }
 
@@ -174,7 +183,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Equipment.QueryXXX(), the query will be executed
+// applies a query, for example: Deposit.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

@@ -3,15 +3,31 @@
 package ent
 
 import (
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/room"
 	"github.com/team15/app/ent/schema"
+	"github.com/team15/app/ent/statusd"
 )
 
 // The init function reads all schema descriptors with runtime
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	employeeFields := schema.Employee{}.Fields()
+	_ = employeeFields
+	// employeeDescEmployeename is the schema descriptor for employeename field.
+	employeeDescEmployeename := employeeFields[0].Descriptor()
+	// employee.EmployeenameValidator is a validator for the "employeename" field. It is called by the builders before save.
+	employee.EmployeenameValidator = employeeDescEmployeename.Validators[0].(func(string) error)
+	// employeeDescEmployeeemail is the schema descriptor for employeeemail field.
+	employeeDescEmployeeemail := employeeFields[1].Descriptor()
+	// employee.EmployeeemailValidator is a validator for the "employeeemail" field. It is called by the builders before save.
+	employee.EmployeeemailValidator = employeeDescEmployeeemail.Validators[0].(func(string) error)
+	// employeeDescPassword is the schema descriptor for password field.
+	employeeDescPassword := employeeFields[2].Descriptor()
+	// employee.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	employee.PasswordValidator = employeeDescPassword.Validators[0].(func(string) error)
 	quantityFields := schema.Quantity{}.Fields()
 	_ = quantityFields
 	// quantityDescQuantity is the schema descriptor for quantity field.
@@ -24,4 +40,10 @@ func init() {
 	roomDescRoomprice := roomFields[0].Descriptor()
 	// room.RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
 	room.RoompriceValidator = roomDescRoomprice.Validators[0].(func(int) error)
+	statusdFields := schema.Statusd{}.Fields()
+	_ = statusdFields
+	// statusdDescStatusdname is the schema descriptor for statusdname field.
+	statusdDescStatusdname := statusdFields[0].Descriptor()
+	// statusd.StatusdnameValidator is a validator for the "statusdname" field. It is called by the builders before save.
+	statusd.StatusdnameValidator = statusdDescStatusdname.Validators[0].(func(string) error)
 }

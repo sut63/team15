@@ -9,6 +9,32 @@ import (
 	"github.com/team15/app/ent"
 )
 
+// The DepositFunc type is an adapter to allow the use of ordinary
+// function as Deposit mutator.
+type DepositFunc func(context.Context, *ent.DepositMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DepositFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DepositMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DepositMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The EmployeeFunc type is an adapter to allow the use of ordinary
+// function as Employee mutator.
+type EmployeeFunc func(context.Context, *ent.EmployeeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f EmployeeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.EmployeeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EmployeeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The EquipmentFunc type is an adapter to allow the use of ordinary
 // function as Equipment mutator.
 type EquipmentFunc func(context.Context, *ent.EquipmentMutation) (ent.Value, error)
@@ -70,6 +96,19 @@ func (f RoomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	mv, ok := m.(*ent.RoomMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoomMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The StatusdFunc type is an adapter to allow the use of ordinary
+// function as Statusd mutator.
+type StatusdFunc func(context.Context, *ent.StatusdMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f StatusdFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.StatusdMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StatusdMutation", m)
 	}
 	return f(ctx, mv)
 }

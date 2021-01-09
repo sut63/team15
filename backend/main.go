@@ -54,6 +54,24 @@ type NearbyPlace struct {
 	Placename string
 }
 
+type Employees struct {
+	Employee []Employee
+}
+
+type Employee struct {
+	Employeename string
+	Employeeemail string
+	Password string
+}
+
+type Statusds struct {
+	Statusd []Statusd
+}
+
+type Statusd struct {
+	Statusdname string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -114,6 +132,9 @@ func main() {
 	controllers.NewFacilityController(v1, client)
 	controllers.NewEquipmentController(v1, client)
 	controllers.NewNearbyPlaceController(v1, client)
+	controllers.NewStatusdController(v1, client)
+	controllers.NewEmployeeController(v1, client)
+	controllers.NewDepositController(v1, client)
 
 	// Set Quantity Data
 	quantitys := Quantitys{
@@ -186,6 +207,37 @@ func main() {
 		client.NearbyPlace.
 			Create().
 			SetPlacename(np.Placename).
+			Save(context.Background())
+	}
+
+	// Set Employees Data
+	employees := Employees{
+		Employee: []Employee{
+			Employee{"John Marston","1111@gmail.com","1111"},
+			Employee{"Arthur Morgan","2222@gmail.com","2222"},
+			Employee{"Dutch Vanderlinde","3333@gmail.com","3333"},
+		},
+	}
+	for _, em := range employees.Employee {
+		client.Employee.
+			Create().
+			SetEmployeename(em.Employeename).
+			SetEmployeeemail(em.Employeeemail).
+			SetPassword(em.Password).
+			Save(context.Background())
+	}
+
+	// Set Statusds Data
+	statusds := Statusds{
+		Statusd: []Statusd{
+			Statusd{"uncompleted"},
+			Statusd{"completed"},
+		},
+	}
+	for _, s := range statusds.Statusd {
+		client.Statusd.
+			Create().
+			SetStatusdname(s.Statusdname).
 			Save(context.Background())
 	}
 

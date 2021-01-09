@@ -8,6 +8,50 @@ import (
 )
 
 var (
+	// DepositsColumns holds the columns for the "deposits" table.
+	DepositsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "addedtime", Type: field.TypeTime},
+		{Name: "info", Type: field.TypeString},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "statusd_id", Type: field.TypeInt, Nullable: true},
+	}
+	// DepositsTable holds the schema information for the "deposits" table.
+	DepositsTable = &schema.Table{
+		Name:       "deposits",
+		Columns:    DepositsColumns,
+		PrimaryKey: []*schema.Column{DepositsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "deposits_employees_employees",
+				Columns: []*schema.Column{DepositsColumns[3]},
+
+				RefColumns: []*schema.Column{EmployeesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "deposits_statusds_statusds",
+				Columns: []*schema.Column{DepositsColumns[4]},
+
+				RefColumns: []*schema.Column{StatusdsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// EmployeesColumns holds the columns for the "employees" table.
+	EmployeesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "employeename", Type: field.TypeString, Unique: true},
+		{Name: "employeeemail", Type: field.TypeString},
+		{Name: "password", Type: field.TypeString},
+	}
+	// EmployeesTable holds the schema information for the "employees" table.
+	EmployeesTable = &schema.Table{
+		Name:        "employees",
+		Columns:     EmployeesColumns,
+		PrimaryKey:  []*schema.Column{EmployeesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// EquipmentColumns holds the columns for the "equipment" table.
 	EquipmentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -85,6 +129,18 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 		},
+	}
+	// StatusdsColumns holds the columns for the "statusds" table.
+	StatusdsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "statusdname", Type: field.TypeString, Unique: true},
+	}
+	// StatusdsTable holds the schema information for the "statusds" table.
+	StatusdsTable = &schema.Table{
+		Name:        "statusds",
+		Columns:     StatusdsColumns,
+		PrimaryKey:  []*schema.Column{StatusdsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// StayTypesColumns holds the columns for the "stay_types" table.
 	StayTypesColumns = []*schema.Column{
@@ -181,11 +237,14 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		DepositsTable,
+		EmployeesTable,
 		EquipmentTable,
 		FacilitiesTable,
 		NearbyPlacesTable,
 		QuantitiesTable,
 		RoomsTable,
+		StatusdsTable,
 		StayTypesTable,
 		RoomFacilitiesTable,
 		RoomEquipmentsTable,
@@ -194,6 +253,8 @@ var (
 )
 
 func init() {
+	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
+	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
 	RoomsTable.ForeignKeys[0].RefTable = QuantitiesTable
 	RoomsTable.ForeignKeys[1].RefTable = StayTypesTable
 	RoomFacilitiesTable.ForeignKeys[0].RefTable = RoomsTable
