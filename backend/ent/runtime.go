@@ -3,7 +3,9 @@
 package ent
 
 import (
+	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/room"
 	"github.com/team15/app/ent/schema"
@@ -14,6 +16,12 @@ import (
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	cleanernameFields := schema.CleanerName{}.Fields()
+	_ = cleanernameFields
+	// cleanernameDescCleanername is the schema descriptor for cleanername field.
+	cleanernameDescCleanername := cleanernameFields[0].Descriptor()
+	// cleanername.CleanernameValidator is a validator for the "cleanername" field. It is called by the builders before save.
+	cleanername.CleanernameValidator = cleanernameDescCleanername.Validators[0].(func(string) error)
 	employeeFields := schema.Employee{}.Fields()
 	_ = employeeFields
 	// employeeDescEmployeename is the schema descriptor for employeename field.
@@ -28,6 +36,12 @@ func init() {
 	employeeDescPassword := employeeFields[2].Descriptor()
 	// employee.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	employee.PasswordValidator = employeeDescPassword.Validators[0].(func(string) error)
+	lengthtimeFields := schema.LengthTime{}.Fields()
+	_ = lengthtimeFields
+	// lengthtimeDescLengthtime is the schema descriptor for lengthtime field.
+	lengthtimeDescLengthtime := lengthtimeFields[0].Descriptor()
+	// lengthtime.LengthtimeValidator is a validator for the "lengthtime" field. It is called by the builders before save.
+	lengthtime.LengthtimeValidator = lengthtimeDescLengthtime.Validators[0].(func(string) error)
 	quantityFields := schema.Quantity{}.Fields()
 	_ = quantityFields
 	// quantityDescQuantity is the schema descriptor for quantity field.

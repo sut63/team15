@@ -9,6 +9,32 @@ import (
 	"github.com/team15/app/ent"
 )
 
+// The CleanerNameFunc type is an adapter to allow the use of ordinary
+// function as CleanerName mutator.
+type CleanerNameFunc func(context.Context, *ent.CleanerNameMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CleanerNameFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CleanerNameMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CleanerNameMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The CleaningRoomFunc type is an adapter to allow the use of ordinary
+// function as CleaningRoom mutator.
+type CleaningRoomFunc func(context.Context, *ent.CleaningRoomMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CleaningRoomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CleaningRoomMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CleaningRoomMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The DepositFunc type is an adapter to allow the use of ordinary
 // function as Deposit mutator.
 type DepositFunc func(context.Context, *ent.DepositMutation) (ent.Value, error)
@@ -57,6 +83,19 @@ func (f FacilityFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	mv, ok := m.(*ent.FacilityMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FacilityMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The LengthTimeFunc type is an adapter to allow the use of ordinary
+// function as LengthTime mutator.
+type LengthTimeFunc func(context.Context, *ent.LengthTimeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f LengthTimeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.LengthTimeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LengthTimeMutation", m)
 	}
 	return f(ctx, mv)
 }

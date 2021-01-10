@@ -432,6 +432,34 @@ func HasNearbyplaceWith(preds ...predicate.NearbyPlace) predicate.Room {
 	})
 }
 
+// HasCleaningrooms applies the HasEdge predicate on the "cleaningrooms" edge.
+func HasCleaningrooms() predicate.Room {
+	return predicate.Room(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CleaningroomsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CleaningroomsTable, CleaningroomsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
+func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.Room {
+	return predicate.Room(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CleaningroomsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CleaningroomsTable, CleaningroomsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Room) predicate.Room {
 	return predicate.Room(func(s *sql.Selector) {

@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facility"
 	"github.com/team15/app/ent/nearbyplace"
@@ -30,12 +31,13 @@ type RoomQuery struct {
 	unique     []string
 	predicates []predicate.Room
 	// eager-loading edges.
-	withQuantity    *QuantityQuery
-	withStaytype    *StayTypeQuery
-	withFacilities  *FacilityQuery
-	withEquipments  *EquipmentQuery
-	withNearbyplace *NearbyPlaceQuery
-	withFKs         bool
+	withQuantity      *QuantityQuery
+	withStaytype      *StayTypeQuery
+	withFacilities    *FacilityQuery
+	withEquipments    *EquipmentQuery
+	withNearbyplace   *NearbyPlaceQuery
+	withCleaningrooms *CleaningRoomQuery
+	withFKs           bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -148,6 +150,24 @@ func (rq *RoomQuery) QueryNearbyplace() *NearbyPlaceQuery {
 			sqlgraph.From(room.Table, room.FieldID, rq.sqlQuery()),
 			sqlgraph.To(nearbyplace.Table, nearbyplace.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, room.NearbyplaceTable, room.NearbyplacePrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCleaningrooms chains the current query on the cleaningrooms edge.
+func (rq *RoomQuery) QueryCleaningrooms() *CleaningRoomQuery {
+	query := &CleaningRoomQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(room.Table, room.FieldID, rq.sqlQuery()),
+			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, room.CleaningroomsTable, room.CleaningroomsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -389,6 +409,17 @@ func (rq *RoomQuery) WithNearbyplace(opts ...func(*NearbyPlaceQuery)) *RoomQuery
 	return rq
 }
 
+//  WithCleaningrooms tells the query-builder to eager-loads the nodes that are connected to
+// the "cleaningrooms" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) *RoomQuery {
+	query := &CleaningRoomQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withCleaningrooms = query
+	return rq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -456,12 +487,13 @@ func (rq *RoomQuery) sqlAll(ctx context.Context) ([]*Room, error) {
 		nodes       = []*Room{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [6]bool{
 			rq.withQuantity != nil,
 			rq.withStaytype != nil,
 			rq.withFacilities != nil,
 			rq.withEquipments != nil,
 			rq.withNearbyplace != nil,
+			rq.withCleaningrooms != nil,
 		}
 	)
 	if rq.withQuantity != nil || rq.withStaytype != nil {
@@ -730,6 +762,34 @@ func (rq *RoomQuery) sqlAll(ctx context.Context) ([]*Room, error) {
 			for i := range nodes {
 				nodes[i].Edges.Nearbyplace = append(nodes[i].Edges.Nearbyplace, n)
 			}
+		}
+	}
+
+	if query := rq.withCleaningrooms; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Room)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.CleaningRoom(func(s *sql.Selector) {
+			s.Where(sql.InValues(room.CleaningroomsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.room_cleaningrooms
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "room_cleaningrooms" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "room_cleaningrooms" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Cleaningrooms = append(node.Edges.Cleaningrooms, n)
 		}
 	}
 

@@ -33,6 +33,232 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/cleanernames": {
+            "get": {
+                "description": "list cleanername entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List cleanername entities",
+                "operationId": "list-cleanername",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.CleanerName"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/cleanernames/{id}": {
+            "get": {
+                "description": "get cleanername by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a cleanername entity by ID",
+                "operationId": "get-cleanername",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "CleanerName ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.CleanerName"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/cleaningrooms": {
+            "get": {
+                "description": "list cleaningroom entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List cleaningroom entities",
+                "operationId": "list-cleaningroom",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.CleaningRoom"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create cleaningroom",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create cleaningroom",
+                "operationId": "create-cleaningroom",
+                "parameters": [
+                    {
+                        "description": "CleaningRoom entity",
+                        "name": "cleaningroom",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.CleaningRoom"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.CleaningRoom"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/cleaningrooms/{id}": {
+            "get": {
+                "description": "get cleaningroom by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a cleaningroom entity by ID",
+                "operationId": "get-cleaningroom",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "CleaningRoom ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.CleaningRoom"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/deposits": {
             "get": {
                 "description": "list deposit entities",
@@ -636,6 +862,98 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/ent.Facility"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/lengthtimes": {
+            "get": {
+                "description": "list lengthtime entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List lengthtime entities",
+                "operationId": "list-lengthtime",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.LengthTime"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/lengthtimes/{id}": {
+            "get": {
+                "description": "get lengthtime by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a lengthtime entity by ID",
+                "operationId": "get-lengthtime",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "LengthTime ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.LengthTime"
                         }
                     },
                     "400": {
@@ -1554,6 +1872,78 @@ var doc = `{
                 }
             }
         },
+        "ent.CleanerName": {
+            "type": "object",
+            "properties": {
+                "cleanername": {
+                    "description": "Cleanername holds the value of the \"cleanername\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CleanerNameQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.CleanerNameEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.CleanerNameEdges": {
+            "type": "object",
+            "properties": {
+                "cleaningrooms": {
+                    "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.CleaningRoom"
+                    }
+                }
+            }
+        },
+        "ent.CleaningRoom": {
+            "type": "object",
+            "properties": {
+                "dateandstarttime": {
+                    "description": "Dateandstarttime holds the value of the \"dateandstarttime\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CleaningRoomQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.CleaningRoomEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "note": {
+                    "description": "Note holds the value of the \"note\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.CleaningRoomEdges": {
+            "type": "object",
+            "properties": {
+                "cleanerName": {
+                    "description": "CleanerName holds the value of the CleanerName edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.CleanerName"
+                },
+                "lengthTime": {
+                    "description": "LengthTime holds the value of the LengthTime edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.LengthTime"
+                },
+                "room": {
+                    "description": "Room holds the value of the Room edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Room"
+                }
+            }
+        },
         "ent.Deposit": {
             "type": "object",
             "properties": {
@@ -1689,6 +2079,36 @@ var doc = `{
                 }
             }
         },
+        "ent.LengthTime": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the LengthTimeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.LengthTimeEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "lengthtime": {
+                    "description": "Lengthtime holds the value of the \"lengthtime\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.LengthTimeEdges": {
+            "type": "object",
+            "properties": {
+                "cleaningrooms": {
+                    "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.CleaningRoom"
+                    }
+                }
+            }
+        },
         "ent.NearbyPlace": {
             "type": "object",
             "properties": {
@@ -1774,6 +2194,13 @@ var doc = `{
         "ent.RoomEdges": {
             "type": "object",
             "properties": {
+                "cleaningrooms": {
+                    "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.CleaningRoom"
+                    }
+                },
                 "equipments": {
                     "description": "Equipments holds the value of the equipments edge.",
                     "type": "array",
