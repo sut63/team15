@@ -22,6 +22,8 @@ const (
 	EdgeEquipments = "equipments"
 	// EdgeNearbyplace holds the string denoting the nearbyplace edge name in mutations.
 	EdgeNearbyplace = "nearbyplace"
+	// EdgeCleaningrooms holds the string denoting the cleaningrooms edge name in mutations.
+	EdgeCleaningrooms = "cleaningrooms"
 
 	// Table holds the table name of the room in the database.
 	Table = "rooms"
@@ -54,6 +56,13 @@ const (
 	// NearbyplaceInverseTable is the table name for the NearbyPlace entity.
 	// It exists in this package in order to avoid circular dependency with the "nearbyplace" package.
 	NearbyplaceInverseTable = "nearby_places"
+	// CleaningroomsTable is the table the holds the cleaningrooms relation/edge.
+	CleaningroomsTable = "cleaning_rooms"
+	// CleaningroomsInverseTable is the table name for the CleaningRoom entity.
+	// It exists in this package in order to avoid circular dependency with the "cleaningroom" package.
+	CleaningroomsInverseTable = "cleaning_rooms"
+	// CleaningroomsColumn is the table column denoting the cleaningrooms relation/edge.
+	CleaningroomsColumn = "room_cleaningrooms"
 )
 
 // Columns holds all SQL columns for room fields.

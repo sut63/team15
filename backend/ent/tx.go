@@ -12,6 +12,10 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// CleanerName is the client for interacting with the CleanerName builders.
+	CleanerName *CleanerNameClient
+	// CleaningRoom is the client for interacting with the CleaningRoom builders.
+	CleaningRoom *CleaningRoomClient
 	// Deposit is the client for interacting with the Deposit builders.
 	Deposit *DepositClient
 	// Employee is the client for interacting with the Employee builders.
@@ -20,6 +24,8 @@ type Tx struct {
 	Equipment *EquipmentClient
 	// Facility is the client for interacting with the Facility builders.
 	Facility *FacilityClient
+	// LengthTime is the client for interacting with the LengthTime builders.
+	LengthTime *LengthTimeClient
 	// NearbyPlace is the client for interacting with the NearbyPlace builders.
 	NearbyPlace *NearbyPlaceClient
 	// Quantity is the client for interacting with the Quantity builders.
@@ -165,10 +171,13 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.CleanerName = NewCleanerNameClient(tx.config)
+	tx.CleaningRoom = NewCleaningRoomClient(tx.config)
 	tx.Deposit = NewDepositClient(tx.config)
 	tx.Employee = NewEmployeeClient(tx.config)
 	tx.Equipment = NewEquipmentClient(tx.config)
 	tx.Facility = NewFacilityClient(tx.config)
+	tx.LengthTime = NewLengthTimeClient(tx.config)
 	tx.NearbyPlace = NewNearbyPlaceClient(tx.config)
 	tx.Quantity = NewQuantityClient(tx.config)
 	tx.Room = NewRoomClient(tx.config)
@@ -183,7 +192,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Deposit.QueryXXX(), the query will be executed
+// applies a query, for example: CleanerName.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

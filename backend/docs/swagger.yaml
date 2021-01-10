@@ -28,6 +28,62 @@ definitions:
       stayType:
         type: integer
     type: object
+  ent.CleanerName:
+    properties:
+      cleanername:
+        description: Cleanername holds the value of the "cleanername" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.CleanerNameEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the CleanerNameQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.CleanerNameEdges:
+    properties:
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
+    type: object
+  ent.CleaningRoom:
+    properties:
+      dateandstarttime:
+        description: Dateandstarttime holds the value of the "dateandstarttime" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.CleaningRoomEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the CleaningRoomQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      note:
+        description: Note holds the value of the "note" field.
+        type: string
+    type: object
+  ent.CleaningRoomEdges:
+    properties:
+      cleanerName:
+        $ref: '#/definitions/ent.CleanerName'
+        description: CleanerName holds the value of the CleanerName edge.
+        type: object
+      lengthTime:
+        $ref: '#/definitions/ent.LengthTime'
+        description: LengthTime holds the value of the LengthTime edge.
+        type: object
+      room:
+        $ref: '#/definitions/ent.Room'
+        description: Room holds the value of the Room edge.
+        type: object
+    type: object
   ent.Deposit:
     properties:
       addedtime:
@@ -132,6 +188,29 @@ definitions:
           $ref: '#/definitions/ent.Room'
         type: array
     type: object
+  ent.LengthTime:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.LengthTimeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the LengthTimeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      lengthtime:
+        description: Lengthtime holds the value of the "lengthtime" field.
+        type: string
+    type: object
+  ent.LengthTimeEdges:
+    properties:
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
+    type: object
   ent.NearbyPlace:
     properties:
       edges:
@@ -198,6 +277,11 @@ definitions:
     type: object
   ent.RoomEdges:
     properties:
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
       equipments:
         description: Equipments holds the value of the equipments edge.
         items:
@@ -285,6 +369,156 @@ info:
   title: SUT SA Example API
   version: "1.0"
 paths:
+  /cleanernames:
+    get:
+      description: list cleanername entities
+      operationId: list-cleanername
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.CleanerName'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List cleanername entities
+  /cleanernames/{id}:
+    get:
+      description: get cleanername by ID
+      operationId: get-cleanername
+      parameters:
+      - description: CleanerName ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.CleanerName'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a cleanername entity by ID
+  /cleaningrooms:
+    get:
+      description: list cleaningroom entities
+      operationId: list-cleaningroom
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.CleaningRoom'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List cleaningroom entities
+    post:
+      consumes:
+      - application/json
+      description: Create cleaningroom
+      operationId: create-cleaningroom
+      parameters:
+      - description: CleaningRoom entity
+        in: body
+        name: cleaningroom
+        required: true
+        schema:
+          $ref: '#/definitions/ent.CleaningRoom'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.CleaningRoom'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create cleaningroom
+  /cleaningrooms/{id}:
+    get:
+      description: get cleaningroom by ID
+      operationId: get-cleaningroom
+      parameters:
+      - description: CleaningRoom ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.CleaningRoom'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a cleaningroom entity by ID
   /deposits:
     get:
       description: list deposit entities
@@ -701,6 +935,67 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a facility entity by ID
+  /lengthtimes:
+    get:
+      description: list lengthtime entities
+      operationId: list-lengthtime
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.LengthTime'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List lengthtime entities
+  /lengthtimes/{id}:
+    get:
+      description: get lengthtime by ID
+      operationId: get-lengthtime
+      parameters:
+      - description: LengthTime ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.LengthTime'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a lengthtime entity by ID
   /nearbyplace/{id}:
     delete:
       description: get nearbyplace by ID

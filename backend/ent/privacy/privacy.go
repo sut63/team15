@@ -210,6 +210,54 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
+// The CleanerNameQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type CleanerNameQueryRuleFunc func(context.Context, *ent.CleanerNameQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f CleanerNameQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.CleanerNameQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.CleanerNameQuery", q)
+}
+
+// The CleanerNameMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type CleanerNameMutationRuleFunc func(context.Context, *ent.CleanerNameMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f CleanerNameMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.CleanerNameMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.CleanerNameMutation", m)
+}
+
+// The CleaningRoomQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type CleaningRoomQueryRuleFunc func(context.Context, *ent.CleaningRoomQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f CleaningRoomQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.CleaningRoomQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.CleaningRoomQuery", q)
+}
+
+// The CleaningRoomMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type CleaningRoomMutationRuleFunc func(context.Context, *ent.CleaningRoomMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f CleaningRoomMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.CleaningRoomMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.CleaningRoomMutation", m)
+}
+
 // The DepositQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type DepositQueryRuleFunc func(context.Context, *ent.DepositQuery) error
@@ -304,6 +352,30 @@ func (f FacilityMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FacilityMutation", m)
+}
+
+// The LengthTimeQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type LengthTimeQueryRuleFunc func(context.Context, *ent.LengthTimeQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f LengthTimeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.LengthTimeQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.LengthTimeQuery", q)
+}
+
+// The LengthTimeMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type LengthTimeMutationRuleFunc func(context.Context, *ent.LengthTimeMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f LengthTimeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.LengthTimeMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LengthTimeMutation", m)
 }
 
 // The NearbyPlaceQueryRuleFunc type is an adapter to allow the use of ordinary

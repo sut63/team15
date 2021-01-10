@@ -40,9 +40,11 @@ type RoomEdges struct {
 	Equipments []*Equipment
 	// Nearbyplace holds the value of the nearbyplace edge.
 	Nearbyplace []*NearbyPlace
+	// Cleaningrooms holds the value of the cleaningrooms edge.
+	Cleaningrooms []*CleaningRoom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // QuantityOrErr returns the Quantity value or an error if the edge
@@ -98,6 +100,15 @@ func (e RoomEdges) NearbyplaceOrErr() ([]*NearbyPlace, error) {
 		return e.Nearbyplace, nil
 	}
 	return nil, &NotLoadedError{edge: "nearbyplace"}
+}
+
+// CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoomEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+	if e.loadedTypes[5] {
+		return e.Cleaningrooms, nil
+	}
+	return nil, &NotLoadedError{edge: "cleaningrooms"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -180,6 +191,11 @@ func (r *Room) QueryEquipments() *EquipmentQuery {
 // QueryNearbyplace queries the nearbyplace edge of the Room.
 func (r *Room) QueryNearbyplace() *NearbyPlaceQuery {
 	return (&RoomClient{config: r.config}).QueryNearbyplace(r)
+}
+
+// QueryCleaningrooms queries the cleaningrooms edge of the Room.
+func (r *Room) QueryCleaningrooms() *CleaningRoomQuery {
+	return (&RoomClient{config: r.config}).QueryCleaningrooms(r)
 }
 
 // Update returns a builder for updating this Room.

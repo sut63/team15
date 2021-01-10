@@ -8,6 +8,56 @@ import (
 )
 
 var (
+	// CleanerNamesColumns holds the columns for the "cleaner_names" table.
+	CleanerNamesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "cleanername", Type: field.TypeString, Unique: true},
+	}
+	// CleanerNamesTable holds the schema information for the "cleaner_names" table.
+	CleanerNamesTable = &schema.Table{
+		Name:        "cleaner_names",
+		Columns:     CleanerNamesColumns,
+		PrimaryKey:  []*schema.Column{CleanerNamesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// CleaningRoomsColumns holds the columns for the "cleaning_rooms" table.
+	CleaningRoomsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "dateandstarttime", Type: field.TypeTime},
+		{Name: "note", Type: field.TypeString},
+		{Name: "cleanerroom_id", Type: field.TypeInt, Nullable: true},
+		{Name: "lengthtime_id", Type: field.TypeInt, Nullable: true},
+		{Name: "room_cleaningrooms", Type: field.TypeInt, Nullable: true},
+	}
+	// CleaningRoomsTable holds the schema information for the "cleaning_rooms" table.
+	CleaningRoomsTable = &schema.Table{
+		Name:       "cleaning_rooms",
+		Columns:    CleaningRoomsColumns,
+		PrimaryKey: []*schema.Column{CleaningRoomsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "cleaning_rooms_cleaner_names_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[3]},
+
+				RefColumns: []*schema.Column{CleanerNamesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "cleaning_rooms_length_times_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[4]},
+
+				RefColumns: []*schema.Column{LengthTimesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "cleaning_rooms_rooms_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[5]},
+
+				RefColumns: []*schema.Column{RoomsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// DepositsColumns holds the columns for the "deposits" table.
 	DepositsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -74,6 +124,18 @@ var (
 		Name:        "facilities",
 		Columns:     FacilitiesColumns,
 		PrimaryKey:  []*schema.Column{FacilitiesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// LengthTimesColumns holds the columns for the "length_times" table.
+	LengthTimesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "lengthtime", Type: field.TypeString, Unique: true},
+	}
+	// LengthTimesTable holds the schema information for the "length_times" table.
+	LengthTimesTable = &schema.Table{
+		Name:        "length_times",
+		Columns:     LengthTimesColumns,
+		PrimaryKey:  []*schema.Column{LengthTimesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// NearbyPlacesColumns holds the columns for the "nearby_places" table.
@@ -237,10 +299,13 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		CleanerNamesTable,
+		CleaningRoomsTable,
 		DepositsTable,
 		EmployeesTable,
 		EquipmentTable,
 		FacilitiesTable,
+		LengthTimesTable,
 		NearbyPlacesTable,
 		QuantitiesTable,
 		RoomsTable,
@@ -253,6 +318,9 @@ var (
 )
 
 func init() {
+	CleaningRoomsTable.ForeignKeys[0].RefTable = CleanerNamesTable
+	CleaningRoomsTable.ForeignKeys[1].RefTable = LengthTimesTable
+	CleaningRoomsTable.ForeignKeys[2].RefTable = RoomsTable
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
 	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
 	RoomsTable.ForeignKeys[0].RefTable = QuantitiesTable

@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facility"
 	"github.com/team15/app/ent/nearbyplace"
@@ -134,6 +135,21 @@ func (ru *RoomUpdate) AddNearbyplace(n ...*NearbyPlace) *RoomUpdate {
 	return ru.AddNearbyplaceIDs(ids...)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ru *RoomUpdate) AddCleaningroomIDs(ids ...int) *RoomUpdate {
+	ru.mutation.AddCleaningroomIDs(ids...)
+	return ru
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ru *RoomUpdate) AddCleaningrooms(c ...*CleaningRoom) *RoomUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomMutation object of the builder.
 func (ru *RoomUpdate) Mutation() *RoomMutation {
 	return ru.mutation
@@ -194,6 +210,21 @@ func (ru *RoomUpdate) RemoveNearbyplace(n ...*NearbyPlace) *RoomUpdate {
 		ids[i] = n[i].ID
 	}
 	return ru.RemoveNearbyplaceIDs(ids...)
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (ru *RoomUpdate) RemoveCleaningroomIDs(ids ...int) *RoomUpdate {
+	ru.mutation.RemoveCleaningroomIDs(ids...)
+	return ru
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (ru *RoomUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *RoomUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -476,6 +507,44 @@ func (ru *RoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := ru.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   room.CleaningroomsTable,
+			Columns: []string{room.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   room.CleaningroomsTable,
+			Columns: []string{room.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{room.Label}
@@ -596,6 +665,21 @@ func (ruo *RoomUpdateOne) AddNearbyplace(n ...*NearbyPlace) *RoomUpdateOne {
 	return ruo.AddNearbyplaceIDs(ids...)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ruo *RoomUpdateOne) AddCleaningroomIDs(ids ...int) *RoomUpdateOne {
+	ruo.mutation.AddCleaningroomIDs(ids...)
+	return ruo
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ruo *RoomUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *RoomUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomMutation object of the builder.
 func (ruo *RoomUpdateOne) Mutation() *RoomMutation {
 	return ruo.mutation
@@ -656,6 +740,21 @@ func (ruo *RoomUpdateOne) RemoveNearbyplace(n ...*NearbyPlace) *RoomUpdateOne {
 		ids[i] = n[i].ID
 	}
 	return ruo.RemoveNearbyplaceIDs(ids...)
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (ruo *RoomUpdateOne) RemoveCleaningroomIDs(ids ...int) *RoomUpdateOne {
+	ruo.mutation.RemoveCleaningroomIDs(ids...)
+	return ruo
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (ruo *RoomUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *RoomUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -928,6 +1027,44 @@ func (ruo *RoomUpdateOne) sqlSave(ctx context.Context) (r *Room, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: nearbyplace.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := ruo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   room.CleaningroomsTable,
+			Columns: []string{room.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   room.CleaningroomsTable,
+			Columns: []string{room.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}

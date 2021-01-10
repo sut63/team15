@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facility"
 	"github.com/team15/app/ent/nearbyplace"
@@ -117,6 +118,21 @@ func (rc *RoomCreate) AddNearbyplace(n ...*NearbyPlace) *RoomCreate {
 		ids[i] = n[i].ID
 	}
 	return rc.AddNearbyplaceIDs(ids...)
+}
+
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (rc *RoomCreate) AddCleaningroomIDs(ids ...int) *RoomCreate {
+	rc.mutation.AddCleaningroomIDs(ids...)
+	return rc
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (rc *RoomCreate) AddCleaningrooms(c ...*CleaningRoom) *RoomCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return rc.AddCleaningroomIDs(ids...)
 }
 
 // Mutation returns the RoomMutation object of the builder.
@@ -300,6 +316,25 @@ func (rc *RoomCreate) createSpec() (*Room, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: nearbyplace.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   room.CleaningroomsTable,
+			Columns: []string{room.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}
