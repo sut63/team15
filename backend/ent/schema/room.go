@@ -27,5 +27,6 @@ func (Room) Edges() []ent.Edge {
 		edge.To("facilities", Facility.Type),
 		edge.To("equipments", Equipment.Type),
 		edge.To("nearbyplace", NearbyPlace.Type),
+		edge.To("cleaningrooms", CleaningRoom.Type),
 	}
 }
