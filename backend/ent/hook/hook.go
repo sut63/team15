@@ -61,32 +61,6 @@ func (f EmployeeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
-// The EquipmentFunc type is an adapter to allow the use of ordinary
-// function as Equipment mutator.
-type EquipmentFunc func(context.Context, *ent.EquipmentMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f EquipmentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.EquipmentMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EquipmentMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The FacilityFunc type is an adapter to allow the use of ordinary
-// function as Facility mutator.
-type FacilityFunc func(context.Context, *ent.FacilityMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f FacilityFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.FacilityMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FacilityMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The LengthTimeFunc type is an adapter to allow the use of ordinary
 // function as LengthTime mutator.
 type LengthTimeFunc func(context.Context, *ent.LengthTimeMutation) (ent.Value, error)
@@ -100,45 +74,6 @@ func (f LengthTimeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
-// The NearbyPlaceFunc type is an adapter to allow the use of ordinary
-// function as NearbyPlace mutator.
-type NearbyPlaceFunc func(context.Context, *ent.NearbyPlaceMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f NearbyPlaceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.NearbyPlaceMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.NearbyPlaceMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The QuantityFunc type is an adapter to allow the use of ordinary
-// function as Quantity mutator.
-type QuantityFunc func(context.Context, *ent.QuantityMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f QuantityFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.QuantityMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.QuantityMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The RoomFunc type is an adapter to allow the use of ordinary
-// function as Room mutator.
-type RoomFunc func(context.Context, *ent.RoomMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f RoomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.RoomMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoomMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The StatusdFunc type is an adapter to allow the use of ordinary
 // function as Statusd mutator.
 type StatusdFunc func(context.Context, *ent.StatusdMutation) (ent.Value, error)
@@ -148,19 +83,6 @@ func (f StatusdFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	mv, ok := m.(*ent.StatusdMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StatusdMutation", m)
-	}
-	return f(ctx, mv)
-}
-
-// The StayTypeFunc type is an adapter to allow the use of ordinary
-// function as StayType mutator.
-type StayTypeFunc func(context.Context, *ent.StayTypeMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f StayTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.StayTypeMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StayTypeMutation", m)
 	}
 	return f(ctx, mv)
 }

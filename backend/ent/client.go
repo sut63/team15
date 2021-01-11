@@ -13,14 +13,8 @@ import (
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
-	"github.com/team15/app/ent/equipment"
-	"github.com/team15/app/ent/facility"
 	"github.com/team15/app/ent/lengthtime"
-	"github.com/team15/app/ent/nearbyplace"
-	"github.com/team15/app/ent/quantity"
-	"github.com/team15/app/ent/room"
 	"github.com/team15/app/ent/statusd"
-	"github.com/team15/app/ent/staytype"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -40,22 +34,10 @@ type Client struct {
 	Deposit *DepositClient
 	// Employee is the client for interacting with the Employee builders.
 	Employee *EmployeeClient
-	// Equipment is the client for interacting with the Equipment builders.
-	Equipment *EquipmentClient
-	// Facility is the client for interacting with the Facility builders.
-	Facility *FacilityClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
-	// NearbyPlace is the client for interacting with the NearbyPlace builders.
-	NearbyPlace *NearbyPlaceClient
-	// Quantity is the client for interacting with the Quantity builders.
-	Quantity *QuantityClient
-	// Room is the client for interacting with the Room builders.
-	Room *RoomClient
 	// Statusd is the client for interacting with the Statusd builders.
 	Statusd *StatusdClient
-	// StayType is the client for interacting with the StayType builders.
-	StayType *StayTypeClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -73,14 +55,8 @@ func (c *Client) init() {
 	c.CleaningRoom = NewCleaningRoomClient(c.config)
 	c.Deposit = NewDepositClient(c.config)
 	c.Employee = NewEmployeeClient(c.config)
-	c.Equipment = NewEquipmentClient(c.config)
-	c.Facility = NewFacilityClient(c.config)
 	c.LengthTime = NewLengthTimeClient(c.config)
-	c.NearbyPlace = NewNearbyPlaceClient(c.config)
-	c.Quantity = NewQuantityClient(c.config)
-	c.Room = NewRoomClient(c.config)
 	c.Statusd = NewStatusdClient(c.config)
-	c.StayType = NewStayTypeClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -117,14 +93,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		CleaningRoom: NewCleaningRoomClient(cfg),
 		Deposit:      NewDepositClient(cfg),
 		Employee:     NewEmployeeClient(cfg),
-		Equipment:    NewEquipmentClient(cfg),
-		Facility:     NewFacilityClient(cfg),
 		LengthTime:   NewLengthTimeClient(cfg),
-		NearbyPlace:  NewNearbyPlaceClient(cfg),
-		Quantity:     NewQuantityClient(cfg),
-		Room:         NewRoomClient(cfg),
 		Statusd:      NewStatusdClient(cfg),
-		StayType:     NewStayTypeClient(cfg),
 	}, nil
 }
 
@@ -144,14 +114,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		CleaningRoom: NewCleaningRoomClient(cfg),
 		Deposit:      NewDepositClient(cfg),
 		Employee:     NewEmployeeClient(cfg),
-		Equipment:    NewEquipmentClient(cfg),
-		Facility:     NewFacilityClient(cfg),
 		LengthTime:   NewLengthTimeClient(cfg),
-		NearbyPlace:  NewNearbyPlaceClient(cfg),
-		Quantity:     NewQuantityClient(cfg),
-		Room:         NewRoomClient(cfg),
 		Statusd:      NewStatusdClient(cfg),
-		StayType:     NewStayTypeClient(cfg),
 	}, nil
 }
 
@@ -184,14 +148,8 @@ func (c *Client) Use(hooks ...Hook) {
 	c.CleaningRoom.Use(hooks...)
 	c.Deposit.Use(hooks...)
 	c.Employee.Use(hooks...)
-	c.Equipment.Use(hooks...)
-	c.Facility.Use(hooks...)
 	c.LengthTime.Use(hooks...)
-	c.NearbyPlace.Use(hooks...)
-	c.Quantity.Use(hooks...)
-	c.Room.Use(hooks...)
 	c.Statusd.Use(hooks...)
-	c.StayType.Use(hooks...)
 }
 
 // CleanerNameClient is a client for the CleanerName schema.
@@ -369,22 +327,6 @@ func (c *CleaningRoomClient) GetX(ctx context.Context, id int) *CleaningRoom {
 		panic(err)
 	}
 	return cr
-}
-
-// QueryRoom queries the Room edge of a CleaningRoom.
-func (c *CleaningRoomClient) QueryRoom(cr *CleaningRoom) *RoomQuery {
-	query := &RoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.RoomTable, cleaningroom.RoomColumn),
-		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
 }
 
 // QueryCleanerName queries the CleanerName edge of a CleaningRoom.
@@ -638,204 +580,6 @@ func (c *EmployeeClient) Hooks() []Hook {
 	return c.hooks.Employee
 }
 
-// EquipmentClient is a client for the Equipment schema.
-type EquipmentClient struct {
-	config
-}
-
-// NewEquipmentClient returns a client for the Equipment from the given config.
-func NewEquipmentClient(c config) *EquipmentClient {
-	return &EquipmentClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `equipment.Hooks(f(g(h())))`.
-func (c *EquipmentClient) Use(hooks ...Hook) {
-	c.hooks.Equipment = append(c.hooks.Equipment, hooks...)
-}
-
-// Create returns a create builder for Equipment.
-func (c *EquipmentClient) Create() *EquipmentCreate {
-	mutation := newEquipmentMutation(c.config, OpCreate)
-	return &EquipmentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Equipment.
-func (c *EquipmentClient) Update() *EquipmentUpdate {
-	mutation := newEquipmentMutation(c.config, OpUpdate)
-	return &EquipmentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *EquipmentClient) UpdateOne(e *Equipment) *EquipmentUpdateOne {
-	mutation := newEquipmentMutation(c.config, OpUpdateOne, withEquipment(e))
-	return &EquipmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *EquipmentClient) UpdateOneID(id int) *EquipmentUpdateOne {
-	mutation := newEquipmentMutation(c.config, OpUpdateOne, withEquipmentID(id))
-	return &EquipmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Equipment.
-func (c *EquipmentClient) Delete() *EquipmentDelete {
-	mutation := newEquipmentMutation(c.config, OpDelete)
-	return &EquipmentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *EquipmentClient) DeleteOne(e *Equipment) *EquipmentDeleteOne {
-	return c.DeleteOneID(e.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *EquipmentClient) DeleteOneID(id int) *EquipmentDeleteOne {
-	builder := c.Delete().Where(equipment.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &EquipmentDeleteOne{builder}
-}
-
-// Create returns a query builder for Equipment.
-func (c *EquipmentClient) Query() *EquipmentQuery {
-	return &EquipmentQuery{config: c.config}
-}
-
-// Get returns a Equipment entity by its id.
-func (c *EquipmentClient) Get(ctx context.Context, id int) (*Equipment, error) {
-	return c.Query().Where(equipment.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *EquipmentClient) GetX(ctx context.Context, id int) *Equipment {
-	e, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return e
-}
-
-// QueryRoom queries the room edge of a Equipment.
-func (c *EquipmentClient) QueryRoom(e *Equipment) *RoomQuery {
-	query := &RoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := e.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(equipment.Table, equipment.FieldID, id),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, equipment.RoomTable, equipment.RoomPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *EquipmentClient) Hooks() []Hook {
-	return c.hooks.Equipment
-}
-
-// FacilityClient is a client for the Facility schema.
-type FacilityClient struct {
-	config
-}
-
-// NewFacilityClient returns a client for the Facility from the given config.
-func NewFacilityClient(c config) *FacilityClient {
-	return &FacilityClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `facility.Hooks(f(g(h())))`.
-func (c *FacilityClient) Use(hooks ...Hook) {
-	c.hooks.Facility = append(c.hooks.Facility, hooks...)
-}
-
-// Create returns a create builder for Facility.
-func (c *FacilityClient) Create() *FacilityCreate {
-	mutation := newFacilityMutation(c.config, OpCreate)
-	return &FacilityCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Facility.
-func (c *FacilityClient) Update() *FacilityUpdate {
-	mutation := newFacilityMutation(c.config, OpUpdate)
-	return &FacilityUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *FacilityClient) UpdateOne(f *Facility) *FacilityUpdateOne {
-	mutation := newFacilityMutation(c.config, OpUpdateOne, withFacility(f))
-	return &FacilityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *FacilityClient) UpdateOneID(id int) *FacilityUpdateOne {
-	mutation := newFacilityMutation(c.config, OpUpdateOne, withFacilityID(id))
-	return &FacilityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Facility.
-func (c *FacilityClient) Delete() *FacilityDelete {
-	mutation := newFacilityMutation(c.config, OpDelete)
-	return &FacilityDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *FacilityClient) DeleteOne(f *Facility) *FacilityDeleteOne {
-	return c.DeleteOneID(f.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *FacilityClient) DeleteOneID(id int) *FacilityDeleteOne {
-	builder := c.Delete().Where(facility.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &FacilityDeleteOne{builder}
-}
-
-// Create returns a query builder for Facility.
-func (c *FacilityClient) Query() *FacilityQuery {
-	return &FacilityQuery{config: c.config}
-}
-
-// Get returns a Facility entity by its id.
-func (c *FacilityClient) Get(ctx context.Context, id int) (*Facility, error) {
-	return c.Query().Where(facility.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *FacilityClient) GetX(ctx context.Context, id int) *Facility {
-	f, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return f
-}
-
-// QueryRoom queries the room edge of a Facility.
-func (c *FacilityClient) QueryRoom(f *Facility) *RoomQuery {
-	query := &RoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := f.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(facility.Table, facility.FieldID, id),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, facility.RoomTable, facility.RoomPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *FacilityClient) Hooks() []Hook {
-	return c.hooks.Facility
-}
-
 // LengthTimeClient is a client for the LengthTime schema.
 type LengthTimeClient struct {
 	config
@@ -935,383 +679,6 @@ func (c *LengthTimeClient) Hooks() []Hook {
 	return c.hooks.LengthTime
 }
 
-// NearbyPlaceClient is a client for the NearbyPlace schema.
-type NearbyPlaceClient struct {
-	config
-}
-
-// NewNearbyPlaceClient returns a client for the NearbyPlace from the given config.
-func NewNearbyPlaceClient(c config) *NearbyPlaceClient {
-	return &NearbyPlaceClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `nearbyplace.Hooks(f(g(h())))`.
-func (c *NearbyPlaceClient) Use(hooks ...Hook) {
-	c.hooks.NearbyPlace = append(c.hooks.NearbyPlace, hooks...)
-}
-
-// Create returns a create builder for NearbyPlace.
-func (c *NearbyPlaceClient) Create() *NearbyPlaceCreate {
-	mutation := newNearbyPlaceMutation(c.config, OpCreate)
-	return &NearbyPlaceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for NearbyPlace.
-func (c *NearbyPlaceClient) Update() *NearbyPlaceUpdate {
-	mutation := newNearbyPlaceMutation(c.config, OpUpdate)
-	return &NearbyPlaceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *NearbyPlaceClient) UpdateOne(np *NearbyPlace) *NearbyPlaceUpdateOne {
-	mutation := newNearbyPlaceMutation(c.config, OpUpdateOne, withNearbyPlace(np))
-	return &NearbyPlaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *NearbyPlaceClient) UpdateOneID(id int) *NearbyPlaceUpdateOne {
-	mutation := newNearbyPlaceMutation(c.config, OpUpdateOne, withNearbyPlaceID(id))
-	return &NearbyPlaceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for NearbyPlace.
-func (c *NearbyPlaceClient) Delete() *NearbyPlaceDelete {
-	mutation := newNearbyPlaceMutation(c.config, OpDelete)
-	return &NearbyPlaceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *NearbyPlaceClient) DeleteOne(np *NearbyPlace) *NearbyPlaceDeleteOne {
-	return c.DeleteOneID(np.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *NearbyPlaceClient) DeleteOneID(id int) *NearbyPlaceDeleteOne {
-	builder := c.Delete().Where(nearbyplace.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &NearbyPlaceDeleteOne{builder}
-}
-
-// Create returns a query builder for NearbyPlace.
-func (c *NearbyPlaceClient) Query() *NearbyPlaceQuery {
-	return &NearbyPlaceQuery{config: c.config}
-}
-
-// Get returns a NearbyPlace entity by its id.
-func (c *NearbyPlaceClient) Get(ctx context.Context, id int) (*NearbyPlace, error) {
-	return c.Query().Where(nearbyplace.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *NearbyPlaceClient) GetX(ctx context.Context, id int) *NearbyPlace {
-	np, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return np
-}
-
-// QueryRoom queries the room edge of a NearbyPlace.
-func (c *NearbyPlaceClient) QueryRoom(np *NearbyPlace) *RoomQuery {
-	query := &RoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := np.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(nearbyplace.Table, nearbyplace.FieldID, id),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, nearbyplace.RoomTable, nearbyplace.RoomPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(np.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *NearbyPlaceClient) Hooks() []Hook {
-	return c.hooks.NearbyPlace
-}
-
-// QuantityClient is a client for the Quantity schema.
-type QuantityClient struct {
-	config
-}
-
-// NewQuantityClient returns a client for the Quantity from the given config.
-func NewQuantityClient(c config) *QuantityClient {
-	return &QuantityClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `quantity.Hooks(f(g(h())))`.
-func (c *QuantityClient) Use(hooks ...Hook) {
-	c.hooks.Quantity = append(c.hooks.Quantity, hooks...)
-}
-
-// Create returns a create builder for Quantity.
-func (c *QuantityClient) Create() *QuantityCreate {
-	mutation := newQuantityMutation(c.config, OpCreate)
-	return &QuantityCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Quantity.
-func (c *QuantityClient) Update() *QuantityUpdate {
-	mutation := newQuantityMutation(c.config, OpUpdate)
-	return &QuantityUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *QuantityClient) UpdateOne(q *Quantity) *QuantityUpdateOne {
-	mutation := newQuantityMutation(c.config, OpUpdateOne, withQuantity(q))
-	return &QuantityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *QuantityClient) UpdateOneID(id int) *QuantityUpdateOne {
-	mutation := newQuantityMutation(c.config, OpUpdateOne, withQuantityID(id))
-	return &QuantityUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Quantity.
-func (c *QuantityClient) Delete() *QuantityDelete {
-	mutation := newQuantityMutation(c.config, OpDelete)
-	return &QuantityDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *QuantityClient) DeleteOne(q *Quantity) *QuantityDeleteOne {
-	return c.DeleteOneID(q.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *QuantityClient) DeleteOneID(id int) *QuantityDeleteOne {
-	builder := c.Delete().Where(quantity.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &QuantityDeleteOne{builder}
-}
-
-// Create returns a query builder for Quantity.
-func (c *QuantityClient) Query() *QuantityQuery {
-	return &QuantityQuery{config: c.config}
-}
-
-// Get returns a Quantity entity by its id.
-func (c *QuantityClient) Get(ctx context.Context, id int) (*Quantity, error) {
-	return c.Query().Where(quantity.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *QuantityClient) GetX(ctx context.Context, id int) *Quantity {
-	q, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return q
-}
-
-// QueryRoom queries the room edge of a Quantity.
-func (c *QuantityClient) QueryRoom(q *Quantity) *RoomQuery {
-	query := &RoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := q.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(quantity.Table, quantity.FieldID, id),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, quantity.RoomTable, quantity.RoomColumn),
-		)
-		fromV = sqlgraph.Neighbors(q.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *QuantityClient) Hooks() []Hook {
-	return c.hooks.Quantity
-}
-
-// RoomClient is a client for the Room schema.
-type RoomClient struct {
-	config
-}
-
-// NewRoomClient returns a client for the Room from the given config.
-func NewRoomClient(c config) *RoomClient {
-	return &RoomClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `room.Hooks(f(g(h())))`.
-func (c *RoomClient) Use(hooks ...Hook) {
-	c.hooks.Room = append(c.hooks.Room, hooks...)
-}
-
-// Create returns a create builder for Room.
-func (c *RoomClient) Create() *RoomCreate {
-	mutation := newRoomMutation(c.config, OpCreate)
-	return &RoomCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Room.
-func (c *RoomClient) Update() *RoomUpdate {
-	mutation := newRoomMutation(c.config, OpUpdate)
-	return &RoomUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *RoomClient) UpdateOne(r *Room) *RoomUpdateOne {
-	mutation := newRoomMutation(c.config, OpUpdateOne, withRoom(r))
-	return &RoomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *RoomClient) UpdateOneID(id int) *RoomUpdateOne {
-	mutation := newRoomMutation(c.config, OpUpdateOne, withRoomID(id))
-	return &RoomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Room.
-func (c *RoomClient) Delete() *RoomDelete {
-	mutation := newRoomMutation(c.config, OpDelete)
-	return &RoomDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *RoomClient) DeleteOne(r *Room) *RoomDeleteOne {
-	return c.DeleteOneID(r.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *RoomClient) DeleteOneID(id int) *RoomDeleteOne {
-	builder := c.Delete().Where(room.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &RoomDeleteOne{builder}
-}
-
-// Create returns a query builder for Room.
-func (c *RoomClient) Query() *RoomQuery {
-	return &RoomQuery{config: c.config}
-}
-
-// Get returns a Room entity by its id.
-func (c *RoomClient) Get(ctx context.Context, id int) (*Room, error) {
-	return c.Query().Where(room.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *RoomClient) GetX(ctx context.Context, id int) *Room {
-	r, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return r
-}
-
-// QueryQuantity queries the quantity edge of a Room.
-func (c *RoomClient) QueryQuantity(r *Room) *QuantityQuery {
-	query := &QuantityQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(room.Table, room.FieldID, id),
-			sqlgraph.To(quantity.Table, quantity.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, room.QuantityTable, room.QuantityColumn),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryStaytype queries the staytype edge of a Room.
-func (c *RoomClient) QueryStaytype(r *Room) *StayTypeQuery {
-	query := &StayTypeQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(room.Table, room.FieldID, id),
-			sqlgraph.To(staytype.Table, staytype.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, room.StaytypeTable, room.StaytypeColumn),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryFacilities queries the facilities edge of a Room.
-func (c *RoomClient) QueryFacilities(r *Room) *FacilityQuery {
-	query := &FacilityQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(room.Table, room.FieldID, id),
-			sqlgraph.To(facility.Table, facility.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, room.FacilitiesTable, room.FacilitiesPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryEquipments queries the equipments edge of a Room.
-func (c *RoomClient) QueryEquipments(r *Room) *EquipmentQuery {
-	query := &EquipmentQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(room.Table, room.FieldID, id),
-			sqlgraph.To(equipment.Table, equipment.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, room.EquipmentsTable, room.EquipmentsPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryNearbyplace queries the nearbyplace edge of a Room.
-func (c *RoomClient) QueryNearbyplace(r *Room) *NearbyPlaceQuery {
-	query := &NearbyPlaceQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(room.Table, room.FieldID, id),
-			sqlgraph.To(nearbyplace.Table, nearbyplace.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, room.NearbyplaceTable, room.NearbyplacePrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryCleaningrooms queries the cleaningrooms edge of a Room.
-func (c *RoomClient) QueryCleaningrooms(r *Room) *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(room.Table, room.FieldID, id),
-			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, room.CleaningroomsTable, room.CleaningroomsColumn),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *RoomClient) Hooks() []Hook {
-	return c.hooks.Room
-}
-
 // StatusdClient is a client for the Statusd schema.
 type StatusdClient struct {
 	config
@@ -1409,103 +776,4 @@ func (c *StatusdClient) QueryStatusds(s *Statusd) *DepositQuery {
 // Hooks returns the client hooks.
 func (c *StatusdClient) Hooks() []Hook {
 	return c.hooks.Statusd
-}
-
-// StayTypeClient is a client for the StayType schema.
-type StayTypeClient struct {
-	config
-}
-
-// NewStayTypeClient returns a client for the StayType from the given config.
-func NewStayTypeClient(c config) *StayTypeClient {
-	return &StayTypeClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `staytype.Hooks(f(g(h())))`.
-func (c *StayTypeClient) Use(hooks ...Hook) {
-	c.hooks.StayType = append(c.hooks.StayType, hooks...)
-}
-
-// Create returns a create builder for StayType.
-func (c *StayTypeClient) Create() *StayTypeCreate {
-	mutation := newStayTypeMutation(c.config, OpCreate)
-	return &StayTypeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for StayType.
-func (c *StayTypeClient) Update() *StayTypeUpdate {
-	mutation := newStayTypeMutation(c.config, OpUpdate)
-	return &StayTypeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *StayTypeClient) UpdateOne(st *StayType) *StayTypeUpdateOne {
-	mutation := newStayTypeMutation(c.config, OpUpdateOne, withStayType(st))
-	return &StayTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *StayTypeClient) UpdateOneID(id int) *StayTypeUpdateOne {
-	mutation := newStayTypeMutation(c.config, OpUpdateOne, withStayTypeID(id))
-	return &StayTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for StayType.
-func (c *StayTypeClient) Delete() *StayTypeDelete {
-	mutation := newStayTypeMutation(c.config, OpDelete)
-	return &StayTypeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *StayTypeClient) DeleteOne(st *StayType) *StayTypeDeleteOne {
-	return c.DeleteOneID(st.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *StayTypeClient) DeleteOneID(id int) *StayTypeDeleteOne {
-	builder := c.Delete().Where(staytype.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &StayTypeDeleteOne{builder}
-}
-
-// Create returns a query builder for StayType.
-func (c *StayTypeClient) Query() *StayTypeQuery {
-	return &StayTypeQuery{config: c.config}
-}
-
-// Get returns a StayType entity by its id.
-func (c *StayTypeClient) Get(ctx context.Context, id int) (*StayType, error) {
-	return c.Query().Where(staytype.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *StayTypeClient) GetX(ctx context.Context, id int) *StayType {
-	st, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return st
-}
-
-// QueryRoom queries the room edge of a StayType.
-func (c *StayTypeClient) QueryRoom(st *StayType) *RoomQuery {
-	query := &RoomQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := st.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(staytype.Table, staytype.FieldID, id),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, staytype.RoomTable, staytype.RoomColumn),
-		)
-		fromV = sqlgraph.Neighbors(st.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *StayTypeClient) Hooks() []Hook {
-	return c.hooks.StayType
 }

@@ -306,54 +306,6 @@ func (f EmployeeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.EmployeeMutation", m)
 }
 
-// The EquipmentQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type EquipmentQueryRuleFunc func(context.Context, *ent.EquipmentQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f EquipmentQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.EquipmentQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.EquipmentQuery", q)
-}
-
-// The EquipmentMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type EquipmentMutationRuleFunc func(context.Context, *ent.EquipmentMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f EquipmentMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.EquipmentMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.EquipmentMutation", m)
-}
-
-// The FacilityQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type FacilityQueryRuleFunc func(context.Context, *ent.FacilityQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f FacilityQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.FacilityQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.FacilityQuery", q)
-}
-
-// The FacilityMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type FacilityMutationRuleFunc func(context.Context, *ent.FacilityMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f FacilityMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.FacilityMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FacilityMutation", m)
-}
-
 // The LengthTimeQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type LengthTimeQueryRuleFunc func(context.Context, *ent.LengthTimeQuery) error
@@ -378,78 +330,6 @@ func (f LengthTimeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LengthTimeMutation", m)
 }
 
-// The NearbyPlaceQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type NearbyPlaceQueryRuleFunc func(context.Context, *ent.NearbyPlaceQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f NearbyPlaceQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.NearbyPlaceQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.NearbyPlaceQuery", q)
-}
-
-// The NearbyPlaceMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type NearbyPlaceMutationRuleFunc func(context.Context, *ent.NearbyPlaceMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f NearbyPlaceMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.NearbyPlaceMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.NearbyPlaceMutation", m)
-}
-
-// The QuantityQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type QuantityQueryRuleFunc func(context.Context, *ent.QuantityQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f QuantityQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.QuantityQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.QuantityQuery", q)
-}
-
-// The QuantityMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type QuantityMutationRuleFunc func(context.Context, *ent.QuantityMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f QuantityMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.QuantityMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.QuantityMutation", m)
-}
-
-// The RoomQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type RoomQueryRuleFunc func(context.Context, *ent.RoomQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f RoomQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.RoomQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RoomQuery", q)
-}
-
-// The RoomMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type RoomMutationRuleFunc func(context.Context, *ent.RoomMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f RoomMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.RoomMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RoomMutation", m)
-}
-
 // The StatusdQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type StatusdQueryRuleFunc func(context.Context, *ent.StatusdQuery) error
@@ -472,28 +352,4 @@ func (f StatusdMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.StatusdMutation", m)
-}
-
-// The StayTypeQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type StayTypeQueryRuleFunc func(context.Context, *ent.StayTypeQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f StayTypeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.StayTypeQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.StayTypeQuery", q)
-}
-
-// The StayTypeMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type StayTypeMutationRuleFunc func(context.Context, *ent.StayTypeMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f StayTypeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.StayTypeMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.StayTypeMutation", m)
 }
