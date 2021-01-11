@@ -527,6 +527,364 @@ var doc = `{
                 }
             }
         },
+        "/equipment/{id}": {
+            "delete": {
+                "description": "get equipment by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a equipment entity by ID",
+                "operationId": "delete-equipment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Equipment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/equipments": {
+            "get": {
+                "description": "list equipment entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List equipment entities",
+                "operationId": "list-equipment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Equipment"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create equipment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create equipment",
+                "operationId": "create-equipment",
+                "parameters": [
+                    {
+                        "description": "Equipment entity",
+                        "name": "equipment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Equipment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Equipment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/equipments/{id}": {
+            "get": {
+                "description": "get equipment by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a equipment entity by ID",
+                "operationId": "get-equipment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Equipment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Equipment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/facilitie/{id}": {
+            "delete": {
+                "description": "get facilitie by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a facilitie entity by ID",
+                "operationId": "delete-facilitie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Facilitie ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/facilities": {
+            "get": {
+                "description": "list facilitie entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List facilitie entities",
+                "operationId": "list-facilitie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Facilitie"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create facilitie",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create facilitie",
+                "operationId": "create-facilitie",
+                "parameters": [
+                    {
+                        "description": "Facilitie entity",
+                        "name": "facilitie",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Facilitie"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Facilitie"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/facilities/{id}": {
+            "get": {
+                "description": "get facilitie by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a facilitie entity by ID",
+                "operationId": "get-facilitie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Facilitie ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Facilitie"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/lengthtimes": {
             "get": {
                 "description": "list lengthtime entities",
@@ -596,6 +954,498 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/ent.LengthTime"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/nearbyplace/{id}": {
+            "delete": {
+                "description": "get nearbyplace by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a nearbyplace entity by ID",
+                "operationId": "delete-nearbyplace",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Nearbyplace ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/nearbyplaces": {
+            "get": {
+                "description": "list nearbyplace entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List nearbyplace entities",
+                "operationId": "list-nearbyplace",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Nearbyplace"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create nearbyplace",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create nearbyplace",
+                "operationId": "create-nearbyplace",
+                "parameters": [
+                    {
+                        "description": "Nearbyplace entity",
+                        "name": "nearbyplace",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Nearbyplace"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Nearbyplace"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/nearbyplaces/{id}": {
+            "get": {
+                "description": "get nearbyplace by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a nearbyplace entity by ID",
+                "operationId": "get-nearbyplace",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Nearbyplace ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Nearbyplace"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/quantity/{id}": {
+            "delete": {
+                "description": "get quantity by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a quantity entity by ID",
+                "operationId": "delete-quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Quantity ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/quantitys": {
+            "get": {
+                "description": "list quantity entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List quantity entities",
+                "operationId": "list-quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Quantity"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create quantity",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create quantity",
+                "operationId": "create-quantity",
+                "parameters": [
+                    {
+                        "description": "Quantity entity",
+                        "name": "quantity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Quantity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Quantity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/quantitys/{id}": {
+            "get": {
+                "description": "get quantity by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a quantity entity by ID",
+                "operationId": "get-quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Quantity ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Quantity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/roomdetails": {
+            "get": {
+                "description": "list roomdetail entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List roomdetail entities",
+                "operationId": "list-roomdetail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Roomdetail"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create roomdetail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create roomdetail",
+                "operationId": "create-roomdetail",
+                "parameters": [
+                    {
+                        "description": "Roomdetail entity",
+                        "name": "roomdetail",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Roomdetail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Roomdetail"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/roomdetails/{id}": {
+            "delete": {
+                "description": "get roomdetail by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a roomdetail entity by ID",
+                "operationId": "delete-roomdetail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Roomdetail ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
                         }
                     },
                     "400": {
@@ -797,6 +1647,185 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/staytype/{id}": {
+            "delete": {
+                "description": "get staytype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a staytype entity by ID",
+                "operationId": "delete-staytype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Staytype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/staytypes": {
+            "get": {
+                "description": "list staytype entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List staytype entities",
+                "operationId": "list-staytype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Staytype"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create staytype",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create staytype",
+                "operationId": "create-staytype",
+                "parameters": [
+                    {
+                        "description": "Staytype entity",
+                        "name": "staytype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Staytype"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Staytype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/staytypes/{id}": {
+            "get": {
+                "description": "get staytype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a staytype entity by ID",
+                "operationId": "get-staytype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Staytype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Staytype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -813,6 +1842,32 @@ var doc = `{
                     "type": "string"
                 },
                 "statusd": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.Roomdetail": {
+            "type": "object",
+            "properties": {
+                "equipment": {
+                    "type": "integer"
+                },
+                "facilitie": {
+                    "type": "integer"
+                },
+                "nearbyplace": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "roomprice": {
+                    "type": "string"
+                },
+                "roomtypename": {
+                    "type": "string"
+                },
+                "staytype": {
                     "type": "integer"
                 }
             }
@@ -959,6 +2014,62 @@ var doc = `{
                 }
             }
         },
+        "ent.Equipment": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EquipmentQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.EquipmentEdges"
+                },
+                "equipment": {
+                    "description": "Equipment holds the value of the \"equipment\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.EquipmentEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetail": {
+                    "description": "Roomdetail holds the value of the roomdetail edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Roomdetail"
+                }
+            }
+        },
+        "ent.Facilitie": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the FacilitieQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.FacilitieEdges"
+                },
+                "facilitie": {
+                    "description": "Facilitie holds the value of the \"facilitie\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.FacilitieEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetail": {
+                    "description": "Roomdetail holds the value of the roomdetail edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Roomdetail"
+                }
+            }
+        },
         "ent.LengthTime": {
             "type": "object",
             "properties": {
@@ -989,6 +2100,122 @@ var doc = `{
                 }
             }
         },
+        "ent.Nearbyplace": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the NearbyplaceQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.NearbyplaceEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "nearbyplace": {
+                    "description": "Nearbyplace holds the value of the \"nearbyplace\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.NearbyplaceEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetail": {
+                    "description": "Roomdetail holds the value of the roomdetail edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Roomdetail"
+                }
+            }
+        },
+        "ent.Quantity": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the QuantityQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.QuantityEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "quantity": {
+                    "description": "Quantity holds the value of the \"quantity\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.QuantityEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
+                    }
+                }
+            }
+        },
+        "ent.Roomdetail": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RoomdetailQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.RoomdetailEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "roomprice": {
+                    "description": "Roomprice holds the value of the \"roomprice\" field.",
+                    "type": "string"
+                },
+                "roomtypename": {
+                    "description": "Roomtypename holds the value of the \"roomtypename\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.RoomdetailEdges": {
+            "type": "object",
+            "properties": {
+                "equipments": {
+                    "description": "Equipments holds the value of the equipments edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Equipment"
+                    }
+                },
+                "facilities": {
+                    "description": "Facilities holds the value of the facilities edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Facilitie"
+                    }
+                },
+                "nearbyplaces": {
+                    "description": "Nearbyplaces holds the value of the nearbyplaces edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Nearbyplace"
+                    }
+                },
+                "quantity": {
+                    "description": "Quantity holds the value of the quantity edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Quantity"
+                },
+                "staytype": {
+                    "description": "Staytype holds the value of the staytype edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Staytype"
+                }
+            }
+        },
         "ent.Statusd": {
             "type": "object",
             "properties": {
@@ -1015,6 +2242,36 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Deposit"
+                    }
+                }
+            }
+        },
+        "ent.Staytype": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the StaytypeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.StaytypeEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "staytype": {
+                    "description": "Staytype holds the value of the \"staytype\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.StaytypeEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
                     }
                 }
             }

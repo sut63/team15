@@ -11,6 +11,23 @@ definitions:
       statusd:
         type: integer
     type: object
+  controllers.Roomdetail:
+    properties:
+      equipment:
+        type: integer
+      facilitie:
+        type: integer
+      nearbyplace:
+        type: integer
+      quantity:
+        type: integer
+      roomprice:
+        type: string
+      roomtypename:
+        type: string
+      staytype:
+        type: integer
+    type: object
   ent.CleanerName:
     properties:
       cleanername:
@@ -121,6 +138,50 @@ definitions:
           $ref: '#/definitions/ent.Deposit'
         type: array
     type: object
+  ent.Equipment:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.EquipmentEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the EquipmentQuery when eager-loading is set.
+        type: object
+      equipment:
+        description: Equipment holds the value of the "equipment" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.EquipmentEdges:
+    properties:
+      roomdetail:
+        $ref: '#/definitions/ent.Roomdetail'
+        description: Roomdetail holds the value of the roomdetail edge.
+        type: object
+    type: object
+  ent.Facilitie:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.FacilitieEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the FacilitieQuery when eager-loading is set.
+        type: object
+      facilitie:
+        description: Facilitie holds the value of the "facilitie" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.FacilitieEdges:
+    properties:
+      roomdetail:
+        $ref: '#/definitions/ent.Roomdetail'
+        description: Roomdetail holds the value of the roomdetail edge.
+        type: object
+    type: object
   ent.LengthTime:
     properties:
       edges:
@@ -144,6 +205,95 @@ definitions:
           $ref: '#/definitions/ent.CleaningRoom'
         type: array
     type: object
+  ent.Nearbyplace:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.NearbyplaceEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the NearbyplaceQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      nearbyplace:
+        description: Nearbyplace holds the value of the "nearbyplace" field.
+        type: string
+    type: object
+  ent.NearbyplaceEdges:
+    properties:
+      roomdetail:
+        $ref: '#/definitions/ent.Roomdetail'
+        description: Roomdetail holds the value of the roomdetail edge.
+        type: object
+    type: object
+  ent.Quantity:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.QuantityEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the QuantityQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      quantity:
+        description: Quantity holds the value of the "quantity" field.
+        type: string
+    type: object
+  ent.QuantityEdges:
+    properties:
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
+    type: object
+  ent.Roomdetail:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.RoomdetailEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the RoomdetailQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      roomprice:
+        description: Roomprice holds the value of the "roomprice" field.
+        type: string
+      roomtypename:
+        description: Roomtypename holds the value of the "roomtypename" field.
+        type: string
+    type: object
+  ent.RoomdetailEdges:
+    properties:
+      equipments:
+        description: Equipments holds the value of the equipments edge.
+        items:
+          $ref: '#/definitions/ent.Equipment'
+        type: array
+      facilities:
+        description: Facilities holds the value of the facilities edge.
+        items:
+          $ref: '#/definitions/ent.Facilitie'
+        type: array
+      nearbyplaces:
+        description: Nearbyplaces holds the value of the nearbyplaces edge.
+        items:
+          $ref: '#/definitions/ent.Nearbyplace'
+        type: array
+      quantity:
+        $ref: '#/definitions/ent.Quantity'
+        description: Quantity holds the value of the quantity edge.
+        type: object
+      staytype:
+        $ref: '#/definitions/ent.Staytype'
+        description: Staytype holds the value of the staytype edge.
+        type: object
+    type: object
   ent.Statusd:
     properties:
       edges:
@@ -165,6 +315,29 @@ definitions:
         description: Statusds holds the value of the statusds edge.
         items:
           $ref: '#/definitions/ent.Deposit'
+        type: array
+    type: object
+  ent.Staytype:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.StaytypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the StaytypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      staytype:
+        description: Staytype holds the value of the "staytype" field.
+        type: string
+    type: object
+  ent.StaytypeEdges:
+    properties:
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
         type: array
     type: object
   gin.H:
@@ -512,6 +685,244 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a employee entity by ID
+  /equipment/{id}:
+    delete:
+      description: get equipment by ID
+      operationId: delete-equipment
+      parameters:
+      - description: Equipment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a equipment entity by ID
+  /equipments:
+    get:
+      description: list equipment entities
+      operationId: list-equipment
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Equipment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List equipment entities
+    post:
+      consumes:
+      - application/json
+      description: Create equipment
+      operationId: create-equipment
+      parameters:
+      - description: Equipment entity
+        in: body
+        name: equipment
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Equipment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Equipment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create equipment
+  /equipments/{id}:
+    get:
+      description: get equipment by ID
+      operationId: get-equipment
+      parameters:
+      - description: Equipment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Equipment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a equipment entity by ID
+  /facilitie/{id}:
+    delete:
+      description: get facilitie by ID
+      operationId: delete-facilitie
+      parameters:
+      - description: Facilitie ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a facilitie entity by ID
+  /facilities:
+    get:
+      description: list facilitie entities
+      operationId: list-facilitie
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Facilitie'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List facilitie entities
+    post:
+      consumes:
+      - application/json
+      description: Create facilitie
+      operationId: create-facilitie
+      parameters:
+      - description: Facilitie entity
+        in: body
+        name: facilitie
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Facilitie'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Facilitie'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create facilitie
+  /facilities/{id}:
+    get:
+      description: get facilitie by ID
+      operationId: get-facilitie
+      parameters:
+      - description: Facilitie ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Facilitie'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a facilitie entity by ID
   /lengthtimes:
     get:
       description: list lengthtime entities
@@ -573,6 +984,333 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a lengthtime entity by ID
+  /nearbyplace/{id}:
+    delete:
+      description: get nearbyplace by ID
+      operationId: delete-nearbyplace
+      parameters:
+      - description: Nearbyplace ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a nearbyplace entity by ID
+  /nearbyplaces:
+    get:
+      description: list nearbyplace entities
+      operationId: list-nearbyplace
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Nearbyplace'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List nearbyplace entities
+    post:
+      consumes:
+      - application/json
+      description: Create nearbyplace
+      operationId: create-nearbyplace
+      parameters:
+      - description: Nearbyplace entity
+        in: body
+        name: nearbyplace
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Nearbyplace'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Nearbyplace'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create nearbyplace
+  /nearbyplaces/{id}:
+    get:
+      description: get nearbyplace by ID
+      operationId: get-nearbyplace
+      parameters:
+      - description: Nearbyplace ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Nearbyplace'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a nearbyplace entity by ID
+  /quantity/{id}:
+    delete:
+      description: get quantity by ID
+      operationId: delete-quantity
+      parameters:
+      - description: Quantity ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a quantity entity by ID
+  /quantitys:
+    get:
+      description: list quantity entities
+      operationId: list-quantity
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Quantity'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List quantity entities
+    post:
+      consumes:
+      - application/json
+      description: Create quantity
+      operationId: create-quantity
+      parameters:
+      - description: Quantity entity
+        in: body
+        name: quantity
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Quantity'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Quantity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create quantity
+  /quantitys/{id}:
+    get:
+      description: get quantity by ID
+      operationId: get-quantity
+      parameters:
+      - description: Quantity ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Quantity'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a quantity entity by ID
+  /roomdetails:
+    get:
+      description: list roomdetail entities
+      operationId: list-roomdetail
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Roomdetail'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List roomdetail entities
+    post:
+      consumes:
+      - application/json
+      description: Create roomdetail
+      operationId: create-roomdetail
+      parameters:
+      - description: Roomdetail entity
+        in: body
+        name: roomdetail
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Roomdetail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Roomdetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create roomdetail
+  /roomdetails/{id}:
+    delete:
+      description: get roomdetail by ID
+      operationId: delete-roomdetail
+      parameters:
+      - description: Roomdetail ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a roomdetail entity by ID
   /statusd/{id}:
     delete:
       description: get statusd by ID
@@ -692,6 +1430,125 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a statusd entity by ID
+  /staytype/{id}:
+    delete:
+      description: get staytype by ID
+      operationId: delete-staytype
+      parameters:
+      - description: Staytype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a staytype entity by ID
+  /staytypes:
+    get:
+      description: list staytype entities
+      operationId: list-staytype
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Staytype'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List staytype entities
+    post:
+      consumes:
+      - application/json
+      description: Create staytype
+      operationId: create-staytype
+      parameters:
+      - description: Staytype entity
+        in: body
+        name: staytype
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Staytype'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Staytype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create staytype
+  /staytypes/{id}:
+    get:
+      description: get staytype by ID
+      operationId: get-staytype
+      parameters:
+      - description: Staytype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Staytype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a staytype entity by ID
 securityDefinitions:
   ApiKeyAuth:
     in: header
