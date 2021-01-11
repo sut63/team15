@@ -48,6 +48,46 @@ type LengthTime struct {
 	lengthtime string
 }
 
+type Quantitys struct {
+	Quantity []Quantity
+}
+
+type Quantity struct {
+	Quantity string
+}
+
+type Staytypes struct {
+	Staytype []Staytype
+}
+
+type Staytype struct {
+	Staytype string
+}
+
+type Equipments struct {
+	Equipment []Equipment
+}
+
+type Equipment struct {
+	Equipment string
+}
+
+type Facilities struct {
+	Facilitie []Facilitie
+}
+
+type Facilitie struct {
+	Facilitie string
+}
+
+type Nearbyplaces struct {
+	Nearbyplace []Nearbyplace
+}
+
+type Nearbyplace struct {
+	Nearbyplace string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -108,6 +148,12 @@ func main() {
 	controllers.NewCleaningRoomController(v1, client)
 	controllers.NewCleanerNameController(v1, client)
 	controllers.NewLengthTimeController(v1, client)
+	controllers.NewRoomdetailController(v1, client)
+	controllers.NewQuantityController(v1, client)
+	controllers.NewEquipmentController(v1, client)
+	controllers.NewFacilitieController(v1, client)
+	controllers.NewNearbyplaceController(v1, client)
+	controllers.NewStaytypeController(v1, client)
 
 	// Set Employees Data
 	employees := Employees{
@@ -168,6 +214,79 @@ func main() {
 		client.LengthTime.
 			Create().
 			SetLengthtime(lt.lengthtime).
+			Save(context.Background())
+	}
+
+	// Set Quantity Data
+	quantitys := Quantitys{
+		Quantity: []Quantity{
+			Quantity{"2 people"},
+			Quantity{"4 people"},
+			Quantity{"6 people"},
+		},
+	}
+	for _, qu := range quantitys.Quantity {
+		client.Quantity.
+			Create().
+			SetQuantity(qu.Quantity).
+			Save(context.Background())
+	}
+
+	// Set StayType Data
+	staytypes := Staytypes{
+		Staytype: []Staytype{
+			Staytype{"Days"},
+			Staytype{"Month"},
+			Staytype{"Days & Month"},
+		},
+	}
+	for _, st := range staytypes.Staytype {
+		client.Staytype.
+			Create().
+			SetStaytype(st.Staytype).
+			Save(context.Background())
+	}
+
+	// Set Equipment Data
+	equipments := Equipments{
+		Equipment: []Equipment{
+			Equipment{"Ensuite bathroom"},
+			Equipment{"Living zone in room"},
+			Equipment{"Small Kitchen"},
+		},
+	}
+	for _, eq := range equipments.Equipment {
+		client.Equipment.
+			Create().
+			SetEquipment(eq.Equipment).
+			Save(context.Background())
+	}
+	// Set Facility Data
+	facilities := Facilities{
+		Facilitie: []Facilitie{
+			Facilitie{"Swimming pool"},
+			Facilitie{"Fitness"},
+		},
+	}
+	for _, fa := range facilities.Facilitie {
+		client.Facilitie.
+			Create().
+			SetFacilitie(fa.Facilitie).
+			Save(context.Background())
+	}
+
+	// Set NearbyPlace Data
+	nearbyplaces := Nearbyplaces{
+		Nearbyplace: []Nearbyplace{
+			Nearbyplace{"Shopping mall"},
+			Nearbyplace{"Supermarket"},
+			Nearbyplace{"BTS"},
+		},
+	}
+	for _, np := range nearbyplaces.Nearbyplace {
+		client.Nearbyplace.
+			Create().
+			SetNearbyplace(np.Nearbyplace).
 			Save(context.Background())
 	}
 
