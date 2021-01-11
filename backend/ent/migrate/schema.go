@@ -94,6 +94,48 @@ var (
 		PrimaryKey:  []*schema.Column{EmployeesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// EquipmentColumns holds the columns for the "equipment" table.
+	EquipmentColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "equipment", Type: field.TypeString},
+		{Name: "roomdetail_equipments", Type: field.TypeInt, Nullable: true},
+	}
+	// EquipmentTable holds the schema information for the "equipment" table.
+	EquipmentTable = &schema.Table{
+		Name:       "equipment",
+		Columns:    EquipmentColumns,
+		PrimaryKey: []*schema.Column{EquipmentColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "equipment_roomdetails_equipments",
+				Columns: []*schema.Column{EquipmentColumns[2]},
+
+				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// FacilitiesColumns holds the columns for the "facilities" table.
+	FacilitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "facilitie", Type: field.TypeString},
+		{Name: "roomdetail_facilities", Type: field.TypeInt, Nullable: true},
+	}
+	// FacilitiesTable holds the schema information for the "facilities" table.
+	FacilitiesTable = &schema.Table{
+		Name:       "facilities",
+		Columns:    FacilitiesColumns,
+		PrimaryKey: []*schema.Column{FacilitiesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "facilities_roomdetails_facilities",
+				Columns: []*schema.Column{FacilitiesColumns[2]},
+
+				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// LengthTimesColumns holds the columns for the "length_times" table.
 	LengthTimesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -105,6 +147,69 @@ var (
 		Columns:     LengthTimesColumns,
 		PrimaryKey:  []*schema.Column{LengthTimesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// NearbyplacesColumns holds the columns for the "nearbyplaces" table.
+	NearbyplacesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "nearbyplace", Type: field.TypeString},
+		{Name: "roomdetail_nearbyplaces", Type: field.TypeInt, Nullable: true},
+	}
+	// NearbyplacesTable holds the schema information for the "nearbyplaces" table.
+	NearbyplacesTable = &schema.Table{
+		Name:       "nearbyplaces",
+		Columns:    NearbyplacesColumns,
+		PrimaryKey: []*schema.Column{NearbyplacesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "nearbyplaces_roomdetails_nearbyplaces",
+				Columns: []*schema.Column{NearbyplacesColumns[2]},
+
+				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// QuantitiesColumns holds the columns for the "quantities" table.
+	QuantitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "quantity", Type: field.TypeString},
+	}
+	// QuantitiesTable holds the schema information for the "quantities" table.
+	QuantitiesTable = &schema.Table{
+		Name:        "quantities",
+		Columns:     QuantitiesColumns,
+		PrimaryKey:  []*schema.Column{QuantitiesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// RoomdetailsColumns holds the columns for the "roomdetails" table.
+	RoomdetailsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "roomtypename", Type: field.TypeString, Unique: true},
+		{Name: "roomprice", Type: field.TypeString, Unique: true},
+		{Name: "quantity_roomdetails", Type: field.TypeInt, Nullable: true},
+		{Name: "staytype_roomdetails", Type: field.TypeInt, Nullable: true},
+	}
+	// RoomdetailsTable holds the schema information for the "roomdetails" table.
+	RoomdetailsTable = &schema.Table{
+		Name:       "roomdetails",
+		Columns:    RoomdetailsColumns,
+		PrimaryKey: []*schema.Column{RoomdetailsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "roomdetails_quantities_roomdetails",
+				Columns: []*schema.Column{RoomdetailsColumns[3]},
+
+				RefColumns: []*schema.Column{QuantitiesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "roomdetails_staytypes_roomdetails",
+				Columns: []*schema.Column{RoomdetailsColumns[4]},
+
+				RefColumns: []*schema.Column{StaytypesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// StatusdsColumns holds the columns for the "statusds" table.
 	StatusdsColumns = []*schema.Column{
@@ -118,14 +223,32 @@ var (
 		PrimaryKey:  []*schema.Column{StatusdsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// StaytypesColumns holds the columns for the "staytypes" table.
+	StaytypesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "staytype", Type: field.TypeString},
+	}
+	// StaytypesTable holds the schema information for the "staytypes" table.
+	StaytypesTable = &schema.Table{
+		Name:        "staytypes",
+		Columns:     StaytypesColumns,
+		PrimaryKey:  []*schema.Column{StaytypesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CleanerNamesTable,
 		CleaningRoomsTable,
 		DepositsTable,
 		EmployeesTable,
+		EquipmentTable,
+		FacilitiesTable,
 		LengthTimesTable,
+		NearbyplacesTable,
+		QuantitiesTable,
+		RoomdetailsTable,
 		StatusdsTable,
+		StaytypesTable,
 	}
 )
 
@@ -134,4 +257,9 @@ func init() {
 	CleaningRoomsTable.ForeignKeys[1].RefTable = LengthTimesTable
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
 	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
+	EquipmentTable.ForeignKeys[0].RefTable = RoomdetailsTable
+	FacilitiesTable.ForeignKeys[0].RefTable = RoomdetailsTable
+	NearbyplacesTable.ForeignKeys[0].RefTable = RoomdetailsTable
+	RoomdetailsTable.ForeignKeys[0].RefTable = QuantitiesTable
+	RoomdetailsTable.ForeignKeys[1].RefTable = StaytypesTable
 }

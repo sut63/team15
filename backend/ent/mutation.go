@@ -12,8 +12,14 @@ import (
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/equipment"
+	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/lengthtime"
+	"github.com/team15/app/ent/nearbyplace"
+	"github.com/team15/app/ent/quantity"
+	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/statusd"
+	"github.com/team15/app/ent/staytype"
 
 	"github.com/facebookincubator/ent"
 )
@@ -31,8 +37,14 @@ const (
 	TypeCleaningRoom = "CleaningRoom"
 	TypeDeposit      = "Deposit"
 	TypeEmployee     = "Employee"
+	TypeEquipment    = "Equipment"
+	TypeFacilitie    = "Facilitie"
 	TypeLengthTime   = "LengthTime"
+	TypeNearbyplace  = "Nearbyplace"
+	TypeQuantity     = "Quantity"
+	TypeRoomdetail   = "Roomdetail"
 	TypeStatusd      = "Statusd"
+	TypeStaytype     = "Staytype"
 )
 
 // CleanerNameMutation represents an operation that mutate the CleanerNames
@@ -1833,6 +1845,730 @@ func (m *EmployeeMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Employee edge %s", name)
 }
 
+// EquipmentMutation represents an operation that mutate the EquipmentSlice
+// nodes in the graph.
+type EquipmentMutation struct {
+	config
+	op                Op
+	typ               string
+	id                *int
+	equipment         *string
+	clearedFields     map[string]struct{}
+	roomdetail        *int
+	clearedroomdetail bool
+	done              bool
+	oldValue          func(context.Context) (*Equipment, error)
+}
+
+var _ ent.Mutation = (*EquipmentMutation)(nil)
+
+// equipmentOption allows to manage the mutation configuration using functional options.
+type equipmentOption func(*EquipmentMutation)
+
+// newEquipmentMutation creates new mutation for $n.Name.
+func newEquipmentMutation(c config, op Op, opts ...equipmentOption) *EquipmentMutation {
+	m := &EquipmentMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeEquipment,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withEquipmentID sets the id field of the mutation.
+func withEquipmentID(id int) equipmentOption {
+	return func(m *EquipmentMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Equipment
+		)
+		m.oldValue = func(ctx context.Context) (*Equipment, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Equipment.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withEquipment sets the old Equipment of the mutation.
+func withEquipment(node *Equipment) equipmentOption {
+	return func(m *EquipmentMutation) {
+		m.oldValue = func(context.Context) (*Equipment, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m EquipmentMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m EquipmentMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *EquipmentMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetEquipment sets the equipment field.
+func (m *EquipmentMutation) SetEquipment(s string) {
+	m.equipment = &s
+}
+
+// Equipment returns the equipment value in the mutation.
+func (m *EquipmentMutation) Equipment() (r string, exists bool) {
+	v := m.equipment
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEquipment returns the old equipment value of the Equipment.
+// If the Equipment object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *EquipmentMutation) OldEquipment(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEquipment is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEquipment requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEquipment: %w", err)
+	}
+	return oldValue.Equipment, nil
+}
+
+// ResetEquipment reset all changes of the "equipment" field.
+func (m *EquipmentMutation) ResetEquipment() {
+	m.equipment = nil
+}
+
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (m *EquipmentMutation) SetRoomdetailID(id int) {
+	m.roomdetail = &id
+}
+
+// ClearRoomdetail clears the roomdetail edge to Roomdetail.
+func (m *EquipmentMutation) ClearRoomdetail() {
+	m.clearedroomdetail = true
+}
+
+// RoomdetailCleared returns if the edge roomdetail was cleared.
+func (m *EquipmentMutation) RoomdetailCleared() bool {
+	return m.clearedroomdetail
+}
+
+// RoomdetailID returns the roomdetail id in the mutation.
+func (m *EquipmentMutation) RoomdetailID() (id int, exists bool) {
+	if m.roomdetail != nil {
+		return *m.roomdetail, true
+	}
+	return
+}
+
+// RoomdetailIDs returns the roomdetail ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// RoomdetailID instead. It exists only for internal usage by the builders.
+func (m *EquipmentMutation) RoomdetailIDs() (ids []int) {
+	if id := m.roomdetail; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRoomdetail reset all changes of the "roomdetail" edge.
+func (m *EquipmentMutation) ResetRoomdetail() {
+	m.roomdetail = nil
+	m.clearedroomdetail = false
+}
+
+// Op returns the operation name.
+func (m *EquipmentMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Equipment).
+func (m *EquipmentMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *EquipmentMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.equipment != nil {
+		fields = append(fields, equipment.FieldEquipment)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *EquipmentMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case equipment.FieldEquipment:
+		return m.Equipment()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *EquipmentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case equipment.FieldEquipment:
+		return m.OldEquipment(ctx)
+	}
+	return nil, fmt.Errorf("unknown Equipment field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *EquipmentMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case equipment.FieldEquipment:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEquipment(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Equipment field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *EquipmentMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *EquipmentMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *EquipmentMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Equipment numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *EquipmentMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *EquipmentMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *EquipmentMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Equipment nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *EquipmentMutation) ResetField(name string) error {
+	switch name {
+	case equipment.FieldEquipment:
+		m.ResetEquipment()
+		return nil
+	}
+	return fmt.Errorf("unknown Equipment field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *EquipmentMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roomdetail != nil {
+		edges = append(edges, equipment.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *EquipmentMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case equipment.EdgeRoomdetail:
+		if id := m.roomdetail; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *EquipmentMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *EquipmentMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *EquipmentMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedroomdetail {
+		edges = append(edges, equipment.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *EquipmentMutation) EdgeCleared(name string) bool {
+	switch name {
+	case equipment.EdgeRoomdetail:
+		return m.clearedroomdetail
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *EquipmentMutation) ClearEdge(name string) error {
+	switch name {
+	case equipment.EdgeRoomdetail:
+		m.ClearRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Equipment unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *EquipmentMutation) ResetEdge(name string) error {
+	switch name {
+	case equipment.EdgeRoomdetail:
+		m.ResetRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Equipment edge %s", name)
+}
+
+// FacilitieMutation represents an operation that mutate the Facilities
+// nodes in the graph.
+type FacilitieMutation struct {
+	config
+	op                Op
+	typ               string
+	id                *int
+	facilitie         *string
+	clearedFields     map[string]struct{}
+	roomdetail        *int
+	clearedroomdetail bool
+	done              bool
+	oldValue          func(context.Context) (*Facilitie, error)
+}
+
+var _ ent.Mutation = (*FacilitieMutation)(nil)
+
+// facilitieOption allows to manage the mutation configuration using functional options.
+type facilitieOption func(*FacilitieMutation)
+
+// newFacilitieMutation creates new mutation for $n.Name.
+func newFacilitieMutation(c config, op Op, opts ...facilitieOption) *FacilitieMutation {
+	m := &FacilitieMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeFacilitie,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withFacilitieID sets the id field of the mutation.
+func withFacilitieID(id int) facilitieOption {
+	return func(m *FacilitieMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Facilitie
+		)
+		m.oldValue = func(ctx context.Context) (*Facilitie, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Facilitie.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withFacilitie sets the old Facilitie of the mutation.
+func withFacilitie(node *Facilitie) facilitieOption {
+	return func(m *FacilitieMutation) {
+		m.oldValue = func(context.Context) (*Facilitie, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m FacilitieMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m FacilitieMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *FacilitieMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetFacilitie sets the facilitie field.
+func (m *FacilitieMutation) SetFacilitie(s string) {
+	m.facilitie = &s
+}
+
+// Facilitie returns the facilitie value in the mutation.
+func (m *FacilitieMutation) Facilitie() (r string, exists bool) {
+	v := m.facilitie
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFacilitie returns the old facilitie value of the Facilitie.
+// If the Facilitie object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *FacilitieMutation) OldFacilitie(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldFacilitie is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldFacilitie requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFacilitie: %w", err)
+	}
+	return oldValue.Facilitie, nil
+}
+
+// ResetFacilitie reset all changes of the "facilitie" field.
+func (m *FacilitieMutation) ResetFacilitie() {
+	m.facilitie = nil
+}
+
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (m *FacilitieMutation) SetRoomdetailID(id int) {
+	m.roomdetail = &id
+}
+
+// ClearRoomdetail clears the roomdetail edge to Roomdetail.
+func (m *FacilitieMutation) ClearRoomdetail() {
+	m.clearedroomdetail = true
+}
+
+// RoomdetailCleared returns if the edge roomdetail was cleared.
+func (m *FacilitieMutation) RoomdetailCleared() bool {
+	return m.clearedroomdetail
+}
+
+// RoomdetailID returns the roomdetail id in the mutation.
+func (m *FacilitieMutation) RoomdetailID() (id int, exists bool) {
+	if m.roomdetail != nil {
+		return *m.roomdetail, true
+	}
+	return
+}
+
+// RoomdetailIDs returns the roomdetail ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// RoomdetailID instead. It exists only for internal usage by the builders.
+func (m *FacilitieMutation) RoomdetailIDs() (ids []int) {
+	if id := m.roomdetail; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRoomdetail reset all changes of the "roomdetail" edge.
+func (m *FacilitieMutation) ResetRoomdetail() {
+	m.roomdetail = nil
+	m.clearedroomdetail = false
+}
+
+// Op returns the operation name.
+func (m *FacilitieMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Facilitie).
+func (m *FacilitieMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *FacilitieMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.facilitie != nil {
+		fields = append(fields, facilitie.FieldFacilitie)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *FacilitieMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case facilitie.FieldFacilitie:
+		return m.Facilitie()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *FacilitieMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case facilitie.FieldFacilitie:
+		return m.OldFacilitie(ctx)
+	}
+	return nil, fmt.Errorf("unknown Facilitie field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *FacilitieMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case facilitie.FieldFacilitie:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFacilitie(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Facilitie field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *FacilitieMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *FacilitieMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *FacilitieMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Facilitie numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *FacilitieMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *FacilitieMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *FacilitieMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Facilitie nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *FacilitieMutation) ResetField(name string) error {
+	switch name {
+	case facilitie.FieldFacilitie:
+		m.ResetFacilitie()
+		return nil
+	}
+	return fmt.Errorf("unknown Facilitie field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *FacilitieMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roomdetail != nil {
+		edges = append(edges, facilitie.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *FacilitieMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case facilitie.EdgeRoomdetail:
+		if id := m.roomdetail; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *FacilitieMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *FacilitieMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *FacilitieMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedroomdetail {
+		edges = append(edges, facilitie.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *FacilitieMutation) EdgeCleared(name string) bool {
+	switch name {
+	case facilitie.EdgeRoomdetail:
+		return m.clearedroomdetail
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *FacilitieMutation) ClearEdge(name string) error {
+	switch name {
+	case facilitie.EdgeRoomdetail:
+		m.ClearRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Facilitie unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *FacilitieMutation) ResetEdge(name string) error {
+	switch name {
+	case facilitie.EdgeRoomdetail:
+		m.ResetRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Facilitie edge %s", name)
+}
+
 // LengthTimeMutation represents an operation that mutate the LengthTimes
 // nodes in the graph.
 type LengthTimeMutation struct {
@@ -2201,6 +2937,1407 @@ func (m *LengthTimeMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown LengthTime edge %s", name)
 }
 
+// NearbyplaceMutation represents an operation that mutate the Nearbyplaces
+// nodes in the graph.
+type NearbyplaceMutation struct {
+	config
+	op                Op
+	typ               string
+	id                *int
+	nearbyplace       *string
+	clearedFields     map[string]struct{}
+	roomdetail        *int
+	clearedroomdetail bool
+	done              bool
+	oldValue          func(context.Context) (*Nearbyplace, error)
+}
+
+var _ ent.Mutation = (*NearbyplaceMutation)(nil)
+
+// nearbyplaceOption allows to manage the mutation configuration using functional options.
+type nearbyplaceOption func(*NearbyplaceMutation)
+
+// newNearbyplaceMutation creates new mutation for $n.Name.
+func newNearbyplaceMutation(c config, op Op, opts ...nearbyplaceOption) *NearbyplaceMutation {
+	m := &NearbyplaceMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeNearbyplace,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withNearbyplaceID sets the id field of the mutation.
+func withNearbyplaceID(id int) nearbyplaceOption {
+	return func(m *NearbyplaceMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Nearbyplace
+		)
+		m.oldValue = func(ctx context.Context) (*Nearbyplace, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Nearbyplace.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withNearbyplace sets the old Nearbyplace of the mutation.
+func withNearbyplace(node *Nearbyplace) nearbyplaceOption {
+	return func(m *NearbyplaceMutation) {
+		m.oldValue = func(context.Context) (*Nearbyplace, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m NearbyplaceMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m NearbyplaceMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *NearbyplaceMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetNearbyplace sets the nearbyplace field.
+func (m *NearbyplaceMutation) SetNearbyplace(s string) {
+	m.nearbyplace = &s
+}
+
+// Nearbyplace returns the nearbyplace value in the mutation.
+func (m *NearbyplaceMutation) Nearbyplace() (r string, exists bool) {
+	v := m.nearbyplace
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNearbyplace returns the old nearbyplace value of the Nearbyplace.
+// If the Nearbyplace object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *NearbyplaceMutation) OldNearbyplace(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldNearbyplace is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldNearbyplace requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNearbyplace: %w", err)
+	}
+	return oldValue.Nearbyplace, nil
+}
+
+// ResetNearbyplace reset all changes of the "nearbyplace" field.
+func (m *NearbyplaceMutation) ResetNearbyplace() {
+	m.nearbyplace = nil
+}
+
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (m *NearbyplaceMutation) SetRoomdetailID(id int) {
+	m.roomdetail = &id
+}
+
+// ClearRoomdetail clears the roomdetail edge to Roomdetail.
+func (m *NearbyplaceMutation) ClearRoomdetail() {
+	m.clearedroomdetail = true
+}
+
+// RoomdetailCleared returns if the edge roomdetail was cleared.
+func (m *NearbyplaceMutation) RoomdetailCleared() bool {
+	return m.clearedroomdetail
+}
+
+// RoomdetailID returns the roomdetail id in the mutation.
+func (m *NearbyplaceMutation) RoomdetailID() (id int, exists bool) {
+	if m.roomdetail != nil {
+		return *m.roomdetail, true
+	}
+	return
+}
+
+// RoomdetailIDs returns the roomdetail ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// RoomdetailID instead. It exists only for internal usage by the builders.
+func (m *NearbyplaceMutation) RoomdetailIDs() (ids []int) {
+	if id := m.roomdetail; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRoomdetail reset all changes of the "roomdetail" edge.
+func (m *NearbyplaceMutation) ResetRoomdetail() {
+	m.roomdetail = nil
+	m.clearedroomdetail = false
+}
+
+// Op returns the operation name.
+func (m *NearbyplaceMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Nearbyplace).
+func (m *NearbyplaceMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *NearbyplaceMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.nearbyplace != nil {
+		fields = append(fields, nearbyplace.FieldNearbyplace)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *NearbyplaceMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case nearbyplace.FieldNearbyplace:
+		return m.Nearbyplace()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *NearbyplaceMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case nearbyplace.FieldNearbyplace:
+		return m.OldNearbyplace(ctx)
+	}
+	return nil, fmt.Errorf("unknown Nearbyplace field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *NearbyplaceMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case nearbyplace.FieldNearbyplace:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNearbyplace(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Nearbyplace field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *NearbyplaceMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *NearbyplaceMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *NearbyplaceMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Nearbyplace numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *NearbyplaceMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *NearbyplaceMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *NearbyplaceMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Nearbyplace nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *NearbyplaceMutation) ResetField(name string) error {
+	switch name {
+	case nearbyplace.FieldNearbyplace:
+		m.ResetNearbyplace()
+		return nil
+	}
+	return fmt.Errorf("unknown Nearbyplace field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *NearbyplaceMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roomdetail != nil {
+		edges = append(edges, nearbyplace.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *NearbyplaceMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case nearbyplace.EdgeRoomdetail:
+		if id := m.roomdetail; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *NearbyplaceMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *NearbyplaceMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *NearbyplaceMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedroomdetail {
+		edges = append(edges, nearbyplace.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *NearbyplaceMutation) EdgeCleared(name string) bool {
+	switch name {
+	case nearbyplace.EdgeRoomdetail:
+		return m.clearedroomdetail
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *NearbyplaceMutation) ClearEdge(name string) error {
+	switch name {
+	case nearbyplace.EdgeRoomdetail:
+		m.ClearRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Nearbyplace unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *NearbyplaceMutation) ResetEdge(name string) error {
+	switch name {
+	case nearbyplace.EdgeRoomdetail:
+		m.ResetRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Nearbyplace edge %s", name)
+}
+
+// QuantityMutation represents an operation that mutate the Quantities
+// nodes in the graph.
+type QuantityMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *int
+	quantity           *string
+	clearedFields      map[string]struct{}
+	roomdetails        map[int]struct{}
+	removedroomdetails map[int]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Quantity, error)
+}
+
+var _ ent.Mutation = (*QuantityMutation)(nil)
+
+// quantityOption allows to manage the mutation configuration using functional options.
+type quantityOption func(*QuantityMutation)
+
+// newQuantityMutation creates new mutation for $n.Name.
+func newQuantityMutation(c config, op Op, opts ...quantityOption) *QuantityMutation {
+	m := &QuantityMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeQuantity,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withQuantityID sets the id field of the mutation.
+func withQuantityID(id int) quantityOption {
+	return func(m *QuantityMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Quantity
+		)
+		m.oldValue = func(ctx context.Context) (*Quantity, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Quantity.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withQuantity sets the old Quantity of the mutation.
+func withQuantity(node *Quantity) quantityOption {
+	return func(m *QuantityMutation) {
+		m.oldValue = func(context.Context) (*Quantity, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m QuantityMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m QuantityMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *QuantityMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetQuantity sets the quantity field.
+func (m *QuantityMutation) SetQuantity(s string) {
+	m.quantity = &s
+}
+
+// Quantity returns the quantity value in the mutation.
+func (m *QuantityMutation) Quantity() (r string, exists bool) {
+	v := m.quantity
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldQuantity returns the old quantity value of the Quantity.
+// If the Quantity object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *QuantityMutation) OldQuantity(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldQuantity is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldQuantity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldQuantity: %w", err)
+	}
+	return oldValue.Quantity, nil
+}
+
+// ResetQuantity reset all changes of the "quantity" field.
+func (m *QuantityMutation) ResetQuantity() {
+	m.quantity = nil
+}
+
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (m *QuantityMutation) AddRoomdetailIDs(ids ...int) {
+	if m.roomdetails == nil {
+		m.roomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.roomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (m *QuantityMutation) RemoveRoomdetailIDs(ids ...int) {
+	if m.removedroomdetails == nil {
+		m.removedroomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedroomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoomdetails returns the removed ids of roomdetails.
+func (m *QuantityMutation) RemovedRoomdetailsIDs() (ids []int) {
+	for id := range m.removedroomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RoomdetailsIDs returns the roomdetails ids in the mutation.
+func (m *QuantityMutation) RoomdetailsIDs() (ids []int) {
+	for id := range m.roomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoomdetails reset all changes of the "roomdetails" edge.
+func (m *QuantityMutation) ResetRoomdetails() {
+	m.roomdetails = nil
+	m.removedroomdetails = nil
+}
+
+// Op returns the operation name.
+func (m *QuantityMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Quantity).
+func (m *QuantityMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *QuantityMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.quantity != nil {
+		fields = append(fields, quantity.FieldQuantity)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *QuantityMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case quantity.FieldQuantity:
+		return m.Quantity()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *QuantityMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case quantity.FieldQuantity:
+		return m.OldQuantity(ctx)
+	}
+	return nil, fmt.Errorf("unknown Quantity field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *QuantityMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case quantity.FieldQuantity:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetQuantity(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Quantity field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *QuantityMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *QuantityMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *QuantityMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Quantity numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *QuantityMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *QuantityMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *QuantityMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Quantity nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *QuantityMutation) ResetField(name string) error {
+	switch name {
+	case quantity.FieldQuantity:
+		m.ResetQuantity()
+		return nil
+	}
+	return fmt.Errorf("unknown Quantity field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *QuantityMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roomdetails != nil {
+		edges = append(edges, quantity.EdgeRoomdetails)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *QuantityMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case quantity.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.roomdetails))
+		for id := range m.roomdetails {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *QuantityMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedroomdetails != nil {
+		edges = append(edges, quantity.EdgeRoomdetails)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *QuantityMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case quantity.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.removedroomdetails))
+		for id := range m.removedroomdetails {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *QuantityMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *QuantityMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *QuantityMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Quantity unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *QuantityMutation) ResetEdge(name string) error {
+	switch name {
+	case quantity.EdgeRoomdetails:
+		m.ResetRoomdetails()
+		return nil
+	}
+	return fmt.Errorf("unknown Quantity edge %s", name)
+}
+
+// RoomdetailMutation represents an operation that mutate the Roomdetails
+// nodes in the graph.
+type RoomdetailMutation struct {
+	config
+	op                  Op
+	typ                 string
+	id                  *int
+	roomtypename        *string
+	roomprice           *string
+	clearedFields       map[string]struct{}
+	equipments          map[int]struct{}
+	removedequipments   map[int]struct{}
+	facilities          map[int]struct{}
+	removedfacilities   map[int]struct{}
+	nearbyplaces        map[int]struct{}
+	removednearbyplaces map[int]struct{}
+	quantity            *int
+	clearedquantity     bool
+	staytype            *int
+	clearedstaytype     bool
+	done                bool
+	oldValue            func(context.Context) (*Roomdetail, error)
+}
+
+var _ ent.Mutation = (*RoomdetailMutation)(nil)
+
+// roomdetailOption allows to manage the mutation configuration using functional options.
+type roomdetailOption func(*RoomdetailMutation)
+
+// newRoomdetailMutation creates new mutation for $n.Name.
+func newRoomdetailMutation(c config, op Op, opts ...roomdetailOption) *RoomdetailMutation {
+	m := &RoomdetailMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeRoomdetail,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withRoomdetailID sets the id field of the mutation.
+func withRoomdetailID(id int) roomdetailOption {
+	return func(m *RoomdetailMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Roomdetail
+		)
+		m.oldValue = func(ctx context.Context) (*Roomdetail, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Roomdetail.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withRoomdetail sets the old Roomdetail of the mutation.
+func withRoomdetail(node *Roomdetail) roomdetailOption {
+	return func(m *RoomdetailMutation) {
+		m.oldValue = func(context.Context) (*Roomdetail, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m RoomdetailMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m RoomdetailMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *RoomdetailMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetRoomtypename sets the roomtypename field.
+func (m *RoomdetailMutation) SetRoomtypename(s string) {
+	m.roomtypename = &s
+}
+
+// Roomtypename returns the roomtypename value in the mutation.
+func (m *RoomdetailMutation) Roomtypename() (r string, exists bool) {
+	v := m.roomtypename
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRoomtypename returns the old roomtypename value of the Roomdetail.
+// If the Roomdetail object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RoomdetailMutation) OldRoomtypename(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRoomtypename is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRoomtypename requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRoomtypename: %w", err)
+	}
+	return oldValue.Roomtypename, nil
+}
+
+// ResetRoomtypename reset all changes of the "roomtypename" field.
+func (m *RoomdetailMutation) ResetRoomtypename() {
+	m.roomtypename = nil
+}
+
+// SetRoomprice sets the roomprice field.
+func (m *RoomdetailMutation) SetRoomprice(s string) {
+	m.roomprice = &s
+}
+
+// Roomprice returns the roomprice value in the mutation.
+func (m *RoomdetailMutation) Roomprice() (r string, exists bool) {
+	v := m.roomprice
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRoomprice returns the old roomprice value of the Roomdetail.
+// If the Roomdetail object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RoomdetailMutation) OldRoomprice(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRoomprice is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRoomprice requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRoomprice: %w", err)
+	}
+	return oldValue.Roomprice, nil
+}
+
+// ResetRoomprice reset all changes of the "roomprice" field.
+func (m *RoomdetailMutation) ResetRoomprice() {
+	m.roomprice = nil
+}
+
+// AddEquipmentIDs adds the equipments edge to Equipment by ids.
+func (m *RoomdetailMutation) AddEquipmentIDs(ids ...int) {
+	if m.equipments == nil {
+		m.equipments = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.equipments[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveEquipmentIDs removes the equipments edge to Equipment by ids.
+func (m *RoomdetailMutation) RemoveEquipmentIDs(ids ...int) {
+	if m.removedequipments == nil {
+		m.removedequipments = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedequipments[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedEquipments returns the removed ids of equipments.
+func (m *RoomdetailMutation) RemovedEquipmentsIDs() (ids []int) {
+	for id := range m.removedequipments {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// EquipmentsIDs returns the equipments ids in the mutation.
+func (m *RoomdetailMutation) EquipmentsIDs() (ids []int) {
+	for id := range m.equipments {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetEquipments reset all changes of the "equipments" edge.
+func (m *RoomdetailMutation) ResetEquipments() {
+	m.equipments = nil
+	m.removedequipments = nil
+}
+
+// AddFacilityIDs adds the facilities edge to Facilitie by ids.
+func (m *RoomdetailMutation) AddFacilityIDs(ids ...int) {
+	if m.facilities == nil {
+		m.facilities = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.facilities[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveFacilityIDs removes the facilities edge to Facilitie by ids.
+func (m *RoomdetailMutation) RemoveFacilityIDs(ids ...int) {
+	if m.removedfacilities == nil {
+		m.removedfacilities = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedfacilities[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedFacilities returns the removed ids of facilities.
+func (m *RoomdetailMutation) RemovedFacilitiesIDs() (ids []int) {
+	for id := range m.removedfacilities {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// FacilitiesIDs returns the facilities ids in the mutation.
+func (m *RoomdetailMutation) FacilitiesIDs() (ids []int) {
+	for id := range m.facilities {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetFacilities reset all changes of the "facilities" edge.
+func (m *RoomdetailMutation) ResetFacilities() {
+	m.facilities = nil
+	m.removedfacilities = nil
+}
+
+// AddNearbyplaceIDs adds the nearbyplaces edge to Nearbyplace by ids.
+func (m *RoomdetailMutation) AddNearbyplaceIDs(ids ...int) {
+	if m.nearbyplaces == nil {
+		m.nearbyplaces = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.nearbyplaces[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveNearbyplaceIDs removes the nearbyplaces edge to Nearbyplace by ids.
+func (m *RoomdetailMutation) RemoveNearbyplaceIDs(ids ...int) {
+	if m.removednearbyplaces == nil {
+		m.removednearbyplaces = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removednearbyplaces[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedNearbyplaces returns the removed ids of nearbyplaces.
+func (m *RoomdetailMutation) RemovedNearbyplacesIDs() (ids []int) {
+	for id := range m.removednearbyplaces {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// NearbyplacesIDs returns the nearbyplaces ids in the mutation.
+func (m *RoomdetailMutation) NearbyplacesIDs() (ids []int) {
+	for id := range m.nearbyplaces {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetNearbyplaces reset all changes of the "nearbyplaces" edge.
+func (m *RoomdetailMutation) ResetNearbyplaces() {
+	m.nearbyplaces = nil
+	m.removednearbyplaces = nil
+}
+
+// SetQuantityID sets the quantity edge to Quantity by id.
+func (m *RoomdetailMutation) SetQuantityID(id int) {
+	m.quantity = &id
+}
+
+// ClearQuantity clears the quantity edge to Quantity.
+func (m *RoomdetailMutation) ClearQuantity() {
+	m.clearedquantity = true
+}
+
+// QuantityCleared returns if the edge quantity was cleared.
+func (m *RoomdetailMutation) QuantityCleared() bool {
+	return m.clearedquantity
+}
+
+// QuantityID returns the quantity id in the mutation.
+func (m *RoomdetailMutation) QuantityID() (id int, exists bool) {
+	if m.quantity != nil {
+		return *m.quantity, true
+	}
+	return
+}
+
+// QuantityIDs returns the quantity ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// QuantityID instead. It exists only for internal usage by the builders.
+func (m *RoomdetailMutation) QuantityIDs() (ids []int) {
+	if id := m.quantity; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetQuantity reset all changes of the "quantity" edge.
+func (m *RoomdetailMutation) ResetQuantity() {
+	m.quantity = nil
+	m.clearedquantity = false
+}
+
+// SetStaytypeID sets the staytype edge to Staytype by id.
+func (m *RoomdetailMutation) SetStaytypeID(id int) {
+	m.staytype = &id
+}
+
+// ClearStaytype clears the staytype edge to Staytype.
+func (m *RoomdetailMutation) ClearStaytype() {
+	m.clearedstaytype = true
+}
+
+// StaytypeCleared returns if the edge staytype was cleared.
+func (m *RoomdetailMutation) StaytypeCleared() bool {
+	return m.clearedstaytype
+}
+
+// StaytypeID returns the staytype id in the mutation.
+func (m *RoomdetailMutation) StaytypeID() (id int, exists bool) {
+	if m.staytype != nil {
+		return *m.staytype, true
+	}
+	return
+}
+
+// StaytypeIDs returns the staytype ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// StaytypeID instead. It exists only for internal usage by the builders.
+func (m *RoomdetailMutation) StaytypeIDs() (ids []int) {
+	if id := m.staytype; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetStaytype reset all changes of the "staytype" edge.
+func (m *RoomdetailMutation) ResetStaytype() {
+	m.staytype = nil
+	m.clearedstaytype = false
+}
+
+// Op returns the operation name.
+func (m *RoomdetailMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Roomdetail).
+func (m *RoomdetailMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *RoomdetailMutation) Fields() []string {
+	fields := make([]string, 0, 2)
+	if m.roomtypename != nil {
+		fields = append(fields, roomdetail.FieldRoomtypename)
+	}
+	if m.roomprice != nil {
+		fields = append(fields, roomdetail.FieldRoomprice)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *RoomdetailMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case roomdetail.FieldRoomtypename:
+		return m.Roomtypename()
+	case roomdetail.FieldRoomprice:
+		return m.Roomprice()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *RoomdetailMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case roomdetail.FieldRoomtypename:
+		return m.OldRoomtypename(ctx)
+	case roomdetail.FieldRoomprice:
+		return m.OldRoomprice(ctx)
+	}
+	return nil, fmt.Errorf("unknown Roomdetail field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case roomdetail.FieldRoomtypename:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRoomtypename(v)
+		return nil
+	case roomdetail.FieldRoomprice:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRoomprice(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Roomdetail field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *RoomdetailMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *RoomdetailMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Roomdetail numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *RoomdetailMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *RoomdetailMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *RoomdetailMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Roomdetail nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *RoomdetailMutation) ResetField(name string) error {
+	switch name {
+	case roomdetail.FieldRoomtypename:
+		m.ResetRoomtypename()
+		return nil
+	case roomdetail.FieldRoomprice:
+		m.ResetRoomprice()
+		return nil
+	}
+	return fmt.Errorf("unknown Roomdetail field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *RoomdetailMutation) AddedEdges() []string {
+	edges := make([]string, 0, 5)
+	if m.equipments != nil {
+		edges = append(edges, roomdetail.EdgeEquipments)
+	}
+	if m.facilities != nil {
+		edges = append(edges, roomdetail.EdgeFacilities)
+	}
+	if m.nearbyplaces != nil {
+		edges = append(edges, roomdetail.EdgeNearbyplaces)
+	}
+	if m.quantity != nil {
+		edges = append(edges, roomdetail.EdgeQuantity)
+	}
+	if m.staytype != nil {
+		edges = append(edges, roomdetail.EdgeStaytype)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case roomdetail.EdgeEquipments:
+		ids := make([]ent.Value, 0, len(m.equipments))
+		for id := range m.equipments {
+			ids = append(ids, id)
+		}
+		return ids
+	case roomdetail.EdgeFacilities:
+		ids := make([]ent.Value, 0, len(m.facilities))
+		for id := range m.facilities {
+			ids = append(ids, id)
+		}
+		return ids
+	case roomdetail.EdgeNearbyplaces:
+		ids := make([]ent.Value, 0, len(m.nearbyplaces))
+		for id := range m.nearbyplaces {
+			ids = append(ids, id)
+		}
+		return ids
+	case roomdetail.EdgeQuantity:
+		if id := m.quantity; id != nil {
+			return []ent.Value{*id}
+		}
+	case roomdetail.EdgeStaytype:
+		if id := m.staytype; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *RoomdetailMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 5)
+	if m.removedequipments != nil {
+		edges = append(edges, roomdetail.EdgeEquipments)
+	}
+	if m.removedfacilities != nil {
+		edges = append(edges, roomdetail.EdgeFacilities)
+	}
+	if m.removednearbyplaces != nil {
+		edges = append(edges, roomdetail.EdgeNearbyplaces)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *RoomdetailMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case roomdetail.EdgeEquipments:
+		ids := make([]ent.Value, 0, len(m.removedequipments))
+		for id := range m.removedequipments {
+			ids = append(ids, id)
+		}
+		return ids
+	case roomdetail.EdgeFacilities:
+		ids := make([]ent.Value, 0, len(m.removedfacilities))
+		for id := range m.removedfacilities {
+			ids = append(ids, id)
+		}
+		return ids
+	case roomdetail.EdgeNearbyplaces:
+		ids := make([]ent.Value, 0, len(m.removednearbyplaces))
+		for id := range m.removednearbyplaces {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *RoomdetailMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 5)
+	if m.clearedquantity {
+		edges = append(edges, roomdetail.EdgeQuantity)
+	}
+	if m.clearedstaytype {
+		edges = append(edges, roomdetail.EdgeStaytype)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *RoomdetailMutation) EdgeCleared(name string) bool {
+	switch name {
+	case roomdetail.EdgeQuantity:
+		return m.clearedquantity
+	case roomdetail.EdgeStaytype:
+		return m.clearedstaytype
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *RoomdetailMutation) ClearEdge(name string) error {
+	switch name {
+	case roomdetail.EdgeQuantity:
+		m.ClearQuantity()
+		return nil
+	case roomdetail.EdgeStaytype:
+		m.ClearStaytype()
+		return nil
+	}
+	return fmt.Errorf("unknown Roomdetail unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *RoomdetailMutation) ResetEdge(name string) error {
+	switch name {
+	case roomdetail.EdgeEquipments:
+		m.ResetEquipments()
+		return nil
+	case roomdetail.EdgeFacilities:
+		m.ResetFacilities()
+		return nil
+	case roomdetail.EdgeNearbyplaces:
+		m.ResetNearbyplaces()
+		return nil
+	case roomdetail.EdgeQuantity:
+		m.ResetQuantity()
+		return nil
+	case roomdetail.EdgeStaytype:
+		m.ResetStaytype()
+		return nil
+	}
+	return fmt.Errorf("unknown Roomdetail edge %s", name)
+}
+
 // StatusdMutation represents an operation that mutate the Statusds
 // nodes in the graph.
 type StatusdMutation struct {
@@ -2567,4 +4704,372 @@ func (m *StatusdMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Statusd edge %s", name)
+}
+
+// StaytypeMutation represents an operation that mutate the Staytypes
+// nodes in the graph.
+type StaytypeMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *int
+	staytype           *string
+	clearedFields      map[string]struct{}
+	roomdetails        map[int]struct{}
+	removedroomdetails map[int]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Staytype, error)
+}
+
+var _ ent.Mutation = (*StaytypeMutation)(nil)
+
+// staytypeOption allows to manage the mutation configuration using functional options.
+type staytypeOption func(*StaytypeMutation)
+
+// newStaytypeMutation creates new mutation for $n.Name.
+func newStaytypeMutation(c config, op Op, opts ...staytypeOption) *StaytypeMutation {
+	m := &StaytypeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeStaytype,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withStaytypeID sets the id field of the mutation.
+func withStaytypeID(id int) staytypeOption {
+	return func(m *StaytypeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Staytype
+		)
+		m.oldValue = func(ctx context.Context) (*Staytype, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Staytype.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withStaytype sets the old Staytype of the mutation.
+func withStaytype(node *Staytype) staytypeOption {
+	return func(m *StaytypeMutation) {
+		m.oldValue = func(context.Context) (*Staytype, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m StaytypeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m StaytypeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *StaytypeMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetStaytype sets the staytype field.
+func (m *StaytypeMutation) SetStaytype(s string) {
+	m.staytype = &s
+}
+
+// Staytype returns the staytype value in the mutation.
+func (m *StaytypeMutation) Staytype() (r string, exists bool) {
+	v := m.staytype
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStaytype returns the old staytype value of the Staytype.
+// If the Staytype object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *StaytypeMutation) OldStaytype(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldStaytype is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldStaytype requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStaytype: %w", err)
+	}
+	return oldValue.Staytype, nil
+}
+
+// ResetStaytype reset all changes of the "staytype" field.
+func (m *StaytypeMutation) ResetStaytype() {
+	m.staytype = nil
+}
+
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (m *StaytypeMutation) AddRoomdetailIDs(ids ...int) {
+	if m.roomdetails == nil {
+		m.roomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.roomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (m *StaytypeMutation) RemoveRoomdetailIDs(ids ...int) {
+	if m.removedroomdetails == nil {
+		m.removedroomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedroomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoomdetails returns the removed ids of roomdetails.
+func (m *StaytypeMutation) RemovedRoomdetailsIDs() (ids []int) {
+	for id := range m.removedroomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RoomdetailsIDs returns the roomdetails ids in the mutation.
+func (m *StaytypeMutation) RoomdetailsIDs() (ids []int) {
+	for id := range m.roomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoomdetails reset all changes of the "roomdetails" edge.
+func (m *StaytypeMutation) ResetRoomdetails() {
+	m.roomdetails = nil
+	m.removedroomdetails = nil
+}
+
+// Op returns the operation name.
+func (m *StaytypeMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Staytype).
+func (m *StaytypeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *StaytypeMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.staytype != nil {
+		fields = append(fields, staytype.FieldStaytype)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *StaytypeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case staytype.FieldStaytype:
+		return m.Staytype()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *StaytypeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case staytype.FieldStaytype:
+		return m.OldStaytype(ctx)
+	}
+	return nil, fmt.Errorf("unknown Staytype field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *StaytypeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case staytype.FieldStaytype:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStaytype(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Staytype field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *StaytypeMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *StaytypeMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *StaytypeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Staytype numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *StaytypeMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *StaytypeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *StaytypeMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Staytype nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *StaytypeMutation) ResetField(name string) error {
+	switch name {
+	case staytype.FieldStaytype:
+		m.ResetStaytype()
+		return nil
+	}
+	return fmt.Errorf("unknown Staytype field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *StaytypeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roomdetails != nil {
+		edges = append(edges, staytype.EdgeRoomdetails)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *StaytypeMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case staytype.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.roomdetails))
+		for id := range m.roomdetails {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *StaytypeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedroomdetails != nil {
+		edges = append(edges, staytype.EdgeRoomdetails)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *StaytypeMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case staytype.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.removedroomdetails))
+		for id := range m.removedroomdetails {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *StaytypeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *StaytypeMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *StaytypeMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Staytype unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *StaytypeMutation) ResetEdge(name string) error {
+	switch name {
+	case staytype.EdgeRoomdetails:
+		m.ResetRoomdetails()
+		return nil
+	}
+	return fmt.Errorf("unknown Staytype edge %s", name)
 }

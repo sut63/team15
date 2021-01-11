@@ -28,8 +28,14 @@ type hooks struct {
 	CleaningRoom []ent.Hook
 	Deposit      []ent.Hook
 	Employee     []ent.Hook
+	Equipment    []ent.Hook
+	Facilitie    []ent.Hook
 	LengthTime   []ent.Hook
+	Nearbyplace  []ent.Hook
+	Quantity     []ent.Hook
+	Roomdetail   []ent.Hook
 	Statusd      []ent.Hook
+	Staytype     []ent.Hook
 }
 
 // Options applies the options on the config object.
