@@ -13,7 +13,6 @@ import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/lengthtime"
-	"github.com/team15/app/ent/room"
 )
 
 // CleaningRoomCreate is the builder for creating a CleaningRoom entity.
@@ -33,25 +32,6 @@ func (crc *CleaningRoomCreate) SetDateandstarttime(t time.Time) *CleaningRoomCre
 func (crc *CleaningRoomCreate) SetNote(s string) *CleaningRoomCreate {
 	crc.mutation.SetNote(s)
 	return crc
-}
-
-// SetRoomID sets the Room edge to Room by id.
-func (crc *CleaningRoomCreate) SetRoomID(id int) *CleaningRoomCreate {
-	crc.mutation.SetRoomID(id)
-	return crc
-}
-
-// SetNillableRoomID sets the Room edge to Room by id if the given value is not nil.
-func (crc *CleaningRoomCreate) SetNillableRoomID(id *int) *CleaningRoomCreate {
-	if id != nil {
-		crc = crc.SetRoomID(*id)
-	}
-	return crc
-}
-
-// SetRoom sets the Room edge to Room.
-func (crc *CleaningRoomCreate) SetRoom(r *Room) *CleaningRoomCreate {
-	return crc.SetRoomID(r.ID)
 }
 
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
@@ -180,25 +160,6 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 			Column: cleaningroom.FieldNote,
 		})
 		cr.Note = value
-	}
-	if nodes := crc.mutation.RoomIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   cleaningroom.RoomTable,
-			Columns: []string{cleaningroom.RoomColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: room.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := crc.mutation.CleanerNameIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

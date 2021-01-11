@@ -12,8 +12,6 @@ const (
 	// FieldNote holds the string denoting the note field in the database.
 	FieldNote = "note"
 
-	// EdgeRoom holds the string denoting the room edge name in mutations.
-	EdgeRoom = "Room"
 	// EdgeCleanerName holds the string denoting the cleanername edge name in mutations.
 	EdgeCleanerName = "CleanerName"
 	// EdgeLengthTime holds the string denoting the lengthtime edge name in mutations.
@@ -21,13 +19,6 @@ const (
 
 	// Table holds the table name of the cleaningroom in the database.
 	Table = "cleaning_rooms"
-	// RoomTable is the table the holds the Room relation/edge.
-	RoomTable = "cleaning_rooms"
-	// RoomInverseTable is the table name for the Room entity.
-	// It exists in this package in order to avoid circular dependency with the "room" package.
-	RoomInverseTable = "rooms"
-	// RoomColumn is the table column denoting the Room relation/edge.
-	RoomColumn = "room_cleaningrooms"
 	// CleanerNameTable is the table the holds the CleanerName relation/edge.
 	CleanerNameTable = "cleaning_rooms"
 	// CleanerNameInverseTable is the table name for the CleanerName entity.
@@ -55,5 +46,4 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"cleanerroom_id",
 	"lengthtime_id",
-	"room_cleaningrooms",
 }

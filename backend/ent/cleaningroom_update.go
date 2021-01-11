@@ -14,7 +14,6 @@ import (
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/predicate"
-	"github.com/team15/app/ent/room"
 )
 
 // CleaningRoomUpdate is the builder for updating CleaningRoom entities.
@@ -41,25 +40,6 @@ func (cru *CleaningRoomUpdate) SetDateandstarttime(t time.Time) *CleaningRoomUpd
 func (cru *CleaningRoomUpdate) SetNote(s string) *CleaningRoomUpdate {
 	cru.mutation.SetNote(s)
 	return cru
-}
-
-// SetRoomID sets the Room edge to Room by id.
-func (cru *CleaningRoomUpdate) SetRoomID(id int) *CleaningRoomUpdate {
-	cru.mutation.SetRoomID(id)
-	return cru
-}
-
-// SetNillableRoomID sets the Room edge to Room by id if the given value is not nil.
-func (cru *CleaningRoomUpdate) SetNillableRoomID(id *int) *CleaningRoomUpdate {
-	if id != nil {
-		cru = cru.SetRoomID(*id)
-	}
-	return cru
-}
-
-// SetRoom sets the Room edge to Room.
-func (cru *CleaningRoomUpdate) SetRoom(r *Room) *CleaningRoomUpdate {
-	return cru.SetRoomID(r.ID)
 }
 
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
@@ -103,12 +83,6 @@ func (cru *CleaningRoomUpdate) SetLengthTime(l *LengthTime) *CleaningRoomUpdate 
 // Mutation returns the CleaningRoomMutation object of the builder.
 func (cru *CleaningRoomUpdate) Mutation() *CleaningRoomMutation {
 	return cru.mutation
-}
-
-// ClearRoom clears the Room edge to Room.
-func (cru *CleaningRoomUpdate) ClearRoom() *CleaningRoomUpdate {
-	cru.mutation.ClearRoom()
-	return cru
 }
 
 // ClearCleanerName clears the CleanerName edge to CleanerName.
@@ -206,41 +180,6 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Value:  value,
 			Column: cleaningroom.FieldNote,
 		})
-	}
-	if cru.mutation.RoomCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   cleaningroom.RoomTable,
-			Columns: []string{cleaningroom.RoomColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: room.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := cru.mutation.RoomIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   cleaningroom.RoomTable,
-			Columns: []string{cleaningroom.RoomColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: room.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if cru.mutation.CleanerNameCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -342,25 +281,6 @@ func (cruo *CleaningRoomUpdateOne) SetNote(s string) *CleaningRoomUpdateOne {
 	return cruo
 }
 
-// SetRoomID sets the Room edge to Room by id.
-func (cruo *CleaningRoomUpdateOne) SetRoomID(id int) *CleaningRoomUpdateOne {
-	cruo.mutation.SetRoomID(id)
-	return cruo
-}
-
-// SetNillableRoomID sets the Room edge to Room by id if the given value is not nil.
-func (cruo *CleaningRoomUpdateOne) SetNillableRoomID(id *int) *CleaningRoomUpdateOne {
-	if id != nil {
-		cruo = cruo.SetRoomID(*id)
-	}
-	return cruo
-}
-
-// SetRoom sets the Room edge to Room.
-func (cruo *CleaningRoomUpdateOne) SetRoom(r *Room) *CleaningRoomUpdateOne {
-	return cruo.SetRoomID(r.ID)
-}
-
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
 func (cruo *CleaningRoomUpdateOne) SetCleanerNameID(id int) *CleaningRoomUpdateOne {
 	cruo.mutation.SetCleanerNameID(id)
@@ -402,12 +322,6 @@ func (cruo *CleaningRoomUpdateOne) SetLengthTime(l *LengthTime) *CleaningRoomUpd
 // Mutation returns the CleaningRoomMutation object of the builder.
 func (cruo *CleaningRoomUpdateOne) Mutation() *CleaningRoomMutation {
 	return cruo.mutation
-}
-
-// ClearRoom clears the Room edge to Room.
-func (cruo *CleaningRoomUpdateOne) ClearRoom() *CleaningRoomUpdateOne {
-	cruo.mutation.ClearRoom()
-	return cruo
 }
 
 // ClearCleanerName clears the CleanerName edge to CleanerName.
@@ -503,41 +417,6 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 			Value:  value,
 			Column: cleaningroom.FieldNote,
 		})
-	}
-	if cruo.mutation.RoomCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   cleaningroom.RoomTable,
-			Columns: []string{cleaningroom.RoomColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: room.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := cruo.mutation.RoomIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   cleaningroom.RoomTable,
-			Columns: []string{cleaningroom.RoomColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: room.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if cruo.mutation.CleanerNameCleared() {
 		edge := &sqlgraph.EdgeSpec{

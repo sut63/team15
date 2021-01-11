@@ -10,7 +10,6 @@ import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/lengthtime"
-	"github.com/team15/app/ent/room"
 )
 
 // CleaningRoomController defines the struct for the cleaningroom controller
@@ -22,7 +21,6 @@ type CleaningRoomController struct {
 type CleaningRoom struct {
 	Dateandstarttime string
 	Note             string
-	Room             int
 	CleanerName      int
 	LengthTime       int
 }
@@ -43,18 +41,6 @@ func (ctl *CleaningRoomController) CreateCleaningRoom(c *gin.Context) {
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "cleaningroom binding failed",
-		})
-		return
-	}
-
-	r, err := ctl.client.Room.
-		Query().
-		Where(room.IDEQ(int(obj.Room))).
-		Only(context.Background())
-
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "room not found",
 		})
 		return
 	}
@@ -87,7 +73,6 @@ func (ctl *CleaningRoomController) CreateCleaningRoom(c *gin.Context) {
 		Create().
 		SetDateandstarttime(time).
 		SetNote(obj.Note).
-		SetRoom(r).
 		SetCleanerName(cn).
 		SetLengthTime(lt).
 		Save(context.Background())
@@ -189,16 +174,15 @@ func NewCleaningRoomController(router gin.IRouter, client *ent.Client) *Cleaning
 	}
 	uc.register()
 	return uc
- }
-  
- // InitCleaningRoomController registers routes to the main engine
- func (ctl *CleaningRoomController) register() {
+}
+
+// InitCleaningRoomController registers routes to the main engine
+func (ctl *CleaningRoomController) register() {
 	cleaningrooms := ctl.router.Group("/cleaningrooms")
-  
+
 	cleaningrooms.GET("", ctl.ListCleaningRoom)
-  
+
 	// CRUD
 	cleaningrooms.POST("", ctl.CreateCleaningRoom)
 	cleaningrooms.GET(":id", ctl.GetCleaningRoom)
- }
- 
+}

@@ -15,7 +15,6 @@ import (
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/predicate"
-	"github.com/team15/app/ent/room"
 )
 
 // CleaningRoomQuery is the builder for querying CleaningRoom entities.
@@ -27,7 +26,6 @@ type CleaningRoomQuery struct {
 	unique     []string
 	predicates []predicate.CleaningRoom
 	// eager-loading edges.
-	withRoom        *RoomQuery
 	withCleanerName *CleanerNameQuery
 	withLengthTime  *LengthTimeQuery
 	withFKs         bool
@@ -58,24 +56,6 @@ func (crq *CleaningRoomQuery) Offset(offset int) *CleaningRoomQuery {
 func (crq *CleaningRoomQuery) Order(o ...OrderFunc) *CleaningRoomQuery {
 	crq.order = append(crq.order, o...)
 	return crq
-}
-
-// QueryRoom chains the current query on the Room edge.
-func (crq *CleaningRoomQuery) QueryRoom() *RoomQuery {
-	query := &RoomQuery{config: crq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := crq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, crq.sqlQuery()),
-			sqlgraph.To(room.Table, room.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.RoomTable, cleaningroom.RoomColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(crq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // QueryCleanerName chains the current query on the CleanerName edge.
@@ -293,17 +273,6 @@ func (crq *CleaningRoomQuery) Clone() *CleaningRoomQuery {
 	}
 }
 
-//  WithRoom tells the query-builder to eager-loads the nodes that are connected to
-// the "Room" edge. The optional arguments used to configure the query builder of the edge.
-func (crq *CleaningRoomQuery) WithRoom(opts ...func(*RoomQuery)) *CleaningRoomQuery {
-	query := &RoomQuery{config: crq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	crq.withRoom = query
-	return crq
-}
-
 //  WithCleanerName tells the query-builder to eager-loads the nodes that are connected to
 // the "CleanerName" edge. The optional arguments used to configure the query builder of the edge.
 func (crq *CleaningRoomQuery) WithCleanerName(opts ...func(*CleanerNameQuery)) *CleaningRoomQuery {
@@ -393,13 +362,12 @@ func (crq *CleaningRoomQuery) sqlAll(ctx context.Context) ([]*CleaningRoom, erro
 		nodes       = []*CleaningRoom{}
 		withFKs     = crq.withFKs
 		_spec       = crq.querySpec()
-		loadedTypes = [3]bool{
-			crq.withRoom != nil,
+		loadedTypes = [2]bool{
 			crq.withCleanerName != nil,
 			crq.withLengthTime != nil,
 		}
 	)
-	if crq.withRoom != nil || crq.withCleanerName != nil || crq.withLengthTime != nil {
+	if crq.withCleanerName != nil || crq.withLengthTime != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -427,31 +395,6 @@ func (crq *CleaningRoomQuery) sqlAll(ctx context.Context) ([]*CleaningRoom, erro
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
-	}
-
-	if query := crq.withRoom; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*CleaningRoom)
-		for i := range nodes {
-			if fk := nodes[i].room_cleaningrooms; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(room.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "room_cleaningrooms" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Room = n
-			}
-		}
 	}
 
 	if query := crq.withCleanerName; query != nil {

@@ -20,22 +20,10 @@ type Tx struct {
 	Deposit *DepositClient
 	// Employee is the client for interacting with the Employee builders.
 	Employee *EmployeeClient
-	// Equipment is the client for interacting with the Equipment builders.
-	Equipment *EquipmentClient
-	// Facility is the client for interacting with the Facility builders.
-	Facility *FacilityClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
-	// NearbyPlace is the client for interacting with the NearbyPlace builders.
-	NearbyPlace *NearbyPlaceClient
-	// Quantity is the client for interacting with the Quantity builders.
-	Quantity *QuantityClient
-	// Room is the client for interacting with the Room builders.
-	Room *RoomClient
 	// Statusd is the client for interacting with the Statusd builders.
 	Statusd *StatusdClient
-	// StayType is the client for interacting with the StayType builders.
-	StayType *StayTypeClient
 
 	// lazily loaded.
 	client     *Client
@@ -175,14 +163,8 @@ func (tx *Tx) init() {
 	tx.CleaningRoom = NewCleaningRoomClient(tx.config)
 	tx.Deposit = NewDepositClient(tx.config)
 	tx.Employee = NewEmployeeClient(tx.config)
-	tx.Equipment = NewEquipmentClient(tx.config)
-	tx.Facility = NewFacilityClient(tx.config)
 	tx.LengthTime = NewLengthTimeClient(tx.config)
-	tx.NearbyPlace = NewNearbyPlaceClient(tx.config)
-	tx.Quantity = NewQuantityClient(tx.config)
-	tx.Room = NewRoomClient(tx.config)
 	tx.Statusd = NewStatusdClient(tx.config)
-	tx.StayType = NewStayTypeClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

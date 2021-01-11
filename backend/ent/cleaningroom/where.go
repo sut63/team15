@@ -294,34 +294,6 @@ func NoteContainsFold(v string) predicate.CleaningRoom {
 	})
 }
 
-// HasRoom applies the HasEdge predicate on the "Room" edge.
-func HasRoom() predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(RoomTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, RoomTable, RoomColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasRoomWith applies the HasEdge predicate on the "Room" edge with a given conditions (other predicates).
-func HasRoomWith(preds ...predicate.Room) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(RoomInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, RoomTable, RoomColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // HasCleanerName applies the HasEdge predicate on the "CleanerName" edge.
 func HasCleanerName() predicate.CleaningRoom {
 	return predicate.CleaningRoom(func(s *sql.Selector) {

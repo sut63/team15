@@ -14,46 +14,6 @@ import (
 	"github.com/team15/app/ent"
 )
 
-type Quantitys struct {
-	Quantity []Quantity
-}
-
-type Quantity struct {
-	Quantity int
-}
-
-type StayTypes struct {
-	StayType []StayType
-}
-
-type StayType struct {
-	StayType string
-}
-
-type Equipments struct {
-	Equipment []Equipment
-}
-
-type Equipment struct {
-	Equipment string
-}
-
-type Facilitys struct {
-	Facility []Facility
-}
-
-type Facility struct {
-	Facility string
-}
-
-type NearbyPlaces struct {
-	NearbyPlace []NearbyPlace
-}
-
-type NearbyPlace struct {
-	Placename string
-}
-
 type Employees struct {
 	Employee []Employee
 }
@@ -142,92 +102,12 @@ func main() {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 	v1 := router.Group("/api/v1")
-	controllers.NewRoomController(v1, client)
-	controllers.NewQuantityController(v1, client)
-	controllers.NewStayTypeController(v1, client)
-	controllers.NewFacilityController(v1, client)
-	controllers.NewEquipmentController(v1, client)
-	controllers.NewNearbyPlaceController(v1, client)
 	controllers.NewStatusdController(v1, client)
 	controllers.NewEmployeeController(v1, client)
 	controllers.NewDepositController(v1, client)
 	controllers.NewCleaningRoomController(v1, client)
 	controllers.NewCleanerNameController(v1, client)
 	controllers.NewLengthTimeController(v1, client)
-
-	// Set Quantity Data
-	quantitys := Quantitys{
-		Quantity: []Quantity{
-			Quantity{2},
-			Quantity{4},
-			Quantity{6},
-		},
-	}
-	for _, q := range quantitys.Quantity {
-		client.Quantity.
-			Create().
-			SetQuantity(q.Quantity).
-			Save(context.Background())
-	}
-
-	// Set StayType Data
-	staytypes := StayTypes{
-		StayType: []StayType{
-			StayType{"Days"},
-			StayType{"Month"},
-			StayType{"Days & Month"},
-		},
-	}
-	for _, st := range staytypes.StayType {
-		client.StayType.
-			Create().
-			SetStaytype(st.StayType).
-			Save(context.Background())
-	}
-
-	// Set Equipment Data
-	equipments := Equipments{
-		Equipment: []Equipment{
-			Equipment{"Bed"},
-			Equipment{"Wardrobe"},
-			Equipment{"Hot kettle"},
-		},
-	}
-	for _, eq := range equipments.Equipment {
-		client.Equipment.
-			Create().
-			SetEquipment(eq.Equipment).
-			Save(context.Background())
-	}
-	// Set Facility Data
-	facilitys := Facilitys{
-		Facility: []Facility{
-			Facility{"Swimming pool"},
-			Facility{"Breakfast"},
-			Facility{"Fitness"},
-		},
-	}
-	for _, fa := range facilitys.Facility {
-		client.Facility.
-			Create().
-			SetFacility(fa.Facility).
-			Save(context.Background())
-	}
-
-	// Set NearbyPlace Data
-	nearbyplaces := NearbyPlaces{
-		NearbyPlace: []NearbyPlace{
-			NearbyPlace{"Shopping mall"},
-			NearbyPlace{"Supermarket"},
-			NearbyPlace{"BTS"},
-		},
-	}
-	for _, np := range nearbyplaces.NearbyPlace {
-		client.NearbyPlace.
-			Create().
-			SetPlacename(np.Placename).
-			Save(context.Background())
-	}
 
 	// Set Employees Data
 	employees := Employees{

@@ -6,8 +6,6 @@ import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
-	"github.com/team15/app/ent/quantity"
-	"github.com/team15/app/ent/room"
 	"github.com/team15/app/ent/schema"
 	"github.com/team15/app/ent/statusd"
 )
@@ -42,18 +40,6 @@ func init() {
 	lengthtimeDescLengthtime := lengthtimeFields[0].Descriptor()
 	// lengthtime.LengthtimeValidator is a validator for the "lengthtime" field. It is called by the builders before save.
 	lengthtime.LengthtimeValidator = lengthtimeDescLengthtime.Validators[0].(func(string) error)
-	quantityFields := schema.Quantity{}.Fields()
-	_ = quantityFields
-	// quantityDescQuantity is the schema descriptor for quantity field.
-	quantityDescQuantity := quantityFields[0].Descriptor()
-	// quantity.QuantityValidator is a validator for the "quantity" field. It is called by the builders before save.
-	quantity.QuantityValidator = quantityDescQuantity.Validators[0].(func(int) error)
-	roomFields := schema.Room{}.Fields()
-	_ = roomFields
-	// roomDescRoomprice is the schema descriptor for roomprice field.
-	roomDescRoomprice := roomFields[0].Descriptor()
-	// room.RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
-	room.RoompriceValidator = roomDescRoomprice.Validators[0].(func(int) error)
 	statusdFields := schema.Statusd{}.Fields()
 	_ = statusdFields
 	// statusdDescStatusdname is the schema descriptor for statusdname field.
