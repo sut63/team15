@@ -14,55 +14,55 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntNearbyPlaceEdges,
-    EntNearbyPlaceEdgesFromJSON,
-    EntNearbyPlaceEdgesFromJSONTyped,
-    EntNearbyPlaceEdgesToJSON,
+    EntNearbyplaceEdges,
+    EntNearbyplaceEdgesFromJSON,
+    EntNearbyplaceEdgesFromJSONTyped,
+    EntNearbyplaceEdgesToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntNearbyPlace
+ * @interface EntNearbyplace
  */
-export interface EntNearbyPlace {
+export interface EntNearbyplace {
     /**
      * 
-     * @type {EntNearbyPlaceEdges}
-     * @memberof EntNearbyPlace
+     * @type {EntNearbyplaceEdges}
+     * @memberof EntNearbyplace
      */
-    edges?: EntNearbyPlaceEdges;
+    edges?: EntNearbyplaceEdges;
     /**
      * ID of the ent.
      * @type {number}
-     * @memberof EntNearbyPlace
+     * @memberof EntNearbyplace
      */
     id?: number;
     /**
-     * Placename holds the value of the "placename" field.
+     * Nearbyplace holds the value of the "nearbyplace" field.
      * @type {string}
-     * @memberof EntNearbyPlace
+     * @memberof EntNearbyplace
      */
-    placename?: string;
+    nearbyplace?: string;
 }
 
-export function EntNearbyPlaceFromJSON(json: any): EntNearbyPlace {
-    return EntNearbyPlaceFromJSONTyped(json, false);
+export function EntNearbyplaceFromJSON(json: any): EntNearbyplace {
+    return EntNearbyplaceFromJSONTyped(json, false);
 }
 
-export function EntNearbyPlaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntNearbyPlace {
+export function EntNearbyplaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntNearbyplace {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'edges': !exists(json, 'edges') ? undefined : EntNearbyPlaceEdgesFromJSON(json['edges']),
+        'edges': !exists(json, 'edges') ? undefined : EntNearbyplaceEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'placename': !exists(json, 'placename') ? undefined : json['placename'],
+        'nearbyplace': !exists(json, 'nearbyplace') ? undefined : json['nearbyplace'],
     };
 }
 
-export function EntNearbyPlaceToJSON(value?: EntNearbyPlace | null): any {
+export function EntNearbyplaceToJSON(value?: EntNearbyplace | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -71,9 +71,9 @@ export function EntNearbyPlaceToJSON(value?: EntNearbyPlace | null): any {
     }
     return {
         
-        'edges': EntNearbyPlaceEdgesToJSON(value.edges),
+        'edges': EntNearbyplaceEdgesToJSON(value.edges),
         'id': value.id,
-        'placename': value.placename,
+        'nearbyplace': value.nearbyplace,
     };
 }
 

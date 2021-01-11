@@ -18,9 +18,15 @@ import {
     ControllersDeposit,
     ControllersDepositFromJSON,
     ControllersDepositToJSON,
-    ControllersRoom,
-    ControllersRoomFromJSON,
-    ControllersRoomToJSON,
+    ControllersRoomdetail,
+    ControllersRoomdetailFromJSON,
+    ControllersRoomdetailToJSON,
+    EntCleanerName,
+    EntCleanerNameFromJSON,
+    EntCleanerNameToJSON,
+    EntCleaningRoom,
+    EntCleaningRoomFromJSON,
+    EntCleaningRoomToJSON,
     EntDeposit,
     EntDepositFromJSON,
     EntDepositToJSON,
@@ -30,25 +36,32 @@ import {
     EntEquipment,
     EntEquipmentFromJSON,
     EntEquipmentToJSON,
-    EntFacility,
-    EntFacilityFromJSON,
-    EntFacilityToJSON,
-    EntNearbyPlace,
-    EntNearbyPlaceFromJSON,
-    EntNearbyPlaceToJSON,
+    EntFacilitie,
+    EntFacilitieFromJSON,
+    EntFacilitieToJSON,
+    EntLengthTime,
+    EntLengthTimeFromJSON,
+    EntLengthTimeToJSON,
+    EntNearbyplace,
+    EntNearbyplaceFromJSON,
+    EntNearbyplaceToJSON,
     EntQuantity,
     EntQuantityFromJSON,
     EntQuantityToJSON,
-    EntRoom,
-    EntRoomFromJSON,
-    EntRoomToJSON,
+    EntRoomdetail,
+    EntRoomdetailFromJSON,
+    EntRoomdetailToJSON,
     EntStatusd,
     EntStatusdFromJSON,
     EntStatusdToJSON,
-    EntStayType,
-    EntStayTypeFromJSON,
-    EntStayTypeToJSON,
+    EntStaytype,
+    EntStaytypeFromJSON,
+    EntStaytypeToJSON,
 } from '../models';
+
+export interface CreateCleaningroomRequest {
+    cleaningroom: EntCleaningRoom;
+}
 
 export interface CreateDepositRequest {
     deposit: ControllersDeposit;
@@ -62,20 +75,20 @@ export interface CreateEquipmentRequest {
     equipment: EntEquipment;
 }
 
-export interface CreateFacilityRequest {
-    facility: EntFacility;
+export interface CreateFacilitieRequest {
+    facilitie: EntFacilitie;
 }
 
 export interface CreateNearbyplaceRequest {
-    nearbyplace: EntNearbyPlace;
+    nearbyplace: EntNearbyplace;
 }
 
 export interface CreateQuantityRequest {
     quantity: EntQuantity;
 }
 
-export interface CreateRoomRequest {
-    room: ControllersRoom;
+export interface CreateRoomdetailRequest {
+    roomdetail: ControllersRoomdetail;
 }
 
 export interface CreateStatusdRequest {
@@ -83,7 +96,7 @@ export interface CreateStatusdRequest {
 }
 
 export interface CreateStaytypeRequest {
-    staytype: EntStayType;
+    staytype: EntStaytype;
 }
 
 export interface DeleteEmployeeRequest {
@@ -94,7 +107,7 @@ export interface DeleteEquipmentRequest {
     id: number;
 }
 
-export interface DeleteFacilityRequest {
+export interface DeleteFacilitieRequest {
     id: number;
 }
 
@@ -106,7 +119,7 @@ export interface DeleteQuantityRequest {
     id: number;
 }
 
-export interface DeleteRoomRequest {
+export interface DeleteRoomdetailRequest {
     id: number;
 }
 
@@ -118,6 +131,14 @@ export interface DeleteStaytypeRequest {
     id: number;
 }
 
+export interface GetCleanernameRequest {
+    id: number;
+}
+
+export interface GetCleaningroomRequest {
+    id: number;
+}
+
 export interface GetEmployeeRequest {
     id: number;
 }
@@ -126,7 +147,11 @@ export interface GetEquipmentRequest {
     id: number;
 }
 
-export interface GetFacilityRequest {
+export interface GetFacilitieRequest {
+    id: number;
+}
+
+export interface GetLengthtimeRequest {
     id: number;
 }
 
@@ -146,6 +171,16 @@ export interface GetStaytypeRequest {
     id: number;
 }
 
+export interface ListCleanernameRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListCleaningroomRequest {
+    limit?: number;
+    offset?: number;
+}
+
 export interface ListDepositRequest {
     limit?: number;
     offset?: number;
@@ -161,7 +196,12 @@ export interface ListEquipmentRequest {
     offset?: number;
 }
 
-export interface ListFacilityRequest {
+export interface ListFacilitieRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListLengthtimeRequest {
     limit?: number;
     offset?: number;
 }
@@ -176,7 +216,7 @@ export interface ListQuantityRequest {
     offset?: number;
 }
 
-export interface ListRoomRequest {
+export interface ListRoomdetailRequest {
     limit?: number;
     offset?: number;
 }
@@ -195,6 +235,41 @@ export interface ListStaytypeRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * Create cleaningroom
+     * Create cleaningroom
+     */
+    async createCleaningroomRaw(requestParameters: CreateCleaningroomRequest): Promise<runtime.ApiResponse<EntCleaningRoom>> {
+        if (requestParameters.cleaningroom === null || requestParameters.cleaningroom === undefined) {
+            throw new runtime.RequiredError('cleaningroom','Required parameter requestParameters.cleaningroom was null or undefined when calling createCleaningroom.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/cleaningrooms`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntCleaningRoomToJSON(requestParameters.cleaningroom),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleaningRoomFromJSON(jsonValue));
+    }
+
+    /**
+     * Create cleaningroom
+     * Create cleaningroom
+     */
+    async createCleaningroom(requestParameters: CreateCleaningroomRequest): Promise<EntCleaningRoom> {
+        const response = await this.createCleaningroomRaw(requestParameters);
+        return await response.value();
+    }
 
     /**
      * Create deposit
@@ -302,12 +377,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create facility
-     * Create facility
+     * Create facilitie
+     * Create facilitie
      */
-    async createFacilityRaw(requestParameters: CreateFacilityRequest): Promise<runtime.ApiResponse<EntFacility>> {
-        if (requestParameters.facility === null || requestParameters.facility === undefined) {
-            throw new runtime.RequiredError('facility','Required parameter requestParameters.facility was null or undefined when calling createFacility.');
+    async createFacilitieRaw(requestParameters: CreateFacilitieRequest): Promise<runtime.ApiResponse<EntFacilitie>> {
+        if (requestParameters.facilitie === null || requestParameters.facilitie === undefined) {
+            throw new runtime.RequiredError('facilitie','Required parameter requestParameters.facilitie was null or undefined when calling createFacilitie.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -317,22 +392,22 @@ export class DefaultApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/facilitys`,
+            path: `/facilities`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntFacilityToJSON(requestParameters.facility),
+            body: EntFacilitieToJSON(requestParameters.facilitie),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntFacilityFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntFacilitieFromJSON(jsonValue));
     }
 
     /**
-     * Create facility
-     * Create facility
+     * Create facilitie
+     * Create facilitie
      */
-    async createFacility(requestParameters: CreateFacilityRequest): Promise<EntFacility> {
-        const response = await this.createFacilityRaw(requestParameters);
+    async createFacilitie(requestParameters: CreateFacilitieRequest): Promise<EntFacilitie> {
+        const response = await this.createFacilitieRaw(requestParameters);
         return await response.value();
     }
 
@@ -340,7 +415,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * Create nearbyplace
      * Create nearbyplace
      */
-    async createNearbyplaceRaw(requestParameters: CreateNearbyplaceRequest): Promise<runtime.ApiResponse<EntNearbyPlace>> {
+    async createNearbyplaceRaw(requestParameters: CreateNearbyplaceRequest): Promise<runtime.ApiResponse<EntNearbyplace>> {
         if (requestParameters.nearbyplace === null || requestParameters.nearbyplace === undefined) {
             throw new runtime.RequiredError('nearbyplace','Required parameter requestParameters.nearbyplace was null or undefined when calling createNearbyplace.');
         }
@@ -356,17 +431,17 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntNearbyPlaceToJSON(requestParameters.nearbyplace),
+            body: EntNearbyplaceToJSON(requestParameters.nearbyplace),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntNearbyPlaceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntNearbyplaceFromJSON(jsonValue));
     }
 
     /**
      * Create nearbyplace
      * Create nearbyplace
      */
-    async createNearbyplace(requestParameters: CreateNearbyplaceRequest): Promise<EntNearbyPlace> {
+    async createNearbyplace(requestParameters: CreateNearbyplaceRequest): Promise<EntNearbyplace> {
         const response = await this.createNearbyplaceRaw(requestParameters);
         return await response.value();
     }
@@ -407,12 +482,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create room
-     * Create room
+     * Create roomdetail
+     * Create roomdetail
      */
-    async createRoomRaw(requestParameters: CreateRoomRequest): Promise<runtime.ApiResponse<ControllersRoom>> {
-        if (requestParameters.room === null || requestParameters.room === undefined) {
-            throw new runtime.RequiredError('room','Required parameter requestParameters.room was null or undefined when calling createRoom.');
+    async createRoomdetailRaw(requestParameters: CreateRoomdetailRequest): Promise<runtime.ApiResponse<EntRoomdetail>> {
+        if (requestParameters.roomdetail === null || requestParameters.roomdetail === undefined) {
+            throw new runtime.RequiredError('roomdetail','Required parameter requestParameters.roomdetail was null or undefined when calling createRoomdetail.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -422,22 +497,22 @@ export class DefaultApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/rooms`,
+            path: `/roomdetails`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ControllersRoomToJSON(requestParameters.room),
+            body: ControllersRoomdetailToJSON(requestParameters.roomdetail),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ControllersRoomFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntRoomdetailFromJSON(jsonValue));
     }
 
     /**
-     * Create room
-     * Create room
+     * Create roomdetail
+     * Create roomdetail
      */
-    async createRoom(requestParameters: CreateRoomRequest): Promise<ControllersRoom> {
-        const response = await this.createRoomRaw(requestParameters);
+    async createRoomdetail(requestParameters: CreateRoomdetailRequest): Promise<EntRoomdetail> {
+        const response = await this.createRoomdetailRaw(requestParameters);
         return await response.value();
     }
 
@@ -480,7 +555,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * Create staytype
      * Create staytype
      */
-    async createStaytypeRaw(requestParameters: CreateStaytypeRequest): Promise<runtime.ApiResponse<EntStayType>> {
+    async createStaytypeRaw(requestParameters: CreateStaytypeRequest): Promise<runtime.ApiResponse<EntStaytype>> {
         if (requestParameters.staytype === null || requestParameters.staytype === undefined) {
             throw new runtime.RequiredError('staytype','Required parameter requestParameters.staytype was null or undefined when calling createStaytype.');
         }
@@ -496,17 +571,17 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntStayTypeToJSON(requestParameters.staytype),
+            body: EntStaytypeToJSON(requestParameters.staytype),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntStayTypeFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntStaytypeFromJSON(jsonValue));
     }
 
     /**
      * Create staytype
      * Create staytype
      */
-    async createStaytype(requestParameters: CreateStaytypeRequest): Promise<EntStayType> {
+    async createStaytype(requestParameters: CreateStaytypeRequest): Promise<EntStaytype> {
         const response = await this.createStaytypeRaw(requestParameters);
         return await response.value();
     }
@@ -576,12 +651,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get facility by ID
-     * Delete a facility entity by ID
+     * get facilitie by ID
+     * Delete a facilitie entity by ID
      */
-    async deleteFacilityRaw(requestParameters: DeleteFacilityRequest): Promise<runtime.ApiResponse<object>> {
+    async deleteFacilitieRaw(requestParameters: DeleteFacilitieRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteFacility.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteFacilitie.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -589,7 +664,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/facility/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/facilitie/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -599,11 +674,11 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get facility by ID
-     * Delete a facility entity by ID
+     * get facilitie by ID
+     * Delete a facilitie entity by ID
      */
-    async deleteFacility(requestParameters: DeleteFacilityRequest): Promise<object> {
-        const response = await this.deleteFacilityRaw(requestParameters);
+    async deleteFacilitie(requestParameters: DeleteFacilitieRequest): Promise<object> {
+        const response = await this.deleteFacilitieRaw(requestParameters);
         return await response.value();
     }
 
@@ -672,12 +747,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get room by ID
-     * Delete a room entity by ID
+     * get roomdetail by ID
+     * Delete a roomdetail entity by ID
      */
-    async deleteRoomRaw(requestParameters: DeleteRoomRequest): Promise<runtime.ApiResponse<object>> {
+    async deleteRoomdetailRaw(requestParameters: DeleteRoomdetailRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteRoom.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteRoomdetail.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -685,7 +760,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/rooms/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/roomdetails/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -695,11 +770,11 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get room by ID
-     * Delete a room entity by ID
+     * get roomdetail by ID
+     * Delete a roomdetail entity by ID
      */
-    async deleteRoom(requestParameters: DeleteRoomRequest): Promise<object> {
-        const response = await this.deleteRoomRaw(requestParameters);
+    async deleteRoomdetail(requestParameters: DeleteRoomdetailRequest): Promise<object> {
+        const response = await this.deleteRoomdetailRaw(requestParameters);
         return await response.value();
     }
 
@@ -768,6 +843,70 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get cleanername by ID
+     * Get a cleanername entity by ID
+     */
+    async getCleanernameRaw(requestParameters: GetCleanernameRequest): Promise<runtime.ApiResponse<EntCleanerName>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getCleanername.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/cleanernames/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleanerNameFromJSON(jsonValue));
+    }
+
+    /**
+     * get cleanername by ID
+     * Get a cleanername entity by ID
+     */
+    async getCleanername(requestParameters: GetCleanernameRequest): Promise<EntCleanerName> {
+        const response = await this.getCleanernameRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get cleaningroom by ID
+     * Get a cleaningroom entity by ID
+     */
+    async getCleaningroomRaw(requestParameters: GetCleaningroomRequest): Promise<runtime.ApiResponse<EntCleaningRoom>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getCleaningroom.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/cleaningrooms/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleaningRoomFromJSON(jsonValue));
+    }
+
+    /**
+     * get cleaningroom by ID
+     * Get a cleaningroom entity by ID
+     */
+    async getCleaningroom(requestParameters: GetCleaningroomRequest): Promise<EntCleaningRoom> {
+        const response = await this.getCleaningroomRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get employee by ID
      * Get a employee entity by ID
      */
@@ -832,12 +971,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get facility by ID
-     * Get a facility entity by ID
+     * get facilitie by ID
+     * Get a facilitie entity by ID
      */
-    async getFacilityRaw(requestParameters: GetFacilityRequest): Promise<runtime.ApiResponse<EntFacility>> {
+    async getFacilitieRaw(requestParameters: GetFacilitieRequest): Promise<runtime.ApiResponse<EntFacilitie>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getFacility.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getFacilitie.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -845,21 +984,53 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/facilitys/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/facilities/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntFacilityFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntFacilitieFromJSON(jsonValue));
     }
 
     /**
-     * get facility by ID
-     * Get a facility entity by ID
+     * get facilitie by ID
+     * Get a facilitie entity by ID
      */
-    async getFacility(requestParameters: GetFacilityRequest): Promise<EntFacility> {
-        const response = await this.getFacilityRaw(requestParameters);
+    async getFacilitie(requestParameters: GetFacilitieRequest): Promise<EntFacilitie> {
+        const response = await this.getFacilitieRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get lengthtime by ID
+     * Get a lengthtime entity by ID
+     */
+    async getLengthtimeRaw(requestParameters: GetLengthtimeRequest): Promise<runtime.ApiResponse<EntLengthTime>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getLengthtime.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/lengthtimes/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntLengthTimeFromJSON(jsonValue));
+    }
+
+    /**
+     * get lengthtime by ID
+     * Get a lengthtime entity by ID
+     */
+    async getLengthtime(requestParameters: GetLengthtimeRequest): Promise<EntLengthTime> {
+        const response = await this.getLengthtimeRaw(requestParameters);
         return await response.value();
     }
 
@@ -867,7 +1038,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * get nearbyplace by ID
      * Get a nearbyplace entity by ID
      */
-    async getNearbyplaceRaw(requestParameters: GetNearbyplaceRequest): Promise<runtime.ApiResponse<EntNearbyPlace>> {
+    async getNearbyplaceRaw(requestParameters: GetNearbyplaceRequest): Promise<runtime.ApiResponse<EntNearbyplace>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getNearbyplace.');
         }
@@ -883,14 +1054,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntNearbyPlaceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntNearbyplaceFromJSON(jsonValue));
     }
 
     /**
      * get nearbyplace by ID
      * Get a nearbyplace entity by ID
      */
-    async getNearbyplace(requestParameters: GetNearbyplaceRequest): Promise<EntNearbyPlace> {
+    async getNearbyplace(requestParameters: GetNearbyplaceRequest): Promise<EntNearbyplace> {
         const response = await this.getNearbyplaceRaw(requestParameters);
         return await response.value();
     }
@@ -963,7 +1134,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * get staytype by ID
      * Get a staytype entity by ID
      */
-    async getStaytypeRaw(requestParameters: GetStaytypeRequest): Promise<runtime.ApiResponse<EntStayType>> {
+    async getStaytypeRaw(requestParameters: GetStaytypeRequest): Promise<runtime.ApiResponse<EntStaytype>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getStaytype.');
         }
@@ -979,15 +1150,87 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntStayTypeFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntStaytypeFromJSON(jsonValue));
     }
 
     /**
      * get staytype by ID
      * Get a staytype entity by ID
      */
-    async getStaytype(requestParameters: GetStaytypeRequest): Promise<EntStayType> {
+    async getStaytype(requestParameters: GetStaytypeRequest): Promise<EntStaytype> {
         const response = await this.getStaytypeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list cleanername entities
+     * List cleanername entities
+     */
+    async listCleanernameRaw(requestParameters: ListCleanernameRequest): Promise<runtime.ApiResponse<Array<EntCleanerName>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/cleanernames`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntCleanerNameFromJSON));
+    }
+
+    /**
+     * list cleanername entities
+     * List cleanername entities
+     */
+    async listCleanername(requestParameters: ListCleanernameRequest): Promise<Array<EntCleanerName>> {
+        const response = await this.listCleanernameRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list cleaningroom entities
+     * List cleaningroom entities
+     */
+    async listCleaningroomRaw(requestParameters: ListCleaningroomRequest): Promise<runtime.ApiResponse<Array<EntCleaningRoom>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/cleaningrooms`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntCleaningRoomFromJSON));
+    }
+
+    /**
+     * list cleaningroom entities
+     * List cleaningroom entities
+     */
+    async listCleaningroom(requestParameters: ListCleaningroomRequest): Promise<Array<EntCleaningRoom>> {
+        const response = await this.listCleaningroomRaw(requestParameters);
         return await response.value();
     }
 
@@ -1033,6 +1276,14 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listEmployeeRaw(requestParameters: ListEmployeeRequest): Promise<runtime.ApiResponse<Array<EntEmployee>>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1092,10 +1343,10 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * list facility entities
-     * List facility entities
+     * list facilitie entities
+     * List facilitie entities
      */
-    async listFacilityRaw(requestParameters: ListFacilityRequest): Promise<runtime.ApiResponse<Array<EntFacility>>> {
+    async listFacilitieRaw(requestParameters: ListFacilitieRequest): Promise<runtime.ApiResponse<Array<EntFacilitie>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1109,21 +1360,57 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/facilitys`,
+            path: `/facilities`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntFacilityFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntFacilitieFromJSON));
     }
 
     /**
-     * list facility entities
-     * List facility entities
+     * list facilitie entities
+     * List facilitie entities
      */
-    async listFacility(requestParameters: ListFacilityRequest): Promise<Array<EntFacility>> {
-        const response = await this.listFacilityRaw(requestParameters);
+    async listFacilitie(requestParameters: ListFacilitieRequest): Promise<Array<EntFacilitie>> {
+        const response = await this.listFacilitieRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list lengthtime entities
+     * List lengthtime entities
+     */
+    async listLengthtimeRaw(requestParameters: ListLengthtimeRequest): Promise<runtime.ApiResponse<Array<EntLengthTime>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/lengthtimes`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntLengthTimeFromJSON));
+    }
+
+    /**
+     * list lengthtime entities
+     * List lengthtime entities
+     */
+    async listLengthtime(requestParameters: ListLengthtimeRequest): Promise<Array<EntLengthTime>> {
+        const response = await this.listLengthtimeRaw(requestParameters);
         return await response.value();
     }
 
@@ -1131,7 +1418,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * list nearbyplace entities
      * List nearbyplace entities
      */
-    async listNearbyplaceRaw(requestParameters: ListNearbyplaceRequest): Promise<runtime.ApiResponse<Array<EntNearbyPlace>>> {
+    async listNearbyplaceRaw(requestParameters: ListNearbyplaceRequest): Promise<runtime.ApiResponse<Array<EntNearbyplace>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1151,14 +1438,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntNearbyPlaceFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntNearbyplaceFromJSON));
     }
 
     /**
      * list nearbyplace entities
      * List nearbyplace entities
      */
-    async listNearbyplace(requestParameters: ListNearbyplaceRequest): Promise<Array<EntNearbyPlace>> {
+    async listNearbyplace(requestParameters: ListNearbyplaceRequest): Promise<Array<EntNearbyplace>> {
         const response = await this.listNearbyplaceRaw(requestParameters);
         return await response.value();
     }
@@ -1200,10 +1487,10 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * list room entities
-     * List room entities
+     * list roomdetail entities
+     * List roomdetail entities
      */
-    async listRoomRaw(requestParameters: ListRoomRequest): Promise<runtime.ApiResponse<Array<EntRoom>>> {
+    async listRoomdetailRaw(requestParameters: ListRoomdetailRequest): Promise<runtime.ApiResponse<Array<EntRoomdetail>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1217,21 +1504,21 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/rooms`,
+            path: `/roomdetails`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntRoomFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntRoomdetailFromJSON));
     }
 
     /**
-     * list room entities
-     * List room entities
+     * list roomdetail entities
+     * List roomdetail entities
      */
-    async listRoom(requestParameters: ListRoomRequest): Promise<Array<EntRoom>> {
-        const response = await this.listRoomRaw(requestParameters);
+    async listRoomdetail(requestParameters: ListRoomdetailRequest): Promise<Array<EntRoomdetail>> {
+        const response = await this.listRoomdetailRaw(requestParameters);
         return await response.value();
     }
 
@@ -1275,7 +1562,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * list staytype entities
      * List staytype entities
      */
-    async listStaytypeRaw(requestParameters: ListStaytypeRequest): Promise<runtime.ApiResponse<Array<EntStayType>>> {
+    async listStaytypeRaw(requestParameters: ListStaytypeRequest): Promise<runtime.ApiResponse<Array<EntStaytype>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1295,14 +1582,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntStayTypeFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntStaytypeFromJSON));
     }
 
     /**
      * list staytype entities
      * List staytype entities
      */
-    async listStaytype(requestParameters: ListStaytypeRequest): Promise<Array<EntStayType>> {
+    async listStaytype(requestParameters: ListStaytypeRequest): Promise<Array<EntStaytype>> {
         const response = await this.listStaytypeRaw(requestParameters);
         return await response.value();
     }

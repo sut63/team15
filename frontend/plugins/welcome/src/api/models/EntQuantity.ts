@@ -40,10 +40,10 @@ export interface EntQuantity {
     id?: number;
     /**
      * Quantity holds the value of the "quantity" field.
-     * @type {number}
+     * @type {string}
      * @memberof EntQuantity
      */
-    quantity?: number;
+    quantity?: string;
 }
 
 export function EntQuantityFromJSON(json: any): EntQuantity {

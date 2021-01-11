@@ -1,8 +1,12 @@
 import React from 'react';
 import HomeIcon from '@material-ui/icons/Home';
-import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
-import YouTube from '@material-ui/icons/YouTube';
+import BuildIcon from '@material-ui/icons/Build';
 import SignOut from '@material-ui/icons/Settings';
+import HotelIcon from '@material-ui/icons/Hotel';
+import DescriptionIcon from '@material-ui/icons/Description';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import CallIcon from '@material-ui/icons/Call';
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 
 
 import {
@@ -23,14 +27,34 @@ export const AppSidebar = () => (
     {/* <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
     <SidebarItem icon={CreateComponentIcon} to="welcome" text="Welcome" /> */}
     <SidebarItem
-      icon={YouTube}
-      to="playlist_video"
-      text="Playlist Video"
+      icon={HotelIcon}
+      to="/Roomdetails"
+      text="Room details"
     />
     <SidebarItem
-      icon={CreateComponentIcon}
-      to="watch_video"
-      text="Watch Video"
+      icon={DescriptionIcon}
+      to="/"
+      text="ฟอร์ด"
+    />
+    <SidebarItem
+      icon={ReceiptIcon}
+      to="/"
+      text="พี่อาท"
+    />
+    <SidebarItem
+      icon={BuildIcon}
+      to="/"
+      text="เอิร์ท"
+    />
+    <SidebarItem
+      icon={CallIcon}
+      to="/" //ใส่ตัวแปรของplugin
+      text="เทพ"
+    />
+    <SidebarItem
+      icon={AllInboxIcon}
+      to="/"  //ใส่ตัวแปรของplugin
+      text="เกน"
     />
 
     {/* End global nav */}

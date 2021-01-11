@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntRoom,
-    EntRoomFromJSON,
-    EntRoomFromJSONTyped,
-    EntRoomToJSON,
+    EntRoomdetail,
+    EntRoomdetailFromJSON,
+    EntRoomdetailFromJSONTyped,
+    EntRoomdetailToJSON,
 } from './';
 
 /**
@@ -27,11 +27,11 @@ import {
  */
 export interface EntQuantityEdges {
     /**
-     * Room holds the value of the room edge.
-     * @type {Array<EntRoom>}
+     * Roomdetails holds the value of the roomdetails edge.
+     * @type {Array<EntRoomdetail>}
      * @memberof EntQuantityEdges
      */
-    room?: Array<EntRoom>;
+    roomdetails?: Array<EntRoomdetail>;
 }
 
 export function EntQuantityEdgesFromJSON(json: any): EntQuantityEdges {
@@ -44,7 +44,7 @@ export function EntQuantityEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'room': !exists(json, 'room') ? undefined : ((json['room'] as Array<any>).map(EntRoomFromJSON)),
+        'roomdetails': !exists(json, 'roomdetails') ? undefined : ((json['roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function EntQuantityEdgesToJSON(value?: EntQuantityEdges | null): any {
     }
     return {
         
-        'room': value.room === undefined ? undefined : ((value.room as Array<any>).map(EntRoomToJSON)),
+        'roomdetails': value.roomdetails === undefined ? undefined : ((value.roomdetails as Array<any>).map(EntRoomdetailToJSON)),
     };
 }
 
