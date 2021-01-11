@@ -14,41 +14,41 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntRoom,
-    EntRoomFromJSON,
-    EntRoomFromJSONTyped,
-    EntRoomToJSON,
+    EntRoomdetail,
+    EntRoomdetailFromJSON,
+    EntRoomdetailFromJSONTyped,
+    EntRoomdetailToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntStayTypeEdges
+ * @interface EntStaytypeEdges
  */
-export interface EntStayTypeEdges {
+export interface EntStaytypeEdges {
     /**
-     * Room holds the value of the room edge.
-     * @type {Array<EntRoom>}
-     * @memberof EntStayTypeEdges
+     * Roomdetails holds the value of the roomdetails edge.
+     * @type {Array<EntRoomdetail>}
+     * @memberof EntStaytypeEdges
      */
-    room?: Array<EntRoom>;
+    roomdetails?: Array<EntRoomdetail>;
 }
 
-export function EntStayTypeEdgesFromJSON(json: any): EntStayTypeEdges {
-    return EntStayTypeEdgesFromJSONTyped(json, false);
+export function EntStaytypeEdgesFromJSON(json: any): EntStaytypeEdges {
+    return EntStaytypeEdgesFromJSONTyped(json, false);
 }
 
-export function EntStayTypeEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntStayTypeEdges {
+export function EntStaytypeEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntStaytypeEdges {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'room': !exists(json, 'room') ? undefined : ((json['room'] as Array<any>).map(EntRoomFromJSON)),
+        'roomdetails': !exists(json, 'roomdetails') ? undefined : ((json['roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 
-export function EntStayTypeEdgesToJSON(value?: EntStayTypeEdges | null): any {
+export function EntStaytypeEdgesToJSON(value?: EntStaytypeEdges | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +57,7 @@ export function EntStayTypeEdgesToJSON(value?: EntStayTypeEdges | null): any {
     }
     return {
         
-        'room': value.room === undefined ? undefined : ((value.room as Array<any>).map(EntRoomToJSON)),
+        'roomdetails': value.roomdetails === undefined ? undefined : ((value.roomdetails as Array<any>).map(EntRoomdetailToJSON)),
     };
 }
 

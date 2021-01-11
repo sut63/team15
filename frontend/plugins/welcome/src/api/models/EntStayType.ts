@@ -14,55 +14,55 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntStayTypeEdges,
-    EntStayTypeEdgesFromJSON,
-    EntStayTypeEdgesFromJSONTyped,
-    EntStayTypeEdgesToJSON,
+    EntStaytypeEdges,
+    EntStaytypeEdgesFromJSON,
+    EntStaytypeEdgesFromJSONTyped,
+    EntStaytypeEdgesToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntStayType
+ * @interface EntStaytype
  */
-export interface EntStayType {
+export interface EntStaytype {
     /**
      * 
-     * @type {EntStayTypeEdges}
-     * @memberof EntStayType
+     * @type {EntStaytypeEdges}
+     * @memberof EntStaytype
      */
-    edges?: EntStayTypeEdges;
+    edges?: EntStaytypeEdges;
     /**
      * ID of the ent.
      * @type {number}
-     * @memberof EntStayType
+     * @memberof EntStaytype
      */
     id?: number;
     /**
      * Staytype holds the value of the "staytype" field.
      * @type {string}
-     * @memberof EntStayType
+     * @memberof EntStaytype
      */
     staytype?: string;
 }
 
-export function EntStayTypeFromJSON(json: any): EntStayType {
-    return EntStayTypeFromJSONTyped(json, false);
+export function EntStaytypeFromJSON(json: any): EntStaytype {
+    return EntStaytypeFromJSONTyped(json, false);
 }
 
-export function EntStayTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntStayType {
+export function EntStaytypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntStaytype {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'edges': !exists(json, 'edges') ? undefined : EntStayTypeEdgesFromJSON(json['edges']),
+        'edges': !exists(json, 'edges') ? undefined : EntStaytypeEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'staytype': !exists(json, 'staytype') ? undefined : json['staytype'],
     };
 }
 
-export function EntStayTypeToJSON(value?: EntStayType | null): any {
+export function EntStaytypeToJSON(value?: EntStaytype | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -71,7 +71,7 @@ export function EntStayTypeToJSON(value?: EntStayType | null): any {
     }
     return {
         
-        'edges': EntStayTypeEdgesToJSON(value.edges),
+        'edges': EntStaytypeEdgesToJSON(value.edges),
         'id': value.id,
         'staytype': value.staytype,
     };

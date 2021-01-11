@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntRoom,
-    EntRoomFromJSON,
-    EntRoomFromJSONTyped,
-    EntRoomToJSON,
+    EntRoomdetail,
+    EntRoomdetailFromJSON,
+    EntRoomdetailFromJSONTyped,
+    EntRoomdetailToJSON,
 } from './';
 
 /**
@@ -27,11 +27,11 @@ import {
  */
 export interface EntEquipmentEdges {
     /**
-     * Room holds the value of the room edge.
-     * @type {Array<EntRoom>}
+     * 
+     * @type {EntRoomdetail}
      * @memberof EntEquipmentEdges
      */
-    room?: Array<EntRoom>;
+    roomdetail?: EntRoomdetail;
 }
 
 export function EntEquipmentEdgesFromJSON(json: any): EntEquipmentEdges {
@@ -44,7 +44,7 @@ export function EntEquipmentEdgesFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'room': !exists(json, 'room') ? undefined : ((json['room'] as Array<any>).map(EntRoomFromJSON)),
+        'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
     };
 }
 
@@ -57,7 +57,7 @@ export function EntEquipmentEdgesToJSON(value?: EntEquipmentEdges | null): any {
     }
     return {
         
-        'room': value.room === undefined ? undefined : ((value.room as Array<any>).map(EntRoomToJSON)),
+        'roomdetail': EntRoomdetailToJSON(value.roomdetail),
     };
 }
 

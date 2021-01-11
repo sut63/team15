@@ -14,41 +14,41 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntRoom,
-    EntRoomFromJSON,
-    EntRoomFromJSONTyped,
-    EntRoomToJSON,
+    EntRoomdetail,
+    EntRoomdetailFromJSON,
+    EntRoomdetailFromJSONTyped,
+    EntRoomdetailToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntNearbyPlaceEdges
+ * @interface EntNearbyplaceEdges
  */
-export interface EntNearbyPlaceEdges {
+export interface EntNearbyplaceEdges {
     /**
-     * Room holds the value of the room edge.
-     * @type {Array<EntRoom>}
-     * @memberof EntNearbyPlaceEdges
+     * 
+     * @type {EntRoomdetail}
+     * @memberof EntNearbyplaceEdges
      */
-    room?: Array<EntRoom>;
+    roomdetail?: EntRoomdetail;
 }
 
-export function EntNearbyPlaceEdgesFromJSON(json: any): EntNearbyPlaceEdges {
-    return EntNearbyPlaceEdgesFromJSONTyped(json, false);
+export function EntNearbyplaceEdgesFromJSON(json: any): EntNearbyplaceEdges {
+    return EntNearbyplaceEdgesFromJSONTyped(json, false);
 }
 
-export function EntNearbyPlaceEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntNearbyPlaceEdges {
+export function EntNearbyplaceEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntNearbyplaceEdges {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'room': !exists(json, 'room') ? undefined : ((json['room'] as Array<any>).map(EntRoomFromJSON)),
+        'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
     };
 }
 
-export function EntNearbyPlaceEdgesToJSON(value?: EntNearbyPlaceEdges | null): any {
+export function EntNearbyplaceEdgesToJSON(value?: EntNearbyplaceEdges | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +57,7 @@ export function EntNearbyPlaceEdgesToJSON(value?: EntNearbyPlaceEdges | null): a
     }
     return {
         
-        'room': value.room === undefined ? undefined : ((value.room as Array<any>).map(EntRoomToJSON)),
+        'roomdetail': EntRoomdetailToJSON(value.roomdetail),
     };
 }
 
