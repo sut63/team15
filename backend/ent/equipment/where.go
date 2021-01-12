@@ -215,7 +215,7 @@ func HasRoomdetail() predicate.Equipment {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(RoomdetailTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, RoomdetailTable, RoomdetailColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, RoomdetailTable, RoomdetailColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -227,7 +227,7 @@ func HasRoomdetailWith(preds ...predicate.Roomdetail) predicate.Equipment {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(RoomdetailInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, RoomdetailTable, RoomdetailColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, RoomdetailTable, RoomdetailColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

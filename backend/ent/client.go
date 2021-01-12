@@ -15,6 +15,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
@@ -44,6 +45,8 @@ type Client struct {
 	Equipment *EquipmentClient
 	// Facilitie is the client for interacting with the Facilitie builders.
 	Facilitie *FacilitieClient
+	// Jobposition is the client for interacting with the Jobposition builders.
+	Jobposition *JobpositionClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
 	// Nearbyplace is the client for interacting with the Nearbyplace builders.
@@ -75,6 +78,7 @@ func (c *Client) init() {
 	c.Employee = NewEmployeeClient(c.config)
 	c.Equipment = NewEquipmentClient(c.config)
 	c.Facilitie = NewFacilitieClient(c.config)
+	c.Jobposition = NewJobpositionClient(c.config)
 	c.LengthTime = NewLengthTimeClient(c.config)
 	c.Nearbyplace = NewNearbyplaceClient(c.config)
 	c.Quantity = NewQuantityClient(c.config)
@@ -119,6 +123,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Employee:     NewEmployeeClient(cfg),
 		Equipment:    NewEquipmentClient(cfg),
 		Facilitie:    NewFacilitieClient(cfg),
+		Jobposition:  NewJobpositionClient(cfg),
 		LengthTime:   NewLengthTimeClient(cfg),
 		Nearbyplace:  NewNearbyplaceClient(cfg),
 		Quantity:     NewQuantityClient(cfg),
@@ -146,6 +151,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Employee:     NewEmployeeClient(cfg),
 		Equipment:    NewEquipmentClient(cfg),
 		Facilitie:    NewFacilitieClient(cfg),
+		Jobposition:  NewJobpositionClient(cfg),
 		LengthTime:   NewLengthTimeClient(cfg),
 		Nearbyplace:  NewNearbyplaceClient(cfg),
 		Quantity:     NewQuantityClient(cfg),
@@ -186,6 +192,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Employee.Use(hooks...)
 	c.Equipment.Use(hooks...)
 	c.Facilitie.Use(hooks...)
+	c.Jobposition.Use(hooks...)
 	c.LengthTime.Use(hooks...)
 	c.Nearbyplace.Use(hooks...)
 	c.Quantity.Use(hooks...)
@@ -617,6 +624,38 @@ func (c *EmployeeClient) QueryEmployees(e *Employee) *DepositQuery {
 	return query
 }
 
+// QueryRoomdetails queries the roomdetails edge of a Employee.
+func (c *EmployeeClient) QueryRoomdetails(e *Employee) *RoomdetailQuery {
+	query := &RoomdetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.RoomdetailsTable, employee.RoomdetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryJobposition queries the jobposition edge of a Employee.
+func (c *EmployeeClient) QueryJobposition(e *Employee) *JobpositionQuery {
+	query := &JobpositionQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(jobposition.Table, jobposition.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.JobpositionTable, employee.JobpositionColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EmployeeClient) Hooks() []Hook {
 	return c.hooks.Employee
@@ -708,7 +747,7 @@ func (c *EquipmentClient) QueryRoomdetail(e *Equipment) *RoomdetailQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(equipment.Table, equipment.FieldID, id),
 			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, equipment.RoomdetailTable, equipment.RoomdetailColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, equipment.RoomdetailTable, equipment.RoomdetailColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -807,7 +846,7 @@ func (c *FacilitieClient) QueryRoomdetail(f *Facilitie) *RoomdetailQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(facilitie.Table, facilitie.FieldID, id),
 			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, facilitie.RoomdetailTable, facilitie.RoomdetailColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, facilitie.RoomdetailTable, facilitie.RoomdetailColumn),
 		)
 		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
@@ -818,6 +857,105 @@ func (c *FacilitieClient) QueryRoomdetail(f *Facilitie) *RoomdetailQuery {
 // Hooks returns the client hooks.
 func (c *FacilitieClient) Hooks() []Hook {
 	return c.hooks.Facilitie
+}
+
+// JobpositionClient is a client for the Jobposition schema.
+type JobpositionClient struct {
+	config
+}
+
+// NewJobpositionClient returns a client for the Jobposition from the given config.
+func NewJobpositionClient(c config) *JobpositionClient {
+	return &JobpositionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `jobposition.Hooks(f(g(h())))`.
+func (c *JobpositionClient) Use(hooks ...Hook) {
+	c.hooks.Jobposition = append(c.hooks.Jobposition, hooks...)
+}
+
+// Create returns a create builder for Jobposition.
+func (c *JobpositionClient) Create() *JobpositionCreate {
+	mutation := newJobpositionMutation(c.config, OpCreate)
+	return &JobpositionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Jobposition.
+func (c *JobpositionClient) Update() *JobpositionUpdate {
+	mutation := newJobpositionMutation(c.config, OpUpdate)
+	return &JobpositionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *JobpositionClient) UpdateOne(j *Jobposition) *JobpositionUpdateOne {
+	mutation := newJobpositionMutation(c.config, OpUpdateOne, withJobposition(j))
+	return &JobpositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *JobpositionClient) UpdateOneID(id int) *JobpositionUpdateOne {
+	mutation := newJobpositionMutation(c.config, OpUpdateOne, withJobpositionID(id))
+	return &JobpositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Jobposition.
+func (c *JobpositionClient) Delete() *JobpositionDelete {
+	mutation := newJobpositionMutation(c.config, OpDelete)
+	return &JobpositionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *JobpositionClient) DeleteOne(j *Jobposition) *JobpositionDeleteOne {
+	return c.DeleteOneID(j.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *JobpositionClient) DeleteOneID(id int) *JobpositionDeleteOne {
+	builder := c.Delete().Where(jobposition.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &JobpositionDeleteOne{builder}
+}
+
+// Create returns a query builder for Jobposition.
+func (c *JobpositionClient) Query() *JobpositionQuery {
+	return &JobpositionQuery{config: c.config}
+}
+
+// Get returns a Jobposition entity by its id.
+func (c *JobpositionClient) Get(ctx context.Context, id int) (*Jobposition, error) {
+	return c.Query().Where(jobposition.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *JobpositionClient) GetX(ctx context.Context, id int) *Jobposition {
+	j, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return j
+}
+
+// QueryEmployees queries the employees edge of a Jobposition.
+func (c *JobpositionClient) QueryEmployees(j *Jobposition) *EmployeeQuery {
+	query := &EmployeeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := j.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(jobposition.Table, jobposition.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, jobposition.EmployeesTable, jobposition.EmployeesColumn),
+		)
+		fromV = sqlgraph.Neighbors(j.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *JobpositionClient) Hooks() []Hook {
+	return c.hooks.Jobposition
 }
 
 // LengthTimeClient is a client for the LengthTime schema.
@@ -1005,7 +1143,7 @@ func (c *NearbyplaceClient) QueryRoomdetail(n *Nearbyplace) *RoomdetailQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(nearbyplace.Table, nearbyplace.FieldID, id),
 			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, nearbyplace.RoomdetailTable, nearbyplace.RoomdetailColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, nearbyplace.RoomdetailTable, nearbyplace.RoomdetailColumn),
 		)
 		fromV = sqlgraph.Neighbors(n.driver.Dialect(), step)
 		return fromV, nil
@@ -1203,7 +1341,7 @@ func (c *RoomdetailClient) QueryEquipments(r *Roomdetail) *EquipmentQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
 			sqlgraph.To(equipment.Table, equipment.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.EquipmentsTable, roomdetail.EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EquipmentsTable, roomdetail.EquipmentsColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1219,7 +1357,7 @@ func (c *RoomdetailClient) QueryFacilities(r *Roomdetail) *FacilitieQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
 			sqlgraph.To(facilitie.Table, facilitie.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.FacilitiesTable, roomdetail.FacilitiesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.FacilitiesTable, roomdetail.FacilitiesColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1235,7 +1373,23 @@ func (c *RoomdetailClient) QueryNearbyplaces(r *Roomdetail) *NearbyplaceQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
 			sqlgraph.To(nearbyplace.Table, nearbyplace.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.NearbyplacesTable, roomdetail.NearbyplacesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.NearbyplacesTable, roomdetail.NearbyplacesColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryEmployee queries the employee edge of a Roomdetail.
+func (c *RoomdetailClient) QueryEmployee(r *Roomdetail) *EmployeeQuery {
+	query := &EmployeeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EmployeeTable, roomdetail.EmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil

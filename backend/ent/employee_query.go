@@ -14,7 +14,9 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // EmployeeQuery is the builder for querying Employee entities.
@@ -26,7 +28,10 @@ type EmployeeQuery struct {
 	unique     []string
 	predicates []predicate.Employee
 	// eager-loading edges.
-	withEmployees *DepositQuery
+	withEmployees   *DepositQuery
+	withRoomdetails *RoomdetailQuery
+	withJobposition *JobpositionQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,6 +72,42 @@ func (eq *EmployeeQuery) QueryEmployees() *DepositQuery {
 			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
 			sqlgraph.To(deposit.Table, deposit.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeesTable, employee.EmployeesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRoomdetails chains the current query on the roomdetails edge.
+func (eq *EmployeeQuery) QueryRoomdetails() *RoomdetailQuery {
+	query := &RoomdetailQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.RoomdetailsTable, employee.RoomdetailsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryJobposition chains the current query on the jobposition edge.
+func (eq *EmployeeQuery) QueryJobposition() *JobpositionQuery {
+	query := &JobpositionQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
+			sqlgraph.To(jobposition.Table, jobposition.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, employee.JobpositionTable, employee.JobpositionColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -264,18 +305,40 @@ func (eq *EmployeeQuery) WithEmployees(opts ...func(*DepositQuery)) *EmployeeQue
 	return eq
 }
 
+//  WithRoomdetails tells the query-builder to eager-loads the nodes that are connected to
+// the "roomdetails" edge. The optional arguments used to configure the query builder of the edge.
+func (eq *EmployeeQuery) WithRoomdetails(opts ...func(*RoomdetailQuery)) *EmployeeQuery {
+	query := &RoomdetailQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withRoomdetails = query
+	return eq
+}
+
+//  WithJobposition tells the query-builder to eager-loads the nodes that are connected to
+// the "jobposition" edge. The optional arguments used to configure the query builder of the edge.
+func (eq *EmployeeQuery) WithJobposition(opts ...func(*JobpositionQuery)) *EmployeeQuery {
+	query := &JobpositionQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withJobposition = query
+	return eq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
 // Example:
 //
 //	var v []struct {
-//		Employeename string `json:"employeename,omitempty"`
+//		Name string `json:"name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Employee.Query().
-//		GroupBy(employee.FieldEmployeename).
+//		GroupBy(employee.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +359,11 @@ func (eq *EmployeeQuery) GroupBy(field string, fields ...string) *EmployeeGroupB
 // Example:
 //
 //	var v []struct {
-//		Employeename string `json:"employeename,omitempty"`
+//		Name string `json:"name,omitempty"`
 //	}
 //
 //	client.Employee.Query().
-//		Select(employee.FieldEmployeename).
+//		Select(employee.FieldName).
 //		Scan(ctx, &v)
 //
 func (eq *EmployeeQuery) Select(field string, fields ...string) *EmployeeSelect {
@@ -329,15 +392,27 @@ func (eq *EmployeeQuery) prepareQuery(ctx context.Context) error {
 func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 	var (
 		nodes       = []*Employee{}
+		withFKs     = eq.withFKs
 		_spec       = eq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [3]bool{
 			eq.withEmployees != nil,
+			eq.withRoomdetails != nil,
+			eq.withJobposition != nil,
 		}
 	)
+	if eq.withJobposition != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, employee.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Employee{config: eq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -380,6 +455,59 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Employees = append(node.Edges.Employees, n)
+		}
+	}
+
+	if query := eq.withRoomdetails; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Employee)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Roomdetail(func(s *sql.Selector) {
+			s.Where(sql.InValues(employee.RoomdetailsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.employee_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "employee_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Roomdetails = append(node.Edges.Roomdetails, n)
+		}
+	}
+
+	if query := eq.withJobposition; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Employee)
+		for i := range nodes {
+			if fk := nodes[i].jobposition_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(jobposition.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "jobposition_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Jobposition = n
+			}
 		}
 	}
 

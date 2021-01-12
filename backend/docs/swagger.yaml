@@ -13,6 +13,8 @@ definitions:
     type: object
   controllers.Roomdetail:
     properties:
+      employee:
+        type: integer
       equipment:
         type: integer
       facilitie:
@@ -117,15 +119,15 @@ definitions:
           Edges holds the relations/edges for other nodes in the graph.
           The values are being populated by the EmployeeQuery when eager-loading is set.
         type: object
-      employeeemail:
-        description: Employeeemail holds the value of the "employeeemail" field.
-        type: string
-      employeename:
-        description: Employeename holds the value of the "employeename" field.
+      email:
+        description: Email holds the value of the "email" field.
         type: string
       id:
         description: ID of the ent.
         type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
       password:
         description: Password holds the value of the "password" field.
         type: string
@@ -136,6 +138,15 @@ definitions:
         description: Employees holds the value of the employees edge.
         items:
           $ref: '#/definitions/ent.Deposit'
+        type: array
+      jobposition:
+        $ref: '#/definitions/ent.Jobposition'
+        description: Jobposition holds the value of the jobposition edge.
+        type: object
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
         type: array
     type: object
   ent.Equipment:
@@ -156,9 +167,10 @@ definitions:
   ent.EquipmentEdges:
     properties:
       roomdetail:
-        $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the roomdetail edge.
-        type: object
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
     type: object
   ent.Facilitie:
     properties:
@@ -178,9 +190,33 @@ definitions:
   ent.FacilitieEdges:
     properties:
       roomdetail:
-        $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the roomdetail edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
+    type: object
+  ent.Jobposition:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.JobpositionEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the JobpositionQuery when eager-loading is set.
         type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      position_name:
+        description: PositionName holds the value of the "position_name" field.
+        type: string
+    type: object
+  ent.JobpositionEdges:
+    properties:
+      employees:
+        description: Employees holds the value of the employees edge.
+        items:
+          $ref: '#/definitions/ent.Employee'
+        type: array
     type: object
   ent.LengthTime:
     properties:
@@ -223,9 +259,10 @@ definitions:
   ent.NearbyplaceEdges:
     properties:
       roomdetail:
-        $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the roomdetail edge.
-        type: object
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
     type: object
   ent.Quantity:
     properties:
@@ -270,21 +307,22 @@ definitions:
     type: object
   ent.RoomdetailEdges:
     properties:
+      employee:
+        $ref: '#/definitions/ent.Employee'
+        description: Employee holds the value of the employee edge.
+        type: object
       equipments:
+        $ref: '#/definitions/ent.Equipment'
         description: Equipments holds the value of the equipments edge.
-        items:
-          $ref: '#/definitions/ent.Equipment'
-        type: array
+        type: object
       facilities:
+        $ref: '#/definitions/ent.Facilitie'
         description: Facilities holds the value of the facilities edge.
-        items:
-          $ref: '#/definitions/ent.Facilitie'
-        type: array
+        type: object
       nearbyplaces:
+        $ref: '#/definitions/ent.Nearbyplace'
         description: Nearbyplaces holds the value of the nearbyplaces edge.
-        items:
-          $ref: '#/definitions/ent.Nearbyplace'
-        type: array
+        type: object
       quantity:
         $ref: '#/definitions/ent.Quantity'
         description: Quantity holds the value of the quantity edge.
@@ -627,34 +665,6 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: List employee entities
-    post:
-      consumes:
-      - application/json
-      description: Create employee
-      operationId: create-employee
-      parameters:
-      - description: Employee entity
-        in: body
-        name: employee
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Employee'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Employee'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Create employee
   /employees/{id}:
     get:
       description: get employee by ID

@@ -11,7 +11,9 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // EmployeeUpdate is the builder for updating Employee entities.
@@ -28,15 +30,15 @@ func (eu *EmployeeUpdate) Where(ps ...predicate.Employee) *EmployeeUpdate {
 	return eu
 }
 
-// SetEmployeename sets the employeename field.
-func (eu *EmployeeUpdate) SetEmployeename(s string) *EmployeeUpdate {
-	eu.mutation.SetEmployeename(s)
+// SetName sets the name field.
+func (eu *EmployeeUpdate) SetName(s string) *EmployeeUpdate {
+	eu.mutation.SetName(s)
 	return eu
 }
 
-// SetEmployeeemail sets the employeeemail field.
-func (eu *EmployeeUpdate) SetEmployeeemail(s string) *EmployeeUpdate {
-	eu.mutation.SetEmployeeemail(s)
+// SetEmail sets the email field.
+func (eu *EmployeeUpdate) SetEmail(s string) *EmployeeUpdate {
+	eu.mutation.SetEmail(s)
 	return eu
 }
 
@@ -61,6 +63,40 @@ func (eu *EmployeeUpdate) AddEmployees(d ...*Deposit) *EmployeeUpdate {
 	return eu.AddEmployeeIDs(ids...)
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (eu *EmployeeUpdate) AddRoomdetailIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.AddRoomdetailIDs(ids...)
+	return eu
+}
+
+// AddRoomdetails adds the roomdetails edges to Roomdetail.
+func (eu *EmployeeUpdate) AddRoomdetails(r ...*Roomdetail) *EmployeeUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return eu.AddRoomdetailIDs(ids...)
+}
+
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (eu *EmployeeUpdate) SetJobpositionID(id int) *EmployeeUpdate {
+	eu.mutation.SetJobpositionID(id)
+	return eu
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (eu *EmployeeUpdate) SetNillableJobpositionID(id *int) *EmployeeUpdate {
+	if id != nil {
+		eu = eu.SetJobpositionID(*id)
+	}
+	return eu
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (eu *EmployeeUpdate) SetJobposition(j *Jobposition) *EmployeeUpdate {
+	return eu.SetJobpositionID(j.ID)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (eu *EmployeeUpdate) Mutation() *EmployeeMutation {
 	return eu.mutation
@@ -81,16 +117,37 @@ func (eu *EmployeeUpdate) RemoveEmployees(d ...*Deposit) *EmployeeUpdate {
 	return eu.RemoveEmployeeIDs(ids...)
 }
 
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (eu *EmployeeUpdate) RemoveRoomdetailIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.RemoveRoomdetailIDs(ids...)
+	return eu
+}
+
+// RemoveRoomdetails removes roomdetails edges to Roomdetail.
+func (eu *EmployeeUpdate) RemoveRoomdetails(r ...*Roomdetail) *EmployeeUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return eu.RemoveRoomdetailIDs(ids...)
+}
+
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (eu *EmployeeUpdate) ClearJobposition() *EmployeeUpdate {
+	eu.mutation.ClearJobposition()
+	return eu
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (eu *EmployeeUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := eu.mutation.Employeename(); ok {
-		if err := employee.EmployeenameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "employeename", err: fmt.Errorf("ent: validator failed for field \"employeename\": %w", err)}
+	if v, ok := eu.mutation.Name(); ok {
+		if err := employee.NameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
-	if v, ok := eu.mutation.Employeeemail(); ok {
-		if err := employee.EmployeeemailValidator(v); err != nil {
-			return 0, &ValidationError{Name: "employeeemail", err: fmt.Errorf("ent: validator failed for field \"employeeemail\": %w", err)}
+	if v, ok := eu.mutation.Email(); ok {
+		if err := employee.EmailValidator(v); err != nil {
+			return 0, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
 		}
 	}
 	if v, ok := eu.mutation.Password(); ok {
@@ -166,18 +223,18 @@ func (eu *EmployeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := eu.mutation.Employeename(); ok {
+	if value, ok := eu.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldEmployeename,
+			Column: employee.FieldName,
 		})
 	}
-	if value, ok := eu.mutation.Employeeemail(); ok {
+	if value, ok := eu.mutation.Email(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldEmployeeemail,
+			Column: employee.FieldEmail,
 		})
 	}
 	if value, ok := eu.mutation.Password(); ok {
@@ -225,6 +282,79 @@ func (eu *EmployeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := eu.mutation.RemovedRoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RoomdetailsTable,
+			Columns: []string{employee.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RoomdetailsTable,
+			Columns: []string{employee.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if eu.mutation.JobpositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.JobpositionTable,
+			Columns: []string{employee.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.JobpositionTable,
+			Columns: []string{employee.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{employee.Label}
@@ -243,15 +373,15 @@ type EmployeeUpdateOne struct {
 	mutation *EmployeeMutation
 }
 
-// SetEmployeename sets the employeename field.
-func (euo *EmployeeUpdateOne) SetEmployeename(s string) *EmployeeUpdateOne {
-	euo.mutation.SetEmployeename(s)
+// SetName sets the name field.
+func (euo *EmployeeUpdateOne) SetName(s string) *EmployeeUpdateOne {
+	euo.mutation.SetName(s)
 	return euo
 }
 
-// SetEmployeeemail sets the employeeemail field.
-func (euo *EmployeeUpdateOne) SetEmployeeemail(s string) *EmployeeUpdateOne {
-	euo.mutation.SetEmployeeemail(s)
+// SetEmail sets the email field.
+func (euo *EmployeeUpdateOne) SetEmail(s string) *EmployeeUpdateOne {
+	euo.mutation.SetEmail(s)
 	return euo
 }
 
@@ -276,6 +406,40 @@ func (euo *EmployeeUpdateOne) AddEmployees(d ...*Deposit) *EmployeeUpdateOne {
 	return euo.AddEmployeeIDs(ids...)
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (euo *EmployeeUpdateOne) AddRoomdetailIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.AddRoomdetailIDs(ids...)
+	return euo
+}
+
+// AddRoomdetails adds the roomdetails edges to Roomdetail.
+func (euo *EmployeeUpdateOne) AddRoomdetails(r ...*Roomdetail) *EmployeeUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return euo.AddRoomdetailIDs(ids...)
+}
+
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (euo *EmployeeUpdateOne) SetJobpositionID(id int) *EmployeeUpdateOne {
+	euo.mutation.SetJobpositionID(id)
+	return euo
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (euo *EmployeeUpdateOne) SetNillableJobpositionID(id *int) *EmployeeUpdateOne {
+	if id != nil {
+		euo = euo.SetJobpositionID(*id)
+	}
+	return euo
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (euo *EmployeeUpdateOne) SetJobposition(j *Jobposition) *EmployeeUpdateOne {
+	return euo.SetJobpositionID(j.ID)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (euo *EmployeeUpdateOne) Mutation() *EmployeeMutation {
 	return euo.mutation
@@ -296,16 +460,37 @@ func (euo *EmployeeUpdateOne) RemoveEmployees(d ...*Deposit) *EmployeeUpdateOne 
 	return euo.RemoveEmployeeIDs(ids...)
 }
 
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (euo *EmployeeUpdateOne) RemoveRoomdetailIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.RemoveRoomdetailIDs(ids...)
+	return euo
+}
+
+// RemoveRoomdetails removes roomdetails edges to Roomdetail.
+func (euo *EmployeeUpdateOne) RemoveRoomdetails(r ...*Roomdetail) *EmployeeUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return euo.RemoveRoomdetailIDs(ids...)
+}
+
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (euo *EmployeeUpdateOne) ClearJobposition() *EmployeeUpdateOne {
+	euo.mutation.ClearJobposition()
+	return euo
+}
+
 // Save executes the query and returns the updated entity.
 func (euo *EmployeeUpdateOne) Save(ctx context.Context) (*Employee, error) {
-	if v, ok := euo.mutation.Employeename(); ok {
-		if err := employee.EmployeenameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "employeename", err: fmt.Errorf("ent: validator failed for field \"employeename\": %w", err)}
+	if v, ok := euo.mutation.Name(); ok {
+		if err := employee.NameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
-	if v, ok := euo.mutation.Employeeemail(); ok {
-		if err := employee.EmployeeemailValidator(v); err != nil {
-			return nil, &ValidationError{Name: "employeeemail", err: fmt.Errorf("ent: validator failed for field \"employeeemail\": %w", err)}
+	if v, ok := euo.mutation.Email(); ok {
+		if err := employee.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
 		}
 	}
 	if v, ok := euo.mutation.Password(); ok {
@@ -379,18 +564,18 @@ func (euo *EmployeeUpdateOne) sqlSave(ctx context.Context) (e *Employee, err err
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Employee.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := euo.mutation.Employeename(); ok {
+	if value, ok := euo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldEmployeename,
+			Column: employee.FieldName,
 		})
 	}
-	if value, ok := euo.mutation.Employeeemail(); ok {
+	if value, ok := euo.mutation.Email(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldEmployeeemail,
+			Column: employee.FieldEmail,
 		})
 	}
 	if value, ok := euo.mutation.Password(); ok {
@@ -430,6 +615,79 @@ func (euo *EmployeeUpdateOne) sqlSave(ctx context.Context) (e *Employee, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := euo.mutation.RemovedRoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RoomdetailsTable,
+			Columns: []string{employee.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RoomdetailsTable,
+			Columns: []string{employee.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if euo.mutation.JobpositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.JobpositionTable,
+			Columns: []string{employee.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.JobpositionTable,
+			Columns: []string{employee.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
 				},
 			},
 		}

@@ -14,15 +14,13 @@ type Nearbyplace struct {
 // Fields of the Nearbyplace.
 func (Nearbyplace) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("nearbyplace"),
+		field.String("nearbyplace").Unique(),
 	}
 }
 
 // Edges of the Nearbyplace.
 func (Nearbyplace) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("roomdetail", Roomdetail.Type).
-			Ref("nearbyplaces").
-			Unique(),
+		edge.To("roomdetail", Roomdetail.Type),
 	}
 }

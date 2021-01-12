@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"context"
-	"time"
 	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/team15/app/ent"
 	"github.com/team15/app/ent/employee"
@@ -17,10 +18,10 @@ type DepositController struct {
 }
 
 type Deposit struct {
-	Added   string
-	Info   string
-	Employee       int
-	Statusd         int
+	Added    string
+	Info     string
+	Employee int
+	Statusd  int
 }
 
 // CreateDeposit handles POST requests for adding deposit entities

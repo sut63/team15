@@ -7,6 +7,10 @@ import (
 	"strings"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/equipment"
+	"github.com/team15/app/ent/facilitie"
+	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/staytype"
@@ -23,59 +27,94 @@ type Roomdetail struct {
 	Roomprice string `json:"roomprice,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoomdetailQuery when eager-loading is set.
-	Edges                RoomdetailEdges `json:"edges"`
-	quantity_roomdetails *int
-	staytype_roomdetails *int
+	Edges                  RoomdetailEdges `json:"edges"`
+	employee_id            *int
+	equipment_roomdetail   *int
+	facilitie_roomdetail   *int
+	nearbyplace_roomdetail *int
+	quantity_roomdetails   *int
+	staytype_roomdetails   *int
 }
 
 // RoomdetailEdges holds the relations/edges for other nodes in the graph.
 type RoomdetailEdges struct {
 	// Equipments holds the value of the equipments edge.
-	Equipments []*Equipment
+	Equipments *Equipment
 	// Facilities holds the value of the facilities edge.
-	Facilities []*Facilitie
+	Facilities *Facilitie
 	// Nearbyplaces holds the value of the nearbyplaces edge.
-	Nearbyplaces []*Nearbyplace
+	Nearbyplaces *Nearbyplace
+	// Employee holds the value of the employee edge.
+	Employee *Employee
 	// Quantity holds the value of the quantity edge.
 	Quantity *Quantity
 	// Staytype holds the value of the staytype edge.
 	Staytype *Staytype
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // EquipmentsOrErr returns the Equipments value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoomdetailEdges) EquipmentsOrErr() ([]*Equipment, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e RoomdetailEdges) EquipmentsOrErr() (*Equipment, error) {
 	if e.loadedTypes[0] {
+		if e.Equipments == nil {
+			// The edge equipments was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: equipment.Label}
+		}
 		return e.Equipments, nil
 	}
 	return nil, &NotLoadedError{edge: "equipments"}
 }
 
 // FacilitiesOrErr returns the Facilities value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoomdetailEdges) FacilitiesOrErr() ([]*Facilitie, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e RoomdetailEdges) FacilitiesOrErr() (*Facilitie, error) {
 	if e.loadedTypes[1] {
+		if e.Facilities == nil {
+			// The edge facilities was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: facilitie.Label}
+		}
 		return e.Facilities, nil
 	}
 	return nil, &NotLoadedError{edge: "facilities"}
 }
 
 // NearbyplacesOrErr returns the Nearbyplaces value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoomdetailEdges) NearbyplacesOrErr() ([]*Nearbyplace, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e RoomdetailEdges) NearbyplacesOrErr() (*Nearbyplace, error) {
 	if e.loadedTypes[2] {
+		if e.Nearbyplaces == nil {
+			// The edge nearbyplaces was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: nearbyplace.Label}
+		}
 		return e.Nearbyplaces, nil
 	}
 	return nil, &NotLoadedError{edge: "nearbyplaces"}
 }
 
+// EmployeeOrErr returns the Employee value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e RoomdetailEdges) EmployeeOrErr() (*Employee, error) {
+	if e.loadedTypes[3] {
+		if e.Employee == nil {
+			// The edge employee was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: employee.Label}
+		}
+		return e.Employee, nil
+	}
+	return nil, &NotLoadedError{edge: "employee"}
+}
+
 // QuantityOrErr returns the Quantity value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e RoomdetailEdges) QuantityOrErr() (*Quantity, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		if e.Quantity == nil {
 			// The edge quantity was loaded in eager-loading,
 			// but was not found.
@@ -89,7 +128,7 @@ func (e RoomdetailEdges) QuantityOrErr() (*Quantity, error) {
 // StaytypeOrErr returns the Staytype value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e RoomdetailEdges) StaytypeOrErr() (*Staytype, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[5] {
 		if e.Staytype == nil {
 			// The edge staytype was loaded in eager-loading,
 			// but was not found.
@@ -112,6 +151,10 @@ func (*Roomdetail) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Roomdetail) fkValues() []interface{} {
 	return []interface{}{
+		&sql.NullInt64{}, // employee_id
+		&sql.NullInt64{}, // equipment_roomdetail
+		&sql.NullInt64{}, // facilitie_roomdetail
+		&sql.NullInt64{}, // nearbyplace_roomdetail
 		&sql.NullInt64{}, // quantity_roomdetails
 		&sql.NullInt64{}, // staytype_roomdetails
 	}
@@ -142,12 +185,36 @@ func (r *Roomdetail) assignValues(values ...interface{}) error {
 	values = values[2:]
 	if len(values) == len(roomdetail.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
+		} else if value.Valid {
+			r.employee_id = new(int)
+			*r.employee_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field equipment_roomdetail", value)
+		} else if value.Valid {
+			r.equipment_roomdetail = new(int)
+			*r.equipment_roomdetail = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field facilitie_roomdetail", value)
+		} else if value.Valid {
+			r.facilitie_roomdetail = new(int)
+			*r.facilitie_roomdetail = int(value.Int64)
+		}
+		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field nearbyplace_roomdetail", value)
+		} else if value.Valid {
+			r.nearbyplace_roomdetail = new(int)
+			*r.nearbyplace_roomdetail = int(value.Int64)
+		}
+		if value, ok := values[4].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field quantity_roomdetails", value)
 		} else if value.Valid {
 			r.quantity_roomdetails = new(int)
 			*r.quantity_roomdetails = int(value.Int64)
 		}
-		if value, ok := values[1].(*sql.NullInt64); !ok {
+		if value, ok := values[5].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field staytype_roomdetails", value)
 		} else if value.Valid {
 			r.staytype_roomdetails = new(int)
@@ -170,6 +237,11 @@ func (r *Roomdetail) QueryFacilities() *FacilitieQuery {
 // QueryNearbyplaces queries the nearbyplaces edge of the Roomdetail.
 func (r *Roomdetail) QueryNearbyplaces() *NearbyplaceQuery {
 	return (&RoomdetailClient{config: r.config}).QueryNearbyplaces(r)
+}
+
+// QueryEmployee queries the employee edge of the Roomdetail.
+func (r *Roomdetail) QueryEmployee() *EmployeeQuery {
+	return (&RoomdetailClient{config: r.config}).QueryEmployee(r)
 }
 
 // QueryQuantity queries the quantity edge of the Roomdetail.

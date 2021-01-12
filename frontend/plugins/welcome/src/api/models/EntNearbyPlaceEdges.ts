@@ -27,11 +27,11 @@ import {
  */
 export interface EntNearbyplaceEdges {
     /**
-     * 
-     * @type {EntRoomdetail}
+     * Roomdetail holds the value of the roomdetail edge.
+     * @type {Array<EntRoomdetail>}
      * @memberof EntNearbyplaceEdges
      */
-    roomdetail?: EntRoomdetail;
+    roomdetail?: Array<EntRoomdetail>;
 }
 
 export function EntNearbyplaceEdgesFromJSON(json: any): EntNearbyplaceEdges {
@@ -44,7 +44,7 @@ export function EntNearbyplaceEdgesFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
+        'roomdetail': !exists(json, 'roomdetail') ? undefined : ((json['roomdetail'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function EntNearbyplaceEdgesToJSON(value?: EntNearbyplaceEdges | null): a
     }
     return {
         
-        'roomdetail': EntRoomdetailToJSON(value.roomdetail),
+        'roomdetail': value.roomdetail === undefined ? undefined : ((value.roomdetail as Array<any>).map(EntRoomdetailToJSON)),
     };
 }
 

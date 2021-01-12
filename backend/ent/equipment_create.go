@@ -26,23 +26,19 @@ func (ec *EquipmentCreate) SetEquipment(s string) *EquipmentCreate {
 	return ec
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (ec *EquipmentCreate) SetRoomdetailID(id int) *EquipmentCreate {
-	ec.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (ec *EquipmentCreate) AddRoomdetailIDs(ids ...int) *EquipmentCreate {
+	ec.mutation.AddRoomdetailIDs(ids...)
 	return ec
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (ec *EquipmentCreate) SetNillableRoomdetailID(id *int) *EquipmentCreate {
-	if id != nil {
-		ec = ec.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (ec *EquipmentCreate) AddRoomdetail(r ...*Roomdetail) *EquipmentCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return ec
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (ec *EquipmentCreate) SetRoomdetail(r *Roomdetail) *EquipmentCreate {
-	return ec.SetRoomdetailID(r.ID)
+	return ec.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the EquipmentMutation object of the builder.
@@ -125,8 +121,8 @@ func (ec *EquipmentCreate) createSpec() (*Equipment, *sqlgraph.CreateSpec) {
 	}
 	if nodes := ec.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   equipment.RoomdetailTable,
 			Columns: []string{equipment.RoomdetailColumn},
 			Bidi:    false,

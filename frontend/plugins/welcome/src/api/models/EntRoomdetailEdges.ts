@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    EntEmployee,
+    EntEmployeeFromJSON,
+    EntEmployeeFromJSONTyped,
+    EntEmployeeToJSON,
     EntEquipment,
     EntEquipmentFromJSON,
     EntEquipmentFromJSONTyped,
@@ -43,23 +47,29 @@ import {
  */
 export interface EntRoomdetailEdges {
     /**
-     * Equipments holds the value of the equipments edge.
-     * @type {Array<EntEquipment>}
+     * 
+     * @type {EntEmployee}
      * @memberof EntRoomdetailEdges
      */
-    equipments?: Array<EntEquipment>;
+    employee?: EntEmployee;
     /**
-     * Facilities holds the value of the facilities edge.
-     * @type {Array<EntFacilitie>}
+     * 
+     * @type {EntEquipment}
      * @memberof EntRoomdetailEdges
      */
-    facilities?: Array<EntFacilitie>;
+    equipments?: EntEquipment;
     /**
-     * Nearbyplaces holds the value of the nearbyplaces edge.
-     * @type {Array<EntNearbyplace>}
+     * 
+     * @type {EntFacilitie}
      * @memberof EntRoomdetailEdges
      */
-    nearbyplaces?: Array<EntNearbyplace>;
+    facilities?: EntFacilitie;
+    /**
+     * 
+     * @type {EntNearbyplace}
+     * @memberof EntRoomdetailEdges
+     */
+    nearbyplaces?: EntNearbyplace;
     /**
      * 
      * @type {EntQuantity}
@@ -84,11 +94,12 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'equipments': !exists(json, 'equipments') ? undefined : ((json['equipments'] as Array<any>).map(EntEquipmentFromJSON)),
-        'facilities': !exists(json, 'facilities') ? undefined : ((json['facilities'] as Array<any>).map(EntFacilitieFromJSON)),
-        'nearbyplaces': !exists(json, 'nearbyplaces') ? undefined : ((json['nearbyplaces'] as Array<any>).map(EntNearbyplaceFromJSON)),
-        'quantity': !exists(json, 'quantity') ? undefined : EntQuantityFromJSON(json['quantity']),
-        'staytype': !exists(json, 'staytype') ? undefined : EntStaytypeFromJSON(json['staytype']),
+        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
+        'equipments': !exists(json, 'Equipments') ? undefined : EntEquipmentFromJSON(json['Equipments']),
+        'facilities': !exists(json, 'Facilities') ? undefined : EntFacilitieFromJSON(json['Facilities']),
+        'nearbyplaces': !exists(json, 'Nearbyplaces') ? undefined : EntNearbyplaceFromJSON(json['Nearbyplaces']),
+        'quantity': !exists(json, 'Quantity') ? undefined : EntQuantityFromJSON(json['Quantity']),
+        'staytype': !exists(json, 'Staytype') ? undefined : EntStaytypeFromJSON(json['Staytype']),
     };
 }
 
@@ -101,9 +112,10 @@ export function EntRoomdetailEdgesToJSON(value?: EntRoomdetailEdges | null): any
     }
     return {
         
-        'equipments': value.equipments === undefined ? undefined : ((value.equipments as Array<any>).map(EntEquipmentToJSON)),
-        'facilities': value.facilities === undefined ? undefined : ((value.facilities as Array<any>).map(EntFacilitieToJSON)),
-        'nearbyplaces': value.nearbyplaces === undefined ? undefined : ((value.nearbyplaces as Array<any>).map(EntNearbyplaceToJSON)),
+        'employee': EntEmployeeToJSON(value.employee),
+        'equipments': EntEquipmentToJSON(value.equipments),
+        'facilities': EntFacilitieToJSON(value.facilities),
+        'nearbyplaces': EntNearbyplaceToJSON(value.nearbyplaces),
         'quantity': EntQuantityToJSON(value.quantity),
         'staytype': EntStaytypeToJSON(value.staytype),
     };

@@ -8,7 +8,6 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/nearbyplace"
-	"github.com/team15/app/ent/roomdetail"
 )
 
 // Nearbyplace is the model entity for the Nearbyplace schema.
@@ -20,28 +19,22 @@ type Nearbyplace struct {
 	Nearbyplace string `json:"nearbyplace,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the NearbyplaceQuery when eager-loading is set.
-	Edges                   NearbyplaceEdges `json:"edges"`
-	roomdetail_nearbyplaces *int
+	Edges NearbyplaceEdges `json:"edges"`
 }
 
 // NearbyplaceEdges holds the relations/edges for other nodes in the graph.
 type NearbyplaceEdges struct {
 	// Roomdetail holds the value of the roomdetail edge.
-	Roomdetail *Roomdetail
+	Roomdetail []*Roomdetail
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
 // RoomdetailOrErr returns the Roomdetail value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e NearbyplaceEdges) RoomdetailOrErr() (*Roomdetail, error) {
+// was not loaded in eager-loading.
+func (e NearbyplaceEdges) RoomdetailOrErr() ([]*Roomdetail, error) {
 	if e.loadedTypes[0] {
-		if e.Roomdetail == nil {
-			// The edge roomdetail was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: roomdetail.Label}
-		}
 		return e.Roomdetail, nil
 	}
 	return nil, &NotLoadedError{edge: "roomdetail"}
@@ -52,13 +45,6 @@ func (*Nearbyplace) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // nearbyplace
-	}
-}
-
-// fkValues returns the types for scanning foreign-keys values from sql.Rows.
-func (*Nearbyplace) fkValues() []interface{} {
-	return []interface{}{
-		&sql.NullInt64{}, // roomdetail_nearbyplaces
 	}
 }
 
@@ -78,15 +64,6 @@ func (n *Nearbyplace) assignValues(values ...interface{}) error {
 		return fmt.Errorf("unexpected type %T for field nearbyplace", values[0])
 	} else if value.Valid {
 		n.Nearbyplace = value.String
-	}
-	values = values[1:]
-	if len(values) == len(nearbyplace.ForeignKeys) {
-		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field roomdetail_nearbyplaces", value)
-		} else if value.Valid {
-			n.roomdetail_nearbyplaces = new(int)
-			*n.roomdetail_nearbyplaces = int(value.Int64)
-		}
 	}
 	return nil
 }

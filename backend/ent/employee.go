@@ -8,6 +8,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 )
 
 // Employee is the model entity for the Employee schema.
@@ -15,24 +16,29 @@ type Employee struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Employeename holds the value of the "employeename" field.
-	Employeename string `json:"employeename,omitempty"`
-	// Employeeemail holds the value of the "employeeemail" field.
-	Employeeemail string `json:"employeeemail,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"password,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EmployeeQuery when eager-loading is set.
-	Edges EmployeeEdges `json:"edges"`
+	Edges          EmployeeEdges `json:"edges"`
+	jobposition_id *int
 }
 
 // EmployeeEdges holds the relations/edges for other nodes in the graph.
 type EmployeeEdges struct {
 	// Employees holds the value of the employees edge.
 	Employees []*Deposit
+	// Roomdetails holds the value of the roomdetails edge.
+	Roomdetails []*Roomdetail
+	// Jobposition holds the value of the jobposition edge.
+	Jobposition *Jobposition
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [3]bool
 }
 
 // EmployeesOrErr returns the Employees value or an error if the edge
@@ -44,13 +50,43 @@ func (e EmployeeEdges) EmployeesOrErr() ([]*Deposit, error) {
 	return nil, &NotLoadedError{edge: "employees"}
 }
 
+// RoomdetailsOrErr returns the Roomdetails value or an error if the edge
+// was not loaded in eager-loading.
+func (e EmployeeEdges) RoomdetailsOrErr() ([]*Roomdetail, error) {
+	if e.loadedTypes[1] {
+		return e.Roomdetails, nil
+	}
+	return nil, &NotLoadedError{edge: "roomdetails"}
+}
+
+// JobpositionOrErr returns the Jobposition value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e EmployeeEdges) JobpositionOrErr() (*Jobposition, error) {
+	if e.loadedTypes[2] {
+		if e.Jobposition == nil {
+			// The edge jobposition was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: jobposition.Label}
+		}
+		return e.Jobposition, nil
+	}
+	return nil, &NotLoadedError{edge: "jobposition"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Employee) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // employeename
-		&sql.NullString{}, // employeeemail
+		&sql.NullString{}, // name
+		&sql.NullString{}, // email
 		&sql.NullString{}, // password
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*Employee) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // jobposition_id
 	}
 }
 
@@ -67,19 +103,28 @@ func (e *Employee) assignValues(values ...interface{}) error {
 	e.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field employeename", values[0])
+		return fmt.Errorf("unexpected type %T for field name", values[0])
 	} else if value.Valid {
-		e.Employeename = value.String
+		e.Name = value.String
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field employeeemail", values[1])
+		return fmt.Errorf("unexpected type %T for field email", values[1])
 	} else if value.Valid {
-		e.Employeeemail = value.String
+		e.Email = value.String
 	}
 	if value, ok := values[2].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field password", values[2])
 	} else if value.Valid {
 		e.Password = value.String
+	}
+	values = values[3:]
+	if len(values) == len(employee.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field jobposition_id", value)
+		} else if value.Valid {
+			e.jobposition_id = new(int)
+			*e.jobposition_id = int(value.Int64)
+		}
 	}
 	return nil
 }
@@ -87,6 +132,16 @@ func (e *Employee) assignValues(values ...interface{}) error {
 // QueryEmployees queries the employees edge of the Employee.
 func (e *Employee) QueryEmployees() *DepositQuery {
 	return (&EmployeeClient{config: e.config}).QueryEmployees(e)
+}
+
+// QueryRoomdetails queries the roomdetails edge of the Employee.
+func (e *Employee) QueryRoomdetails() *RoomdetailQuery {
+	return (&EmployeeClient{config: e.config}).QueryRoomdetails(e)
+}
+
+// QueryJobposition queries the jobposition edge of the Employee.
+func (e *Employee) QueryJobposition() *JobpositionQuery {
+	return (&EmployeeClient{config: e.config}).QueryJobposition(e)
 }
 
 // Update returns a builder for updating this Employee.
@@ -112,10 +167,10 @@ func (e *Employee) String() string {
 	var builder strings.Builder
 	builder.WriteString("Employee(")
 	builder.WriteString(fmt.Sprintf("id=%v", e.ID))
-	builder.WriteString(", employeename=")
-	builder.WriteString(e.Employeename)
-	builder.WriteString(", employeeemail=")
-	builder.WriteString(e.Employeeemail)
+	builder.WriteString(", name=")
+	builder.WriteString(e.Name)
+	builder.WriteString(", email=")
+	builder.WriteString(e.Email)
 	builder.WriteString(", password=")
 	builder.WriteString(e.Password)
 	builder.WriteByte(')')

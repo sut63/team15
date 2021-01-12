@@ -1,14 +1,7 @@
-import React from 'react';
-import HomeIcon from '@material-ui/icons/Home';
-import BuildIcon from '@material-ui/icons/Build';
-import SignOut from '@material-ui/icons/Settings';
-import HotelIcon from '@material-ui/icons/Hotel';
-import DescriptionIcon from '@material-ui/icons/Description';
-import ReceiptIcon from '@material-ui/icons/Receipt';
-import CallIcon from '@material-ui/icons/Call';
-import AllInboxIcon from '@material-ui/icons/AllInbox';
-
-
+import React, { useState, useEffect } from 'react';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import {
   Sidebar,
   SidebarItem,
@@ -19,54 +12,60 @@ import {
   SidebarPinButton,
 } from '@backstage/core';
 
-export const AppSidebar = () => (
-  <Sidebar>
-    <SidebarDivider />
-    {/* Global nav, not org-specific */}
-    <SidebarItem icon={HomeIcon} to="" text="Home" />
-    {/* <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
-    <SidebarItem icon={CreateComponentIcon} to="welcome" text="Welcome" /> */}
-    <SidebarItem
-      icon={HotelIcon}
-      to="/Roomdetails"
-      text="Room details"
-    />
-    <SidebarItem
-      icon={DescriptionIcon}
-      to="/"
-      text="ฟอร์ด"
-    />
-    <SidebarItem
-      icon={ReceiptIcon}
-      to="/"
-      text="พี่อาท"
-    />
-    <SidebarItem
-      icon={BuildIcon}
-      to="/"
-      text="เอิร์ท"
-    />
-    <SidebarItem
-      icon={CallIcon}
-      to="/" //ใส่ตัวแปรของplugin
-      text="เทพ"
-    />
-    <SidebarItem
-      icon={AllInboxIcon}
-      to="/DepositTable"
-      text="เกน"
-    />
+import { EntEmployee } from 'plugin-welcome/src/api/models/EntEmployee';
+import { DefaultApi } from 'plugin-welcome/src/api/apis';
 
-    {/* End global nav */}
-    <SidebarDivider />
-    <SidebarSpace />
-    <SidebarDivider />
-    <SidebarItem
-      icon={SignOut}
-      to="sign_out"
-      text="Sign Out"
-    />
-    {/* <SidebarUserSettings  /> */}
-    <SidebarPinButton />
-  </Sidebar>
-);
+export const AppSidebar = () => {
+
+  const api = new DefaultApi();
+  const [employeeid, setEmployee] = useState(Number);
+  const [employees, setEmployees] = useState<EntEmployee[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getEmployees = async () => {
+      const res = await api.listEmployee();
+      setLoading(false);
+      setEmployees(res);
+    };
+    getEmployees();
+    const data = localStorage.getItem("employeedata");
+    if (data) {
+      setEmployee(Number(JSON.parse(data)));
+      setLoading(false);
+    }
+    
+  }, [loading]);
+
+  return (
+
+    <Sidebar>
+      <SidebarDivider />
+      {/* Global nav, not org-specific */}
+      {(employeeid) ?
+        employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => 
+          <SidebarItem icon={PermIdentityIcon} text={item.name} />
+        )
+        :
+        null
+      }
+      {/* End global nav */}
+      <SidebarDivider />
+      <SidebarSpace />
+      <SidebarDivider />
+      <SidebarThemeToggle />
+      {(employeeid) ?
+        <SidebarItem icon={MeetingRoomIcon} to="./" text="ออกจากระบบ"
+          onClick={() => {
+            localStorage.setItem("employeedata", JSON.stringify(null));
+            localStorage.setItem("employeelogindata", JSON.stringify(null));
+            history.pushState("", "", "./");
+            window.location.reload(false);
+          }} />
+        :
+        null
+      }
+      <SidebarPinButton />
+    </Sidebar>
+  )
+};

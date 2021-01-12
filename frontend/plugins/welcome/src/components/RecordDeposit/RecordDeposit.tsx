@@ -106,9 +106,10 @@ export default function recordDeposit() {
   getStatusds();
 
   const checkEmployee = async () => {
-    const edata = JSON.parse(Number(localStorage.getItem("employeedata")));
+    const edata = JSON.parse(String(localStorage.getItem("employeedata")));
     setLoading(false);
 	if(edata == ''){
+    history.pushState("","","./");
 	   window.location.href = "http://localhost:3000";
 	}
     setEmployee(edata)

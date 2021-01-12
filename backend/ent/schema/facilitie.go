@@ -14,15 +14,13 @@ type Facilitie struct {
 // Fields of the Facilitie.
 func (Facilitie) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("facilitie"),
+		field.String("facilitie").Unique(),
 	}
 }
 
 // Edges of the Facilitie.
 func (Facilitie) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("roomdetail", Roomdetail.Type).
-			Ref("facilities").
-			Unique(),
+		edge.To("roomdetail", Roomdetail.Type),
 	}
 }

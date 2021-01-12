@@ -26,23 +26,19 @@ func (nc *NearbyplaceCreate) SetNearbyplace(s string) *NearbyplaceCreate {
 	return nc
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (nc *NearbyplaceCreate) SetRoomdetailID(id int) *NearbyplaceCreate {
-	nc.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (nc *NearbyplaceCreate) AddRoomdetailIDs(ids ...int) *NearbyplaceCreate {
+	nc.mutation.AddRoomdetailIDs(ids...)
 	return nc
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (nc *NearbyplaceCreate) SetNillableRoomdetailID(id *int) *NearbyplaceCreate {
-	if id != nil {
-		nc = nc.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (nc *NearbyplaceCreate) AddRoomdetail(r ...*Roomdetail) *NearbyplaceCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return nc
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (nc *NearbyplaceCreate) SetRoomdetail(r *Roomdetail) *NearbyplaceCreate {
-	return nc.SetRoomdetailID(r.ID)
+	return nc.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the NearbyplaceMutation object of the builder.
@@ -125,8 +121,8 @@ func (nc *NearbyplaceCreate) createSpec() (*Nearbyplace, *sqlgraph.CreateSpec) {
 	}
 	if nodes := nc.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   nearbyplace.RoomdetailTable,
 			Columns: []string{nearbyplace.RoomdetailColumn},
 			Bidi:    false,

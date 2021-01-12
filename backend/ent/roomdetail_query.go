@@ -4,7 +4,6 @@ package ent
 
 import (
 	"context"
-	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -12,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/nearbyplace"
@@ -33,6 +33,7 @@ type RoomdetailQuery struct {
 	withEquipments   *EquipmentQuery
 	withFacilities   *FacilitieQuery
 	withNearbyplaces *NearbyplaceQuery
+	withEmployee     *EmployeeQuery
 	withQuantity     *QuantityQuery
 	withStaytype     *StaytypeQuery
 	withFKs          bool
@@ -75,7 +76,7 @@ func (rq *RoomdetailQuery) QueryEquipments() *EquipmentQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
 			sqlgraph.To(equipment.Table, equipment.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.EquipmentsTable, roomdetail.EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EquipmentsTable, roomdetail.EquipmentsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -93,7 +94,7 @@ func (rq *RoomdetailQuery) QueryFacilities() *FacilitieQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
 			sqlgraph.To(facilitie.Table, facilitie.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.FacilitiesTable, roomdetail.FacilitiesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.FacilitiesTable, roomdetail.FacilitiesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -111,7 +112,25 @@ func (rq *RoomdetailQuery) QueryNearbyplaces() *NearbyplaceQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
 			sqlgraph.To(nearbyplace.Table, nearbyplace.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.NearbyplacesTable, roomdetail.NearbyplacesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.NearbyplacesTable, roomdetail.NearbyplacesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryEmployee chains the current query on the employee edge.
+func (rq *RoomdetailQuery) QueryEmployee() *EmployeeQuery {
+	query := &EmployeeQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EmployeeTable, roomdetail.EmployeeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -367,6 +386,17 @@ func (rq *RoomdetailQuery) WithNearbyplaces(opts ...func(*NearbyplaceQuery)) *Ro
 	return rq
 }
 
+//  WithEmployee tells the query-builder to eager-loads the nodes that are connected to
+// the "employee" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomdetailQuery) WithEmployee(opts ...func(*EmployeeQuery)) *RoomdetailQuery {
+	query := &EmployeeQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withEmployee = query
+	return rq
+}
+
 //  WithQuantity tells the query-builder to eager-loads the nodes that are connected to
 // the "quantity" edge. The optional arguments used to configure the query builder of the edge.
 func (rq *RoomdetailQuery) WithQuantity(opts ...func(*QuantityQuery)) *RoomdetailQuery {
@@ -456,15 +486,16 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		nodes       = []*Roomdetail{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [6]bool{
 			rq.withEquipments != nil,
 			rq.withFacilities != nil,
 			rq.withNearbyplaces != nil,
+			rq.withEmployee != nil,
 			rq.withQuantity != nil,
 			rq.withStaytype != nil,
 		}
 	)
-	if rq.withQuantity != nil || rq.withStaytype != nil {
+	if rq.withEquipments != nil || rq.withFacilities != nil || rq.withNearbyplaces != nil || rq.withEmployee != nil || rq.withQuantity != nil || rq.withStaytype != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -495,86 +526,102 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 	}
 
 	if query := rq.withEquipments; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Roomdetail)
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Roomdetail)
 		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
+			if fk := nodes[i].equipment_roomdetail; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
 		}
-		query.withFKs = true
-		query.Where(predicate.Equipment(func(s *sql.Selector) {
-			s.Where(sql.InValues(roomdetail.EquipmentsColumn, fks...))
-		}))
+		query.Where(equipment.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.roomdetail_equipments
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "roomdetail_equipments" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
+			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_equipments" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "equipment_roomdetail" returned %v`, n.ID)
 			}
-			node.Edges.Equipments = append(node.Edges.Equipments, n)
+			for i := range nodes {
+				nodes[i].Edges.Equipments = n
+			}
 		}
 	}
 
 	if query := rq.withFacilities; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Roomdetail)
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Roomdetail)
 		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
+			if fk := nodes[i].facilitie_roomdetail; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
 		}
-		query.withFKs = true
-		query.Where(predicate.Facilitie(func(s *sql.Selector) {
-			s.Where(sql.InValues(roomdetail.FacilitiesColumn, fks...))
-		}))
+		query.Where(facilitie.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.roomdetail_facilities
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "roomdetail_facilities" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
+			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_facilities" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "facilitie_roomdetail" returned %v`, n.ID)
 			}
-			node.Edges.Facilities = append(node.Edges.Facilities, n)
+			for i := range nodes {
+				nodes[i].Edges.Facilities = n
+			}
 		}
 	}
 
 	if query := rq.withNearbyplaces; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Roomdetail)
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Roomdetail)
 		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
+			if fk := nodes[i].nearbyplace_roomdetail; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
 		}
-		query.withFKs = true
-		query.Where(predicate.Nearbyplace(func(s *sql.Selector) {
-			s.Where(sql.InValues(roomdetail.NearbyplacesColumn, fks...))
-		}))
+		query.Where(nearbyplace.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.roomdetail_nearbyplaces
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "roomdetail_nearbyplaces" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
+			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_nearbyplaces" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "nearbyplace_roomdetail" returned %v`, n.ID)
 			}
-			node.Edges.Nearbyplaces = append(node.Edges.Nearbyplaces, n)
+			for i := range nodes {
+				nodes[i].Edges.Nearbyplaces = n
+			}
+		}
+	}
+
+	if query := rq.withEmployee; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Roomdetail)
+		for i := range nodes {
+			if fk := nodes[i].employee_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(employee.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Employee = n
+			}
 		}
 	}
 

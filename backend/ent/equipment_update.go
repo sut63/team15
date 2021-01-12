@@ -34,23 +34,19 @@ func (eu *EquipmentUpdate) SetEquipment(s string) *EquipmentUpdate {
 	return eu
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (eu *EquipmentUpdate) SetRoomdetailID(id int) *EquipmentUpdate {
-	eu.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (eu *EquipmentUpdate) AddRoomdetailIDs(ids ...int) *EquipmentUpdate {
+	eu.mutation.AddRoomdetailIDs(ids...)
 	return eu
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (eu *EquipmentUpdate) SetNillableRoomdetailID(id *int) *EquipmentUpdate {
-	if id != nil {
-		eu = eu.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (eu *EquipmentUpdate) AddRoomdetail(r ...*Roomdetail) *EquipmentUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return eu
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (eu *EquipmentUpdate) SetRoomdetail(r *Roomdetail) *EquipmentUpdate {
-	return eu.SetRoomdetailID(r.ID)
+	return eu.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the EquipmentMutation object of the builder.
@@ -58,10 +54,19 @@ func (eu *EquipmentUpdate) Mutation() *EquipmentMutation {
 	return eu.mutation
 }
 
-// ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (eu *EquipmentUpdate) ClearRoomdetail() *EquipmentUpdate {
-	eu.mutation.ClearRoomdetail()
+// RemoveRoomdetailIDs removes the roomdetail edge to Roomdetail by ids.
+func (eu *EquipmentUpdate) RemoveRoomdetailIDs(ids ...int) *EquipmentUpdate {
+	eu.mutation.RemoveRoomdetailIDs(ids...)
 	return eu
+}
+
+// RemoveRoomdetail removes roomdetail edges to Roomdetail.
+func (eu *EquipmentUpdate) RemoveRoomdetail(r ...*Roomdetail) *EquipmentUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return eu.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -141,10 +146,10 @@ func (eu *EquipmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: equipment.FieldEquipment,
 		})
 	}
-	if eu.mutation.RoomdetailCleared() {
+	if nodes := eu.mutation.RemovedRoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   equipment.RoomdetailTable,
 			Columns: []string{equipment.RoomdetailColumn},
 			Bidi:    false,
@@ -155,12 +160,15 @@ func (eu *EquipmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := eu.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   equipment.RoomdetailTable,
 			Columns: []string{equipment.RoomdetailColumn},
 			Bidi:    false,
@@ -200,23 +208,19 @@ func (euo *EquipmentUpdateOne) SetEquipment(s string) *EquipmentUpdateOne {
 	return euo
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (euo *EquipmentUpdateOne) SetRoomdetailID(id int) *EquipmentUpdateOne {
-	euo.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (euo *EquipmentUpdateOne) AddRoomdetailIDs(ids ...int) *EquipmentUpdateOne {
+	euo.mutation.AddRoomdetailIDs(ids...)
 	return euo
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (euo *EquipmentUpdateOne) SetNillableRoomdetailID(id *int) *EquipmentUpdateOne {
-	if id != nil {
-		euo = euo.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (euo *EquipmentUpdateOne) AddRoomdetail(r ...*Roomdetail) *EquipmentUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return euo
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (euo *EquipmentUpdateOne) SetRoomdetail(r *Roomdetail) *EquipmentUpdateOne {
-	return euo.SetRoomdetailID(r.ID)
+	return euo.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the EquipmentMutation object of the builder.
@@ -224,10 +228,19 @@ func (euo *EquipmentUpdateOne) Mutation() *EquipmentMutation {
 	return euo.mutation
 }
 
-// ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (euo *EquipmentUpdateOne) ClearRoomdetail() *EquipmentUpdateOne {
-	euo.mutation.ClearRoomdetail()
+// RemoveRoomdetailIDs removes the roomdetail edge to Roomdetail by ids.
+func (euo *EquipmentUpdateOne) RemoveRoomdetailIDs(ids ...int) *EquipmentUpdateOne {
+	euo.mutation.RemoveRoomdetailIDs(ids...)
 	return euo
+}
+
+// RemoveRoomdetail removes roomdetail edges to Roomdetail.
+func (euo *EquipmentUpdateOne) RemoveRoomdetail(r ...*Roomdetail) *EquipmentUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return euo.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -305,10 +318,10 @@ func (euo *EquipmentUpdateOne) sqlSave(ctx context.Context) (e *Equipment, err e
 			Column: equipment.FieldEquipment,
 		})
 	}
-	if euo.mutation.RoomdetailCleared() {
+	if nodes := euo.mutation.RemovedRoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   equipment.RoomdetailTable,
 			Columns: []string{equipment.RoomdetailColumn},
 			Bidi:    false,
@@ -319,12 +332,15 @@ func (euo *EquipmentUpdateOne) sqlSave(ctx context.Context) (e *Equipment, err e
 				},
 			},
 		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := euo.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   equipment.RoomdetailTable,
 			Columns: []string{equipment.RoomdetailColumn},
 			Bidi:    false,

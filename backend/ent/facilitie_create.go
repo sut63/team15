@@ -26,23 +26,19 @@ func (fc *FacilitieCreate) SetFacilitie(s string) *FacilitieCreate {
 	return fc
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (fc *FacilitieCreate) SetRoomdetailID(id int) *FacilitieCreate {
-	fc.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (fc *FacilitieCreate) AddRoomdetailIDs(ids ...int) *FacilitieCreate {
+	fc.mutation.AddRoomdetailIDs(ids...)
 	return fc
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (fc *FacilitieCreate) SetNillableRoomdetailID(id *int) *FacilitieCreate {
-	if id != nil {
-		fc = fc.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (fc *FacilitieCreate) AddRoomdetail(r ...*Roomdetail) *FacilitieCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return fc
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (fc *FacilitieCreate) SetRoomdetail(r *Roomdetail) *FacilitieCreate {
-	return fc.SetRoomdetailID(r.ID)
+	return fc.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the FacilitieMutation object of the builder.
@@ -125,8 +121,8 @@ func (fc *FacilitieCreate) createSpec() (*Facilitie, *sqlgraph.CreateSpec) {
 	}
 	if nodes := fc.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   facilitie.RoomdetailTable,
 			Columns: []string{facilitie.RoomdetailColumn},
 			Bidi:    false,

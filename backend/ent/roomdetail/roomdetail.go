@@ -18,6 +18,8 @@ const (
 	EdgeFacilities = "facilities"
 	// EdgeNearbyplaces holds the string denoting the nearbyplaces edge name in mutations.
 	EdgeNearbyplaces = "nearbyplaces"
+	// EdgeEmployee holds the string denoting the employee edge name in mutations.
+	EdgeEmployee = "employee"
 	// EdgeQuantity holds the string denoting the quantity edge name in mutations.
 	EdgeQuantity = "quantity"
 	// EdgeStaytype holds the string denoting the staytype edge name in mutations.
@@ -26,26 +28,33 @@ const (
 	// Table holds the table name of the roomdetail in the database.
 	Table = "roomdetails"
 	// EquipmentsTable is the table the holds the equipments relation/edge.
-	EquipmentsTable = "equipment"
+	EquipmentsTable = "roomdetails"
 	// EquipmentsInverseTable is the table name for the Equipment entity.
 	// It exists in this package in order to avoid circular dependency with the "equipment" package.
 	EquipmentsInverseTable = "equipment"
 	// EquipmentsColumn is the table column denoting the equipments relation/edge.
-	EquipmentsColumn = "roomdetail_equipments"
+	EquipmentsColumn = "equipment_roomdetail"
 	// FacilitiesTable is the table the holds the facilities relation/edge.
-	FacilitiesTable = "facilities"
+	FacilitiesTable = "roomdetails"
 	// FacilitiesInverseTable is the table name for the Facilitie entity.
 	// It exists in this package in order to avoid circular dependency with the "facilitie" package.
 	FacilitiesInverseTable = "facilities"
 	// FacilitiesColumn is the table column denoting the facilities relation/edge.
-	FacilitiesColumn = "roomdetail_facilities"
+	FacilitiesColumn = "facilitie_roomdetail"
 	// NearbyplacesTable is the table the holds the nearbyplaces relation/edge.
-	NearbyplacesTable = "nearbyplaces"
+	NearbyplacesTable = "roomdetails"
 	// NearbyplacesInverseTable is the table name for the Nearbyplace entity.
 	// It exists in this package in order to avoid circular dependency with the "nearbyplace" package.
 	NearbyplacesInverseTable = "nearbyplaces"
 	// NearbyplacesColumn is the table column denoting the nearbyplaces relation/edge.
-	NearbyplacesColumn = "roomdetail_nearbyplaces"
+	NearbyplacesColumn = "nearbyplace_roomdetail"
+	// EmployeeTable is the table the holds the employee relation/edge.
+	EmployeeTable = "roomdetails"
+	// EmployeeInverseTable is the table name for the Employee entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	EmployeeInverseTable = "employees"
+	// EmployeeColumn is the table column denoting the employee relation/edge.
+	EmployeeColumn = "employee_id"
 	// QuantityTable is the table the holds the quantity relation/edge.
 	QuantityTable = "roomdetails"
 	// QuantityInverseTable is the table name for the Quantity entity.
@@ -71,6 +80,10 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Roomdetail type.
 var ForeignKeys = []string{
+	"employee_id",
+	"equipment_roomdetail",
+	"facilitie_roomdetail",
+	"nearbyplace_roomdetail",
 	"quantity_roomdetails",
 	"staytype_roomdetails",
 }

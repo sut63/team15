@@ -1,16 +1,20 @@
 import { createPlugin } from '@backstage/core';
-import WelcomePage from './components/WelcomePage';
 import CreateDeposit from './components/RecordDeposit';
 import ShowDeposit from './components/DepositTable';
 import SignIn from './components/SignIn';
+import CreateRoomdetail from './components/RoomDetails';
+import RoomdetailsTable from './components/RoomdetailsTable';
 
 
 export const plugin = createPlugin({
   id: 'welcome',
   register({ router }) {
     router.registerRoute('/', SignIn);
-	router.registerRoute('/Home', WelcomePage);
+	//router.registerRoute('/Home', WelcomePage);
     router.registerRoute('/DepositTable', ShowDeposit);
     router.registerRoute('/RecordDeposit', CreateDeposit);
+    router.registerRoute('/RoomDetails', CreateRoomdetail);
+    router.registerRoute('/RoomdetailsTable', RoomdetailsTable);
+
   },
 });

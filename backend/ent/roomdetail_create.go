@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/nearbyplace"
@@ -36,49 +37,80 @@ func (rc *RoomdetailCreate) SetRoomprice(s string) *RoomdetailCreate {
 	return rc
 }
 
-// AddEquipmentIDs adds the equipments edge to Equipment by ids.
-func (rc *RoomdetailCreate) AddEquipmentIDs(ids ...int) *RoomdetailCreate {
-	rc.mutation.AddEquipmentIDs(ids...)
+// SetEquipmentsID sets the equipments edge to Equipment by id.
+func (rc *RoomdetailCreate) SetEquipmentsID(id int) *RoomdetailCreate {
+	rc.mutation.SetEquipmentsID(id)
 	return rc
 }
 
-// AddEquipments adds the equipments edges to Equipment.
-func (rc *RoomdetailCreate) AddEquipments(e ...*Equipment) *RoomdetailCreate {
-	ids := make([]int, len(e))
-	for i := range e {
-		ids[i] = e[i].ID
+// SetNillableEquipmentsID sets the equipments edge to Equipment by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableEquipmentsID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetEquipmentsID(*id)
 	}
-	return rc.AddEquipmentIDs(ids...)
-}
-
-// AddFacilityIDs adds the facilities edge to Facilitie by ids.
-func (rc *RoomdetailCreate) AddFacilityIDs(ids ...int) *RoomdetailCreate {
-	rc.mutation.AddFacilityIDs(ids...)
 	return rc
 }
 
-// AddFacilities adds the facilities edges to Facilitie.
-func (rc *RoomdetailCreate) AddFacilities(f ...*Facilitie) *RoomdetailCreate {
-	ids := make([]int, len(f))
-	for i := range f {
-		ids[i] = f[i].ID
-	}
-	return rc.AddFacilityIDs(ids...)
+// SetEquipments sets the equipments edge to Equipment.
+func (rc *RoomdetailCreate) SetEquipments(e *Equipment) *RoomdetailCreate {
+	return rc.SetEquipmentsID(e.ID)
 }
 
-// AddNearbyplaceIDs adds the nearbyplaces edge to Nearbyplace by ids.
-func (rc *RoomdetailCreate) AddNearbyplaceIDs(ids ...int) *RoomdetailCreate {
-	rc.mutation.AddNearbyplaceIDs(ids...)
+// SetFacilitiesID sets the facilities edge to Facilitie by id.
+func (rc *RoomdetailCreate) SetFacilitiesID(id int) *RoomdetailCreate {
+	rc.mutation.SetFacilitiesID(id)
 	return rc
 }
 
-// AddNearbyplaces adds the nearbyplaces edges to Nearbyplace.
-func (rc *RoomdetailCreate) AddNearbyplaces(n ...*Nearbyplace) *RoomdetailCreate {
-	ids := make([]int, len(n))
-	for i := range n {
-		ids[i] = n[i].ID
+// SetNillableFacilitiesID sets the facilities edge to Facilitie by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableFacilitiesID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetFacilitiesID(*id)
 	}
-	return rc.AddNearbyplaceIDs(ids...)
+	return rc
+}
+
+// SetFacilities sets the facilities edge to Facilitie.
+func (rc *RoomdetailCreate) SetFacilities(f *Facilitie) *RoomdetailCreate {
+	return rc.SetFacilitiesID(f.ID)
+}
+
+// SetNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id.
+func (rc *RoomdetailCreate) SetNearbyplacesID(id int) *RoomdetailCreate {
+	rc.mutation.SetNearbyplacesID(id)
+	return rc
+}
+
+// SetNillableNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableNearbyplacesID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetNearbyplacesID(*id)
+	}
+	return rc
+}
+
+// SetNearbyplaces sets the nearbyplaces edge to Nearbyplace.
+func (rc *RoomdetailCreate) SetNearbyplaces(n *Nearbyplace) *RoomdetailCreate {
+	return rc.SetNearbyplacesID(n.ID)
+}
+
+// SetEmployeeID sets the employee edge to Employee by id.
+func (rc *RoomdetailCreate) SetEmployeeID(id int) *RoomdetailCreate {
+	rc.mutation.SetEmployeeID(id)
+	return rc
+}
+
+// SetNillableEmployeeID sets the employee edge to Employee by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableEmployeeID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetEmployeeID(*id)
+	}
+	return rc
+}
+
+// SetEmployee sets the employee edge to Employee.
+func (rc *RoomdetailCreate) SetEmployee(e *Employee) *RoomdetailCreate {
+	return rc.SetEmployeeID(e.ID)
 }
 
 // SetQuantityID sets the quantity edge to Quantity by id.
@@ -210,8 +242,8 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 	}
 	if nodes := rc.mutation.EquipmentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.EquipmentsTable,
 			Columns: []string{roomdetail.EquipmentsColumn},
 			Bidi:    false,
@@ -229,8 +261,8 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 	}
 	if nodes := rc.mutation.FacilitiesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.FacilitiesTable,
 			Columns: []string{roomdetail.FacilitiesColumn},
 			Bidi:    false,
@@ -248,8 +280,8 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 	}
 	if nodes := rc.mutation.NearbyplacesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.NearbyplacesTable,
 			Columns: []string{roomdetail.NearbyplacesColumn},
 			Bidi:    false,
@@ -257,6 +289,25 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: nearbyplace.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.EmployeeTable,
+			Columns: []string{roomdetail.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}

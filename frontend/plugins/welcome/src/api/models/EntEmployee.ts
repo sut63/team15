@@ -33,23 +33,23 @@ export interface EntEmployee {
      */
     edges?: EntEmployeeEdges;
     /**
-     * Employeeemail holds the value of the "employeeemail" field.
+     * Email holds the value of the "email" field.
      * @type {string}
      * @memberof EntEmployee
      */
-    employeeemail?: string;
-    /**
-     * Employeename holds the value of the "employeename" field.
-     * @type {string}
-     * @memberof EntEmployee
-     */
-    employeename?: string;
+    email?: string;
     /**
      * ID of the ent.
      * @type {number}
      * @memberof EntEmployee
      */
     id?: number;
+    /**
+     * Name holds the value of the "name" field.
+     * @type {string}
+     * @memberof EntEmployee
+     */
+    name?: string;
     /**
      * Password holds the value of the "password" field.
      * @type {string}
@@ -69,9 +69,9 @@ export function EntEmployeeFromJSONTyped(json: any, ignoreDiscriminator: boolean
     return {
         
         'edges': !exists(json, 'edges') ? undefined : EntEmployeeEdgesFromJSON(json['edges']),
-        'employeeemail': !exists(json, 'employeeemail') ? undefined : json['employeeemail'],
-        'employeename': !exists(json, 'employeename') ? undefined : json['employeename'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
         'password': !exists(json, 'password') ? undefined : json['password'],
     };
 }
@@ -86,9 +86,9 @@ export function EntEmployeeToJSON(value?: EntEmployee | null): any {
     return {
         
         'edges': EntEmployeeEdgesToJSON(value.edges),
-        'employeeemail': value.employeeemail,
-        'employeename': value.employeename,
+        'email': value.email,
         'id': value.id,
+        'name': value.name,
         'password': value.password,
     };
 }

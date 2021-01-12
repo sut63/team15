@@ -7,15 +7,19 @@ const (
 	Label = "employee"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldEmployeename holds the string denoting the employeename field in the database.
-	FieldEmployeename = "employeename"
-	// FieldEmployeeemail holds the string denoting the employeeemail field in the database.
-	FieldEmployeeemail = "employeeemail"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
 
 	// EdgeEmployees holds the string denoting the employees edge name in mutations.
 	EdgeEmployees = "employees"
+	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
+	EdgeRoomdetails = "roomdetails"
+	// EdgeJobposition holds the string denoting the jobposition edge name in mutations.
+	EdgeJobposition = "jobposition"
 
 	// Table holds the table name of the employee in the database.
 	Table = "employees"
@@ -26,21 +30,40 @@ const (
 	EmployeesInverseTable = "deposits"
 	// EmployeesColumn is the table column denoting the employees relation/edge.
 	EmployeesColumn = "employee_id"
+	// RoomdetailsTable is the table the holds the roomdetails relation/edge.
+	RoomdetailsTable = "roomdetails"
+	// RoomdetailsInverseTable is the table name for the Roomdetail entity.
+	// It exists in this package in order to avoid circular dependency with the "roomdetail" package.
+	RoomdetailsInverseTable = "roomdetails"
+	// RoomdetailsColumn is the table column denoting the roomdetails relation/edge.
+	RoomdetailsColumn = "employee_id"
+	// JobpositionTable is the table the holds the jobposition relation/edge.
+	JobpositionTable = "employees"
+	// JobpositionInverseTable is the table name for the Jobposition entity.
+	// It exists in this package in order to avoid circular dependency with the "jobposition" package.
+	JobpositionInverseTable = "jobpositions"
+	// JobpositionColumn is the table column denoting the jobposition relation/edge.
+	JobpositionColumn = "jobposition_id"
 )
 
 // Columns holds all SQL columns for employee fields.
 var Columns = []string{
 	FieldID,
-	FieldEmployeename,
-	FieldEmployeeemail,
+	FieldName,
+	FieldEmail,
 	FieldPassword,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the Employee type.
+var ForeignKeys = []string{
+	"jobposition_id",
+}
+
 var (
-	// EmployeenameValidator is a validator for the "employeename" field. It is called by the builders before save.
-	EmployeenameValidator func(string) error
-	// EmployeeemailValidator is a validator for the "employeeemail" field. It is called by the builders before save.
-	EmployeeemailValidator func(string) error
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
+	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	EmailValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	PasswordValidator func(string) error
 )

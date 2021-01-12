@@ -67,10 +67,6 @@ export interface CreateDepositRequest {
     deposit: ControllersDeposit;
 }
 
-export interface CreateEmployeeRequest {
-    employee: EntEmployee;
-}
-
 export interface CreateEquipmentRequest {
     equipment: EntEquipment;
 }
@@ -303,41 +299,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async createDeposit(requestParameters: CreateDepositRequest): Promise<ControllersDeposit> {
         const response = await this.createDepositRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * Create employee
-     * Create employee
-     */
-    async createEmployeeRaw(requestParameters: CreateEmployeeRequest): Promise<runtime.ApiResponse<EntEmployee>> {
-        if (requestParameters.employee === null || requestParameters.employee === undefined) {
-            throw new runtime.RequiredError('employee','Required parameter requestParameters.employee was null or undefined when calling createEmployee.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/employees`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: EntEmployeeToJSON(requestParameters.employee),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntEmployeeFromJSON(jsonValue));
-    }
-
-    /**
-     * Create employee
-     * Create employee
-     */
-    async createEmployee(requestParameters: CreateEmployeeRequest): Promise<EntEmployee> {
-        const response = await this.createEmployeeRaw(requestParameters);
         return await response.value();
     }
 
@@ -1274,9 +1235,10 @@ export class DefaultApi extends runtime.BaseAPI {
      * list employee entities
      * List employee entities
      */
-    async listEmployeeRaw(requestParameters: ListEmployeeRequest): Promise<runtime.ApiResponse<Array<EntEmployee>>> {
+    async listEmployeeRaw(): Promise<runtime.ApiResponse<Array<EntEmployee>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
+    
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -1293,8 +1255,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list employee entities
      * List employee entities
      */
-    async listEmployee(requestParameters: ListEmployeeRequest): Promise<Array<EntEmployee>> {
-        const response = await this.listEmployeeRaw(requestParameters);
+    async listEmployee(): Promise<Array<EntEmployee>> {
+        const response = await this.listEmployeeRaw();
         return await response.value();
     }
 
@@ -1482,16 +1444,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list roomdetail entities
      * List roomdetail entities
      */
-    async listRoomdetailRaw(requestParameters: ListRoomdetailRequest): Promise<runtime.ApiResponse<Array<EntRoomdetail>>> {
+    async listRoomdetailRaw(): Promise<runtime.ApiResponse<Array<EntRoomdetail>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1509,8 +1463,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list roomdetail entities
      * List roomdetail entities
      */
-    async listRoomdetail(requestParameters: ListRoomdetailRequest): Promise<Array<EntRoomdetail>> {
-        const response = await this.listRoomdetailRaw(requestParameters);
+    async listRoomdetail(): Promise<Array<EntRoomdetail>> {
+        const response = await this.listRoomdetailRaw();
         return await response.value();
     }
 

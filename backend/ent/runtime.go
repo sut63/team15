@@ -5,6 +5,7 @@ package ent
 import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/schema"
 	"github.com/team15/app/ent/statusd"
@@ -22,18 +23,24 @@ func init() {
 	cleanername.CleanernameValidator = cleanernameDescCleanername.Validators[0].(func(string) error)
 	employeeFields := schema.Employee{}.Fields()
 	_ = employeeFields
-	// employeeDescEmployeename is the schema descriptor for employeename field.
-	employeeDescEmployeename := employeeFields[0].Descriptor()
-	// employee.EmployeenameValidator is a validator for the "employeename" field. It is called by the builders before save.
-	employee.EmployeenameValidator = employeeDescEmployeename.Validators[0].(func(string) error)
-	// employeeDescEmployeeemail is the schema descriptor for employeeemail field.
-	employeeDescEmployeeemail := employeeFields[1].Descriptor()
-	// employee.EmployeeemailValidator is a validator for the "employeeemail" field. It is called by the builders before save.
-	employee.EmployeeemailValidator = employeeDescEmployeeemail.Validators[0].(func(string) error)
+	// employeeDescName is the schema descriptor for name field.
+	employeeDescName := employeeFields[0].Descriptor()
+	// employee.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	employee.NameValidator = employeeDescName.Validators[0].(func(string) error)
+	// employeeDescEmail is the schema descriptor for email field.
+	employeeDescEmail := employeeFields[1].Descriptor()
+	// employee.EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	employee.EmailValidator = employeeDescEmail.Validators[0].(func(string) error)
 	// employeeDescPassword is the schema descriptor for password field.
 	employeeDescPassword := employeeFields[2].Descriptor()
 	// employee.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	employee.PasswordValidator = employeeDescPassword.Validators[0].(func(string) error)
+	jobpositionFields := schema.Jobposition{}.Fields()
+	_ = jobpositionFields
+	// jobpositionDescPositionName is the schema descriptor for position_name field.
+	jobpositionDescPositionName := jobpositionFields[0].Descriptor()
+	// jobposition.PositionNameValidator is a validator for the "position_name" field. It is called by the builders before save.
+	jobposition.PositionNameValidator = jobpositionDescPositionName.Validators[0].(func(string) error)
 	lengthtimeFields := schema.LengthTime{}.Fields()
 	_ = lengthtimeFields
 	// lengthtimeDescLengthtime is the schema descriptor for lengthtime field.

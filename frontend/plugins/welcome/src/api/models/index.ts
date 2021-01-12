@@ -12,6 +12,8 @@ export * from './EntEquipment';
 export * from './EntEquipmentEdges';
 export * from './EntFacilitie';
 export * from './EntFacilitieEdges';
+export * from './EntJobposition';
+export * from './EntJobpositionEdges';
 export * from './EntLengthTime';
 export * from './EntLengthTimeEdges';
 export * from './EntNearbyplace';

@@ -14,7 +14,7 @@ type Staytype struct {
 // Fields of the Staytype.
 func (Staytype) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("staytype"),
+		field.String("staytype").Unique(),
 	}
 }
 

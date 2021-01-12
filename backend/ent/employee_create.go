@@ -11,6 +11,8 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // EmployeeCreate is the builder for creating a Employee entity.
@@ -20,15 +22,15 @@ type EmployeeCreate struct {
 	hooks    []Hook
 }
 
-// SetEmployeename sets the employeename field.
-func (ec *EmployeeCreate) SetEmployeename(s string) *EmployeeCreate {
-	ec.mutation.SetEmployeename(s)
+// SetName sets the name field.
+func (ec *EmployeeCreate) SetName(s string) *EmployeeCreate {
+	ec.mutation.SetName(s)
 	return ec
 }
 
-// SetEmployeeemail sets the employeeemail field.
-func (ec *EmployeeCreate) SetEmployeeemail(s string) *EmployeeCreate {
-	ec.mutation.SetEmployeeemail(s)
+// SetEmail sets the email field.
+func (ec *EmployeeCreate) SetEmail(s string) *EmployeeCreate {
+	ec.mutation.SetEmail(s)
 	return ec
 }
 
@@ -53,6 +55,40 @@ func (ec *EmployeeCreate) AddEmployees(d ...*Deposit) *EmployeeCreate {
 	return ec.AddEmployeeIDs(ids...)
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (ec *EmployeeCreate) AddRoomdetailIDs(ids ...int) *EmployeeCreate {
+	ec.mutation.AddRoomdetailIDs(ids...)
+	return ec
+}
+
+// AddRoomdetails adds the roomdetails edges to Roomdetail.
+func (ec *EmployeeCreate) AddRoomdetails(r ...*Roomdetail) *EmployeeCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ec.AddRoomdetailIDs(ids...)
+}
+
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (ec *EmployeeCreate) SetJobpositionID(id int) *EmployeeCreate {
+	ec.mutation.SetJobpositionID(id)
+	return ec
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (ec *EmployeeCreate) SetNillableJobpositionID(id *int) *EmployeeCreate {
+	if id != nil {
+		ec = ec.SetJobpositionID(*id)
+	}
+	return ec
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (ec *EmployeeCreate) SetJobposition(j *Jobposition) *EmployeeCreate {
+	return ec.SetJobpositionID(j.ID)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (ec *EmployeeCreate) Mutation() *EmployeeMutation {
 	return ec.mutation
@@ -60,20 +96,20 @@ func (ec *EmployeeCreate) Mutation() *EmployeeMutation {
 
 // Save creates the Employee in the database.
 func (ec *EmployeeCreate) Save(ctx context.Context) (*Employee, error) {
-	if _, ok := ec.mutation.Employeename(); !ok {
-		return nil, &ValidationError{Name: "employeename", err: errors.New("ent: missing required field \"employeename\"")}
+	if _, ok := ec.mutation.Name(); !ok {
+		return nil, &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
 	}
-	if v, ok := ec.mutation.Employeename(); ok {
-		if err := employee.EmployeenameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "employeename", err: fmt.Errorf("ent: validator failed for field \"employeename\": %w", err)}
+	if v, ok := ec.mutation.Name(); ok {
+		if err := employee.NameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
-	if _, ok := ec.mutation.Employeeemail(); !ok {
-		return nil, &ValidationError{Name: "employeeemail", err: errors.New("ent: missing required field \"employeeemail\"")}
+	if _, ok := ec.mutation.Email(); !ok {
+		return nil, &ValidationError{Name: "email", err: errors.New("ent: missing required field \"email\"")}
 	}
-	if v, ok := ec.mutation.Employeeemail(); ok {
-		if err := employee.EmployeeemailValidator(v); err != nil {
-			return nil, &ValidationError{Name: "employeeemail", err: fmt.Errorf("ent: validator failed for field \"employeeemail\": %w", err)}
+	if v, ok := ec.mutation.Email(); ok {
+		if err := employee.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "email", err: fmt.Errorf("ent: validator failed for field \"email\": %w", err)}
 		}
 	}
 	if _, ok := ec.mutation.Password(); !ok {
@@ -144,21 +180,21 @@ func (ec *EmployeeCreate) createSpec() (*Employee, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := ec.mutation.Employeename(); ok {
+	if value, ok := ec.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldEmployeename,
+			Column: employee.FieldName,
 		})
-		e.Employeename = value
+		e.Name = value
 	}
-	if value, ok := ec.mutation.Employeeemail(); ok {
+	if value, ok := ec.mutation.Email(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: employee.FieldEmployeeemail,
+			Column: employee.FieldEmail,
 		})
-		e.Employeeemail = value
+		e.Email = value
 	}
 	if value, ok := ec.mutation.Password(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -179,6 +215,44 @@ func (ec *EmployeeCreate) createSpec() (*Employee, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RoomdetailsTable,
+			Columns: []string{employee.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   employee.JobpositionTable,
+			Columns: []string{employee.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
 				},
 			},
 		}
