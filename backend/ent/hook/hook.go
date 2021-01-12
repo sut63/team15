@@ -87,6 +87,19 @@ func (f FacilitieFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return f(ctx, mv)
 }
 
+// The JobpositionFunc type is an adapter to allow the use of ordinary
+// function as Jobposition mutator.
+type JobpositionFunc func(context.Context, *ent.JobpositionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f JobpositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.JobpositionMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.JobpositionMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The LengthTimeFunc type is an adapter to allow the use of ordinary
 // function as LengthTime mutator.
 type LengthTimeFunc func(context.Context, *ent.LengthTimeMutation) (ent.Value, error)

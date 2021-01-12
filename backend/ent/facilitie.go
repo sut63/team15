@@ -8,7 +8,6 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/facilitie"
-	"github.com/team15/app/ent/roomdetail"
 )
 
 // Facilitie is the model entity for the Facilitie schema.
@@ -20,28 +19,22 @@ type Facilitie struct {
 	Facilitie string `json:"facilitie,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the FacilitieQuery when eager-loading is set.
-	Edges                 FacilitieEdges `json:"edges"`
-	roomdetail_facilities *int
+	Edges FacilitieEdges `json:"edges"`
 }
 
 // FacilitieEdges holds the relations/edges for other nodes in the graph.
 type FacilitieEdges struct {
 	// Roomdetail holds the value of the roomdetail edge.
-	Roomdetail *Roomdetail
+	Roomdetail []*Roomdetail
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
 // RoomdetailOrErr returns the Roomdetail value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e FacilitieEdges) RoomdetailOrErr() (*Roomdetail, error) {
+// was not loaded in eager-loading.
+func (e FacilitieEdges) RoomdetailOrErr() ([]*Roomdetail, error) {
 	if e.loadedTypes[0] {
-		if e.Roomdetail == nil {
-			// The edge roomdetail was loaded in eager-loading,
-			// but was not found.
-			return nil, &NotFoundError{label: roomdetail.Label}
-		}
 		return e.Roomdetail, nil
 	}
 	return nil, &NotLoadedError{edge: "roomdetail"}
@@ -52,13 +45,6 @@ func (*Facilitie) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // facilitie
-	}
-}
-
-// fkValues returns the types for scanning foreign-keys values from sql.Rows.
-func (*Facilitie) fkValues() []interface{} {
-	return []interface{}{
-		&sql.NullInt64{}, // roomdetail_facilities
 	}
 }
 
@@ -78,15 +64,6 @@ func (f *Facilitie) assignValues(values ...interface{}) error {
 		return fmt.Errorf("unexpected type %T for field facilitie", values[0])
 	} else if value.Valid {
 		f.Facilitie = value.String
-	}
-	values = values[1:]
-	if len(values) == len(facilitie.ForeignKeys) {
-		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field roomdetail_facilities", value)
-		} else if value.Valid {
-			f.roomdetail_facilities = new(int)
-			*f.roomdetail_facilities = int(value.Int64)
-		}
 	}
 	return nil
 }

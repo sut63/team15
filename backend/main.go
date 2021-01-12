@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -12,6 +13,7 @@ import (
 	"github.com/team15/app/controllers"
 	_ "github.com/team15/app/docs"
 	"github.com/team15/app/ent"
+	"github.com/team15/app/ent/jobposition"
 )
 
 type Employees struct {
@@ -19,11 +21,19 @@ type Employees struct {
 }
 
 type Employee struct {
-	Employeename  string
-	Employeeemail string
-	Password      string
+	name          string
+	email         string
+	password      string
+	jobpositionID int
 }
 
+type Jobpositions struct {
+	Jobposition []Jobposition
+}
+
+type Jobposition struct {
+	name string
+}
 type Statusds struct {
 	Statusd []Statusd
 }
@@ -156,22 +166,45 @@ func main() {
 	controllers.NewStaytypeController(v1, client)
 
 	// Set Employees Data
-	employees := Employees{
-		Employee: []Employee{
-			Employee{"John Marston", "1111@gmail.com", "1111"},
-			Employee{"Arthur Morgan", "2222@gmail.com", "2222"},
-			Employee{"Dutch Vanderlinde", "3333@gmail.com", "3333"},
-		},
-	}
-	for _, em := range employees.Employee {
-		client.Employee.
+
+	jobpositions := []string{"พนักงานหอพัก1", "พนักงานหอพัก2", "พนักงานหอพัก3", "พนักงานหอพัก4", "พนักงานหอพัก5", "พนักงานหอพัก6"}
+	for _, jp := range jobpositions {
+		client.Jobposition.
 			Create().
-			SetEmployeename(em.Employeename).
-			SetEmployeeemail(em.Employeeemail).
-			SetPassword(em.Password).
+			SetPositionName(jp).
 			Save(context.Background())
 	}
 
+	employees := Employees{
+		Employee: []Employee{
+			Employee{"โรเจอร์", "rogerkung@gmail.com", "1234", 1},
+			Employee{"นาตาชา", "natasha@gmail.com", "1234", 2},
+			Employee{"โทนี่ สตาร์ค", "stark@gmail.com", "1234", 3},
+			Employee{"สเตฟานี่ โรเจอร์", "step@gmail.com", "1234", 4},
+			Employee{"นาตาชา โรไปนอฟ", "romanoff@gmail.com", "1234", 5},
+			Employee{"นาตาชา โรมานอฟ", "romania@gmail.com", "1234", 6},
+		},
+	}
+
+	for _, em := range employees.Employee {
+		jp, err := client.Jobposition.
+			Query().
+			Where(jobposition.IDEQ(int(em.jobpositionID))).
+			Only(context.Background())
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		client.Employee.
+			Create().
+			SetName(em.name).
+			SetEmail(em.email).
+			SetPassword(em.password).
+			SetJobposition(jp).
+			Save(context.Background())
+	}
 	// Set Statusds Data
 	statusds := Statusds{
 		Statusd: []Statusd{

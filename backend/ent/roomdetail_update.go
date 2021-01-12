@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/nearbyplace"
@@ -44,49 +45,80 @@ func (ru *RoomdetailUpdate) SetRoomprice(s string) *RoomdetailUpdate {
 	return ru
 }
 
-// AddEquipmentIDs adds the equipments edge to Equipment by ids.
-func (ru *RoomdetailUpdate) AddEquipmentIDs(ids ...int) *RoomdetailUpdate {
-	ru.mutation.AddEquipmentIDs(ids...)
+// SetEquipmentsID sets the equipments edge to Equipment by id.
+func (ru *RoomdetailUpdate) SetEquipmentsID(id int) *RoomdetailUpdate {
+	ru.mutation.SetEquipmentsID(id)
 	return ru
 }
 
-// AddEquipments adds the equipments edges to Equipment.
-func (ru *RoomdetailUpdate) AddEquipments(e ...*Equipment) *RoomdetailUpdate {
-	ids := make([]int, len(e))
-	for i := range e {
-		ids[i] = e[i].ID
+// SetNillableEquipmentsID sets the equipments edge to Equipment by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableEquipmentsID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetEquipmentsID(*id)
 	}
-	return ru.AddEquipmentIDs(ids...)
-}
-
-// AddFacilityIDs adds the facilities edge to Facilitie by ids.
-func (ru *RoomdetailUpdate) AddFacilityIDs(ids ...int) *RoomdetailUpdate {
-	ru.mutation.AddFacilityIDs(ids...)
 	return ru
 }
 
-// AddFacilities adds the facilities edges to Facilitie.
-func (ru *RoomdetailUpdate) AddFacilities(f ...*Facilitie) *RoomdetailUpdate {
-	ids := make([]int, len(f))
-	for i := range f {
-		ids[i] = f[i].ID
-	}
-	return ru.AddFacilityIDs(ids...)
+// SetEquipments sets the equipments edge to Equipment.
+func (ru *RoomdetailUpdate) SetEquipments(e *Equipment) *RoomdetailUpdate {
+	return ru.SetEquipmentsID(e.ID)
 }
 
-// AddNearbyplaceIDs adds the nearbyplaces edge to Nearbyplace by ids.
-func (ru *RoomdetailUpdate) AddNearbyplaceIDs(ids ...int) *RoomdetailUpdate {
-	ru.mutation.AddNearbyplaceIDs(ids...)
+// SetFacilitiesID sets the facilities edge to Facilitie by id.
+func (ru *RoomdetailUpdate) SetFacilitiesID(id int) *RoomdetailUpdate {
+	ru.mutation.SetFacilitiesID(id)
 	return ru
 }
 
-// AddNearbyplaces adds the nearbyplaces edges to Nearbyplace.
-func (ru *RoomdetailUpdate) AddNearbyplaces(n ...*Nearbyplace) *RoomdetailUpdate {
-	ids := make([]int, len(n))
-	for i := range n {
-		ids[i] = n[i].ID
+// SetNillableFacilitiesID sets the facilities edge to Facilitie by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableFacilitiesID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetFacilitiesID(*id)
 	}
-	return ru.AddNearbyplaceIDs(ids...)
+	return ru
+}
+
+// SetFacilities sets the facilities edge to Facilitie.
+func (ru *RoomdetailUpdate) SetFacilities(f *Facilitie) *RoomdetailUpdate {
+	return ru.SetFacilitiesID(f.ID)
+}
+
+// SetNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id.
+func (ru *RoomdetailUpdate) SetNearbyplacesID(id int) *RoomdetailUpdate {
+	ru.mutation.SetNearbyplacesID(id)
+	return ru
+}
+
+// SetNillableNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableNearbyplacesID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetNearbyplacesID(*id)
+	}
+	return ru
+}
+
+// SetNearbyplaces sets the nearbyplaces edge to Nearbyplace.
+func (ru *RoomdetailUpdate) SetNearbyplaces(n *Nearbyplace) *RoomdetailUpdate {
+	return ru.SetNearbyplacesID(n.ID)
+}
+
+// SetEmployeeID sets the employee edge to Employee by id.
+func (ru *RoomdetailUpdate) SetEmployeeID(id int) *RoomdetailUpdate {
+	ru.mutation.SetEmployeeID(id)
+	return ru
+}
+
+// SetNillableEmployeeID sets the employee edge to Employee by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableEmployeeID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetEmployeeID(*id)
+	}
+	return ru
+}
+
+// SetEmployee sets the employee edge to Employee.
+func (ru *RoomdetailUpdate) SetEmployee(e *Employee) *RoomdetailUpdate {
+	return ru.SetEmployeeID(e.ID)
 }
 
 // SetQuantityID sets the quantity edge to Quantity by id.
@@ -132,49 +164,28 @@ func (ru *RoomdetailUpdate) Mutation() *RoomdetailMutation {
 	return ru.mutation
 }
 
-// RemoveEquipmentIDs removes the equipments edge to Equipment by ids.
-func (ru *RoomdetailUpdate) RemoveEquipmentIDs(ids ...int) *RoomdetailUpdate {
-	ru.mutation.RemoveEquipmentIDs(ids...)
+// ClearEquipments clears the equipments edge to Equipment.
+func (ru *RoomdetailUpdate) ClearEquipments() *RoomdetailUpdate {
+	ru.mutation.ClearEquipments()
 	return ru
 }
 
-// RemoveEquipments removes equipments edges to Equipment.
-func (ru *RoomdetailUpdate) RemoveEquipments(e ...*Equipment) *RoomdetailUpdate {
-	ids := make([]int, len(e))
-	for i := range e {
-		ids[i] = e[i].ID
-	}
-	return ru.RemoveEquipmentIDs(ids...)
-}
-
-// RemoveFacilityIDs removes the facilities edge to Facilitie by ids.
-func (ru *RoomdetailUpdate) RemoveFacilityIDs(ids ...int) *RoomdetailUpdate {
-	ru.mutation.RemoveFacilityIDs(ids...)
+// ClearFacilities clears the facilities edge to Facilitie.
+func (ru *RoomdetailUpdate) ClearFacilities() *RoomdetailUpdate {
+	ru.mutation.ClearFacilities()
 	return ru
 }
 
-// RemoveFacilities removes facilities edges to Facilitie.
-func (ru *RoomdetailUpdate) RemoveFacilities(f ...*Facilitie) *RoomdetailUpdate {
-	ids := make([]int, len(f))
-	for i := range f {
-		ids[i] = f[i].ID
-	}
-	return ru.RemoveFacilityIDs(ids...)
-}
-
-// RemoveNearbyplaceIDs removes the nearbyplaces edge to Nearbyplace by ids.
-func (ru *RoomdetailUpdate) RemoveNearbyplaceIDs(ids ...int) *RoomdetailUpdate {
-	ru.mutation.RemoveNearbyplaceIDs(ids...)
+// ClearNearbyplaces clears the nearbyplaces edge to Nearbyplace.
+func (ru *RoomdetailUpdate) ClearNearbyplaces() *RoomdetailUpdate {
+	ru.mutation.ClearNearbyplaces()
 	return ru
 }
 
-// RemoveNearbyplaces removes nearbyplaces edges to Nearbyplace.
-func (ru *RoomdetailUpdate) RemoveNearbyplaces(n ...*Nearbyplace) *RoomdetailUpdate {
-	ids := make([]int, len(n))
-	for i := range n {
-		ids[i] = n[i].ID
-	}
-	return ru.RemoveNearbyplaceIDs(ids...)
+// ClearEmployee clears the employee edge to Employee.
+func (ru *RoomdetailUpdate) ClearEmployee() *RoomdetailUpdate {
+	ru.mutation.ClearEmployee()
+	return ru
 }
 
 // ClearQuantity clears the quantity edge to Quantity.
@@ -273,10 +284,10 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if nodes := ru.mutation.RemovedEquipmentsIDs(); len(nodes) > 0 {
+	if ru.mutation.EquipmentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.EquipmentsTable,
 			Columns: []string{roomdetail.EquipmentsColumn},
 			Bidi:    false,
@@ -286,16 +297,13 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 					Column: equipment.FieldID,
 				},
 			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ru.mutation.EquipmentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.EquipmentsTable,
 			Columns: []string{roomdetail.EquipmentsColumn},
 			Bidi:    false,
@@ -311,10 +319,10 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ru.mutation.RemovedFacilitiesIDs(); len(nodes) > 0 {
+	if ru.mutation.FacilitiesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.FacilitiesTable,
 			Columns: []string{roomdetail.FacilitiesColumn},
 			Bidi:    false,
@@ -325,15 +333,12 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ru.mutation.FacilitiesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.FacilitiesTable,
 			Columns: []string{roomdetail.FacilitiesColumn},
 			Bidi:    false,
@@ -349,10 +354,26 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ru.mutation.RemovedNearbyplacesIDs(); len(nodes) > 0 {
+	if ru.mutation.NearbyplacesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.NearbyplacesTable,
+			Columns: []string{roomdetail.NearbyplacesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: nearbyplace.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.NearbyplacesTable,
 			Columns: []string{roomdetail.NearbyplacesColumn},
 			Bidi:    false,
@@ -366,19 +387,35 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ru.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+	if ru.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.EmployeeTable,
+			Columns: []string{roomdetail.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.EmployeeTable,
+			Columns: []string{roomdetail.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}
@@ -487,49 +524,80 @@ func (ruo *RoomdetailUpdateOne) SetRoomprice(s string) *RoomdetailUpdateOne {
 	return ruo
 }
 
-// AddEquipmentIDs adds the equipments edge to Equipment by ids.
-func (ruo *RoomdetailUpdateOne) AddEquipmentIDs(ids ...int) *RoomdetailUpdateOne {
-	ruo.mutation.AddEquipmentIDs(ids...)
+// SetEquipmentsID sets the equipments edge to Equipment by id.
+func (ruo *RoomdetailUpdateOne) SetEquipmentsID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetEquipmentsID(id)
 	return ruo
 }
 
-// AddEquipments adds the equipments edges to Equipment.
-func (ruo *RoomdetailUpdateOne) AddEquipments(e ...*Equipment) *RoomdetailUpdateOne {
-	ids := make([]int, len(e))
-	for i := range e {
-		ids[i] = e[i].ID
+// SetNillableEquipmentsID sets the equipments edge to Equipment by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableEquipmentsID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetEquipmentsID(*id)
 	}
-	return ruo.AddEquipmentIDs(ids...)
-}
-
-// AddFacilityIDs adds the facilities edge to Facilitie by ids.
-func (ruo *RoomdetailUpdateOne) AddFacilityIDs(ids ...int) *RoomdetailUpdateOne {
-	ruo.mutation.AddFacilityIDs(ids...)
 	return ruo
 }
 
-// AddFacilities adds the facilities edges to Facilitie.
-func (ruo *RoomdetailUpdateOne) AddFacilities(f ...*Facilitie) *RoomdetailUpdateOne {
-	ids := make([]int, len(f))
-	for i := range f {
-		ids[i] = f[i].ID
-	}
-	return ruo.AddFacilityIDs(ids...)
+// SetEquipments sets the equipments edge to Equipment.
+func (ruo *RoomdetailUpdateOne) SetEquipments(e *Equipment) *RoomdetailUpdateOne {
+	return ruo.SetEquipmentsID(e.ID)
 }
 
-// AddNearbyplaceIDs adds the nearbyplaces edge to Nearbyplace by ids.
-func (ruo *RoomdetailUpdateOne) AddNearbyplaceIDs(ids ...int) *RoomdetailUpdateOne {
-	ruo.mutation.AddNearbyplaceIDs(ids...)
+// SetFacilitiesID sets the facilities edge to Facilitie by id.
+func (ruo *RoomdetailUpdateOne) SetFacilitiesID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetFacilitiesID(id)
 	return ruo
 }
 
-// AddNearbyplaces adds the nearbyplaces edges to Nearbyplace.
-func (ruo *RoomdetailUpdateOne) AddNearbyplaces(n ...*Nearbyplace) *RoomdetailUpdateOne {
-	ids := make([]int, len(n))
-	for i := range n {
-		ids[i] = n[i].ID
+// SetNillableFacilitiesID sets the facilities edge to Facilitie by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableFacilitiesID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetFacilitiesID(*id)
 	}
-	return ruo.AddNearbyplaceIDs(ids...)
+	return ruo
+}
+
+// SetFacilities sets the facilities edge to Facilitie.
+func (ruo *RoomdetailUpdateOne) SetFacilities(f *Facilitie) *RoomdetailUpdateOne {
+	return ruo.SetFacilitiesID(f.ID)
+}
+
+// SetNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id.
+func (ruo *RoomdetailUpdateOne) SetNearbyplacesID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetNearbyplacesID(id)
+	return ruo
+}
+
+// SetNillableNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableNearbyplacesID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetNearbyplacesID(*id)
+	}
+	return ruo
+}
+
+// SetNearbyplaces sets the nearbyplaces edge to Nearbyplace.
+func (ruo *RoomdetailUpdateOne) SetNearbyplaces(n *Nearbyplace) *RoomdetailUpdateOne {
+	return ruo.SetNearbyplacesID(n.ID)
+}
+
+// SetEmployeeID sets the employee edge to Employee by id.
+func (ruo *RoomdetailUpdateOne) SetEmployeeID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetEmployeeID(id)
+	return ruo
+}
+
+// SetNillableEmployeeID sets the employee edge to Employee by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableEmployeeID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetEmployeeID(*id)
+	}
+	return ruo
+}
+
+// SetEmployee sets the employee edge to Employee.
+func (ruo *RoomdetailUpdateOne) SetEmployee(e *Employee) *RoomdetailUpdateOne {
+	return ruo.SetEmployeeID(e.ID)
 }
 
 // SetQuantityID sets the quantity edge to Quantity by id.
@@ -575,49 +643,28 @@ func (ruo *RoomdetailUpdateOne) Mutation() *RoomdetailMutation {
 	return ruo.mutation
 }
 
-// RemoveEquipmentIDs removes the equipments edge to Equipment by ids.
-func (ruo *RoomdetailUpdateOne) RemoveEquipmentIDs(ids ...int) *RoomdetailUpdateOne {
-	ruo.mutation.RemoveEquipmentIDs(ids...)
+// ClearEquipments clears the equipments edge to Equipment.
+func (ruo *RoomdetailUpdateOne) ClearEquipments() *RoomdetailUpdateOne {
+	ruo.mutation.ClearEquipments()
 	return ruo
 }
 
-// RemoveEquipments removes equipments edges to Equipment.
-func (ruo *RoomdetailUpdateOne) RemoveEquipments(e ...*Equipment) *RoomdetailUpdateOne {
-	ids := make([]int, len(e))
-	for i := range e {
-		ids[i] = e[i].ID
-	}
-	return ruo.RemoveEquipmentIDs(ids...)
-}
-
-// RemoveFacilityIDs removes the facilities edge to Facilitie by ids.
-func (ruo *RoomdetailUpdateOne) RemoveFacilityIDs(ids ...int) *RoomdetailUpdateOne {
-	ruo.mutation.RemoveFacilityIDs(ids...)
+// ClearFacilities clears the facilities edge to Facilitie.
+func (ruo *RoomdetailUpdateOne) ClearFacilities() *RoomdetailUpdateOne {
+	ruo.mutation.ClearFacilities()
 	return ruo
 }
 
-// RemoveFacilities removes facilities edges to Facilitie.
-func (ruo *RoomdetailUpdateOne) RemoveFacilities(f ...*Facilitie) *RoomdetailUpdateOne {
-	ids := make([]int, len(f))
-	for i := range f {
-		ids[i] = f[i].ID
-	}
-	return ruo.RemoveFacilityIDs(ids...)
-}
-
-// RemoveNearbyplaceIDs removes the nearbyplaces edge to Nearbyplace by ids.
-func (ruo *RoomdetailUpdateOne) RemoveNearbyplaceIDs(ids ...int) *RoomdetailUpdateOne {
-	ruo.mutation.RemoveNearbyplaceIDs(ids...)
+// ClearNearbyplaces clears the nearbyplaces edge to Nearbyplace.
+func (ruo *RoomdetailUpdateOne) ClearNearbyplaces() *RoomdetailUpdateOne {
+	ruo.mutation.ClearNearbyplaces()
 	return ruo
 }
 
-// RemoveNearbyplaces removes nearbyplaces edges to Nearbyplace.
-func (ruo *RoomdetailUpdateOne) RemoveNearbyplaces(n ...*Nearbyplace) *RoomdetailUpdateOne {
-	ids := make([]int, len(n))
-	for i := range n {
-		ids[i] = n[i].ID
-	}
-	return ruo.RemoveNearbyplaceIDs(ids...)
+// ClearEmployee clears the employee edge to Employee.
+func (ruo *RoomdetailUpdateOne) ClearEmployee() *RoomdetailUpdateOne {
+	ruo.mutation.ClearEmployee()
+	return ruo
 }
 
 // ClearQuantity clears the quantity edge to Quantity.
@@ -714,10 +761,10 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if nodes := ruo.mutation.RemovedEquipmentsIDs(); len(nodes) > 0 {
+	if ruo.mutation.EquipmentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.EquipmentsTable,
 			Columns: []string{roomdetail.EquipmentsColumn},
 			Bidi:    false,
@@ -727,16 +774,13 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 					Column: equipment.FieldID,
 				},
 			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ruo.mutation.EquipmentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.EquipmentsTable,
 			Columns: []string{roomdetail.EquipmentsColumn},
 			Bidi:    false,
@@ -752,10 +796,10 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ruo.mutation.RemovedFacilitiesIDs(); len(nodes) > 0 {
+	if ruo.mutation.FacilitiesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.FacilitiesTable,
 			Columns: []string{roomdetail.FacilitiesColumn},
 			Bidi:    false,
@@ -766,15 +810,12 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 				},
 			},
 		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ruo.mutation.FacilitiesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.FacilitiesTable,
 			Columns: []string{roomdetail.FacilitiesColumn},
 			Bidi:    false,
@@ -790,10 +831,26 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ruo.mutation.RemovedNearbyplacesIDs(); len(nodes) > 0 {
+	if ruo.mutation.NearbyplacesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.NearbyplacesTable,
+			Columns: []string{roomdetail.NearbyplacesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: nearbyplace.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
 			Table:   roomdetail.NearbyplacesTable,
 			Columns: []string{roomdetail.NearbyplacesColumn},
 			Bidi:    false,
@@ -807,19 +864,35 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := ruo.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+	if ruo.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.EmployeeTable,
+			Columns: []string{roomdetail.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.EmployeeTable,
+			Columns: []string{roomdetail.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}

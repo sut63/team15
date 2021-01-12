@@ -22,9 +22,12 @@ func (Roomdetail) Fields() []ent.Field {
 // Edges of the Roomdetail.
 func (Roomdetail) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("equipments", Equipment.Type),
-		edge.To("facilities", Facilitie.Type),
-		edge.To("nearbyplaces", Nearbyplace.Type),
+		edge.From("equipments", Equipment.Type).Ref("roomdetail").Unique(),
+		edge.From("facilities", Facilitie.Type).Ref("roomdetail").Unique(),
+		edge.From("nearbyplaces", Nearbyplace.Type).Ref("roomdetail").Unique(),
+		edge.From("employee", Employee.Type).
+			Ref("roomdetails").
+			Unique(),
 		edge.From("quantity", Quantity.Type).
 			Ref("roomdetails").
 			Unique(),

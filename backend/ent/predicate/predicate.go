@@ -24,6 +24,9 @@ type Equipment func(*sql.Selector)
 // Facilitie is the predicate function for facilitie builders.
 type Facilitie func(*sql.Selector)
 
+// Jobposition is the predicate function for jobposition builders.
+type Jobposition func(*sql.Selector)
+
 // LengthTime is the predicate function for lengthtime builders.
 type LengthTime func(*sql.Selector)
 

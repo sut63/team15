@@ -6,6 +6,7 @@ import {
   Page,
   pageTheme,
   ContentHeader,
+  InfoCard,
 } from '@backstage/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -17,6 +18,7 @@ import { Alert } from '@material-ui/lab';
 import { DefaultApi } from '../../api/apis';
 
 import { EntEmployee } from '../../api/models/EntEmployee';
+import { EntJobposition } from '../../api';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -53,8 +55,12 @@ const useStyles = makeStyles(theme => ({
    margin: theme.spacing(2, 0, 2),
    width: 350 ,
    marginLeft: theme.spacing(67),
- }
-
+ },
+ root: {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+},
 }));
 
 
@@ -79,6 +85,14 @@ export default function Login(props: any) {
     }
 
     getEmployees();
+
+    const resetEmployeeData = async () => {
+      setLoading(false);
+      localStorage.setItem("employeedata", JSON.stringify(null));
+      localStorage.setItem("jobpositiondata", JSON.stringify(null));
+    }
+    resetEmployeeData();
+
   }, [loading]);
 
   const EmailthandleChange = (event: any) => {
@@ -91,69 +105,130 @@ export default function Login(props: any) {
 
   const LoginChecker = async () => {
     employees.map((item: any) => {
-      if ((item.employeeemail == email) && (item.password == password)) {
-	    localStorage.setItem("employeedata",JSON.stringify(item.id));
-        window.location.href = "http://localhost:3000/Home";
-		Break;
-      }
-      if (item.id == 3) {
-        setStatus(true);
-        setAlert(false);
-		const timer = setTimeout(() => {
-          setStatus(false);
-        }, 3000);
+      console.log(item.email);
+      if ((item.email == email) && (item.password == password)) {
+       
+       setAlert(true);
+        localStorage.setItem("employeedata",JSON.stringify(item.id));
+        console.log(item.email);
+        localStorage.setItem("employeelogindata", JSON.stringify(item.name))
+        console.log(item.name);
+      
+      if (item.name == "โรเจอร์") {
+        
+          history.pushState("", "", "/RoomDetails");
+        }
+        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก2") {
+          history.pushState("", "", "/");
+        }
+        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก3") {
+          history.pushState("", "", "/");
+        }
+        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก4") {
+          history.pushState("", "", "/");
+        }
+        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก5") {
+          history.pushState("", "", "/");
+        }
+        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก6") {
+          history.pushState("", "", "/");
+        }
+       window.location.reload(false);
+
       }
     })
+    setStatus(true);
+     //const timer = setTimeout(() => {
+     //  setStatus(false);
+     //}, 10000);
   };
 
   return (
     <Page theme={pageTheme.tool}>
+  <Header
+        title={`ยินดีต้อนรับสู่ ระบบหอพัก`}
+        subtitle="หอพักทั่วไป"
+      ></Header>
 
-<Header
-       title="Signin" type="Dorm System"> 
-     </Header>
-
-     <Content>
-  <div className={classes.paper}> <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar></div>
-
-	 {status ? ( <div className={classes.paper}>
-              { alert ? ( <Link to="/Home" />   ) : ( <strong>Incorrect Username or Password</strong> )} </div>
-            ) : null}
-
-     <form noValidate autoComplete="off">
-     <div><TextField className={classes.textField}
-                id="email"
-                label="Email"
+<Content>
+       
+        
+        <InfoCard><div className={classes.root}> 
+        <ContentHeader title="กรุณา Login ก่อนการใช้งาน">
+          {status ? (
+            <div>
+              {alert ? (
+                <Alert severity="success" onClose={() => { }}>
+                  เข้าสู่ระบบสำเร็จ
+                </Alert>
+              ) : (
+                  <Alert severity="error" onClose={() => { setStatus(false) }}>
+                    เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password
+                  </Alert>
+                )}
+            </div>
+          ) : null}
+        </ContentHeader>
+          <form noValidate autoComplete="off">
+            <div>
+              <FormControl
+                className={classes.margin}
                 variant="outlined"
-                type="string"
-                size="medium"
-                value={email}
-                onChange={EmailthandleChange}
-              /></div>
-      <div><TextField className={classes.textField}
-                id="password"
-                label="Password"
+              >
+              </FormControl>
+            </div>
+            <div>
+              <FormControl
+                className={classes.margin}
                 variant="outlined"
-                type="password"
-                size="medium"
-                value={password}
-                onChange={PasswordthandleChange}
-              /></div></form>
+              >
+                <TextField
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                  type="string"
+                  size="medium"
+                  value={email}
+                  onChange={EmailthandleChange}
+                  style={{ width: 400 }}
+                />
+              </FormControl>
+            </div>
 
-            <div> 
-            <Button
-              onClick={() => {LoginChecker();}}
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-            </Button></div>
+            <div>
+              <FormControl
+                className={classes.margin}
+                variant="outlined"
+              >
+                <TextField
+                  id="password"
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  size="medium"
+                  value={password}
+                  onChange={PasswordthandleChange}
+                  style={{ width: 400 }}
+                />
+              </FormControl>
+            </div>
 
-     </Content>
+            <div className={classes.margin}>
+              <Button
+                style={{ width: 100, backgroundColor: "#6FD9FF",marginLeft: 300 }}
+                onClick={() => {
+                  LoginChecker();
+                }}
+                variant="contained"
+                color="primary"
+              >
+                Login
+             </Button>
+            </div>
+          </form>
+        </div></InfoCard>
+        
+      </Content>
     </Page>
   );
 }

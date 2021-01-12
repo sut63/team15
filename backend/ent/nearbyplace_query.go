@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -26,7 +27,6 @@ type NearbyplaceQuery struct {
 	predicates []predicate.Nearbyplace
 	// eager-loading edges.
 	withRoomdetail *RoomdetailQuery
-	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -66,7 +66,7 @@ func (nq *NearbyplaceQuery) QueryRoomdetail() *RoomdetailQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(nearbyplace.Table, nearbyplace.FieldID, nq.sqlQuery()),
 			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, nearbyplace.RoomdetailTable, nearbyplace.RoomdetailColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, nearbyplace.RoomdetailTable, nearbyplace.RoomdetailColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(nq.driver.Dialect(), step)
 		return fromU, nil
@@ -329,25 +329,15 @@ func (nq *NearbyplaceQuery) prepareQuery(ctx context.Context) error {
 func (nq *NearbyplaceQuery) sqlAll(ctx context.Context) ([]*Nearbyplace, error) {
 	var (
 		nodes       = []*Nearbyplace{}
-		withFKs     = nq.withFKs
 		_spec       = nq.querySpec()
 		loadedTypes = [1]bool{
 			nq.withRoomdetail != nil,
 		}
 	)
-	if nq.withRoomdetail != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, nearbyplace.ForeignKeys...)
-	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Nearbyplace{config: nq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
-		if withFKs {
-			values = append(values, node.fkValues()...)
-		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -366,27 +356,30 @@ func (nq *NearbyplaceQuery) sqlAll(ctx context.Context) ([]*Nearbyplace, error) 
 	}
 
 	if query := nq.withRoomdetail; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Nearbyplace)
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Nearbyplace)
 		for i := range nodes {
-			if fk := nodes[i].roomdetail_nearbyplaces; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
 		}
-		query.Where(roomdetail.IDIn(ids...))
+		query.withFKs = true
+		query.Where(predicate.Roomdetail(func(s *sql.Selector) {
+			s.Where(sql.InValues(nearbyplace.RoomdetailColumn, fks...))
+		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
+			fk := n.nearbyplace_roomdetail
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "nearbyplace_roomdetail" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_nearbyplaces" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "nearbyplace_roomdetail" returned %v for node %v`, *fk, n.ID)
 			}
-			for i := range nodes {
-				nodes[i].Edges.Roomdetail = n
-			}
+			node.Edges.Roomdetail = append(node.Edges.Roomdetail, n)
 		}
 	}
 

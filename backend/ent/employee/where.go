@@ -91,17 +91,17 @@ func IDLTE(id int) predicate.Employee {
 	})
 }
 
-// Employeename applies equality check predicate on the "employeename" field. It's identical to EmployeenameEQ.
-func Employeename(v string) predicate.Employee {
+// Name applies equality check predicate on the "name" field. It's identical to NameEQ.
+func Name(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmployeename), v))
+		s.Where(sql.EQ(s.C(FieldName), v))
 	})
 }
 
-// Employeeemail applies equality check predicate on the "employeeemail" field. It's identical to EmployeeemailEQ.
-func Employeeemail(v string) predicate.Employee {
+// Email applies equality check predicate on the "email" field. It's identical to EmailEQ.
+func Email(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmployeeemail), v))
+		s.Where(sql.EQ(s.C(FieldEmail), v))
 	})
 }
 
@@ -112,22 +112,22 @@ func Password(v string) predicate.Employee {
 	})
 }
 
-// EmployeenameEQ applies the EQ predicate on the "employeename" field.
-func EmployeenameEQ(v string) predicate.Employee {
+// NameEQ applies the EQ predicate on the "name" field.
+func NameEQ(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmployeename), v))
+		s.Where(sql.EQ(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameNEQ applies the NEQ predicate on the "employeename" field.
-func EmployeenameNEQ(v string) predicate.Employee {
+// NameNEQ applies the NEQ predicate on the "name" field.
+func NameNEQ(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldEmployeename), v))
+		s.Where(sql.NEQ(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameIn applies the In predicate on the "employeename" field.
-func EmployeenameIn(vs ...string) predicate.Employee {
+// NameIn applies the In predicate on the "name" field.
+func NameIn(vs ...string) predicate.Employee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -139,12 +139,12 @@ func EmployeenameIn(vs ...string) predicate.Employee {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldEmployeename), v...))
+		s.Where(sql.In(s.C(FieldName), v...))
 	})
 }
 
-// EmployeenameNotIn applies the NotIn predicate on the "employeename" field.
-func EmployeenameNotIn(vs ...string) predicate.Employee {
+// NameNotIn applies the NotIn predicate on the "name" field.
+func NameNotIn(vs ...string) predicate.Employee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -156,89 +156,89 @@ func EmployeenameNotIn(vs ...string) predicate.Employee {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldEmployeename), v...))
+		s.Where(sql.NotIn(s.C(FieldName), v...))
 	})
 }
 
-// EmployeenameGT applies the GT predicate on the "employeename" field.
-func EmployeenameGT(v string) predicate.Employee {
+// NameGT applies the GT predicate on the "name" field.
+func NameGT(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldEmployeename), v))
+		s.Where(sql.GT(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameGTE applies the GTE predicate on the "employeename" field.
-func EmployeenameGTE(v string) predicate.Employee {
+// NameGTE applies the GTE predicate on the "name" field.
+func NameGTE(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldEmployeename), v))
+		s.Where(sql.GTE(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameLT applies the LT predicate on the "employeename" field.
-func EmployeenameLT(v string) predicate.Employee {
+// NameLT applies the LT predicate on the "name" field.
+func NameLT(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldEmployeename), v))
+		s.Where(sql.LT(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameLTE applies the LTE predicate on the "employeename" field.
-func EmployeenameLTE(v string) predicate.Employee {
+// NameLTE applies the LTE predicate on the "name" field.
+func NameLTE(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldEmployeename), v))
+		s.Where(sql.LTE(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameContains applies the Contains predicate on the "employeename" field.
-func EmployeenameContains(v string) predicate.Employee {
+// NameContains applies the Contains predicate on the "name" field.
+func NameContains(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldEmployeename), v))
+		s.Where(sql.Contains(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameHasPrefix applies the HasPrefix predicate on the "employeename" field.
-func EmployeenameHasPrefix(v string) predicate.Employee {
+// NameHasPrefix applies the HasPrefix predicate on the "name" field.
+func NameHasPrefix(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldEmployeename), v))
+		s.Where(sql.HasPrefix(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameHasSuffix applies the HasSuffix predicate on the "employeename" field.
-func EmployeenameHasSuffix(v string) predicate.Employee {
+// NameHasSuffix applies the HasSuffix predicate on the "name" field.
+func NameHasSuffix(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldEmployeename), v))
+		s.Where(sql.HasSuffix(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameEqualFold applies the EqualFold predicate on the "employeename" field.
-func EmployeenameEqualFold(v string) predicate.Employee {
+// NameEqualFold applies the EqualFold predicate on the "name" field.
+func NameEqualFold(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldEmployeename), v))
+		s.Where(sql.EqualFold(s.C(FieldName), v))
 	})
 }
 
-// EmployeenameContainsFold applies the ContainsFold predicate on the "employeename" field.
-func EmployeenameContainsFold(v string) predicate.Employee {
+// NameContainsFold applies the ContainsFold predicate on the "name" field.
+func NameContainsFold(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldEmployeename), v))
+		s.Where(sql.ContainsFold(s.C(FieldName), v))
 	})
 }
 
-// EmployeeemailEQ applies the EQ predicate on the "employeeemail" field.
-func EmployeeemailEQ(v string) predicate.Employee {
+// EmailEQ applies the EQ predicate on the "email" field.
+func EmailEQ(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldEmployeeemail), v))
+		s.Where(sql.EQ(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailNEQ applies the NEQ predicate on the "employeeemail" field.
-func EmployeeemailNEQ(v string) predicate.Employee {
+// EmailNEQ applies the NEQ predicate on the "email" field.
+func EmailNEQ(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldEmployeeemail), v))
+		s.Where(sql.NEQ(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailIn applies the In predicate on the "employeeemail" field.
-func EmployeeemailIn(vs ...string) predicate.Employee {
+// EmailIn applies the In predicate on the "email" field.
+func EmailIn(vs ...string) predicate.Employee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -250,12 +250,12 @@ func EmployeeemailIn(vs ...string) predicate.Employee {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldEmployeeemail), v...))
+		s.Where(sql.In(s.C(FieldEmail), v...))
 	})
 }
 
-// EmployeeemailNotIn applies the NotIn predicate on the "employeeemail" field.
-func EmployeeemailNotIn(vs ...string) predicate.Employee {
+// EmailNotIn applies the NotIn predicate on the "email" field.
+func EmailNotIn(vs ...string) predicate.Employee {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -267,70 +267,70 @@ func EmployeeemailNotIn(vs ...string) predicate.Employee {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldEmployeeemail), v...))
+		s.Where(sql.NotIn(s.C(FieldEmail), v...))
 	})
 }
 
-// EmployeeemailGT applies the GT predicate on the "employeeemail" field.
-func EmployeeemailGT(v string) predicate.Employee {
+// EmailGT applies the GT predicate on the "email" field.
+func EmailGT(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldEmployeeemail), v))
+		s.Where(sql.GT(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailGTE applies the GTE predicate on the "employeeemail" field.
-func EmployeeemailGTE(v string) predicate.Employee {
+// EmailGTE applies the GTE predicate on the "email" field.
+func EmailGTE(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldEmployeeemail), v))
+		s.Where(sql.GTE(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailLT applies the LT predicate on the "employeeemail" field.
-func EmployeeemailLT(v string) predicate.Employee {
+// EmailLT applies the LT predicate on the "email" field.
+func EmailLT(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldEmployeeemail), v))
+		s.Where(sql.LT(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailLTE applies the LTE predicate on the "employeeemail" field.
-func EmployeeemailLTE(v string) predicate.Employee {
+// EmailLTE applies the LTE predicate on the "email" field.
+func EmailLTE(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldEmployeeemail), v))
+		s.Where(sql.LTE(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailContains applies the Contains predicate on the "employeeemail" field.
-func EmployeeemailContains(v string) predicate.Employee {
+// EmailContains applies the Contains predicate on the "email" field.
+func EmailContains(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldEmployeeemail), v))
+		s.Where(sql.Contains(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailHasPrefix applies the HasPrefix predicate on the "employeeemail" field.
-func EmployeeemailHasPrefix(v string) predicate.Employee {
+// EmailHasPrefix applies the HasPrefix predicate on the "email" field.
+func EmailHasPrefix(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldEmployeeemail), v))
+		s.Where(sql.HasPrefix(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailHasSuffix applies the HasSuffix predicate on the "employeeemail" field.
-func EmployeeemailHasSuffix(v string) predicate.Employee {
+// EmailHasSuffix applies the HasSuffix predicate on the "email" field.
+func EmailHasSuffix(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldEmployeeemail), v))
+		s.Where(sql.HasSuffix(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailEqualFold applies the EqualFold predicate on the "employeeemail" field.
-func EmployeeemailEqualFold(v string) predicate.Employee {
+// EmailEqualFold applies the EqualFold predicate on the "email" field.
+func EmailEqualFold(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldEmployeeemail), v))
+		s.Where(sql.EqualFold(s.C(FieldEmail), v))
 	})
 }
 
-// EmployeeemailContainsFold applies the ContainsFold predicate on the "employeeemail" field.
-func EmployeeemailContainsFold(v string) predicate.Employee {
+// EmailContainsFold applies the ContainsFold predicate on the "email" field.
+func EmailContainsFold(v string) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldEmployeeemail), v))
+		s.Where(sql.ContainsFold(s.C(FieldEmail), v))
 	})
 }
 
@@ -464,6 +464,62 @@ func HasEmployeesWith(preds ...predicate.Deposit) predicate.Employee {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(EmployeesInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, EmployeesTable, EmployeesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasRoomdetails applies the HasEdge predicate on the "roomdetails" edge.
+func HasRoomdetails() predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RoomdetailsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, RoomdetailsTable, RoomdetailsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRoomdetailsWith applies the HasEdge predicate on the "roomdetails" edge with a given conditions (other predicates).
+func HasRoomdetailsWith(preds ...predicate.Roomdetail) predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RoomdetailsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, RoomdetailsTable, RoomdetailsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasJobposition applies the HasEdge predicate on the "jobposition" edge.
+func HasJobposition() predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(JobpositionTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, JobpositionTable, JobpositionColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasJobpositionWith applies the HasEdge predicate on the "jobposition" edge with a given conditions (other predicates).
+func HasJobpositionWith(preds ...predicate.Jobposition) predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(JobpositionInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, JobpositionTable, JobpositionColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

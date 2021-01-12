@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/team15/app/ent"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/nearbyplace"
@@ -27,6 +28,7 @@ type Roomdetail struct {
 	Equipment    int
 	Facilitie    int
 	Nearbyplace  int
+	Employee     int
 }
 
 // CreateRoomdetail handles POST requests for adding roomdetail entities
@@ -109,15 +111,28 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 		return
 	}
 
+	em, err := ctl.client.Employee.
+		Query().
+		Where(employee.IDEQ(int(obj.Employee))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "employee not found",
+		})
+		return
+	}
+
 	rd, err := ctl.client.Roomdetail.
 		Create().
 		SetRoomprice(obj.Roomprice).
 		SetRoomtypename(obj.Roomtypename).
 		SetQuantity(qu).
 		SetStaytype(st).
-		AddEquipments(eq).
-		AddFacilities(fa).
-		AddNearbyplaces(nb).
+		SetEmployee(em).
+		SetEquipments(eq).
+		SetFacilities(fa).
+		SetNearbyplaces(nb).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -199,6 +214,7 @@ func (ctl *RoomdetailController) ListRoomdetail(c *gin.Context) {
 		WithEquipments().
 		WithFacilities().
 		WithNearbyplaces().
+		WithEmployee().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

@@ -30,6 +30,7 @@ type hooks struct {
 	Employee     []ent.Hook
 	Equipment    []ent.Hook
 	Facilitie    []ent.Hook
+	Jobposition  []ent.Hook
 	LengthTime   []ent.Hook
 	Nearbyplace  []ent.Hook
 	Quantity     []ent.Hook

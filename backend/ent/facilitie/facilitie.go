@@ -16,21 +16,16 @@ const (
 	// Table holds the table name of the facilitie in the database.
 	Table = "facilities"
 	// RoomdetailTable is the table the holds the roomdetail relation/edge.
-	RoomdetailTable = "facilities"
+	RoomdetailTable = "roomdetails"
 	// RoomdetailInverseTable is the table name for the Roomdetail entity.
 	// It exists in this package in order to avoid circular dependency with the "roomdetail" package.
 	RoomdetailInverseTable = "roomdetails"
 	// RoomdetailColumn is the table column denoting the roomdetail relation/edge.
-	RoomdetailColumn = "roomdetail_facilities"
+	RoomdetailColumn = "facilitie_roomdetail"
 )
 
 // Columns holds all SQL columns for facilitie fields.
 var Columns = []string{
 	FieldID,
 	FieldFacilitie,
-}
-
-// ForeignKeys holds the SQL foreign-keys that are owned by the Facilitie type.
-var ForeignKeys = []string{
-	"roomdetail_facilities",
 }

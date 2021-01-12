@@ -333,7 +333,7 @@ func HasEquipments() predicate.Roomdetail {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(EquipmentsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, EquipmentsTable, EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, EquipmentsTable, EquipmentsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -345,7 +345,7 @@ func HasEquipmentsWith(preds ...predicate.Equipment) predicate.Roomdetail {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(EquipmentsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, EquipmentsTable, EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, EquipmentsTable, EquipmentsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -361,7 +361,7 @@ func HasFacilities() predicate.Roomdetail {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(FacilitiesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, FacilitiesTable, FacilitiesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, FacilitiesTable, FacilitiesColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -373,7 +373,7 @@ func HasFacilitiesWith(preds ...predicate.Facilitie) predicate.Roomdetail {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(FacilitiesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, FacilitiesTable, FacilitiesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, FacilitiesTable, FacilitiesColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -389,7 +389,7 @@ func HasNearbyplaces() predicate.Roomdetail {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(NearbyplacesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, NearbyplacesTable, NearbyplacesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, NearbyplacesTable, NearbyplacesColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -401,7 +401,35 @@ func HasNearbyplacesWith(preds ...predicate.Nearbyplace) predicate.Roomdetail {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(NearbyplacesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, NearbyplacesTable, NearbyplacesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, NearbyplacesTable, NearbyplacesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasEmployee applies the HasEdge predicate on the "employee" edge.
+func HasEmployee() predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTable, EmployeeColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasEmployeeWith applies the HasEdge predicate on the "employee" edge with a given conditions (other predicates).
+func HasEmployeeWith(preds ...predicate.Employee) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTable, EmployeeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

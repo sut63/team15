@@ -27,11 +27,11 @@ import {
  */
 export interface EntEquipmentEdges {
     /**
-     * 
-     * @type {EntRoomdetail}
+     * Roomdetail holds the value of the roomdetail edge.
+     * @type {Array<EntRoomdetail>}
      * @memberof EntEquipmentEdges
      */
-    roomdetail?: EntRoomdetail;
+    roomdetail?: Array<EntRoomdetail>;
 }
 
 export function EntEquipmentEdgesFromJSON(json: any): EntEquipmentEdges {
@@ -44,7 +44,7 @@ export function EntEquipmentEdgesFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
+        'roomdetail': !exists(json, 'roomdetail') ? undefined : ((json['roomdetail'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function EntEquipmentEdgesToJSON(value?: EntEquipmentEdges | null): any {
     }
     return {
         
-        'roomdetail': EntRoomdetailToJSON(value.roomdetail),
+        'roomdetail': value.roomdetail === undefined ? undefined : ((value.roomdetail as Array<any>).map(EntRoomdetailToJSON)),
     };
 }
 

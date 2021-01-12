@@ -24,6 +24,12 @@ export interface ControllersRoomdetail {
      * @type {number}
      * @memberof ControllersRoomdetail
      */
+    employee?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersRoomdetail
+     */
     equipment?: number;
     /**
      * 
@@ -73,6 +79,7 @@ export function ControllersRoomdetailFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
+        'employee': !exists(json, 'employee') ? undefined : json['employee'],
         'equipment': !exists(json, 'equipment') ? undefined : json['equipment'],
         'facilitie': !exists(json, 'facilitie') ? undefined : json['facilitie'],
         'nearbyplace': !exists(json, 'nearbyplace') ? undefined : json['nearbyplace'],
@@ -92,6 +99,7 @@ export function ControllersRoomdetailToJSON(value?: ControllersRoomdetail | null
     }
     return {
         
+        'employee': value.employee,
         'equipment': value.equipment,
         'facilitie': value.facilitie,
         'nearbyplace': value.nearbyplace,

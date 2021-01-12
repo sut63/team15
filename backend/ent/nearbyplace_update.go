@@ -34,23 +34,19 @@ func (nu *NearbyplaceUpdate) SetNearbyplace(s string) *NearbyplaceUpdate {
 	return nu
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (nu *NearbyplaceUpdate) SetRoomdetailID(id int) *NearbyplaceUpdate {
-	nu.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (nu *NearbyplaceUpdate) AddRoomdetailIDs(ids ...int) *NearbyplaceUpdate {
+	nu.mutation.AddRoomdetailIDs(ids...)
 	return nu
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (nu *NearbyplaceUpdate) SetNillableRoomdetailID(id *int) *NearbyplaceUpdate {
-	if id != nil {
-		nu = nu.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (nu *NearbyplaceUpdate) AddRoomdetail(r ...*Roomdetail) *NearbyplaceUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return nu
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (nu *NearbyplaceUpdate) SetRoomdetail(r *Roomdetail) *NearbyplaceUpdate {
-	return nu.SetRoomdetailID(r.ID)
+	return nu.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the NearbyplaceMutation object of the builder.
@@ -58,10 +54,19 @@ func (nu *NearbyplaceUpdate) Mutation() *NearbyplaceMutation {
 	return nu.mutation
 }
 
-// ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (nu *NearbyplaceUpdate) ClearRoomdetail() *NearbyplaceUpdate {
-	nu.mutation.ClearRoomdetail()
+// RemoveRoomdetailIDs removes the roomdetail edge to Roomdetail by ids.
+func (nu *NearbyplaceUpdate) RemoveRoomdetailIDs(ids ...int) *NearbyplaceUpdate {
+	nu.mutation.RemoveRoomdetailIDs(ids...)
 	return nu
+}
+
+// RemoveRoomdetail removes roomdetail edges to Roomdetail.
+func (nu *NearbyplaceUpdate) RemoveRoomdetail(r ...*Roomdetail) *NearbyplaceUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return nu.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -141,10 +146,10 @@ func (nu *NearbyplaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: nearbyplace.FieldNearbyplace,
 		})
 	}
-	if nu.mutation.RoomdetailCleared() {
+	if nodes := nu.mutation.RemovedRoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   nearbyplace.RoomdetailTable,
 			Columns: []string{nearbyplace.RoomdetailColumn},
 			Bidi:    false,
@@ -155,12 +160,15 @@ func (nu *NearbyplaceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := nu.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   nearbyplace.RoomdetailTable,
 			Columns: []string{nearbyplace.RoomdetailColumn},
 			Bidi:    false,
@@ -200,23 +208,19 @@ func (nuo *NearbyplaceUpdateOne) SetNearbyplace(s string) *NearbyplaceUpdateOne 
 	return nuo
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (nuo *NearbyplaceUpdateOne) SetRoomdetailID(id int) *NearbyplaceUpdateOne {
-	nuo.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (nuo *NearbyplaceUpdateOne) AddRoomdetailIDs(ids ...int) *NearbyplaceUpdateOne {
+	nuo.mutation.AddRoomdetailIDs(ids...)
 	return nuo
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (nuo *NearbyplaceUpdateOne) SetNillableRoomdetailID(id *int) *NearbyplaceUpdateOne {
-	if id != nil {
-		nuo = nuo.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (nuo *NearbyplaceUpdateOne) AddRoomdetail(r ...*Roomdetail) *NearbyplaceUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return nuo
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (nuo *NearbyplaceUpdateOne) SetRoomdetail(r *Roomdetail) *NearbyplaceUpdateOne {
-	return nuo.SetRoomdetailID(r.ID)
+	return nuo.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the NearbyplaceMutation object of the builder.
@@ -224,10 +228,19 @@ func (nuo *NearbyplaceUpdateOne) Mutation() *NearbyplaceMutation {
 	return nuo.mutation
 }
 
-// ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (nuo *NearbyplaceUpdateOne) ClearRoomdetail() *NearbyplaceUpdateOne {
-	nuo.mutation.ClearRoomdetail()
+// RemoveRoomdetailIDs removes the roomdetail edge to Roomdetail by ids.
+func (nuo *NearbyplaceUpdateOne) RemoveRoomdetailIDs(ids ...int) *NearbyplaceUpdateOne {
+	nuo.mutation.RemoveRoomdetailIDs(ids...)
 	return nuo
+}
+
+// RemoveRoomdetail removes roomdetail edges to Roomdetail.
+func (nuo *NearbyplaceUpdateOne) RemoveRoomdetail(r ...*Roomdetail) *NearbyplaceUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return nuo.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -305,10 +318,10 @@ func (nuo *NearbyplaceUpdateOne) sqlSave(ctx context.Context) (n *Nearbyplace, e
 			Column: nearbyplace.FieldNearbyplace,
 		})
 	}
-	if nuo.mutation.RoomdetailCleared() {
+	if nodes := nuo.mutation.RemovedRoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   nearbyplace.RoomdetailTable,
 			Columns: []string{nearbyplace.RoomdetailColumn},
 			Bidi:    false,
@@ -319,12 +332,15 @@ func (nuo *NearbyplaceUpdateOne) sqlSave(ctx context.Context) (n *Nearbyplace, e
 				},
 			},
 		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := nuo.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   nearbyplace.RoomdetailTable,
 			Columns: []string{nearbyplace.RoomdetailColumn},
 			Bidi:    false,

@@ -34,23 +34,19 @@ func (fu *FacilitieUpdate) SetFacilitie(s string) *FacilitieUpdate {
 	return fu
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (fu *FacilitieUpdate) SetRoomdetailID(id int) *FacilitieUpdate {
-	fu.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (fu *FacilitieUpdate) AddRoomdetailIDs(ids ...int) *FacilitieUpdate {
+	fu.mutation.AddRoomdetailIDs(ids...)
 	return fu
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (fu *FacilitieUpdate) SetNillableRoomdetailID(id *int) *FacilitieUpdate {
-	if id != nil {
-		fu = fu.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (fu *FacilitieUpdate) AddRoomdetail(r ...*Roomdetail) *FacilitieUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return fu
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (fu *FacilitieUpdate) SetRoomdetail(r *Roomdetail) *FacilitieUpdate {
-	return fu.SetRoomdetailID(r.ID)
+	return fu.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the FacilitieMutation object of the builder.
@@ -58,10 +54,19 @@ func (fu *FacilitieUpdate) Mutation() *FacilitieMutation {
 	return fu.mutation
 }
 
-// ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (fu *FacilitieUpdate) ClearRoomdetail() *FacilitieUpdate {
-	fu.mutation.ClearRoomdetail()
+// RemoveRoomdetailIDs removes the roomdetail edge to Roomdetail by ids.
+func (fu *FacilitieUpdate) RemoveRoomdetailIDs(ids ...int) *FacilitieUpdate {
+	fu.mutation.RemoveRoomdetailIDs(ids...)
 	return fu
+}
+
+// RemoveRoomdetail removes roomdetail edges to Roomdetail.
+func (fu *FacilitieUpdate) RemoveRoomdetail(r ...*Roomdetail) *FacilitieUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return fu.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -141,10 +146,10 @@ func (fu *FacilitieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: facilitie.FieldFacilitie,
 		})
 	}
-	if fu.mutation.RoomdetailCleared() {
+	if nodes := fu.mutation.RemovedRoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   facilitie.RoomdetailTable,
 			Columns: []string{facilitie.RoomdetailColumn},
 			Bidi:    false,
@@ -155,12 +160,15 @@ func (fu *FacilitieUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fu.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   facilitie.RoomdetailTable,
 			Columns: []string{facilitie.RoomdetailColumn},
 			Bidi:    false,
@@ -200,23 +208,19 @@ func (fuo *FacilitieUpdateOne) SetFacilitie(s string) *FacilitieUpdateOne {
 	return fuo
 }
 
-// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (fuo *FacilitieUpdateOne) SetRoomdetailID(id int) *FacilitieUpdateOne {
-	fuo.mutation.SetRoomdetailID(id)
+// AddRoomdetailIDs adds the roomdetail edge to Roomdetail by ids.
+func (fuo *FacilitieUpdateOne) AddRoomdetailIDs(ids ...int) *FacilitieUpdateOne {
+	fuo.mutation.AddRoomdetailIDs(ids...)
 	return fuo
 }
 
-// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (fuo *FacilitieUpdateOne) SetNillableRoomdetailID(id *int) *FacilitieUpdateOne {
-	if id != nil {
-		fuo = fuo.SetRoomdetailID(*id)
+// AddRoomdetail adds the roomdetail edges to Roomdetail.
+func (fuo *FacilitieUpdateOne) AddRoomdetail(r ...*Roomdetail) *FacilitieUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
-	return fuo
-}
-
-// SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (fuo *FacilitieUpdateOne) SetRoomdetail(r *Roomdetail) *FacilitieUpdateOne {
-	return fuo.SetRoomdetailID(r.ID)
+	return fuo.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the FacilitieMutation object of the builder.
@@ -224,10 +228,19 @@ func (fuo *FacilitieUpdateOne) Mutation() *FacilitieMutation {
 	return fuo.mutation
 }
 
-// ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (fuo *FacilitieUpdateOne) ClearRoomdetail() *FacilitieUpdateOne {
-	fuo.mutation.ClearRoomdetail()
+// RemoveRoomdetailIDs removes the roomdetail edge to Roomdetail by ids.
+func (fuo *FacilitieUpdateOne) RemoveRoomdetailIDs(ids ...int) *FacilitieUpdateOne {
+	fuo.mutation.RemoveRoomdetailIDs(ids...)
 	return fuo
+}
+
+// RemoveRoomdetail removes roomdetail edges to Roomdetail.
+func (fuo *FacilitieUpdateOne) RemoveRoomdetail(r ...*Roomdetail) *FacilitieUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return fuo.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -305,10 +318,10 @@ func (fuo *FacilitieUpdateOne) sqlSave(ctx context.Context) (f *Facilitie, err e
 			Column: facilitie.FieldFacilitie,
 		})
 	}
-	if fuo.mutation.RoomdetailCleared() {
+	if nodes := fuo.mutation.RemovedRoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   facilitie.RoomdetailTable,
 			Columns: []string{facilitie.RoomdetailColumn},
 			Bidi:    false,
@@ -319,12 +332,15 @@ func (fuo *FacilitieUpdateOne) sqlSave(ctx context.Context) (f *Facilitie, err e
 				},
 			},
 		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fuo.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
 			Table:   facilitie.RoomdetailTable,
 			Columns: []string{facilitie.RoomdetailColumn},
 			Bidi:    false,

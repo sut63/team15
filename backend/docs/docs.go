@@ -438,48 +438,6 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Create employee",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create employee",
-                "operationId": "create-employee",
-                "parameters": [
-                    {
-                        "description": "Employee entity",
-                        "name": "employee",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Employee"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Employee"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
             }
         },
         "/employees/{id}": {
@@ -1849,6 +1807,9 @@ var doc = `{
         "controllers.Roomdetail": {
             "type": "object",
             "properties": {
+                "employee": {
+                    "type": "integer"
+                },
                 "equipment": {
                     "type": "integer"
                 },
@@ -1984,17 +1945,17 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.EmployeeEdges"
                 },
-                "employeeemail": {
-                    "description": "Employeeemail holds the value of the \"employeeemail\" field.",
-                    "type": "string"
-                },
-                "employeename": {
-                    "description": "Employeename holds the value of the \"employeename\" field.",
+                "email": {
+                    "description": "Email holds the value of the \"email\" field.",
                     "type": "string"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "name": {
+                    "description": "Name holds the value of the \"name\" field.",
+                    "type": "string"
                 },
                 "password": {
                     "description": "Password holds the value of the \"password\" field.",
@@ -2010,6 +1971,18 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Deposit"
+                    }
+                },
+                "jobposition": {
+                    "description": "Jobposition holds the value of the jobposition edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Jobposition"
+                },
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
                     }
                 }
             }
@@ -2037,8 +2010,10 @@ var doc = `{
             "properties": {
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the roomdetail edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Roomdetail"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
+                    }
                 }
             }
         },
@@ -2065,8 +2040,40 @@ var doc = `{
             "properties": {
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the roomdetail edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
+                    }
+                }
+            }
+        },
+        "ent.Jobposition": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the JobpositionQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.Roomdetail"
+                    "$ref": "#/definitions/ent.JobpositionEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "position_name": {
+                    "description": "PositionName holds the value of the \"position_name\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.JobpositionEdges": {
+            "type": "object",
+            "properties": {
+                "employees": {
+                    "description": "Employees holds the value of the employees edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Employee"
+                    }
                 }
             }
         },
@@ -2123,8 +2130,10 @@ var doc = `{
             "properties": {
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the roomdetail edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Roomdetail"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
+                    }
                 }
             }
         },
@@ -2183,26 +2192,25 @@ var doc = `{
         "ent.RoomdetailEdges": {
             "type": "object",
             "properties": {
+                "employee": {
+                    "description": "Employee holds the value of the employee edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Employee"
+                },
                 "equipments": {
                     "description": "Equipments holds the value of the equipments edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Equipment"
-                    }
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Equipment"
                 },
                 "facilities": {
                     "description": "Facilities holds the value of the facilities edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Facilitie"
-                    }
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Facilitie"
                 },
                 "nearbyplaces": {
                     "description": "Nearbyplaces holds the value of the nearbyplaces edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Nearbyplace"
-                    }
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Nearbyplace"
                 },
                 "quantity": {
                     "description": "Quantity holds the value of the quantity edge.",

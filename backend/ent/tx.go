@@ -24,6 +24,8 @@ type Tx struct {
 	Equipment *EquipmentClient
 	// Facilitie is the client for interacting with the Facilitie builders.
 	Facilitie *FacilitieClient
+	// Jobposition is the client for interacting with the Jobposition builders.
+	Jobposition *JobpositionClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
 	// Nearbyplace is the client for interacting with the Nearbyplace builders.
@@ -177,6 +179,7 @@ func (tx *Tx) init() {
 	tx.Employee = NewEmployeeClient(tx.config)
 	tx.Equipment = NewEquipmentClient(tx.config)
 	tx.Facilitie = NewFacilitieClient(tx.config)
+	tx.Jobposition = NewJobpositionClient(tx.config)
 	tx.LengthTime = NewLengthTimeClient(tx.config)
 	tx.Nearbyplace = NewNearbyplaceClient(tx.config)
 	tx.Quantity = NewQuantityClient(tx.config)

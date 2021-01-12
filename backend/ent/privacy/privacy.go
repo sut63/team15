@@ -354,6 +354,30 @@ func (f FacilitieMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutat
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FacilitieMutation", m)
 }
 
+// The JobpositionQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type JobpositionQueryRuleFunc func(context.Context, *ent.JobpositionQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f JobpositionQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.JobpositionQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.JobpositionQuery", q)
+}
+
+// The JobpositionMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type JobpositionMutationRuleFunc func(context.Context, *ent.JobpositionMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f JobpositionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.JobpositionMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.JobpositionMutation", m)
+}
+
 // The LengthTimeQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type LengthTimeQueryRuleFunc func(context.Context, *ent.LengthTimeQuery) error

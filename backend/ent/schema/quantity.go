@@ -14,7 +14,7 @@ type Quantity struct {
 // Fields of the Quantity.
 func (Quantity) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("quantity"),
+		field.String("quantity").Unique(),
 	}
 }
 
