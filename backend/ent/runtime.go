@@ -5,7 +5,6 @@ package ent
 import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/employee"
-	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/schema"
@@ -37,12 +36,6 @@ func init() {
 	employeeDescPassword := employeeFields[2].Descriptor()
 	// employee.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	employee.PasswordValidator = employeeDescPassword.Validators[0].(func(string) error)
-	jobpositionFields := schema.Jobposition{}.Fields()
-	_ = jobpositionFields
-	// jobpositionDescPositionName is the schema descriptor for position_name field.
-	jobpositionDescPositionName := jobpositionFields[0].Descriptor()
-	// jobposition.PositionNameValidator is a validator for the "position_name" field. It is called by the builders before save.
-	jobposition.PositionNameValidator = jobpositionDescPositionName.Validators[0].(func(string) error)
 	lengthtimeFields := schema.LengthTime{}.Fields()
 	_ = lengthtimeFields
 	// lengthtimeDescLengthtime is the schema descriptor for lengthtime field.
@@ -51,12 +44,16 @@ func init() {
 	lengthtime.LengthtimeValidator = lengthtimeDescLengthtime.Validators[0].(func(string) error)
 	roomdetailFields := schema.Roomdetail{}.Fields()
 	_ = roomdetailFields
+	// roomdetailDescRoomnumber is the schema descriptor for roomnumber field.
+	roomdetailDescRoomnumber := roomdetailFields[0].Descriptor()
+	// roomdetail.RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
+	roomdetail.RoomnumberValidator = roomdetailDescRoomnumber.Validators[0].(func(string) error)
 	// roomdetailDescRoomtypename is the schema descriptor for roomtypename field.
-	roomdetailDescRoomtypename := roomdetailFields[0].Descriptor()
+	roomdetailDescRoomtypename := roomdetailFields[1].Descriptor()
 	// roomdetail.RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
 	roomdetail.RoomtypenameValidator = roomdetailDescRoomtypename.Validators[0].(func(string) error)
 	// roomdetailDescRoomprice is the schema descriptor for roomprice field.
-	roomdetailDescRoomprice := roomdetailFields[1].Descriptor()
+	roomdetailDescRoomprice := roomdetailFields[2].Descriptor()
 	// roomdetail.RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
 	roomdetail.RoompriceValidator = roomdetailDescRoomprice.Validators[0].(func(string) error)
 	statusdFields := schema.Statusd{}.Fields()

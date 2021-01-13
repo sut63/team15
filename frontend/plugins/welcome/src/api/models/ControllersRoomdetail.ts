@@ -54,6 +54,12 @@ export interface ControllersRoomdetail {
      * @type {string}
      * @memberof ControllersRoomdetail
      */
+    roomnumber?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersRoomdetail
+     */
     roomprice?: string;
     /**
      * 
@@ -84,6 +90,7 @@ export function ControllersRoomdetailFromJSONTyped(json: any, ignoreDiscriminato
         'facilitie': !exists(json, 'facilitie') ? undefined : json['facilitie'],
         'nearbyplace': !exists(json, 'nearbyplace') ? undefined : json['nearbyplace'],
         'quantity': !exists(json, 'quantity') ? undefined : json['quantity'],
+        'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
         'roomprice': !exists(json, 'roomprice') ? undefined : json['roomprice'],
         'roomtypename': !exists(json, 'roomtypename') ? undefined : json['roomtypename'],
         'staytype': !exists(json, 'staytype') ? undefined : json['staytype'],
@@ -104,6 +111,7 @@ export function ControllersRoomdetailToJSON(value?: ControllersRoomdetail | null
         'facilitie': value.facilitie,
         'nearbyplace': value.nearbyplace,
         'quantity': value.quantity,
+        'roomnumber': value.roomnumber,
         'roomprice': value.roomprice,
         'roomtypename': value.roomtypename,
         'staytype': value.staytype,

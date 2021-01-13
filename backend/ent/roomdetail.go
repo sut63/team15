@@ -22,6 +22,8 @@ type Roomdetail struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// Roomnumber holds the value of the "roomnumber" field.
+	Roomnumber string `json:"roomnumber,omitempty"`
 	// Roomtypename holds the value of the "roomtypename" field.
 	Roomtypename string `json:"roomtypename,omitempty"`
 	// Roomprice holds the value of the "roomprice" field.
@@ -160,6 +162,7 @@ func (e RoomdetailEdges) RoomdetailsOrErr() (*Lease, error) {
 func (*Roomdetail) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
+		&sql.NullString{}, // roomnumber
 		&sql.NullString{}, // roomtypename
 		&sql.NullString{}, // roomprice
 	}
@@ -190,16 +193,21 @@ func (r *Roomdetail) assignValues(values ...interface{}) error {
 	r.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field roomtypename", values[0])
+		return fmt.Errorf("unexpected type %T for field roomnumber", values[0])
+	} else if value.Valid {
+		r.Roomnumber = value.String
+	}
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field roomtypename", values[1])
 	} else if value.Valid {
 		r.Roomtypename = value.String
 	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field roomprice", values[1])
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field roomprice", values[2])
 	} else if value.Valid {
 		r.Roomprice = value.String
 	}
-	values = values[2:]
+	values = values[3:]
 	if len(values) == len(roomdetail.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
@@ -299,6 +307,8 @@ func (r *Roomdetail) String() string {
 	var builder strings.Builder
 	builder.WriteString("Roomdetail(")
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
+	builder.WriteString(", roomnumber=")
+	builder.WriteString(r.Roomnumber)
 	builder.WriteString(", roomtypename=")
 	builder.WriteString(r.Roomtypename)
 	builder.WriteString(", roomprice=")

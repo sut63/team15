@@ -14,13 +14,13 @@ type Jobposition struct {
 // Fields of the Jobposition.
 func (Jobposition) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("position_name").NotEmpty().Unique(),
+		field.String("positionname").Unique(),
 	}
 }
 
 // Edges of the Jobposition.
 func (Jobposition) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("employees", Employee.Type).StorageKey(edge.Column("jobposition_id")),
+		edge.To("employees", Employee.Type),
 	}
 }

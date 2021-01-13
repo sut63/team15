@@ -270,12 +270,12 @@ func (jq *JobpositionQuery) WithEmployees(opts ...func(*EmployeeQuery)) *Jobposi
 // Example:
 //
 //	var v []struct {
-//		PositionName string `json:"position_name,omitempty"`
+//		Positionname string `json:"positionname,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Jobposition.Query().
-//		GroupBy(jobposition.FieldPositionName).
+//		GroupBy(jobposition.FieldPositionname).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +296,11 @@ func (jq *JobpositionQuery) GroupBy(field string, fields ...string) *Jobposition
 // Example:
 //
 //	var v []struct {
-//		PositionName string `json:"position_name,omitempty"`
+//		Positionname string `json:"positionname,omitempty"`
 //	}
 //
 //	client.Jobposition.Query().
-//		Select(jobposition.FieldPositionName).
+//		Select(jobposition.FieldPositionname).
 //		Scan(ctx, &v)
 //
 func (jq *JobpositionQuery) Select(field string, fields ...string) *JobpositionSelect {
@@ -371,13 +371,13 @@ func (jq *JobpositionQuery) sqlAll(ctx context.Context) ([]*Jobposition, error) 
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.jobposition_id
+			fk := n.jobposition_employees
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "jobposition_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "jobposition_employees" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "jobposition_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "jobposition_employees" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Employees = append(node.Edges.Employees, n)
 		}

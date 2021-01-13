@@ -89,7 +89,7 @@ export default function CreateRoomdetail() {
   const [alert2, setAlerts] = useState(true);
 
   //เก็บข้อมูลที่จะดึงมา
-  const [roomdetail, setRoomdetail] = React.useState<EntRoomdetail[]>([]);
+  const [roomdetail, setRoomdetail] = useState<EntRoomdetail[]>([]);
   const [quantitys, setQuantitys] = useState<EntQuantity[]>([]);
   const [staytypes, setStaytypes] = useState<EntStaytype[]>([]);
   const [equipments, setEquipments] = useState<EntEquipment[]>([]);
@@ -99,6 +99,7 @@ export default function CreateRoomdetail() {
   const [loading, setLoading] = useState(true);
 
   const [price, setRoomprice] = useState(String);
+  const [noroom, setRoomnumber] = useState(String);
   const [roomname, setRoomtypename] = useState(String);
   const [quantity, setQuantity] = useState(Number);
   const [staytype, setStaytype] = useState(Number);
@@ -170,20 +171,20 @@ export default function CreateRoomdetail() {
           getEmployees();
         
         
-        const checkEmployeeLoginData = async () => {
-          const logindata = JSON.parse(String(localStorage.getItem("employeedata")));
-          setLoading(false);
-          if(logindata != "1"){
-            localStorage.setItem("employeedata", JSON.stringify(null));
-            localStorage.setItem("employeelogindata", JSON.stringify(null));
-            history.pushState("", "", "./");
-            window.location.reload(false);    
+         {const checkEmployeeLoginData = async () => {
+            const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
+            setLoading(false);
+            if(jobdata != "พนักงานหอพัก"){
+              localStorage.setItem("employeedata", JSON.stringify(null));
+              localStorage.setItem("jobpositiondata", JSON.stringify(null));
+              history.pushState("", "", "./");
+              window.location.reload(false);    
+            }
+            else{
+              setEmployee(Number(localStorage.getItem("employeedata")))
+            }
           }
-          else{
-            setEmployee(Number(localStorage.getItem("employeedata")))
-          }
-        }
-        checkEmployeeLoginData();
+        checkEmployeeLoginData();} 
       
       }, [loading]);
       console.log(employeeid)
@@ -193,6 +194,11 @@ export default function CreateRoomdetail() {
   const handleRoompriceChange = (event: any) => {
     setRoomprice(event.target.value as string);
   };
+
+  const handleNoroomChange = (event: any) => {
+    setRoomnumber(event.target.value as string);
+  };
+  
   
   const handleRoomtypenameChange = (event: any) => {
     setRoomtypename(event.target.value as string);
@@ -225,29 +231,27 @@ export default function CreateRoomdetail() {
   const listRoom = () => {
     window.location.href ="http://localhost:3000/RoomDetails";
   };
-
   const forCheck = () => {
-    for (const room of roomdetail){
-      if(roomname === room.roomtypename){
+    for (const color of roomdetail){
+      if(noroom === color.roomnumber){
              setStatus(true);
              setAlert(false);
              setAlerts(false);
-             console.log("ALERT")
              //window.location.reload(false);
       }
       else{
-        console.log("ALERT2")
         CreateRoomdetail();
       }
-  }
+    }
   };
 
   const CreateRoomdetail = async () => {
-    if ((roomname != "") && (roomname != null) && (price != "") && (price != null)
+    if ((noroom != "") && (noroom != null) && (roomname != "") && (roomname != null) && (price != "") && (price != null)
     && (quantity != null) && (quantity != null) && (equipment != null) && (facilitie != null) && (staytype != null)
     && (nearbyplace != null)){
     
       const roomdetail = {
+      roomnumber: noroom,
       roomprice: price,
       roomtypename: roomname,
       quantity: quantity,
@@ -274,8 +278,6 @@ export default function CreateRoomdetail() {
 
   return (
  <Page theme={pageTheme.service}>
-       <Header title="Room Detail" subtitle="รายละเอียดข้อมูลห้องพัก">
-  </Header>
       <Content>
         <InfoCard title="Add room details" subheader="เพิ่มรายละเอียดห้องพักเข้าสู่ระบบ">
           <div className={classes.root}>
@@ -283,6 +285,18 @@ export default function CreateRoomdetail() {
             <FormControl
               variant="outlined"
             >
+
+            <div className={classes.paper}><strong>เลขห้อง(No room)</strong></div>
+              <TextField className={classes.textField}
+                id="roomnumber"
+                label=""
+                variant="outlined"
+                //color="secondary"
+                type="string"
+                size="medium"
+                value={noroom}
+                onChange={handleNoroomChange}
+              />      
                <div className={classes.paper}><strong>ประเภทห้อง(Room type)</strong></div>
               <TextField className={classes.textField}
                 id="roomtypename"
@@ -382,7 +396,7 @@ export default function CreateRoomdetail() {
                 <TextField className={classes.select}
                     id="employee"
                     size="medium"
-                    value={employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => `${item.name} (${item.email})`)}
+                    value={employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => `${item.name} (${item.email}) ตำแหน่ง (${item.edges?.jobposition?.positionname})`)}
                     style={{ width: 500 }}/>
              
 
@@ -410,16 +424,16 @@ export default function CreateRoomdetail() {
               {status ? (
                         <div>
                     {(!alert2) ?
-                          <Alert severity="warning" style={{ marginTop: 20 }} onClose={() => {window.location.reload(false)}}>
+                          <Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {window.location.reload(false)}}>
                           มีข้อมูลนี้อยู่ในระบบแล้ว
                           </Alert>
                       :
                       (alert) ? (
-                        <Alert severity="success" onClose={() => {listRoom()}}>
+                        <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {listRoom()}}>
                             บันทึกสำเร็จ
                         </Alert>
                     ) : (
-                            <Alert severity="warning" style={{ marginTop: 20 }} onClose={() => {setStatus(false)}}>
+                            <Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {setStatus(false)}}>
                                 บันทึกไม่สำเร็จ กรุณาใส่ข้อมูลให้ครบ
                             </Alert>
                         )

@@ -34,6 +34,12 @@ func (ru *RoomdetailUpdate) Where(ps ...predicate.Roomdetail) *RoomdetailUpdate 
 	return ru
 }
 
+// SetRoomnumber sets the roomnumber field.
+func (ru *RoomdetailUpdate) SetRoomnumber(s string) *RoomdetailUpdate {
+	ru.mutation.SetRoomnumber(s)
+	return ru
+}
+
 // SetRoomtypename sets the roomtypename field.
 func (ru *RoomdetailUpdate) SetRoomtypename(s string) *RoomdetailUpdate {
 	ru.mutation.SetRoomtypename(s)
@@ -228,6 +234,11 @@ func (ru *RoomdetailUpdate) ClearRoomdetails() *RoomdetailUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomdetailUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
 	if v, ok := ru.mutation.Roomtypename(); ok {
 		if err := roomdetail.RoomtypenameValidator(v); err != nil {
 			return 0, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
@@ -305,6 +316,13 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ru.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldRoomnumber,
+		})
 	}
 	if value, ok := ru.mutation.Roomtypename(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -583,6 +601,12 @@ type RoomdetailUpdateOne struct {
 	mutation *RoomdetailMutation
 }
 
+// SetRoomnumber sets the roomnumber field.
+func (ruo *RoomdetailUpdateOne) SetRoomnumber(s string) *RoomdetailUpdateOne {
+	ruo.mutation.SetRoomnumber(s)
+	return ruo
+}
+
 // SetRoomtypename sets the roomtypename field.
 func (ruo *RoomdetailUpdateOne) SetRoomtypename(s string) *RoomdetailUpdateOne {
 	ruo.mutation.SetRoomtypename(s)
@@ -777,6 +801,11 @@ func (ruo *RoomdetailUpdateOne) ClearRoomdetails() *RoomdetailUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *RoomdetailUpdateOne) Save(ctx context.Context) (*Roomdetail, error) {
+	if v, ok := ruo.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
 	if v, ok := ruo.mutation.Roomtypename(); ok {
 		if err := roomdetail.RoomtypenameValidator(v); err != nil {
 			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
@@ -853,6 +882,13 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Roomdetail.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := ruo.mutation.Roomnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldRoomnumber,
+		})
+	}
 	if value, ok := ruo.mutation.Roomtypename(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

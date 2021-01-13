@@ -7,6 +7,8 @@ const (
 	Label = "roomdetail"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldRoomnumber holds the string denoting the roomnumber field in the database.
+	FieldRoomnumber = "roomnumber"
 	// FieldRoomtypename holds the string denoting the roomtypename field in the database.
 	FieldRoomtypename = "roomtypename"
 	// FieldRoomprice holds the string denoting the roomprice field in the database.
@@ -83,6 +85,7 @@ const (
 // Columns holds all SQL columns for roomdetail fields.
 var Columns = []string{
 	FieldID,
+	FieldRoomnumber,
 	FieldRoomtypename,
 	FieldRoomprice,
 }
@@ -98,6 +101,8 @@ var ForeignKeys = []string{
 }
 
 var (
+	// RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
+	RoomnumberValidator func(string) error
 	// RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
 	RoomtypenameValidator func(string) error
 	// RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.

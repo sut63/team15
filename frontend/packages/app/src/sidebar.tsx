@@ -45,7 +45,7 @@ export const AppSidebar = () => {
       {/* Global nav, not org-specific */}
       {(employeeid) ?
         employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => 
-          <SidebarItem icon={PermIdentityIcon} text={item.name} />
+          <SidebarItem icon={PermIdentityIcon} text={item.edges?.jobposition?.positionname} />
         )
         :
         null

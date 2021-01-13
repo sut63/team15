@@ -22,6 +22,7 @@ type RoomdetailController struct {
 }
 
 type Roomdetail struct {
+	Roomnumber   string
 	Roomtypename string
 	Roomprice    string
 	Quantity     int
@@ -126,6 +127,7 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 
 	rd, err := ctl.client.Roomdetail.
 		Create().
+		SetRoomnumber(obj.Roomnumber).
 		SetRoomprice(obj.Roomprice).
 		SetRoomtypename(obj.Roomtypename).
 		SetQuantity(qu).
@@ -228,24 +230,6 @@ func (ctl *RoomdetailController) GetRoomdetail(c *gin.Context) {
 // @Failure 500 {object} gin.H
 // @Router /roomdetails [get]
 func (ctl *RoomdetailController) ListRoomdetail(c *gin.Context) {
-	limitQuery := c.Query("limit")
-	limit := 10
-	if limitQuery != "" {
-		limit64, err := strconv.ParseInt(limitQuery, 10, 64)
-		if err == nil {
-			limit = int(limit64)
-		}
-	}
-
-	offsetQuery := c.Query("offset")
-	offset := 0
-	if offsetQuery != "" {
-		offset64, err := strconv.ParseInt(offsetQuery, 10, 64)
-		if err == nil {
-			offset = int(offset64)
-		}
-	}
-
 	roomdetails, err := ctl.client.Roomdetail.
 		Query().
 		WithQuantity().
@@ -254,8 +238,6 @@ func (ctl *RoomdetailController) ListRoomdetail(c *gin.Context) {
 		WithFacilities().
 		WithNearbyplaces().
 		WithEmployee().
-		Limit(limit).
-		Offset(offset).
 		All(context.Background())
 
 	if err != nil {

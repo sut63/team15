@@ -28,9 +28,9 @@ func (ju *JobpositionUpdate) Where(ps ...predicate.Jobposition) *JobpositionUpda
 	return ju
 }
 
-// SetPositionName sets the position_name field.
-func (ju *JobpositionUpdate) SetPositionName(s string) *JobpositionUpdate {
-	ju.mutation.SetPositionName(s)
+// SetPositionname sets the positionname field.
+func (ju *JobpositionUpdate) SetPositionname(s string) *JobpositionUpdate {
+	ju.mutation.SetPositionname(s)
 	return ju
 }
 
@@ -71,11 +71,6 @@ func (ju *JobpositionUpdate) RemoveEmployees(e ...*Employee) *JobpositionUpdate 
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ju *JobpositionUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ju.mutation.PositionName(); ok {
-		if err := jobposition.PositionNameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "position_name", err: fmt.Errorf("ent: validator failed for field \"position_name\": %w", err)}
-		}
-	}
 
 	var (
 		err      error
@@ -144,11 +139,11 @@ func (ju *JobpositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := ju.mutation.PositionName(); ok {
+	if value, ok := ju.mutation.Positionname(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: jobposition.FieldPositionName,
+			Column: jobposition.FieldPositionname,
 		})
 	}
 	if nodes := ju.mutation.RemovedEmployeesIDs(); len(nodes) > 0 {
@@ -207,9 +202,9 @@ type JobpositionUpdateOne struct {
 	mutation *JobpositionMutation
 }
 
-// SetPositionName sets the position_name field.
-func (juo *JobpositionUpdateOne) SetPositionName(s string) *JobpositionUpdateOne {
-	juo.mutation.SetPositionName(s)
+// SetPositionname sets the positionname field.
+func (juo *JobpositionUpdateOne) SetPositionname(s string) *JobpositionUpdateOne {
+	juo.mutation.SetPositionname(s)
 	return juo
 }
 
@@ -250,11 +245,6 @@ func (juo *JobpositionUpdateOne) RemoveEmployees(e ...*Employee) *JobpositionUpd
 
 // Save executes the query and returns the updated entity.
 func (juo *JobpositionUpdateOne) Save(ctx context.Context) (*Jobposition, error) {
-	if v, ok := juo.mutation.PositionName(); ok {
-		if err := jobposition.PositionNameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "position_name", err: fmt.Errorf("ent: validator failed for field \"position_name\": %w", err)}
-		}
-	}
 
 	var (
 		err  error
@@ -321,11 +311,11 @@ func (juo *JobpositionUpdateOne) sqlSave(ctx context.Context) (j *Jobposition, e
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Jobposition.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := juo.mutation.PositionName(); ok {
+	if value, ok := juo.mutation.Positionname(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: jobposition.FieldPositionName,
+			Column: jobposition.FieldPositionname,
 		})
 	}
 	if nodes := juo.mutation.RemovedEmployeesIDs(); len(nodes) > 0 {

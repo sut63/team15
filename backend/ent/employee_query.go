@@ -522,7 +522,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Employee)
 		for i := range nodes {
-			if fk := nodes[i].jobposition_id; fk != nil {
+			if fk := nodes[i].jobposition_employees; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -535,7 +535,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "jobposition_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "jobposition_employees" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.Jobposition = n

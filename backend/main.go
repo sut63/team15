@@ -32,7 +32,7 @@ type Jobpositions struct {
 }
 
 type Jobposition struct {
-	name string
+	positionname string
 }
 type Statusds struct {
 	Statusd []Statusd
@@ -185,22 +185,17 @@ func main() {
 
 	// Set Employees Data
 
-	jobpositions := []string{"พนักงานหอพัก1", "พนักงานหอพัก2", "พนักงานหอพัก3", "พนักงานหอพัก4", "พนักงานหอพัก5", "พนักงานหอพัก6"}
+	jobpositions := []string{"พนักงานหอพัก"}
 	for _, jp := range jobpositions {
 		client.Jobposition.
 			Create().
-			SetPositionName(jp).
+			SetPositionname(jp).
 			Save(context.Background())
 	}
 
 	employees := Employees{
 		Employee: []Employee{
-			Employee{"โรเจอร์", "rogerkung@gmail.com", "1234", 1},
-			Employee{"นาตาชา", "natasha@gmail.com", "1234", 2},
-			Employee{"โทนี่ สตาร์ค", "stark@gmail.com", "1234", 3},
-			Employee{"สเตฟานี่ โรเจอร์", "step@gmail.com", "1234", 4},
-			Employee{"นาตาชา โรไปนอฟ", "romanoff@gmail.com", "1234", 5},
-			Employee{"นาตาชา โรมานอฟ", "romania@gmail.com", "1234", 6},
+			Employee{"นายใจดี ไปตากผ้าด้วย", "jaidee@gmail.com", "1234", 1},
 		},
 	}
 

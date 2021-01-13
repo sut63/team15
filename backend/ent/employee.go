@@ -24,8 +24,8 @@ type Employee struct {
 	Password string `json:"password,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EmployeeQuery when eager-loading is set.
-	Edges          EmployeeEdges `json:"edges"`
-	jobposition_id *int
+	Edges                 EmployeeEdges `json:"edges"`
+	jobposition_employees *int
 }
 
 // EmployeeEdges holds the relations/edges for other nodes in the graph.
@@ -97,7 +97,7 @@ func (*Employee) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Employee) fkValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // jobposition_id
+		&sql.NullInt64{}, // jobposition_employees
 	}
 }
 
@@ -131,10 +131,10 @@ func (e *Employee) assignValues(values ...interface{}) error {
 	values = values[3:]
 	if len(values) == len(employee.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field jobposition_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field jobposition_employees", value)
 		} else if value.Valid {
-			e.jobposition_id = new(int)
-			*e.jobposition_id = int(value.Int64)
+			e.jobposition_employees = new(int)
+			*e.jobposition_employees = int(value.Int64)
 		}
 	}
 	return nil

@@ -829,6 +829,95 @@ var doc = `{
                 }
             }
         },
+        "/leases": {
+            "get": {
+                "description": "list lease entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List lease entities",
+                "operationId": "list-lease",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Lease"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create lease",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create lease",
+                "operationId": "create-lease",
+                "parameters": [
+                    {
+                        "description": "Lease entity",
+                        "name": "lease",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Lease"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Lease"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/lengthtimes": {
             "get": {
                 "description": "list lengthtime entities",
@@ -1799,6 +1888,183 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/wifis": {
+            "get": {
+                "description": "list wifi entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List wifi entities",
+                "operationId": "list-wifi",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Wifi"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create wifi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create wifi",
+                "operationId": "create-wifi",
+                "parameters": [
+                    {
+                        "description": "Wifi entity",
+                        "name": "wifi",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Wifi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Wifi"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/wifis/{id}": {
+            "get": {
+                "description": "get wifi by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a wifi entity by ID",
+                "operationId": "get-wifi",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Wifi ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Wifi"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get wifi by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a wifi entity by ID",
+                "operationId": "delete-wifi",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Wifi ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1815,6 +2081,20 @@ var doc = `{
                     "type": "string"
                 },
                 "statusd": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.Lease": {
+            "type": "object",
+            "properties": {
+                "added": {
+                    "type": "string"
+                },
+                "lease": {
+                    "type": "string"
+                },
+                "wifi": {
                     "type": "integer"
                 }
             }
@@ -1836,6 +2116,9 @@ var doc = `{
                 },
                 "quantity": {
                     "type": "integer"
+                },
+                "roomnumber": {
+                    "type": "string"
                 },
                 "roomprice": {
                     "type": "string"
@@ -2074,8 +2357,8 @@ var doc = `{
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "position_name": {
-                    "description": "PositionName holds the value of the \"position_name\" field.",
+                "positionname": {
+                    "description": "Positionname holds the value of the \"positionname\" field.",
                     "type": "string"
                 }
             }
@@ -2089,6 +2372,43 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/ent.Employee"
                     }
+                }
+            }
+        },
+        "ent.Lease": {
+            "type": "object",
+            "properties": {
+                "addedtime": {
+                    "description": "Addedtime holds the value of the \"addedtime\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the LeaseQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.LeaseEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "lease": {
+                    "description": "Lease holds the value of the \"lease\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.LeaseEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetail": {
+                    "description": "Roomdetail holds the value of the Roomdetail edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Roomdetail"
+                },
+                "wifi": {
+                    "description": "Wifi holds the value of the Wifi edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Wifi"
                 }
             }
         },
@@ -2194,6 +2514,10 @@ var doc = `{
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
+                "roomnumber": {
+                    "description": "Roomnumber holds the value of the \"roomnumber\" field.",
+                    "type": "string"
+                },
                 "roomprice": {
                     "description": "Roomprice holds the value of the \"roomprice\" field.",
                     "type": "string"
@@ -2231,6 +2555,11 @@ var doc = `{
                     "description": "Quantity holds the value of the quantity edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Quantity"
+                },
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Lease"
                 },
                 "staytype": {
                     "description": "Staytype holds the value of the staytype edge.",
@@ -2295,6 +2624,36 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Roomdetail"
+                    }
+                }
+            }
+        },
+        "ent.Wifi": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the WifiQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.WifiEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "wifiname": {
+                    "description": "Wifiname holds the value of the \"wifiname\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.WifiEdges": {
+            "type": "object",
+            "properties": {
+                "wifis": {
+                    "description": "Wifis holds the value of the wifis edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Lease"
                     }
                 }
             }

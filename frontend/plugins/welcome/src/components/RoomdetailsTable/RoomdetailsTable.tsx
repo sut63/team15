@@ -75,6 +75,7 @@ export default function ComponentsTable() {
          {roomdetails.map((item:any) => (
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
+             <TableCell align="center">{item.roomnumber}</TableCell>
              <TableCell align="center">{item.roomtypename}</TableCell>
              <TableCell align="center">{item.roomprice}</TableCell>
              <TableCell align="center">{item.edges?.quantity?.quantity}</TableCell>

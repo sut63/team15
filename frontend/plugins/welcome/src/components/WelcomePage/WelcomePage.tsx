@@ -1,17 +1,17 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import {
   Content,
   Header,
   Page,
   pageTheme,
-  ContentHeader,
+  TabbedCard, 
+  CardTab ,
 } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import ComponanceRoomDetails from '../RoomDetails';
+import { EntRoomdetail } from '../../api/models/EntRoomdetail';
+import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 
 const HeaderCustom = {
   minHeight: '50px',
@@ -23,56 +23,63 @@ const useStyles = makeStyles({
   },
 });
 
-export type ProfileProps = {
-  name: string; 
-  id: string;
-  system: string;
-};
+const cardContentStyle = { height: 200, width: 500 };
+const DormEmployee: FC<{}> = () => {
 
-export function CardTeam({ name, id, system }: ProfileProps) {
-  const classes = useStyles();
-  return (
-    <Grid item xs={12} md={3}>
-      <Card className={classes.root}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            alt="นาย สมชาย ใจดี"
-            height="140"
-            image="../../image/account.jpg"
-            title="นาย สมชาย ใจดี"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {system}
-            </Typography>
-            <Typography gutterBottom variant="h5" component="h2">
-              {id} {name}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
-  );
-}
+  const [status, setStatus] = useState(false);
+  const [alert, setAlert] = useState(true);
+  const [alert2, setAlerts] = useState(true);
 
-const WelcomePage: FC<{}> = () => {
+  const [employees, setEmployees] = useState<EntEmployee[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [employeeid, setEmployee] = useState(Number);
+
+  
+  useEffect(() => { 
+        const checkEmployeeLoginData = async () => {
+          const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
+          setLoading(false);
+          if(jobdata != "พนักงานหอพัก"){
+            localStorage.setItem("employeedata", JSON.stringify(null));
+            localStorage.setItem("jobpositiondata", JSON.stringify(null));
+            history.pushState("", "", "./");
+            window.location.reload(false);    
+          }
+          else{
+            setEmployee(Number(localStorage.getItem("employeedata")))
+          }
+        }
+        checkEmployeeLoginData();
+      
+      }, [loading]); 
+      console.log("ID พนักงาน")
+      console.log(employeeid)
+     
+
   return (
-    <Page theme={pageTheme.home}>
-      <Header style={HeaderCustom} title={`ระบบ...`}></Header>
+    <Page theme={pageTheme.service}>
+      <Header style={HeaderCustom} title={`Dormitory`} subtitle={'ยินดีต้อนรับเข้าสู่หน้า หอพัก สำหรับพนักงานหอพัก'}></Header>
       <Content>
-        <ContentHeader title="สมาชิกในกลุ่ม"></ContentHeader>
-        <Grid container>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย..."}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย..."}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย..."}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย..."}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย..."}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย..."}></CardTeam>
-        </Grid>
+        <TabbedCard title="">
+        <CardTab label="เพิ่มข้อมูลห้องพัก">
+          <div><ComponanceRoomDetails></ComponanceRoomDetails>
+          
+          </div>
+        </CardTab>
+        <CardTab label="Option 2">
+          <div style={cardContentStyle}>Some content 2</div>
+        </CardTab>
+        <CardTab label="Option 3">
+          <div style={cardContentStyle}>Some content 3</div>
+        </CardTab>
+        <CardTab label="Option 4">
+          <div style={cardContentStyle}>Some content 4</div>
+        </CardTab>
+      </TabbedCard>
       </Content>
     </Page>
   );
 };
 
-export default WelcomePage;
+export default DormEmployee;

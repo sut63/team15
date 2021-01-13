@@ -2787,7 +2787,7 @@ type JobpositionMutation struct {
 	op               Op
 	typ              string
 	id               *int
-	position_name    *string
+	positionname     *string
 	clearedFields    map[string]struct{}
 	employees        map[int]struct{}
 	removedemployees map[int]struct{}
@@ -2874,41 +2874,41 @@ func (m *JobpositionMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetPositionName sets the position_name field.
-func (m *JobpositionMutation) SetPositionName(s string) {
-	m.position_name = &s
+// SetPositionname sets the positionname field.
+func (m *JobpositionMutation) SetPositionname(s string) {
+	m.positionname = &s
 }
 
-// PositionName returns the position_name value in the mutation.
-func (m *JobpositionMutation) PositionName() (r string, exists bool) {
-	v := m.position_name
+// Positionname returns the positionname value in the mutation.
+func (m *JobpositionMutation) Positionname() (r string, exists bool) {
+	v := m.positionname
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPositionName returns the old position_name value of the Jobposition.
+// OldPositionname returns the old positionname value of the Jobposition.
 // If the Jobposition object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *JobpositionMutation) OldPositionName(ctx context.Context) (v string, err error) {
+func (m *JobpositionMutation) OldPositionname(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPositionName is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldPositionname is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPositionName requires an ID field in the mutation")
+		return v, fmt.Errorf("OldPositionname requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPositionName: %w", err)
+		return v, fmt.Errorf("querying old value for OldPositionname: %w", err)
 	}
-	return oldValue.PositionName, nil
+	return oldValue.Positionname, nil
 }
 
-// ResetPositionName reset all changes of the "position_name" field.
-func (m *JobpositionMutation) ResetPositionName() {
-	m.position_name = nil
+// ResetPositionname reset all changes of the "positionname" field.
+func (m *JobpositionMutation) ResetPositionname() {
+	m.positionname = nil
 }
 
 // AddEmployeeIDs adds the employees edge to Employee by ids.
@@ -2968,8 +2968,8 @@ func (m *JobpositionMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *JobpositionMutation) Fields() []string {
 	fields := make([]string, 0, 1)
-	if m.position_name != nil {
-		fields = append(fields, jobposition.FieldPositionName)
+	if m.positionname != nil {
+		fields = append(fields, jobposition.FieldPositionname)
 	}
 	return fields
 }
@@ -2979,8 +2979,8 @@ func (m *JobpositionMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *JobpositionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case jobposition.FieldPositionName:
-		return m.PositionName()
+	case jobposition.FieldPositionname:
+		return m.Positionname()
 	}
 	return nil, false
 }
@@ -2990,8 +2990,8 @@ func (m *JobpositionMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *JobpositionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case jobposition.FieldPositionName:
-		return m.OldPositionName(ctx)
+	case jobposition.FieldPositionname:
+		return m.OldPositionname(ctx)
 	}
 	return nil, fmt.Errorf("unknown Jobposition field %s", name)
 }
@@ -3001,12 +3001,12 @@ func (m *JobpositionMutation) OldField(ctx context.Context, name string) (ent.Va
 // type mismatch the field type.
 func (m *JobpositionMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case jobposition.FieldPositionName:
+	case jobposition.FieldPositionname:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPositionName(v)
+		m.SetPositionname(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Jobposition field %s", name)
@@ -3058,8 +3058,8 @@ func (m *JobpositionMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *JobpositionMutation) ResetField(name string) error {
 	switch name {
-	case jobposition.FieldPositionName:
-		m.ResetPositionName()
+	case jobposition.FieldPositionname:
+		m.ResetPositionname()
 		return nil
 	}
 	return fmt.Errorf("unknown Jobposition field %s", name)
@@ -5524,6 +5524,7 @@ type RoomdetailMutation struct {
 	op                  Op
 	typ                 string
 	id                  *int
+	roomnumber          *string
 	roomtypename        *string
 	roomprice           *string
 	clearedFields       map[string]struct{}
@@ -5622,6 +5623,43 @@ func (m *RoomdetailMutation) ID() (id int, exists bool) {
 		return
 	}
 	return *m.id, true
+}
+
+// SetRoomnumber sets the roomnumber field.
+func (m *RoomdetailMutation) SetRoomnumber(s string) {
+	m.roomnumber = &s
+}
+
+// Roomnumber returns the roomnumber value in the mutation.
+func (m *RoomdetailMutation) Roomnumber() (r string, exists bool) {
+	v := m.roomnumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRoomnumber returns the old roomnumber value of the Roomdetail.
+// If the Roomdetail object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RoomdetailMutation) OldRoomnumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRoomnumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRoomnumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRoomnumber: %w", err)
+	}
+	return oldValue.Roomnumber, nil
+}
+
+// ResetRoomnumber reset all changes of the "roomnumber" field.
+func (m *RoomdetailMutation) ResetRoomnumber() {
+	m.roomnumber = nil
 }
 
 // SetRoomtypename sets the roomtypename field.
@@ -5985,7 +6023,10 @@ func (m *RoomdetailMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *RoomdetailMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
+	if m.roomnumber != nil {
+		fields = append(fields, roomdetail.FieldRoomnumber)
+	}
 	if m.roomtypename != nil {
 		fields = append(fields, roomdetail.FieldRoomtypename)
 	}
@@ -6000,6 +6041,8 @@ func (m *RoomdetailMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *RoomdetailMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case roomdetail.FieldRoomnumber:
+		return m.Roomnumber()
 	case roomdetail.FieldRoomtypename:
 		return m.Roomtypename()
 	case roomdetail.FieldRoomprice:
@@ -6013,6 +6056,8 @@ func (m *RoomdetailMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *RoomdetailMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case roomdetail.FieldRoomnumber:
+		return m.OldRoomnumber(ctx)
 	case roomdetail.FieldRoomtypename:
 		return m.OldRoomtypename(ctx)
 	case roomdetail.FieldRoomprice:
@@ -6026,6 +6071,13 @@ func (m *RoomdetailMutation) OldField(ctx context.Context, name string) (ent.Val
 // type mismatch the field type.
 func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case roomdetail.FieldRoomnumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRoomnumber(v)
+		return nil
 	case roomdetail.FieldRoomtypename:
 		v, ok := value.(string)
 		if !ok {
@@ -6090,6 +6142,9 @@ func (m *RoomdetailMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *RoomdetailMutation) ResetField(name string) error {
 	switch name {
+	case roomdetail.FieldRoomnumber:
+		m.ResetRoomnumber()
+		return nil
 	case roomdetail.FieldRoomtypename:
 		m.ResetRoomtypename()
 		return nil
