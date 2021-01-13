@@ -28,9 +28,9 @@ func (lc *LeaseCreate) SetAddedtime(t time.Time) *LeaseCreate {
 	return lc
 }
 
-// SetLease sets the lease field.
-func (lc *LeaseCreate) SetLease(s string) *LeaseCreate {
-	lc.mutation.SetLease(s)
+// SetTenant sets the tenant field.
+func (lc *LeaseCreate) SetTenant(s string) *LeaseCreate {
+	lc.mutation.SetTenant(s)
 	return lc
 }
 
@@ -74,8 +74,8 @@ func (lc *LeaseCreate) Save(ctx context.Context) (*Lease, error) {
 	if _, ok := lc.mutation.Addedtime(); !ok {
 		return nil, &ValidationError{Name: "addedtime", err: errors.New("ent: missing required field \"addedtime\"")}
 	}
-	if _, ok := lc.mutation.Lease(); !ok {
-		return nil, &ValidationError{Name: "lease", err: errors.New("ent: missing required field \"lease\"")}
+	if _, ok := lc.mutation.Tenant(); !ok {
+		return nil, &ValidationError{Name: "tenant", err: errors.New("ent: missing required field \"tenant\"")}
 	}
 	if _, ok := lc.mutation.RoomdetailID(); !ok {
 		return nil, &ValidationError{Name: "Roomdetail", err: errors.New("ent: missing required edge \"Roomdetail\"")}
@@ -148,13 +148,13 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 		})
 		l.Addedtime = value
 	}
-	if value, ok := lc.mutation.Lease(); ok {
+	if value, ok := lc.mutation.Tenant(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: lease.FieldLease,
+			Column: lease.FieldTenant,
 		})
-		l.Lease = value
+		l.Tenant = value
 	}
 	if nodes := lc.mutation.WifiIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

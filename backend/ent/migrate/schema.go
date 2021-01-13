@@ -143,7 +143,7 @@ var (
 	LeasesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
-		{Name: "lease", Type: field.TypeString},
+		{Name: "tenant", Type: field.TypeString},
 		{Name: "room_num", Type: field.TypeInt, Unique: true, Nullable: true},
 		{Name: "wifi_id", Type: field.TypeInt, Nullable: true},
 	}

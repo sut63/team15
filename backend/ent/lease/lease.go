@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldAddedtime holds the string denoting the addedtime field in the database.
 	FieldAddedtime = "addedtime"
-	// FieldLease holds the string denoting the lease field in the database.
-	FieldLease = "lease"
+	// FieldTenant holds the string denoting the tenant field in the database.
+	FieldTenant = "tenant"
 
 	// EdgeWifi holds the string denoting the wifi edge name in mutations.
 	EdgeWifi = "Wifi"
@@ -39,7 +39,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldAddedtime,
-	FieldLease,
+	FieldTenant,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Lease type.

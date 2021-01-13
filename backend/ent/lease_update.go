@@ -37,9 +37,9 @@ func (lu *LeaseUpdate) SetAddedtime(t time.Time) *LeaseUpdate {
 	return lu
 }
 
-// SetLease sets the lease field.
-func (lu *LeaseUpdate) SetLease(s string) *LeaseUpdate {
-	lu.mutation.SetLease(s)
+// SetTenant sets the tenant field.
+func (lu *LeaseUpdate) SetTenant(s string) *LeaseUpdate {
+	lu.mutation.SetTenant(s)
 	return lu
 }
 
@@ -170,11 +170,11 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: lease.FieldAddedtime,
 		})
 	}
-	if value, ok := lu.mutation.Lease(); ok {
+	if value, ok := lu.mutation.Tenant(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: lease.FieldLease,
+			Column: lease.FieldTenant,
 		})
 	}
 	if lu.mutation.WifiCleared() {
@@ -271,9 +271,9 @@ func (luo *LeaseUpdateOne) SetAddedtime(t time.Time) *LeaseUpdateOne {
 	return luo
 }
 
-// SetLease sets the lease field.
-func (luo *LeaseUpdateOne) SetLease(s string) *LeaseUpdateOne {
-	luo.mutation.SetLease(s)
+// SetTenant sets the tenant field.
+func (luo *LeaseUpdateOne) SetTenant(s string) *LeaseUpdateOne {
+	luo.mutation.SetTenant(s)
 	return luo
 }
 
@@ -402,11 +402,11 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 			Column: lease.FieldAddedtime,
 		})
 	}
-	if value, ok := luo.mutation.Lease(); ok {
+	if value, ok := luo.mutation.Tenant(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: lease.FieldLease,
+			Column: lease.FieldTenant,
 		})
 	}
 	if luo.mutation.WifiCleared() {

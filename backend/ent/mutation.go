@@ -3156,7 +3156,7 @@ type LeaseMutation struct {
 	typ                string
 	id                 *int
 	addedtime          *time.Time
-	lease              *string
+	tenant             *string
 	clearedFields      map[string]struct{}
 	_Wifi              *int
 	cleared_Wifi       bool
@@ -3282,41 +3282,41 @@ func (m *LeaseMutation) ResetAddedtime() {
 	m.addedtime = nil
 }
 
-// SetLease sets the lease field.
-func (m *LeaseMutation) SetLease(s string) {
-	m.lease = &s
+// SetTenant sets the tenant field.
+func (m *LeaseMutation) SetTenant(s string) {
+	m.tenant = &s
 }
 
-// Lease returns the lease value in the mutation.
-func (m *LeaseMutation) Lease() (r string, exists bool) {
-	v := m.lease
+// Tenant returns the tenant value in the mutation.
+func (m *LeaseMutation) Tenant() (r string, exists bool) {
+	v := m.tenant
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldLease returns the old lease value of the Lease.
+// OldTenant returns the old tenant value of the Lease.
 // If the Lease object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *LeaseMutation) OldLease(ctx context.Context) (v string, err error) {
+func (m *LeaseMutation) OldTenant(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldLease is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldTenant is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldLease requires an ID field in the mutation")
+		return v, fmt.Errorf("OldTenant requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLease: %w", err)
+		return v, fmt.Errorf("querying old value for OldTenant: %w", err)
 	}
-	return oldValue.Lease, nil
+	return oldValue.Tenant, nil
 }
 
-// ResetLease reset all changes of the "lease" field.
-func (m *LeaseMutation) ResetLease() {
-	m.lease = nil
+// ResetTenant reset all changes of the "tenant" field.
+func (m *LeaseMutation) ResetTenant() {
+	m.tenant = nil
 }
 
 // SetWifiID sets the Wifi edge to Wifi by id.
@@ -3415,8 +3415,8 @@ func (m *LeaseMutation) Fields() []string {
 	if m.addedtime != nil {
 		fields = append(fields, lease.FieldAddedtime)
 	}
-	if m.lease != nil {
-		fields = append(fields, lease.FieldLease)
+	if m.tenant != nil {
+		fields = append(fields, lease.FieldTenant)
 	}
 	return fields
 }
@@ -3428,8 +3428,8 @@ func (m *LeaseMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case lease.FieldAddedtime:
 		return m.Addedtime()
-	case lease.FieldLease:
-		return m.Lease()
+	case lease.FieldTenant:
+		return m.Tenant()
 	}
 	return nil, false
 }
@@ -3441,8 +3441,8 @@ func (m *LeaseMutation) OldField(ctx context.Context, name string) (ent.Value, e
 	switch name {
 	case lease.FieldAddedtime:
 		return m.OldAddedtime(ctx)
-	case lease.FieldLease:
-		return m.OldLease(ctx)
+	case lease.FieldTenant:
+		return m.OldTenant(ctx)
 	}
 	return nil, fmt.Errorf("unknown Lease field %s", name)
 }
@@ -3459,12 +3459,12 @@ func (m *LeaseMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAddedtime(v)
 		return nil
-	case lease.FieldLease:
+	case lease.FieldTenant:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetLease(v)
+		m.SetTenant(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Lease field %s", name)
@@ -3519,8 +3519,8 @@ func (m *LeaseMutation) ResetField(name string) error {
 	case lease.FieldAddedtime:
 		m.ResetAddedtime()
 		return nil
-	case lease.FieldLease:
-		m.ResetLease()
+	case lease.FieldTenant:
+		m.ResetTenant()
 		return nil
 	}
 	return fmt.Errorf("unknown Lease field %s", name)
