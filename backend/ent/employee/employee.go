@@ -20,6 +20,8 @@ const (
 	EdgeRoomdetails = "roomdetails"
 	// EdgeJobposition holds the string denoting the jobposition edge name in mutations.
 	EdgeJobposition = "jobposition"
+	// EdgeRepairinvoices holds the string denoting the repairinvoices edge name in mutations.
+	EdgeRepairinvoices = "repairinvoices"
 
 	// Table holds the table name of the employee in the database.
 	Table = "employees"
@@ -44,6 +46,13 @@ const (
 	JobpositionInverseTable = "jobpositions"
 	// JobpositionColumn is the table column denoting the jobposition relation/edge.
 	JobpositionColumn = "jobposition_id"
+	// RepairinvoicesTable is the table the holds the repairinvoices relation/edge.
+	RepairinvoicesTable = "repairinvoices"
+	// RepairinvoicesInverseTable is the table name for the Repairinvoice entity.
+	// It exists in this package in order to avoid circular dependency with the "repairinvoice" package.
+	RepairinvoicesInverseTable = "repairinvoices"
+	// RepairinvoicesColumn is the table column denoting the repairinvoices relation/edge.
+	RepairinvoicesColumn = "employee_id"
 )
 
 // Columns holds all SQL columns for employee fields.

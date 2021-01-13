@@ -13,6 +13,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 )
 
@@ -97,6 +98,21 @@ func (eu *EmployeeUpdate) SetJobposition(j *Jobposition) *EmployeeUpdate {
 	return eu.SetJobpositionID(j.ID)
 }
 
+// AddRepairinvoiceIDs adds the repairinvoices edge to Repairinvoice by ids.
+func (eu *EmployeeUpdate) AddRepairinvoiceIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.AddRepairinvoiceIDs(ids...)
+	return eu
+}
+
+// AddRepairinvoices adds the repairinvoices edges to Repairinvoice.
+func (eu *EmployeeUpdate) AddRepairinvoices(r ...*Repairinvoice) *EmployeeUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return eu.AddRepairinvoiceIDs(ids...)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (eu *EmployeeUpdate) Mutation() *EmployeeMutation {
 	return eu.mutation
@@ -136,6 +152,21 @@ func (eu *EmployeeUpdate) RemoveRoomdetails(r ...*Roomdetail) *EmployeeUpdate {
 func (eu *EmployeeUpdate) ClearJobposition() *EmployeeUpdate {
 	eu.mutation.ClearJobposition()
 	return eu
+}
+
+// RemoveRepairinvoiceIDs removes the repairinvoices edge to Repairinvoice by ids.
+func (eu *EmployeeUpdate) RemoveRepairinvoiceIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.RemoveRepairinvoiceIDs(ids...)
+	return eu
+}
+
+// RemoveRepairinvoices removes repairinvoices edges to Repairinvoice.
+func (eu *EmployeeUpdate) RemoveRepairinvoices(r ...*Repairinvoice) *EmployeeUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return eu.RemoveRepairinvoiceIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -355,6 +386,44 @@ func (eu *EmployeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := eu.mutation.RemovedRepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RepairinvoicesTable,
+			Columns: []string{employee.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.RepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RepairinvoicesTable,
+			Columns: []string{employee.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{employee.Label}
@@ -440,6 +509,21 @@ func (euo *EmployeeUpdateOne) SetJobposition(j *Jobposition) *EmployeeUpdateOne 
 	return euo.SetJobpositionID(j.ID)
 }
 
+// AddRepairinvoiceIDs adds the repairinvoices edge to Repairinvoice by ids.
+func (euo *EmployeeUpdateOne) AddRepairinvoiceIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.AddRepairinvoiceIDs(ids...)
+	return euo
+}
+
+// AddRepairinvoices adds the repairinvoices edges to Repairinvoice.
+func (euo *EmployeeUpdateOne) AddRepairinvoices(r ...*Repairinvoice) *EmployeeUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return euo.AddRepairinvoiceIDs(ids...)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (euo *EmployeeUpdateOne) Mutation() *EmployeeMutation {
 	return euo.mutation
@@ -479,6 +563,21 @@ func (euo *EmployeeUpdateOne) RemoveRoomdetails(r ...*Roomdetail) *EmployeeUpdat
 func (euo *EmployeeUpdateOne) ClearJobposition() *EmployeeUpdateOne {
 	euo.mutation.ClearJobposition()
 	return euo
+}
+
+// RemoveRepairinvoiceIDs removes the repairinvoices edge to Repairinvoice by ids.
+func (euo *EmployeeUpdateOne) RemoveRepairinvoiceIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.RemoveRepairinvoiceIDs(ids...)
+	return euo
+}
+
+// RemoveRepairinvoices removes repairinvoices edges to Repairinvoice.
+func (euo *EmployeeUpdateOne) RemoveRepairinvoices(r ...*Repairinvoice) *EmployeeUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return euo.RemoveRepairinvoiceIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -688,6 +787,44 @@ func (euo *EmployeeUpdateOne) sqlSave(ctx context.Context) (e *Employee, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := euo.mutation.RemovedRepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RepairinvoicesTable,
+			Columns: []string{employee.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.RepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RepairinvoicesTable,
+			Columns: []string{employee.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
 				},
 			},
 		}

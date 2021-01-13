@@ -39,6 +39,12 @@ type Nearbyplace func(*sql.Selector)
 // Quantity is the predicate function for quantity builders.
 type Quantity func(*sql.Selector)
 
+// Rentalstatus is the predicate function for rentalstatus builders.
+type Rentalstatus func(*sql.Selector)
+
+// Repairinvoice is the predicate function for repairinvoice builders.
+type Repairinvoice func(*sql.Selector)
+
 // Roomdetail is the predicate function for roomdetail builders.
 type Roomdetail func(*sql.Selector)
 
