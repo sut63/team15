@@ -11,6 +11,7 @@ import {
   SidebarThemeToggle,
   SidebarPinButton,
 } from '@backstage/core';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 
 import { EntEmployee } from 'plugin-welcome/src/api/models/EntEmployee';
 import { DefaultApi } from 'plugin-welcome/src/api/apis';
@@ -50,7 +51,9 @@ export const AppSidebar = () => {
         null
       }
       {/* End global nav */}
+     { /* <SidebarItem icon={HomeOutlinedIcon} to="#" text="Home" />*/} 
       <SidebarDivider />
+      
       <SidebarSpace />
       <SidebarDivider />
       <SidebarThemeToggle />

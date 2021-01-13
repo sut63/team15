@@ -8,7 +8,17 @@ import {
   ContentHeader,
   HeaderLabel,
   InfoCard,
+  Sidebar,
+  SidebarItem,
+  SidebarDivider,
+  SidebarSpace,
+  SidebarUserSettings,
+  SidebarThemeToggle,
+  SidebarPinButton,
 } from '@backstage/core';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -26,6 +36,7 @@ import { EntEquipment, EntFacilitie, EntQuantity, EntNearbyplace, EntStaytype } 
 import RoomDetails from '.';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
+import ComponanceRoomdetailsTable from '../RoomdetailsTable';
 
 // css style 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,6 +73,9 @@ const useStyles = makeStyles((theme: Theme) =>
     center: {
       marginTop: theme.spacing(2),
       marginLeft: theme.spacing(23),
+    },
+    cardtable: {
+      marginTop: theme.spacing(5),
     }
   }),
 );
@@ -70,12 +84,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function CreateRoomdetail() {
   const classes = useStyles();
   const api = new DefaultApi();
-
-  const [roomdetails, setRoomdetail] = React.useState<EntRoomdetail[]>([]);
-
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
+  const [alert2, setAlerts] = useState(true);
+
   //เก็บข้อมูลที่จะดึงมา
+  const [roomdetail, setRoomdetail] = React.useState<EntRoomdetail[]>([]);
   const [quantitys, setQuantitys] = useState<EntQuantity[]>([]);
   const [staytypes, setStaytypes] = useState<EntStaytype[]>([]);
   const [equipments, setEquipments] = useState<EntEquipment[]>([]);
@@ -84,8 +98,8 @@ export default function CreateRoomdetail() {
   const [employees, setEmployees] = useState<EntEmployee[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [roomprice, setRoomprice] = useState(String);
-  const [roomtypename, setRoomtypename] = useState(String);
+  const [price, setRoomprice] = useState(String);
+  const [roomname, setRoomtypename] = useState(String);
   const [quantity, setQuantity] = useState(Number);
   const [staytype, setStaytype] = useState(Number);
   const [equipment, setEquipment] = useState(Number);
@@ -96,6 +110,16 @@ export default function CreateRoomdetail() {
   
 
   useEffect(() => {
+
+
+    const getRoomdetais = async () => {
+ 
+      const rd = await api.listRoomdetail();
+      setLoading(false);
+      setRoomdetail(rd);
+    };
+    getRoomdetais();
+ 
 
     const getQuantitys = async () => {
  
@@ -147,9 +171,9 @@ export default function CreateRoomdetail() {
         
         
         const checkEmployeeLoginData = async () => {
-          const logindata = JSON.parse(String(localStorage.getItem("employeelogindata")));
+          const logindata = JSON.parse(String(localStorage.getItem("employeedata")));
           setLoading(false);
-          if(logindata != "โรเจอร์"){
+          if(logindata != "1"){
             localStorage.setItem("employeedata", JSON.stringify(null));
             localStorage.setItem("employeelogindata", JSON.stringify(null));
             history.pushState("", "", "./");
@@ -198,11 +222,34 @@ export default function CreateRoomdetail() {
     setEmployee(event.target.value as number);
   };
 
+  const listRoom = () => {
+    window.location.href ="http://localhost:3000/RoomDetails";
+  };
+
+  const forCheck = () => {
+    for (const room of roomdetail){
+      if(roomname === room.roomtypename){
+             setStatus(true);
+             setAlert(false);
+             setAlerts(false);
+             console.log("ALERT")
+             //window.location.reload(false);
+      }
+      else{
+        console.log("ALERT2")
+        CreateRoomdetail();
+      }
+  }
+  };
+
   const CreateRoomdetail = async () => {
-    if ((roomprice != "") && (roomtypename != "")){
-    const roomdetail = {
-      roomprice: roomprice,
-      roomtypename: roomtypename,
+    if ((roomname != "") && (roomname != null) && (price != "") && (price != null)
+    && (quantity != null) && (quantity != null) && (equipment != null) && (facilitie != null) && (staytype != null)
+    && (nearbyplace != null)){
+    
+      const roomdetail = {
+      roomprice: price,
+      roomtypename: roomname,
       quantity: quantity,
       equipment: equipment,
       facilitie: facilitie,
@@ -215,7 +262,7 @@ export default function CreateRoomdetail() {
     setStatus(true);
     if (res.id != '') {
       setAlert(true);
-      window.location.reload(false);
+     // window.location.reload(false);
     }
   }
      else {
@@ -231,17 +278,6 @@ export default function CreateRoomdetail() {
   </Header>
       <Content>
         <InfoCard title="Add room details" subheader="เพิ่มรายละเอียดห้องพักเข้าสู่ระบบ">
-        
-        {status ? (
-             <div>
-                 {alert ? (
-                      <Alert severity="success" onClose={() => { }} >บันทึกสำเร็จ</Alert>
-                            ) : (
-                                <Alert severity="warning" onClose={() => { setStatus(false) }} style={{marginTop: 20}}>กรุณากรอกข้อมูลให้ครบถ้วน</Alert>
-                            )}
-                        </div>
-                    ) : null}
-          
           <div className={classes.root}>
           <form noValidate autoComplete="off">
             <FormControl
@@ -255,7 +291,7 @@ export default function CreateRoomdetail() {
                 //color="secondary"
                 type="string"
                 size="medium"
-                value={roomtypename}
+                value={roomname}
                 onChange={handleRoomtypenameChange}
               />
 
@@ -267,7 +303,7 @@ export default function CreateRoomdetail() {
                 //color="secondary"
                 type="string"
                 size="medium"
-                value={roomprice}
+                value={price}
                 onChange={handleRoompriceChange}
               />
 
@@ -348,13 +384,13 @@ export default function CreateRoomdetail() {
                     size="medium"
                     value={employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => `${item.name} (${item.email})`)}
                     style={{ width: 500 }}/>
-              <div className={classes.center}>
+             
 
 
               <Button
-                style={{ width: 150, backgroundColor: "#1814E5",marginLeft: 5 }}
+                style={{ width: 500, backgroundColor: "#5319e7",marginTop: 30,marginLeft: 7}}
                 onClick={() => {
-                  CreateRoomdetail();
+                  forCheck();
                 }}
                 variant="contained"
                 color="primary"
@@ -362,19 +398,46 @@ export default function CreateRoomdetail() {
                 บันทึกข้อมูลห้อง
              </Button>
 
-              <Button
+              { /*<Button
                    style={{ width: 150, backgroundColor: "#C1FF3C",marginLeft: 20}}
                 component={RouterLink}
-                to="/RoomdetailsTable"
+                to="/ComponanceRoomdetailsTable"
                 variant="contained"
               >
                 ดูข้อมูลที่บันทึก
-             </Button>
-            </div>
+              </Button> */}
+              <div>
+              {status ? (
+                        <div>
+                    {(!alert2) ?
+                          <Alert severity="warning" style={{ marginTop: 20 }} onClose={() => {window.location.reload(false)}}>
+                          มีข้อมูลนี้อยู่ในระบบแล้ว
+                          </Alert>
+                      :
+                      (alert) ? (
+                        <Alert severity="success" onClose={() => {listRoom()}}>
+                            บันทึกสำเร็จ
+                        </Alert>
+                    ) : (
+                            <Alert severity="warning" style={{ marginTop: 20 }} onClose={() => {setStatus(false)}}>
+                                บันทึกไม่สำเร็จ กรุณาใส่ข้อมูลให้ครบ
+                            </Alert>
+                        )
+                    }
+                        </div>
+                      ) : null}</div>
+          
             </FormControl>
           </form>
         </div>
         </InfoCard>
+        <div>
+          <InfoCard className={classes.cardtable} title="Room details table" subheader="ตารางรายละเอียดข้อมูลห้อง">
+        <ComponanceRoomdetailsTable></ComponanceRoomdetailsTable>
+        </InfoCard>
+        </div>
+
+        
       </Content>
     </Page>
   );

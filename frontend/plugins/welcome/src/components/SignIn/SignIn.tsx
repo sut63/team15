@@ -118,19 +118,19 @@ export default function Login(props: any) {
         
           history.pushState("", "", "/RoomDetails");
         }
-        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก2") {
+        else if (item.name == "พนักงานหอพัก2") {
           history.pushState("", "", "/");
         }
-        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก3") {
+        else if (item.name == "พนักงานหอพัก3") {
           history.pushState("", "", "/");
         }
-        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก4") {
+        else if (item.name == "พนักงานหอพัก4") {
           history.pushState("", "", "/");
         }
-        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก5") {
+        else if (item.name == "พนักงานหอพัก5") {
           history.pushState("", "", "/");
         }
-        else if (item.edges?.jobposition?.positionName == "พนักงานหอพัก6") {
+        else if (item.name == "พนักงานหอพัก6") {
           history.pushState("", "", "/");
         }
        window.location.reload(false);

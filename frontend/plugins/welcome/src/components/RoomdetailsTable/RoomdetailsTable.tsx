@@ -46,21 +46,7 @@ export default function ComponentsTable() {
       setEmployees(em);
     };
     getEmployees();
-
-   const checkEmployeeLoginData = async () => {
-    const logindata = JSON.parse(String(localStorage.getItem("employeelogindata")));
-    setLoading(false);
-    if(logindata != "โรเจอร์"){
-      localStorage.setItem("employeedata",JSON.stringify(null));
-      localStorage.setItem("employeelogindata",JSON.stringify(null));
-      history.pushState("","","./");
-      window.location.reload(false);     
-    }
-    else{
-      setEmployee(Number(localStorage.getItem("employeedata")))
-    }
-  }
-  checkEmployeeLoginData();
+  
 
  }, [loading]);
  
@@ -71,19 +57,7 @@ export default function ComponentsTable() {
  
  return (
     <Page theme={pageTheme.service}>
-    <Header title="Room Detail table" subtitle="ตารางรายละเอียดข้อมูลห้องพัก">
-    <Button
-                   style={{ width: 230, backgroundColor: "#ADF279",marginLeft: 25}}
-                component={RouterLink}
-                to="/RoomDetails"
-                variant="contained"
-              >
-                <strong>เพิ่มรายละเอียดห้องพักเข้าสู่ระบบ</strong>
-             </Button>
-
-</Header>
-     <Content>
- <InfoCard> <TableContainer component={Paper}>
+     <Content><TableContainer component={Paper}>
      <Table className={classes.table} aria-label="simple table">
        <TableHead>
          <TableRow>
@@ -113,7 +87,7 @@ export default function ComponentsTable() {
                onClick={() => {
                    deleteRoomdetail(item.id);
                  }}
-                 style={{ marginLeft: 10 , backgroundColor: "#140087" }}
+                 style={{ marginLeft: 10 , backgroundColor: "#adf279" }}
                  variant="contained"
                  color="secondary"
                >
@@ -125,7 +99,7 @@ export default function ComponentsTable() {
        </TableBody>
      </Table>
    </TableContainer>
-</InfoCard></Content>
+ </Content>
 </Page>
   
  );

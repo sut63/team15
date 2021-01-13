@@ -159,6 +159,10 @@ export interface GetQuantityRequest {
     id: number;
 }
 
+export interface GetRoomdetailRequest {
+    id: number;
+}
+
 export interface GetStatusdRequest {
     id: number;
 }
@@ -178,11 +182,6 @@ export interface ListCleaningroomRequest {
 }
 
 export interface ListDepositRequest {
-    limit?: number;
-    offset?: number;
-}
-
-export interface ListEmployeeRequest {
     limit?: number;
     offset?: number;
 }
@@ -208,11 +207,6 @@ export interface ListNearbyplaceRequest {
 }
 
 export interface ListQuantityRequest {
-    limit?: number;
-    offset?: number;
-}
-
-export interface ListRoomdetailRequest {
     limit?: number;
     offset?: number;
 }
@@ -1060,6 +1054,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get roomdetail by ID
+     * Get a roomdetail entity by ID
+     */
+    async getRoomdetailRaw(requestParameters: GetRoomdetailRequest): Promise<runtime.ApiResponse<EntRoomdetail>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getRoomdetail.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/roomdetails/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntRoomdetailFromJSON(jsonValue));
+    }
+
+    /**
+     * get roomdetail by ID
+     * Get a roomdetail entity by ID
+     */
+    async getRoomdetail(requestParameters: GetRoomdetailRequest): Promise<EntRoomdetail> {
+        const response = await this.getRoomdetailRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get statusd by ID
      * Get a statusd entity by ID
      */
@@ -1238,7 +1264,6 @@ export class DefaultApi extends runtime.BaseAPI {
     async listEmployeeRaw(): Promise<runtime.ApiResponse<Array<EntEmployee>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
-    
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
