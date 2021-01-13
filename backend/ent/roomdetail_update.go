@@ -202,6 +202,16 @@ func (ru *RoomdetailUpdate) ClearStaytype() *RoomdetailUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomdetailUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -681,6 +691,16 @@ func (ruo *RoomdetailUpdateOne) ClearStaytype() *RoomdetailUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *RoomdetailUpdateOne) Save(ctx context.Context) (*Roomdetail, error) {
+	if v, ok := ruo.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
 
 	var (
 		err  error

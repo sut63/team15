@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
+	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/staytype"
 )
 
@@ -177,13 +178,51 @@ func (ctl *RoomdetailController) DeleteRoomdetail(c *gin.Context) {
 	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
 }
 
+// GetRoomdetail handles GET requests to retrieve a roomdetail entity
+// @Summary Get a roomdetail entity by ID
+// @Description get roomdetail by ID
+// @ID get-roomdetail
+// @Produce  json
+// @Param id path int true "Roomdetail ID"
+// @Success 200 {object} ent.Roomdetail
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /roomdetails/{id} [get]
+func (ctl *RoomdetailController) GetRoomdetail(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	rd, err := ctl.client.Roomdetail.
+		Query().
+		WithEmployee().
+		WithEquipments().
+		WithFacilities().
+		WithNearbyplaces().
+		WithQuantity().
+		WithStaytype().
+		Where(roomdetail.IDEQ(int(id))).
+		Only(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, rd)
+}
+
 // ListRoomdetail handles request to get a list of roomdetail entities
 // @Summary List roomdetail entities
 // @Description list roomdetail entities
 // @ID list-roomdetail
 // @Produce json
-// @Param limit  query int false "Limit"
-// @Param offset query int false "Offset"
 // @Success 200 {array} ent.Roomdetail
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
