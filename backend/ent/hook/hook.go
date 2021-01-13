@@ -100,6 +100,19 @@ func (f JobpositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	return f(ctx, mv)
 }
 
+// The LeaseFunc type is an adapter to allow the use of ordinary
+// function as Lease mutator.
+type LeaseFunc func(context.Context, *ent.LeaseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f LeaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.LeaseMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LeaseMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The LengthTimeFunc type is an adapter to allow the use of ordinary
 // function as LengthTime mutator.
 type LengthTimeFunc func(context.Context, *ent.LengthTimeMutation) (ent.Value, error)
@@ -174,6 +187,19 @@ func (f StaytypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	mv, ok := m.(*ent.StaytypeMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.StaytypeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The WifiFunc type is an adapter to allow the use of ordinary
+// function as Wifi mutator.
+type WifiFunc func(context.Context, *ent.WifiMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f WifiFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.WifiMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WifiMutation", m)
 	}
 	return f(ctx, mv)
 }

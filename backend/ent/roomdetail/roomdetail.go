@@ -24,6 +24,8 @@ const (
 	EdgeQuantity = "quantity"
 	// EdgeStaytype holds the string denoting the staytype edge name in mutations.
 	EdgeStaytype = "staytype"
+	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
+	EdgeRoomdetails = "roomdetails"
 
 	// Table holds the table name of the roomdetail in the database.
 	Table = "roomdetails"
@@ -69,6 +71,13 @@ const (
 	StaytypeInverseTable = "staytypes"
 	// StaytypeColumn is the table column denoting the staytype relation/edge.
 	StaytypeColumn = "staytype_roomdetails"
+	// RoomdetailsTable is the table the holds the roomdetails relation/edge.
+	RoomdetailsTable = "leases"
+	// RoomdetailsInverseTable is the table name for the Lease entity.
+	// It exists in this package in order to avoid circular dependency with the "lease" package.
+	RoomdetailsInverseTable = "leases"
+	// RoomdetailsColumn is the table column denoting the roomdetails relation/edge.
+	RoomdetailsColumn = "room_num"
 )
 
 // Columns holds all SQL columns for roomdetail fields.

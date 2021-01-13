@@ -10,6 +10,7 @@ import (
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/schema"
 	"github.com/team15/app/ent/statusd"
+	"github.com/team15/app/ent/wifi"
 )
 
 // The init function reads all schema descriptors with runtime
@@ -64,4 +65,10 @@ func init() {
 	statusdDescStatusdname := statusdFields[0].Descriptor()
 	// statusd.StatusdnameValidator is a validator for the "statusdname" field. It is called by the builders before save.
 	statusd.StatusdnameValidator = statusdDescStatusdname.Validators[0].(func(string) error)
+	wifiFields := schema.Wifi{}.Fields()
+	_ = wifiFields
+	// wifiDescWifiname is the schema descriptor for wifiname field.
+	wifiDescWifiname := wifiFields[0].Descriptor()
+	// wifi.WifinameValidator is a validator for the "wifiname" field. It is called by the builders before save.
+	wifi.WifinameValidator = wifiDescWifiname.Validators[0].(func(string) error)
 }

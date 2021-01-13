@@ -10,6 +10,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
@@ -50,9 +51,11 @@ type RoomdetailEdges struct {
 	Quantity *Quantity
 	// Staytype holds the value of the staytype edge.
 	Staytype *Staytype
+	// Roomdetails holds the value of the roomdetails edge.
+	Roomdetails *Lease
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [7]bool
 }
 
 // EquipmentsOrErr returns the Equipments value or an error if the edge
@@ -137,6 +140,20 @@ func (e RoomdetailEdges) StaytypeOrErr() (*Staytype, error) {
 		return e.Staytype, nil
 	}
 	return nil, &NotLoadedError{edge: "staytype"}
+}
+
+// RoomdetailsOrErr returns the Roomdetails value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e RoomdetailEdges) RoomdetailsOrErr() (*Lease, error) {
+	if e.loadedTypes[6] {
+		if e.Roomdetails == nil {
+			// The edge roomdetails was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: lease.Label}
+		}
+		return e.Roomdetails, nil
+	}
+	return nil, &NotLoadedError{edge: "roomdetails"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -252,6 +269,11 @@ func (r *Roomdetail) QueryQuantity() *QuantityQuery {
 // QueryStaytype queries the staytype edge of the Roomdetail.
 func (r *Roomdetail) QueryStaytype() *StaytypeQuery {
 	return (&RoomdetailClient{config: r.config}).QueryStaytype(r)
+}
+
+// QueryRoomdetails queries the roomdetails edge of the Roomdetail.
+func (r *Roomdetail) QueryRoomdetails() *LeaseQuery {
+	return (&RoomdetailClient{config: r.config}).QueryRoomdetails(r)
 }
 
 // Update returns a builder for updating this Roomdetail.

@@ -495,6 +495,34 @@ func HasStaytypeWith(preds ...predicate.Staytype) predicate.Roomdetail {
 	})
 }
 
+// HasRoomdetails applies the HasEdge predicate on the "roomdetails" edge.
+func HasRoomdetails() predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RoomdetailsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, RoomdetailsTable, RoomdetailsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRoomdetailsWith applies the HasEdge predicate on the "roomdetails" edge with a given conditions (other predicates).
+func HasRoomdetailsWith(preds ...predicate.Lease) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RoomdetailsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, RoomdetailsTable, RoomdetailsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Roomdetail) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {

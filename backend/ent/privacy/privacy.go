@@ -378,6 +378,30 @@ func (f JobpositionMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mut
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.JobpositionMutation", m)
 }
 
+// The LeaseQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type LeaseQueryRuleFunc func(context.Context, *ent.LeaseQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f LeaseQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.LeaseQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.LeaseQuery", q)
+}
+
+// The LeaseMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type LeaseMutationRuleFunc func(context.Context, *ent.LeaseMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f LeaseMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.LeaseMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LeaseMutation", m)
+}
+
 // The LengthTimeQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type LengthTimeQueryRuleFunc func(context.Context, *ent.LengthTimeQuery) error
@@ -520,4 +544,28 @@ func (f StaytypeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.StaytypeMutation", m)
+}
+
+// The WifiQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type WifiQueryRuleFunc func(context.Context, *ent.WifiQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f WifiQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.WifiQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.WifiQuery", q)
+}
+
+// The WifiMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type WifiMutationRuleFunc func(context.Context, *ent.WifiMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f WifiMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.WifiMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.WifiMutation", m)
 }

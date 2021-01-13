@@ -139,6 +139,36 @@ var (
 		PrimaryKey:  []*schema.Column{JobpositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// LeasesColumns holds the columns for the "leases" table.
+	LeasesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "addedtime", Type: field.TypeTime},
+		{Name: "lease", Type: field.TypeString},
+		{Name: "room_num", Type: field.TypeInt, Unique: true, Nullable: true},
+		{Name: "wifi_id", Type: field.TypeInt, Nullable: true},
+	}
+	// LeasesTable holds the schema information for the "leases" table.
+	LeasesTable = &schema.Table{
+		Name:       "leases",
+		Columns:    LeasesColumns,
+		PrimaryKey: []*schema.Column{LeasesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "leases_roomdetails_roomdetails",
+				Columns: []*schema.Column{LeasesColumns[3]},
+
+				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "leases_wifis_wifis",
+				Columns: []*schema.Column{LeasesColumns[4]},
+
+				RefColumns: []*schema.Column{WifisColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// LengthTimesColumns holds the columns for the "length_times" table.
 	LengthTimesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -261,6 +291,18 @@ var (
 		PrimaryKey:  []*schema.Column{StaytypesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// WifisColumns holds the columns for the "wifis" table.
+	WifisColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "wifiname", Type: field.TypeString, Unique: true},
+	}
+	// WifisTable holds the schema information for the "wifis" table.
+	WifisTable = &schema.Table{
+		Name:        "wifis",
+		Columns:     WifisColumns,
+		PrimaryKey:  []*schema.Column{WifisColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CleanerNamesTable,
@@ -270,12 +312,14 @@ var (
 		EquipmentTable,
 		FacilitiesTable,
 		JobpositionsTable,
+		LeasesTable,
 		LengthTimesTable,
 		NearbyplacesTable,
 		QuantitiesTable,
 		RoomdetailsTable,
 		StatusdsTable,
 		StaytypesTable,
+		WifisTable,
 	}
 )
 
@@ -285,6 +329,8 @@ func init() {
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
 	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
 	EmployeesTable.ForeignKeys[0].RefTable = JobpositionsTable
+	LeasesTable.ForeignKeys[0].RefTable = RoomdetailsTable
+	LeasesTable.ForeignKeys[1].RefTable = WifisTable
 	RoomdetailsTable.ForeignKeys[0].RefTable = EmployeesTable
 	RoomdetailsTable.ForeignKeys[1].RefTable = EquipmentTable
 	RoomdetailsTable.ForeignKeys[2].RefTable = FacilitiesTable

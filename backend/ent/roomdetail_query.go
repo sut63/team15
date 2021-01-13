@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -14,6 +15,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/quantity"
@@ -36,6 +38,7 @@ type RoomdetailQuery struct {
 	withEmployee     *EmployeeQuery
 	withQuantity     *QuantityQuery
 	withStaytype     *StaytypeQuery
+	withRoomdetails  *LeaseQuery
 	withFKs          bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -167,6 +170,24 @@ func (rq *RoomdetailQuery) QueryStaytype() *StaytypeQuery {
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
 			sqlgraph.To(staytype.Table, staytype.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.StaytypeTable, roomdetail.StaytypeColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRoomdetails chains the current query on the roomdetails edge.
+func (rq *RoomdetailQuery) QueryRoomdetails() *LeaseQuery {
+	query := &LeaseQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, roomdetail.RoomdetailsTable, roomdetail.RoomdetailsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -419,6 +440,17 @@ func (rq *RoomdetailQuery) WithStaytype(opts ...func(*StaytypeQuery)) *Roomdetai
 	return rq
 }
 
+//  WithRoomdetails tells the query-builder to eager-loads the nodes that are connected to
+// the "roomdetails" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomdetailQuery) WithRoomdetails(opts ...func(*LeaseQuery)) *RoomdetailQuery {
+	query := &LeaseQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withRoomdetails = query
+	return rq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -486,13 +518,14 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		nodes       = []*Roomdetail{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [6]bool{
+		loadedTypes = [7]bool{
 			rq.withEquipments != nil,
 			rq.withFacilities != nil,
 			rq.withNearbyplaces != nil,
 			rq.withEmployee != nil,
 			rq.withQuantity != nil,
 			rq.withStaytype != nil,
+			rq.withRoomdetails != nil,
 		}
 	)
 	if rq.withEquipments != nil || rq.withFacilities != nil || rq.withNearbyplaces != nil || rq.withEmployee != nil || rq.withQuantity != nil || rq.withStaytype != nil {
@@ -672,6 +705,34 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 			for i := range nodes {
 				nodes[i].Edges.Staytype = n
 			}
+		}
+	}
+
+	if query := rq.withRoomdetails; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Roomdetail)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Lease(func(s *sql.Selector) {
+			s.Where(sql.InValues(roomdetail.RoomdetailsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.room_num
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "room_num" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "room_num" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Roomdetails = n
 		}
 	}
 

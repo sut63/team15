@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
@@ -149,6 +150,25 @@ func (rc *RoomdetailCreate) SetNillableStaytypeID(id *int) *RoomdetailCreate {
 // SetStaytype sets the staytype edge to Staytype.
 func (rc *RoomdetailCreate) SetStaytype(s *Staytype) *RoomdetailCreate {
 	return rc.SetStaytypeID(s.ID)
+}
+
+// SetRoomdetailsID sets the roomdetails edge to Lease by id.
+func (rc *RoomdetailCreate) SetRoomdetailsID(id int) *RoomdetailCreate {
+	rc.mutation.SetRoomdetailsID(id)
+	return rc
+}
+
+// SetNillableRoomdetailsID sets the roomdetails edge to Lease by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableRoomdetailsID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetRoomdetailsID(*id)
+	}
+	return rc
+}
+
+// SetRoomdetails sets the roomdetails edge to Lease.
+func (rc *RoomdetailCreate) SetRoomdetails(l *Lease) *RoomdetailCreate {
+	return rc.SetRoomdetailsID(l.ID)
 }
 
 // Mutation returns the RoomdetailMutation object of the builder.
@@ -356,6 +376,25 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: staytype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   roomdetail.RoomdetailsTable,
+			Columns: []string{roomdetail.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

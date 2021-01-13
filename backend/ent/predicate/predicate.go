@@ -27,6 +27,9 @@ type Facilitie func(*sql.Selector)
 // Jobposition is the predicate function for jobposition builders.
 type Jobposition func(*sql.Selector)
 
+// Lease is the predicate function for lease builders.
+type Lease func(*sql.Selector)
+
 // LengthTime is the predicate function for lengthtime builders.
 type LengthTime func(*sql.Selector)
 
@@ -44,3 +47,6 @@ type Statusd func(*sql.Selector)
 
 // Staytype is the predicate function for staytype builders.
 type Staytype func(*sql.Selector)
+
+// Wifi is the predicate function for wifi builders.
+type Wifi func(*sql.Selector)
