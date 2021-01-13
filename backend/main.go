@@ -270,6 +270,7 @@ func main() {
 			Quantity{"2 people"},
 			Quantity{"4 people"},
 			Quantity{"6 people"},
+			Quantity{"10 people"},
 		},
 	}
 	for _, qu := range quantitys.Quantity {
@@ -297,6 +298,7 @@ func main() {
 	// Set Equipment Data
 	equipments := Equipments{
 		Equipment: []Equipment{
+			Equipment{"Shared bathroom"},
 			Equipment{"Ensuite bathroom"},
 			Equipment{"Living zone in room"},
 			Equipment{"Small Kitchen"},
@@ -311,6 +313,7 @@ func main() {
 	// Set Facility Data
 	facilities := Facilities{
 		Facilitie: []Facilitie{
+			Facilitie{"No service facilities"},
 			Facilitie{"Swimming pool"},
 			Facilitie{"Fitness"},
 		},
