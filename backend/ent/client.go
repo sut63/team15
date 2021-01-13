@@ -20,6 +20,8 @@ import (
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
+	"github.com/team15/app/ent/rentalstatus"
+	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/staytype"
@@ -57,6 +59,10 @@ type Client struct {
 	Nearbyplace *NearbyplaceClient
 	// Quantity is the client for interacting with the Quantity builders.
 	Quantity *QuantityClient
+	// Rentalstatus is the client for interacting with the Rentalstatus builders.
+	Rentalstatus *RentalstatusClient
+	// Repairinvoice is the client for interacting with the Repairinvoice builders.
+	Repairinvoice *RepairinvoiceClient
 	// Roomdetail is the client for interacting with the Roomdetail builders.
 	Roomdetail *RoomdetailClient
 	// Statusd is the client for interacting with the Statusd builders.
@@ -89,6 +95,8 @@ func (c *Client) init() {
 	c.LengthTime = NewLengthTimeClient(c.config)
 	c.Nearbyplace = NewNearbyplaceClient(c.config)
 	c.Quantity = NewQuantityClient(c.config)
+	c.Rentalstatus = NewRentalstatusClient(c.config)
+	c.Repairinvoice = NewRepairinvoiceClient(c.config)
 	c.Roomdetail = NewRoomdetailClient(c.config)
 	c.Statusd = NewStatusdClient(c.config)
 	c.Staytype = NewStaytypeClient(c.config)
@@ -123,23 +131,25 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		CleanerName:  NewCleanerNameClient(cfg),
-		CleaningRoom: NewCleaningRoomClient(cfg),
-		Deposit:      NewDepositClient(cfg),
-		Employee:     NewEmployeeClient(cfg),
-		Equipment:    NewEquipmentClient(cfg),
-		Facilitie:    NewFacilitieClient(cfg),
-		Jobposition:  NewJobpositionClient(cfg),
-		Lease:        NewLeaseClient(cfg),
-		LengthTime:   NewLengthTimeClient(cfg),
-		Nearbyplace:  NewNearbyplaceClient(cfg),
-		Quantity:     NewQuantityClient(cfg),
-		Roomdetail:   NewRoomdetailClient(cfg),
-		Statusd:      NewStatusdClient(cfg),
-		Staytype:     NewStaytypeClient(cfg),
-		Wifi:         NewWifiClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		CleanerName:   NewCleanerNameClient(cfg),
+		CleaningRoom:  NewCleaningRoomClient(cfg),
+		Deposit:       NewDepositClient(cfg),
+		Employee:      NewEmployeeClient(cfg),
+		Equipment:     NewEquipmentClient(cfg),
+		Facilitie:     NewFacilitieClient(cfg),
+		Jobposition:   NewJobpositionClient(cfg),
+		Lease:         NewLeaseClient(cfg),
+		LengthTime:    NewLengthTimeClient(cfg),
+		Nearbyplace:   NewNearbyplaceClient(cfg),
+		Quantity:      NewQuantityClient(cfg),
+		Rentalstatus:  NewRentalstatusClient(cfg),
+		Repairinvoice: NewRepairinvoiceClient(cfg),
+		Roomdetail:    NewRoomdetailClient(cfg),
+		Statusd:       NewStatusdClient(cfg),
+		Staytype:      NewStaytypeClient(cfg),
+		Wifi:          NewWifiClient(cfg),
 	}, nil
 }
 
@@ -154,22 +164,24 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config:       cfg,
-		CleanerName:  NewCleanerNameClient(cfg),
-		CleaningRoom: NewCleaningRoomClient(cfg),
-		Deposit:      NewDepositClient(cfg),
-		Employee:     NewEmployeeClient(cfg),
-		Equipment:    NewEquipmentClient(cfg),
-		Facilitie:    NewFacilitieClient(cfg),
-		Jobposition:  NewJobpositionClient(cfg),
-		Lease:        NewLeaseClient(cfg),
-		LengthTime:   NewLengthTimeClient(cfg),
-		Nearbyplace:  NewNearbyplaceClient(cfg),
-		Quantity:     NewQuantityClient(cfg),
-		Roomdetail:   NewRoomdetailClient(cfg),
-		Statusd:      NewStatusdClient(cfg),
-		Staytype:     NewStaytypeClient(cfg),
-		Wifi:         NewWifiClient(cfg),
+		config:        cfg,
+		CleanerName:   NewCleanerNameClient(cfg),
+		CleaningRoom:  NewCleaningRoomClient(cfg),
+		Deposit:       NewDepositClient(cfg),
+		Employee:      NewEmployeeClient(cfg),
+		Equipment:     NewEquipmentClient(cfg),
+		Facilitie:     NewFacilitieClient(cfg),
+		Jobposition:   NewJobpositionClient(cfg),
+		Lease:         NewLeaseClient(cfg),
+		LengthTime:    NewLengthTimeClient(cfg),
+		Nearbyplace:   NewNearbyplaceClient(cfg),
+		Quantity:      NewQuantityClient(cfg),
+		Rentalstatus:  NewRentalstatusClient(cfg),
+		Repairinvoice: NewRepairinvoiceClient(cfg),
+		Roomdetail:    NewRoomdetailClient(cfg),
+		Statusd:       NewStatusdClient(cfg),
+		Staytype:      NewStaytypeClient(cfg),
+		Wifi:          NewWifiClient(cfg),
 	}, nil
 }
 
@@ -209,6 +221,8 @@ func (c *Client) Use(hooks ...Hook) {
 	c.LengthTime.Use(hooks...)
 	c.Nearbyplace.Use(hooks...)
 	c.Quantity.Use(hooks...)
+	c.Rentalstatus.Use(hooks...)
+	c.Repairinvoice.Use(hooks...)
 	c.Roomdetail.Use(hooks...)
 	c.Statusd.Use(hooks...)
 	c.Staytype.Use(hooks...)
@@ -663,6 +677,22 @@ func (c *EmployeeClient) QueryJobposition(e *Employee) *JobpositionQuery {
 			sqlgraph.From(employee.Table, employee.FieldID, id),
 			sqlgraph.To(jobposition.Table, jobposition.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, employee.JobpositionTable, employee.JobpositionColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRepairinvoices queries the repairinvoices edge of a Employee.
+func (c *EmployeeClient) QueryRepairinvoices(e *Employee) *RepairinvoiceQuery {
+	query := &RepairinvoiceQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(repairinvoice.Table, repairinvoice.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.RepairinvoicesTable, employee.RepairinvoicesColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -1382,6 +1412,220 @@ func (c *QuantityClient) QueryRoomdetails(q *Quantity) *RoomdetailQuery {
 // Hooks returns the client hooks.
 func (c *QuantityClient) Hooks() []Hook {
 	return c.hooks.Quantity
+}
+
+// RentalstatusClient is a client for the Rentalstatus schema.
+type RentalstatusClient struct {
+	config
+}
+
+// NewRentalstatusClient returns a client for the Rentalstatus from the given config.
+func NewRentalstatusClient(c config) *RentalstatusClient {
+	return &RentalstatusClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `rentalstatus.Hooks(f(g(h())))`.
+func (c *RentalstatusClient) Use(hooks ...Hook) {
+	c.hooks.Rentalstatus = append(c.hooks.Rentalstatus, hooks...)
+}
+
+// Create returns a create builder for Rentalstatus.
+func (c *RentalstatusClient) Create() *RentalstatusCreate {
+	mutation := newRentalstatusMutation(c.config, OpCreate)
+	return &RentalstatusCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Rentalstatus.
+func (c *RentalstatusClient) Update() *RentalstatusUpdate {
+	mutation := newRentalstatusMutation(c.config, OpUpdate)
+	return &RentalstatusUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RentalstatusClient) UpdateOne(r *Rentalstatus) *RentalstatusUpdateOne {
+	mutation := newRentalstatusMutation(c.config, OpUpdateOne, withRentalstatus(r))
+	return &RentalstatusUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RentalstatusClient) UpdateOneID(id int) *RentalstatusUpdateOne {
+	mutation := newRentalstatusMutation(c.config, OpUpdateOne, withRentalstatusID(id))
+	return &RentalstatusUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Rentalstatus.
+func (c *RentalstatusClient) Delete() *RentalstatusDelete {
+	mutation := newRentalstatusMutation(c.config, OpDelete)
+	return &RentalstatusDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *RentalstatusClient) DeleteOne(r *Rentalstatus) *RentalstatusDeleteOne {
+	return c.DeleteOneID(r.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *RentalstatusClient) DeleteOneID(id int) *RentalstatusDeleteOne {
+	builder := c.Delete().Where(rentalstatus.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RentalstatusDeleteOne{builder}
+}
+
+// Create returns a query builder for Rentalstatus.
+func (c *RentalstatusClient) Query() *RentalstatusQuery {
+	return &RentalstatusQuery{config: c.config}
+}
+
+// Get returns a Rentalstatus entity by its id.
+func (c *RentalstatusClient) Get(ctx context.Context, id int) (*Rentalstatus, error) {
+	return c.Query().Where(rentalstatus.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RentalstatusClient) GetX(ctx context.Context, id int) *Rentalstatus {
+	r, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return r
+}
+
+// QueryRepairinvoices queries the repairinvoices edge of a Rentalstatus.
+func (c *RentalstatusClient) QueryRepairinvoices(r *Rentalstatus) *RepairinvoiceQuery {
+	query := &RepairinvoiceQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(rentalstatus.Table, rentalstatus.FieldID, id),
+			sqlgraph.To(repairinvoice.Table, repairinvoice.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, rentalstatus.RepairinvoicesTable, rentalstatus.RepairinvoicesColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *RentalstatusClient) Hooks() []Hook {
+	return c.hooks.Rentalstatus
+}
+
+// RepairinvoiceClient is a client for the Repairinvoice schema.
+type RepairinvoiceClient struct {
+	config
+}
+
+// NewRepairinvoiceClient returns a client for the Repairinvoice from the given config.
+func NewRepairinvoiceClient(c config) *RepairinvoiceClient {
+	return &RepairinvoiceClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `repairinvoice.Hooks(f(g(h())))`.
+func (c *RepairinvoiceClient) Use(hooks ...Hook) {
+	c.hooks.Repairinvoice = append(c.hooks.Repairinvoice, hooks...)
+}
+
+// Create returns a create builder for Repairinvoice.
+func (c *RepairinvoiceClient) Create() *RepairinvoiceCreate {
+	mutation := newRepairinvoiceMutation(c.config, OpCreate)
+	return &RepairinvoiceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Repairinvoice.
+func (c *RepairinvoiceClient) Update() *RepairinvoiceUpdate {
+	mutation := newRepairinvoiceMutation(c.config, OpUpdate)
+	return &RepairinvoiceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RepairinvoiceClient) UpdateOne(r *Repairinvoice) *RepairinvoiceUpdateOne {
+	mutation := newRepairinvoiceMutation(c.config, OpUpdateOne, withRepairinvoice(r))
+	return &RepairinvoiceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RepairinvoiceClient) UpdateOneID(id int) *RepairinvoiceUpdateOne {
+	mutation := newRepairinvoiceMutation(c.config, OpUpdateOne, withRepairinvoiceID(id))
+	return &RepairinvoiceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Repairinvoice.
+func (c *RepairinvoiceClient) Delete() *RepairinvoiceDelete {
+	mutation := newRepairinvoiceMutation(c.config, OpDelete)
+	return &RepairinvoiceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *RepairinvoiceClient) DeleteOne(r *Repairinvoice) *RepairinvoiceDeleteOne {
+	return c.DeleteOneID(r.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *RepairinvoiceClient) DeleteOneID(id int) *RepairinvoiceDeleteOne {
+	builder := c.Delete().Where(repairinvoice.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RepairinvoiceDeleteOne{builder}
+}
+
+// Create returns a query builder for Repairinvoice.
+func (c *RepairinvoiceClient) Query() *RepairinvoiceQuery {
+	return &RepairinvoiceQuery{config: c.config}
+}
+
+// Get returns a Repairinvoice entity by its id.
+func (c *RepairinvoiceClient) Get(ctx context.Context, id int) (*Repairinvoice, error) {
+	return c.Query().Where(repairinvoice.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RepairinvoiceClient) GetX(ctx context.Context, id int) *Repairinvoice {
+	r, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return r
+}
+
+// QueryEmployee queries the employee edge of a Repairinvoice.
+func (c *RepairinvoiceClient) QueryEmployee(r *Repairinvoice) *EmployeeQuery {
+	query := &EmployeeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(repairinvoice.Table, repairinvoice.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, repairinvoice.EmployeeTable, repairinvoice.EmployeeColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRentalstatus queries the Rentalstatus edge of a Repairinvoice.
+func (c *RepairinvoiceClient) QueryRentalstatus(r *Repairinvoice) *RentalstatusQuery {
+	query := &RentalstatusQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(repairinvoice.Table, repairinvoice.FieldID, id),
+			sqlgraph.To(rentalstatus.Table, rentalstatus.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, repairinvoice.RentalstatusTable, repairinvoice.RentalstatusColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *RepairinvoiceClient) Hooks() []Hook {
+	return c.hooks.Repairinvoice
 }
 
 // RoomdetailClient is a client for the Roomdetail schema.

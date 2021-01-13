@@ -34,6 +34,10 @@ type Tx struct {
 	Nearbyplace *NearbyplaceClient
 	// Quantity is the client for interacting with the Quantity builders.
 	Quantity *QuantityClient
+	// Rentalstatus is the client for interacting with the Rentalstatus builders.
+	Rentalstatus *RentalstatusClient
+	// Repairinvoice is the client for interacting with the Repairinvoice builders.
+	Repairinvoice *RepairinvoiceClient
 	// Roomdetail is the client for interacting with the Roomdetail builders.
 	Roomdetail *RoomdetailClient
 	// Statusd is the client for interacting with the Statusd builders.
@@ -188,6 +192,8 @@ func (tx *Tx) init() {
 	tx.LengthTime = NewLengthTimeClient(tx.config)
 	tx.Nearbyplace = NewNearbyplaceClient(tx.config)
 	tx.Quantity = NewQuantityClient(tx.config)
+	tx.Rentalstatus = NewRentalstatusClient(tx.config)
+	tx.Repairinvoice = NewRepairinvoiceClient(tx.config)
 	tx.Roomdetail = NewRoomdetailClient(tx.config)
 	tx.Statusd = NewStatusdClient(tx.config)
 	tx.Staytype = NewStaytypeClient(tx.config)

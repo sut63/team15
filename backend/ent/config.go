@@ -24,21 +24,23 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	CleanerName  []ent.Hook
-	CleaningRoom []ent.Hook
-	Deposit      []ent.Hook
-	Employee     []ent.Hook
-	Equipment    []ent.Hook
-	Facilitie    []ent.Hook
-	Jobposition  []ent.Hook
-	Lease        []ent.Hook
-	LengthTime   []ent.Hook
-	Nearbyplace  []ent.Hook
-	Quantity     []ent.Hook
-	Roomdetail   []ent.Hook
-	Statusd      []ent.Hook
-	Staytype     []ent.Hook
-	Wifi         []ent.Hook
+	CleanerName   []ent.Hook
+	CleaningRoom  []ent.Hook
+	Deposit       []ent.Hook
+	Employee      []ent.Hook
+	Equipment     []ent.Hook
+	Facilitie     []ent.Hook
+	Jobposition   []ent.Hook
+	Lease         []ent.Hook
+	LengthTime    []ent.Hook
+	Nearbyplace   []ent.Hook
+	Quantity      []ent.Hook
+	Rentalstatus  []ent.Hook
+	Repairinvoice []ent.Hook
+	Roomdetail    []ent.Hook
+	Statusd       []ent.Hook
+	Staytype      []ent.Hook
+	Wifi          []ent.Hook
 }
 
 // Options applies the options on the config object.

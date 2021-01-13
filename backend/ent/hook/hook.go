@@ -152,6 +152,32 @@ func (f QuantityFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	return f(ctx, mv)
 }
 
+// The RentalstatusFunc type is an adapter to allow the use of ordinary
+// function as Rentalstatus mutator.
+type RentalstatusFunc func(context.Context, *ent.RentalstatusMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RentalstatusFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.RentalstatusMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RentalstatusMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The RepairinvoiceFunc type is an adapter to allow the use of ordinary
+// function as Repairinvoice mutator.
+type RepairinvoiceFunc func(context.Context, *ent.RepairinvoiceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RepairinvoiceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.RepairinvoiceMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RepairinvoiceMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The RoomdetailFunc type is an adapter to allow the use of ordinary
 // function as Roomdetail mutator.
 type RoomdetailFunc func(context.Context, *ent.RoomdetailMutation) (ent.Value, error)

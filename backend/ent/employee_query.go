@@ -16,6 +16,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 )
 
@@ -28,10 +29,11 @@ type EmployeeQuery struct {
 	unique     []string
 	predicates []predicate.Employee
 	// eager-loading edges.
-	withEmployees   *DepositQuery
-	withRoomdetails *RoomdetailQuery
-	withJobposition *JobpositionQuery
-	withFKs         bool
+	withEmployees      *DepositQuery
+	withRoomdetails    *RoomdetailQuery
+	withJobposition    *JobpositionQuery
+	withRepairinvoices *RepairinvoiceQuery
+	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -108,6 +110,24 @@ func (eq *EmployeeQuery) QueryJobposition() *JobpositionQuery {
 			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
 			sqlgraph.To(jobposition.Table, jobposition.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, employee.JobpositionTable, employee.JobpositionColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRepairinvoices chains the current query on the repairinvoices edge.
+func (eq *EmployeeQuery) QueryRepairinvoices() *RepairinvoiceQuery {
+	query := &RepairinvoiceQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
+			sqlgraph.To(repairinvoice.Table, repairinvoice.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.RepairinvoicesTable, employee.RepairinvoicesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -327,6 +347,17 @@ func (eq *EmployeeQuery) WithJobposition(opts ...func(*JobpositionQuery)) *Emplo
 	return eq
 }
 
+//  WithRepairinvoices tells the query-builder to eager-loads the nodes that are connected to
+// the "repairinvoices" edge. The optional arguments used to configure the query builder of the edge.
+func (eq *EmployeeQuery) WithRepairinvoices(opts ...func(*RepairinvoiceQuery)) *EmployeeQuery {
+	query := &RepairinvoiceQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withRepairinvoices = query
+	return eq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -394,10 +425,11 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		nodes       = []*Employee{}
 		withFKs     = eq.withFKs
 		_spec       = eq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			eq.withEmployees != nil,
 			eq.withRoomdetails != nil,
 			eq.withJobposition != nil,
+			eq.withRepairinvoices != nil,
 		}
 	)
 	if eq.withJobposition != nil {
@@ -508,6 +540,34 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 			for i := range nodes {
 				nodes[i].Edges.Jobposition = n
 			}
+		}
+	}
+
+	if query := eq.withRepairinvoices; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Employee)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Repairinvoice(func(s *sql.Selector) {
+			s.Where(sql.InValues(employee.RepairinvoicesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.employee_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "employee_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Repairinvoices = append(node.Edges.Repairinvoices, n)
 		}
 	}
 

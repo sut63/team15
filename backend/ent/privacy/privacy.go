@@ -474,6 +474,54 @@ func (f QuantityMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutati
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.QuantityMutation", m)
 }
 
+// The RentalstatusQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type RentalstatusQueryRuleFunc func(context.Context, *ent.RentalstatusQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f RentalstatusQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.RentalstatusQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RentalstatusQuery", q)
+}
+
+// The RentalstatusMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type RentalstatusMutationRuleFunc func(context.Context, *ent.RentalstatusMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f RentalstatusMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.RentalstatusMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RentalstatusMutation", m)
+}
+
+// The RepairinvoiceQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type RepairinvoiceQueryRuleFunc func(context.Context, *ent.RepairinvoiceQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f RepairinvoiceQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.RepairinvoiceQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RepairinvoiceQuery", q)
+}
+
+// The RepairinvoiceMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type RepairinvoiceMutationRuleFunc func(context.Context, *ent.RepairinvoiceMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f RepairinvoiceMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.RepairinvoiceMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RepairinvoiceMutation", m)
+}
+
 // The RoomdetailQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type RoomdetailQueryRuleFunc func(context.Context, *ent.RoomdetailQuery) error

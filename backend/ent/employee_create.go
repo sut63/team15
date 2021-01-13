@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 )
 
@@ -87,6 +88,21 @@ func (ec *EmployeeCreate) SetNillableJobpositionID(id *int) *EmployeeCreate {
 // SetJobposition sets the jobposition edge to Jobposition.
 func (ec *EmployeeCreate) SetJobposition(j *Jobposition) *EmployeeCreate {
 	return ec.SetJobpositionID(j.ID)
+}
+
+// AddRepairinvoiceIDs adds the repairinvoices edge to Repairinvoice by ids.
+func (ec *EmployeeCreate) AddRepairinvoiceIDs(ids ...int) *EmployeeCreate {
+	ec.mutation.AddRepairinvoiceIDs(ids...)
+	return ec
+}
+
+// AddRepairinvoices adds the repairinvoices edges to Repairinvoice.
+func (ec *EmployeeCreate) AddRepairinvoices(r ...*Repairinvoice) *EmployeeCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ec.AddRepairinvoiceIDs(ids...)
 }
 
 // Mutation returns the EmployeeMutation object of the builder.
@@ -253,6 +269,25 @@ func (ec *EmployeeCreate) createSpec() (*Employee, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.RepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.RepairinvoicesTable,
+			Columns: []string{employee.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
 				},
 			},
 		}

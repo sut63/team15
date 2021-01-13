@@ -28,5 +28,6 @@ func (Employee) Edges() []ent.Edge {
 		edge.From("jobposition", Jobposition.Type).
 			Ref("employees").
 			Unique(),
+			edge.To("repairinvoices", Repairinvoice.Type).StorageKey(edge.Column("employee_id")),
 	}
 }

@@ -205,6 +205,47 @@ var (
 		PrimaryKey:  []*schema.Column{QuantitiesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// RentalstatusesColumns holds the columns for the "rentalstatuses" table.
+	RentalstatusesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "rentalstatus", Type: field.TypeString, Unique: true},
+	}
+	// RentalstatusesTable holds the schema information for the "rentalstatuses" table.
+	RentalstatusesTable = &schema.Table{
+		Name:        "rentalstatuses",
+		Columns:     RentalstatusesColumns,
+		PrimaryKey:  []*schema.Column{RentalstatusesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// RepairinvoicesColumns holds the columns for the "repairinvoices" table.
+	RepairinvoicesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "bequipment", Type: field.TypeString},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "rentalstatus_repairinvoices", Type: field.TypeInt, Nullable: true},
+	}
+	// RepairinvoicesTable holds the schema information for the "repairinvoices" table.
+	RepairinvoicesTable = &schema.Table{
+		Name:       "repairinvoices",
+		Columns:    RepairinvoicesColumns,
+		PrimaryKey: []*schema.Column{RepairinvoicesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "repairinvoices_employees_repairinvoices",
+				Columns: []*schema.Column{RepairinvoicesColumns[2]},
+
+				RefColumns: []*schema.Column{EmployeesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "repairinvoices_rentalstatuses_repairinvoices",
+				Columns: []*schema.Column{RepairinvoicesColumns[3]},
+
+				RefColumns: []*schema.Column{RentalstatusesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// RoomdetailsColumns holds the columns for the "roomdetails" table.
 	RoomdetailsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -316,6 +357,8 @@ var (
 		LengthTimesTable,
 		NearbyplacesTable,
 		QuantitiesTable,
+		RentalstatusesTable,
+		RepairinvoicesTable,
 		RoomdetailsTable,
 		StatusdsTable,
 		StaytypesTable,
@@ -331,6 +374,8 @@ func init() {
 	EmployeesTable.ForeignKeys[0].RefTable = JobpositionsTable
 	LeasesTable.ForeignKeys[0].RefTable = RoomdetailsTable
 	LeasesTable.ForeignKeys[1].RefTable = WifisTable
+	RepairinvoicesTable.ForeignKeys[0].RefTable = EmployeesTable
+	RepairinvoicesTable.ForeignKeys[1].RefTable = RentalstatusesTable
 	RoomdetailsTable.ForeignKeys[0].RefTable = EmployeesTable
 	RoomdetailsTable.ForeignKeys[1].RefTable = EquipmentTable
 	RoomdetailsTable.ForeignKeys[2].RefTable = FacilitiesTable

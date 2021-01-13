@@ -105,6 +105,13 @@ type Wifis struct {
 type Wifi struct {
 	Wifiname string
 }
+type Rentalstatuss struct {
+	Rentalstatus []Rentalstatus
+}
+
+type Rentalstatus struct {
+	Rentalstatus string
+}
 
 // @title SUT SA Example API
 // @version 1.0
@@ -173,6 +180,8 @@ func main() {
 	controllers.NewNearbyplaceController(v1, client)
 	controllers.NewStaytypeController(v1, client)
 	controllers.NewWifiController(v1, client)
+	controllers.NewRepairinvoiceController(v1, client)
+	controllers.NewRentalstatusController(v1, client)
 
 	// Set Employees Data
 
@@ -343,6 +352,19 @@ func main() {
 		client.Wifi.
 			Create().
 			SetWifiname(s.Wifiname).
+			Save(context.Background())
+	}
+	// Set Rentalstatus Data
+	rentalstatuss := Rentalstatuss{
+		Rentalstatus: []Rentalstatus{
+			Rentalstatus{"1"},
+			Rentalstatus{"30"},
+		},
+	}
+	for _, rs := range rentalstatuss.Rentalstatus {
+		client.Rentalstatus.
+			Create().
+			SetRentalstatus(rs.Rentalstatus).
 			Save(context.Background())
 	}
 
