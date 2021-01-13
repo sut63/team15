@@ -98,6 +98,14 @@ type Nearbyplace struct {
 	Nearbyplace string
 }
 
+type Wifis struct {
+	Wifi []Wifi
+}
+
+type Wifi struct {
+	Wifiname string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -164,6 +172,7 @@ func main() {
 	controllers.NewFacilitieController(v1, client)
 	controllers.NewNearbyplaceController(v1, client)
 	controllers.NewStaytypeController(v1, client)
+	controllers.NewWifiController(v1, client)
 
 	// Set Employees Data
 
@@ -320,6 +329,20 @@ func main() {
 		client.Nearbyplace.
 			Create().
 			SetNearbyplace(np.Nearbyplace).
+			Save(context.Background())
+	}
+
+	// Set Wifis Data
+	wifis := Wifis{
+		Wifi: []Wifi{
+			Wifi{"no service"},
+			Wifi{"service"},
+		},
+	}
+	for _, s := range wifis.Wifi {
+		client.Wifi.
+			Create().
+			SetWifiname(s.Wifiname).
 			Save(context.Background())
 	}
 

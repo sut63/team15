@@ -26,6 +26,8 @@ type Tx struct {
 	Facilitie *FacilitieClient
 	// Jobposition is the client for interacting with the Jobposition builders.
 	Jobposition *JobpositionClient
+	// Lease is the client for interacting with the Lease builders.
+	Lease *LeaseClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
 	// Nearbyplace is the client for interacting with the Nearbyplace builders.
@@ -38,6 +40,8 @@ type Tx struct {
 	Statusd *StatusdClient
 	// Staytype is the client for interacting with the Staytype builders.
 	Staytype *StaytypeClient
+	// Wifi is the client for interacting with the Wifi builders.
+	Wifi *WifiClient
 
 	// lazily loaded.
 	client     *Client
@@ -180,12 +184,14 @@ func (tx *Tx) init() {
 	tx.Equipment = NewEquipmentClient(tx.config)
 	tx.Facilitie = NewFacilitieClient(tx.config)
 	tx.Jobposition = NewJobpositionClient(tx.config)
+	tx.Lease = NewLeaseClient(tx.config)
 	tx.LengthTime = NewLengthTimeClient(tx.config)
 	tx.Nearbyplace = NewNearbyplaceClient(tx.config)
 	tx.Quantity = NewQuantityClient(tx.config)
 	tx.Roomdetail = NewRoomdetailClient(tx.config)
 	tx.Statusd = NewStatusdClient(tx.config)
 	tx.Staytype = NewStaytypeClient(tx.config)
+	tx.Wifi = NewWifiClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

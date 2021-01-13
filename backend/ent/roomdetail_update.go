@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/quantity"
@@ -159,6 +160,25 @@ func (ru *RoomdetailUpdate) SetStaytype(s *Staytype) *RoomdetailUpdate {
 	return ru.SetStaytypeID(s.ID)
 }
 
+// SetRoomdetailsID sets the roomdetails edge to Lease by id.
+func (ru *RoomdetailUpdate) SetRoomdetailsID(id int) *RoomdetailUpdate {
+	ru.mutation.SetRoomdetailsID(id)
+	return ru
+}
+
+// SetNillableRoomdetailsID sets the roomdetails edge to Lease by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableRoomdetailsID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetRoomdetailsID(*id)
+	}
+	return ru
+}
+
+// SetRoomdetails sets the roomdetails edge to Lease.
+func (ru *RoomdetailUpdate) SetRoomdetails(l *Lease) *RoomdetailUpdate {
+	return ru.SetRoomdetailsID(l.ID)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (ru *RoomdetailUpdate) Mutation() *RoomdetailMutation {
 	return ru.mutation
@@ -197,6 +217,12 @@ func (ru *RoomdetailUpdate) ClearQuantity() *RoomdetailUpdate {
 // ClearStaytype clears the staytype edge to Staytype.
 func (ru *RoomdetailUpdate) ClearStaytype() *RoomdetailUpdate {
 	ru.mutation.ClearStaytype()
+	return ru
+}
+
+// ClearRoomdetails clears the roomdetails edge to Lease.
+func (ru *RoomdetailUpdate) ClearRoomdetails() *RoomdetailUpdate {
+	ru.mutation.ClearRoomdetails()
 	return ru
 }
 
@@ -504,6 +530,41 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.RoomdetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   roomdetail.RoomdetailsTable,
+			Columns: []string{roomdetail.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   roomdetail.RoomdetailsTable,
+			Columns: []string{roomdetail.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{roomdetail.Label}
@@ -648,6 +709,25 @@ func (ruo *RoomdetailUpdateOne) SetStaytype(s *Staytype) *RoomdetailUpdateOne {
 	return ruo.SetStaytypeID(s.ID)
 }
 
+// SetRoomdetailsID sets the roomdetails edge to Lease by id.
+func (ruo *RoomdetailUpdateOne) SetRoomdetailsID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetRoomdetailsID(id)
+	return ruo
+}
+
+// SetNillableRoomdetailsID sets the roomdetails edge to Lease by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableRoomdetailsID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetRoomdetailsID(*id)
+	}
+	return ruo
+}
+
+// SetRoomdetails sets the roomdetails edge to Lease.
+func (ruo *RoomdetailUpdateOne) SetRoomdetails(l *Lease) *RoomdetailUpdateOne {
+	return ruo.SetRoomdetailsID(l.ID)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (ruo *RoomdetailUpdateOne) Mutation() *RoomdetailMutation {
 	return ruo.mutation
@@ -686,6 +766,12 @@ func (ruo *RoomdetailUpdateOne) ClearQuantity() *RoomdetailUpdateOne {
 // ClearStaytype clears the staytype edge to Staytype.
 func (ruo *RoomdetailUpdateOne) ClearStaytype() *RoomdetailUpdateOne {
 	ruo.mutation.ClearStaytype()
+	return ruo
+}
+
+// ClearRoomdetails clears the roomdetails edge to Lease.
+func (ruo *RoomdetailUpdateOne) ClearRoomdetails() *RoomdetailUpdateOne {
+	ruo.mutation.ClearRoomdetails()
 	return ruo
 }
 
@@ -983,6 +1069,41 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: staytype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.RoomdetailsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   roomdetail.RoomdetailsTable,
+			Columns: []string{roomdetail.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   roomdetail.RoomdetailsTable,
+			Columns: []string{roomdetail.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

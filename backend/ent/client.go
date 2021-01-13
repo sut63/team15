@@ -16,12 +16,14 @@ import (
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/staytype"
+	"github.com/team15/app/ent/wifi"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -47,6 +49,8 @@ type Client struct {
 	Facilitie *FacilitieClient
 	// Jobposition is the client for interacting with the Jobposition builders.
 	Jobposition *JobpositionClient
+	// Lease is the client for interacting with the Lease builders.
+	Lease *LeaseClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
 	// Nearbyplace is the client for interacting with the Nearbyplace builders.
@@ -59,6 +63,8 @@ type Client struct {
 	Statusd *StatusdClient
 	// Staytype is the client for interacting with the Staytype builders.
 	Staytype *StaytypeClient
+	// Wifi is the client for interacting with the Wifi builders.
+	Wifi *WifiClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -79,12 +85,14 @@ func (c *Client) init() {
 	c.Equipment = NewEquipmentClient(c.config)
 	c.Facilitie = NewFacilitieClient(c.config)
 	c.Jobposition = NewJobpositionClient(c.config)
+	c.Lease = NewLeaseClient(c.config)
 	c.LengthTime = NewLengthTimeClient(c.config)
 	c.Nearbyplace = NewNearbyplaceClient(c.config)
 	c.Quantity = NewQuantityClient(c.config)
 	c.Roomdetail = NewRoomdetailClient(c.config)
 	c.Statusd = NewStatusdClient(c.config)
 	c.Staytype = NewStaytypeClient(c.config)
+	c.Wifi = NewWifiClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -124,12 +132,14 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Equipment:    NewEquipmentClient(cfg),
 		Facilitie:    NewFacilitieClient(cfg),
 		Jobposition:  NewJobpositionClient(cfg),
+		Lease:        NewLeaseClient(cfg),
 		LengthTime:   NewLengthTimeClient(cfg),
 		Nearbyplace:  NewNearbyplaceClient(cfg),
 		Quantity:     NewQuantityClient(cfg),
 		Roomdetail:   NewRoomdetailClient(cfg),
 		Statusd:      NewStatusdClient(cfg),
 		Staytype:     NewStaytypeClient(cfg),
+		Wifi:         NewWifiClient(cfg),
 	}, nil
 }
 
@@ -152,12 +162,14 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Equipment:    NewEquipmentClient(cfg),
 		Facilitie:    NewFacilitieClient(cfg),
 		Jobposition:  NewJobpositionClient(cfg),
+		Lease:        NewLeaseClient(cfg),
 		LengthTime:   NewLengthTimeClient(cfg),
 		Nearbyplace:  NewNearbyplaceClient(cfg),
 		Quantity:     NewQuantityClient(cfg),
 		Roomdetail:   NewRoomdetailClient(cfg),
 		Statusd:      NewStatusdClient(cfg),
 		Staytype:     NewStaytypeClient(cfg),
+		Wifi:         NewWifiClient(cfg),
 	}, nil
 }
 
@@ -193,12 +205,14 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Equipment.Use(hooks...)
 	c.Facilitie.Use(hooks...)
 	c.Jobposition.Use(hooks...)
+	c.Lease.Use(hooks...)
 	c.LengthTime.Use(hooks...)
 	c.Nearbyplace.Use(hooks...)
 	c.Quantity.Use(hooks...)
 	c.Roomdetail.Use(hooks...)
 	c.Statusd.Use(hooks...)
 	c.Staytype.Use(hooks...)
+	c.Wifi.Use(hooks...)
 }
 
 // CleanerNameClient is a client for the CleanerName schema.
@@ -958,6 +972,121 @@ func (c *JobpositionClient) Hooks() []Hook {
 	return c.hooks.Jobposition
 }
 
+// LeaseClient is a client for the Lease schema.
+type LeaseClient struct {
+	config
+}
+
+// NewLeaseClient returns a client for the Lease from the given config.
+func NewLeaseClient(c config) *LeaseClient {
+	return &LeaseClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `lease.Hooks(f(g(h())))`.
+func (c *LeaseClient) Use(hooks ...Hook) {
+	c.hooks.Lease = append(c.hooks.Lease, hooks...)
+}
+
+// Create returns a create builder for Lease.
+func (c *LeaseClient) Create() *LeaseCreate {
+	mutation := newLeaseMutation(c.config, OpCreate)
+	return &LeaseCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Lease.
+func (c *LeaseClient) Update() *LeaseUpdate {
+	mutation := newLeaseMutation(c.config, OpUpdate)
+	return &LeaseUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *LeaseClient) UpdateOne(l *Lease) *LeaseUpdateOne {
+	mutation := newLeaseMutation(c.config, OpUpdateOne, withLease(l))
+	return &LeaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *LeaseClient) UpdateOneID(id int) *LeaseUpdateOne {
+	mutation := newLeaseMutation(c.config, OpUpdateOne, withLeaseID(id))
+	return &LeaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Lease.
+func (c *LeaseClient) Delete() *LeaseDelete {
+	mutation := newLeaseMutation(c.config, OpDelete)
+	return &LeaseDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *LeaseClient) DeleteOne(l *Lease) *LeaseDeleteOne {
+	return c.DeleteOneID(l.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *LeaseClient) DeleteOneID(id int) *LeaseDeleteOne {
+	builder := c.Delete().Where(lease.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &LeaseDeleteOne{builder}
+}
+
+// Create returns a query builder for Lease.
+func (c *LeaseClient) Query() *LeaseQuery {
+	return &LeaseQuery{config: c.config}
+}
+
+// Get returns a Lease entity by its id.
+func (c *LeaseClient) Get(ctx context.Context, id int) (*Lease, error) {
+	return c.Query().Where(lease.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *LeaseClient) GetX(ctx context.Context, id int) *Lease {
+	l, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return l
+}
+
+// QueryWifi queries the Wifi edge of a Lease.
+func (c *LeaseClient) QueryWifi(l *Lease) *WifiQuery {
+	query := &WifiQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, id),
+			sqlgraph.To(wifi.Table, wifi.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, lease.WifiTable, lease.WifiColumn),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRoomdetail queries the Roomdetail edge of a Lease.
+func (c *LeaseClient) QueryRoomdetail(l *Lease) *RoomdetailQuery {
+	query := &RoomdetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, id),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, true, lease.RoomdetailTable, lease.RoomdetailColumn),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *LeaseClient) Hooks() []Hook {
+	return c.hooks.Lease
+}
+
 // LengthTimeClient is a client for the LengthTime schema.
 type LengthTimeClient struct {
 	config
@@ -1429,6 +1558,22 @@ func (c *RoomdetailClient) QueryStaytype(r *Roomdetail) *StaytypeQuery {
 	return query
 }
 
+// QueryRoomdetails queries the roomdetails edge of a Roomdetail.
+func (c *RoomdetailClient) QueryRoomdetails(r *Roomdetail) *LeaseQuery {
+	query := &LeaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, roomdetail.RoomdetailsTable, roomdetail.RoomdetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *RoomdetailClient) Hooks() []Hook {
 	return c.hooks.Roomdetail
@@ -1630,4 +1775,103 @@ func (c *StaytypeClient) QueryRoomdetails(s *Staytype) *RoomdetailQuery {
 // Hooks returns the client hooks.
 func (c *StaytypeClient) Hooks() []Hook {
 	return c.hooks.Staytype
+}
+
+// WifiClient is a client for the Wifi schema.
+type WifiClient struct {
+	config
+}
+
+// NewWifiClient returns a client for the Wifi from the given config.
+func NewWifiClient(c config) *WifiClient {
+	return &WifiClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `wifi.Hooks(f(g(h())))`.
+func (c *WifiClient) Use(hooks ...Hook) {
+	c.hooks.Wifi = append(c.hooks.Wifi, hooks...)
+}
+
+// Create returns a create builder for Wifi.
+func (c *WifiClient) Create() *WifiCreate {
+	mutation := newWifiMutation(c.config, OpCreate)
+	return &WifiCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Wifi.
+func (c *WifiClient) Update() *WifiUpdate {
+	mutation := newWifiMutation(c.config, OpUpdate)
+	return &WifiUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WifiClient) UpdateOne(w *Wifi) *WifiUpdateOne {
+	mutation := newWifiMutation(c.config, OpUpdateOne, withWifi(w))
+	return &WifiUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WifiClient) UpdateOneID(id int) *WifiUpdateOne {
+	mutation := newWifiMutation(c.config, OpUpdateOne, withWifiID(id))
+	return &WifiUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Wifi.
+func (c *WifiClient) Delete() *WifiDelete {
+	mutation := newWifiMutation(c.config, OpDelete)
+	return &WifiDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *WifiClient) DeleteOne(w *Wifi) *WifiDeleteOne {
+	return c.DeleteOneID(w.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *WifiClient) DeleteOneID(id int) *WifiDeleteOne {
+	builder := c.Delete().Where(wifi.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WifiDeleteOne{builder}
+}
+
+// Create returns a query builder for Wifi.
+func (c *WifiClient) Query() *WifiQuery {
+	return &WifiQuery{config: c.config}
+}
+
+// Get returns a Wifi entity by its id.
+func (c *WifiClient) Get(ctx context.Context, id int) (*Wifi, error) {
+	return c.Query().Where(wifi.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WifiClient) GetX(ctx context.Context, id int) *Wifi {
+	w, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return w
+}
+
+// QueryWifis queries the wifis edge of a Wifi.
+func (c *WifiClient) QueryWifis(w *Wifi) *LeaseQuery {
+	query := &LeaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := w.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(wifi.Table, wifi.FieldID, id),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, wifi.WifisTable, wifi.WifisColumn),
+		)
+		fromV = sqlgraph.Neighbors(w.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *WifiClient) Hooks() []Hook {
+	return c.hooks.Wifi
 }

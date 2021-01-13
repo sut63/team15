@@ -15,12 +15,14 @@ import (
 	"github.com/team15/app/ent/equipment"
 	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/nearbyplace"
 	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/staytype"
+	"github.com/team15/app/ent/wifi"
 
 	"github.com/facebookincubator/ent"
 )
@@ -41,12 +43,14 @@ const (
 	TypeEquipment    = "Equipment"
 	TypeFacilitie    = "Facilitie"
 	TypeJobposition  = "Jobposition"
+	TypeLease        = "Lease"
 	TypeLengthTime   = "LengthTime"
 	TypeNearbyplace  = "Nearbyplace"
 	TypeQuantity     = "Quantity"
 	TypeRoomdetail   = "Roomdetail"
 	TypeStatusd      = "Statusd"
 	TypeStaytype     = "Staytype"
+	TypeWifi         = "Wifi"
 )
 
 // CleanerNameMutation represents an operation that mutate the CleanerNames
@@ -3075,6 +3079,482 @@ func (m *JobpositionMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Jobposition edge %s", name)
 }
 
+// LeaseMutation represents an operation that mutate the Leases
+// nodes in the graph.
+type LeaseMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *int
+	addedtime          *time.Time
+	lease              *string
+	clearedFields      map[string]struct{}
+	_Wifi              *int
+	cleared_Wifi       bool
+	_Roomdetail        *int
+	cleared_Roomdetail bool
+	done               bool
+	oldValue           func(context.Context) (*Lease, error)
+}
+
+var _ ent.Mutation = (*LeaseMutation)(nil)
+
+// leaseOption allows to manage the mutation configuration using functional options.
+type leaseOption func(*LeaseMutation)
+
+// newLeaseMutation creates new mutation for $n.Name.
+func newLeaseMutation(c config, op Op, opts ...leaseOption) *LeaseMutation {
+	m := &LeaseMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeLease,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withLeaseID sets the id field of the mutation.
+func withLeaseID(id int) leaseOption {
+	return func(m *LeaseMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Lease
+		)
+		m.oldValue = func(ctx context.Context) (*Lease, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Lease.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withLease sets the old Lease of the mutation.
+func withLease(node *Lease) leaseOption {
+	return func(m *LeaseMutation) {
+		m.oldValue = func(context.Context) (*Lease, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m LeaseMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m LeaseMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *LeaseMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetAddedtime sets the addedtime field.
+func (m *LeaseMutation) SetAddedtime(t time.Time) {
+	m.addedtime = &t
+}
+
+// Addedtime returns the addedtime value in the mutation.
+func (m *LeaseMutation) Addedtime() (r time.Time, exists bool) {
+	v := m.addedtime
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddedtime returns the old addedtime value of the Lease.
+// If the Lease object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *LeaseMutation) OldAddedtime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddedtime is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddedtime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddedtime: %w", err)
+	}
+	return oldValue.Addedtime, nil
+}
+
+// ResetAddedtime reset all changes of the "addedtime" field.
+func (m *LeaseMutation) ResetAddedtime() {
+	m.addedtime = nil
+}
+
+// SetLease sets the lease field.
+func (m *LeaseMutation) SetLease(s string) {
+	m.lease = &s
+}
+
+// Lease returns the lease value in the mutation.
+func (m *LeaseMutation) Lease() (r string, exists bool) {
+	v := m.lease
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLease returns the old lease value of the Lease.
+// If the Lease object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *LeaseMutation) OldLease(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldLease is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldLease requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLease: %w", err)
+	}
+	return oldValue.Lease, nil
+}
+
+// ResetLease reset all changes of the "lease" field.
+func (m *LeaseMutation) ResetLease() {
+	m.lease = nil
+}
+
+// SetWifiID sets the Wifi edge to Wifi by id.
+func (m *LeaseMutation) SetWifiID(id int) {
+	m._Wifi = &id
+}
+
+// ClearWifi clears the Wifi edge to Wifi.
+func (m *LeaseMutation) ClearWifi() {
+	m.cleared_Wifi = true
+}
+
+// WifiCleared returns if the edge Wifi was cleared.
+func (m *LeaseMutation) WifiCleared() bool {
+	return m.cleared_Wifi
+}
+
+// WifiID returns the Wifi id in the mutation.
+func (m *LeaseMutation) WifiID() (id int, exists bool) {
+	if m._Wifi != nil {
+		return *m._Wifi, true
+	}
+	return
+}
+
+// WifiIDs returns the Wifi ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// WifiID instead. It exists only for internal usage by the builders.
+func (m *LeaseMutation) WifiIDs() (ids []int) {
+	if id := m._Wifi; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetWifi reset all changes of the "Wifi" edge.
+func (m *LeaseMutation) ResetWifi() {
+	m._Wifi = nil
+	m.cleared_Wifi = false
+}
+
+// SetRoomdetailID sets the Roomdetail edge to Roomdetail by id.
+func (m *LeaseMutation) SetRoomdetailID(id int) {
+	m._Roomdetail = &id
+}
+
+// ClearRoomdetail clears the Roomdetail edge to Roomdetail.
+func (m *LeaseMutation) ClearRoomdetail() {
+	m.cleared_Roomdetail = true
+}
+
+// RoomdetailCleared returns if the edge Roomdetail was cleared.
+func (m *LeaseMutation) RoomdetailCleared() bool {
+	return m.cleared_Roomdetail
+}
+
+// RoomdetailID returns the Roomdetail id in the mutation.
+func (m *LeaseMutation) RoomdetailID() (id int, exists bool) {
+	if m._Roomdetail != nil {
+		return *m._Roomdetail, true
+	}
+	return
+}
+
+// RoomdetailIDs returns the Roomdetail ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// RoomdetailID instead. It exists only for internal usage by the builders.
+func (m *LeaseMutation) RoomdetailIDs() (ids []int) {
+	if id := m._Roomdetail; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRoomdetail reset all changes of the "Roomdetail" edge.
+func (m *LeaseMutation) ResetRoomdetail() {
+	m._Roomdetail = nil
+	m.cleared_Roomdetail = false
+}
+
+// Op returns the operation name.
+func (m *LeaseMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Lease).
+func (m *LeaseMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *LeaseMutation) Fields() []string {
+	fields := make([]string, 0, 2)
+	if m.addedtime != nil {
+		fields = append(fields, lease.FieldAddedtime)
+	}
+	if m.lease != nil {
+		fields = append(fields, lease.FieldLease)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *LeaseMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case lease.FieldAddedtime:
+		return m.Addedtime()
+	case lease.FieldLease:
+		return m.Lease()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *LeaseMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case lease.FieldAddedtime:
+		return m.OldAddedtime(ctx)
+	case lease.FieldLease:
+		return m.OldLease(ctx)
+	}
+	return nil, fmt.Errorf("unknown Lease field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *LeaseMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case lease.FieldAddedtime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddedtime(v)
+		return nil
+	case lease.FieldLease:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLease(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Lease field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *LeaseMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *LeaseMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *LeaseMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Lease numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *LeaseMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *LeaseMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *LeaseMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Lease nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *LeaseMutation) ResetField(name string) error {
+	switch name {
+	case lease.FieldAddedtime:
+		m.ResetAddedtime()
+		return nil
+	case lease.FieldLease:
+		m.ResetLease()
+		return nil
+	}
+	return fmt.Errorf("unknown Lease field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *LeaseMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m._Wifi != nil {
+		edges = append(edges, lease.EdgeWifi)
+	}
+	if m._Roomdetail != nil {
+		edges = append(edges, lease.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case lease.EdgeWifi:
+		if id := m._Wifi; id != nil {
+			return []ent.Value{*id}
+		}
+	case lease.EdgeRoomdetail:
+		if id := m._Roomdetail; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *LeaseMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *LeaseMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.cleared_Wifi {
+		edges = append(edges, lease.EdgeWifi)
+	}
+	if m.cleared_Roomdetail {
+		edges = append(edges, lease.EdgeRoomdetail)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *LeaseMutation) EdgeCleared(name string) bool {
+	switch name {
+	case lease.EdgeWifi:
+		return m.cleared_Wifi
+	case lease.EdgeRoomdetail:
+		return m.cleared_Roomdetail
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *LeaseMutation) ClearEdge(name string) error {
+	switch name {
+	case lease.EdgeWifi:
+		m.ClearWifi()
+		return nil
+	case lease.EdgeRoomdetail:
+		m.ClearRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Lease unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *LeaseMutation) ResetEdge(name string) error {
+	switch name {
+	case lease.EdgeWifi:
+		m.ResetWifi()
+		return nil
+	case lease.EdgeRoomdetail:
+		m.ResetRoomdetail()
+		return nil
+	}
+	return fmt.Errorf("unknown Lease edge %s", name)
+}
+
 // LengthTimeMutation represents an operation that mutate the LengthTimes
 // nodes in the graph.
 type LengthTimeMutation struct {
@@ -4201,6 +4681,8 @@ type RoomdetailMutation struct {
 	clearedquantity     bool
 	staytype            *int
 	clearedstaytype     bool
+	roomdetails         *int
+	clearedroomdetails  bool
 	done                bool
 	oldValue            func(context.Context) (*Roomdetail, error)
 }
@@ -4592,6 +5074,45 @@ func (m *RoomdetailMutation) ResetStaytype() {
 	m.clearedstaytype = false
 }
 
+// SetRoomdetailsID sets the roomdetails edge to Lease by id.
+func (m *RoomdetailMutation) SetRoomdetailsID(id int) {
+	m.roomdetails = &id
+}
+
+// ClearRoomdetails clears the roomdetails edge to Lease.
+func (m *RoomdetailMutation) ClearRoomdetails() {
+	m.clearedroomdetails = true
+}
+
+// RoomdetailsCleared returns if the edge roomdetails was cleared.
+func (m *RoomdetailMutation) RoomdetailsCleared() bool {
+	return m.clearedroomdetails
+}
+
+// RoomdetailsID returns the roomdetails id in the mutation.
+func (m *RoomdetailMutation) RoomdetailsID() (id int, exists bool) {
+	if m.roomdetails != nil {
+		return *m.roomdetails, true
+	}
+	return
+}
+
+// RoomdetailsIDs returns the roomdetails ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// RoomdetailsID instead. It exists only for internal usage by the builders.
+func (m *RoomdetailMutation) RoomdetailsIDs() (ids []int) {
+	if id := m.roomdetails; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRoomdetails reset all changes of the "roomdetails" edge.
+func (m *RoomdetailMutation) ResetRoomdetails() {
+	m.roomdetails = nil
+	m.clearedroomdetails = false
+}
+
 // Op returns the operation name.
 func (m *RoomdetailMutation) Op() Op {
 	return m.op
@@ -4724,7 +5245,7 @@ func (m *RoomdetailMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *RoomdetailMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.equipments != nil {
 		edges = append(edges, roomdetail.EdgeEquipments)
 	}
@@ -4742,6 +5263,9 @@ func (m *RoomdetailMutation) AddedEdges() []string {
 	}
 	if m.staytype != nil {
 		edges = append(edges, roomdetail.EdgeStaytype)
+	}
+	if m.roomdetails != nil {
+		edges = append(edges, roomdetail.EdgeRoomdetails)
 	}
 	return edges
 }
@@ -4774,6 +5298,10 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 		if id := m.staytype; id != nil {
 			return []ent.Value{*id}
 		}
+	case roomdetail.EdgeRoomdetails:
+		if id := m.roomdetails; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -4781,7 +5309,7 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *RoomdetailMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	return edges
 }
 
@@ -4796,7 +5324,7 @@ func (m *RoomdetailMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *RoomdetailMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.clearedequipments {
 		edges = append(edges, roomdetail.EdgeEquipments)
 	}
@@ -4814,6 +5342,9 @@ func (m *RoomdetailMutation) ClearedEdges() []string {
 	}
 	if m.clearedstaytype {
 		edges = append(edges, roomdetail.EdgeStaytype)
+	}
+	if m.clearedroomdetails {
+		edges = append(edges, roomdetail.EdgeRoomdetails)
 	}
 	return edges
 }
@@ -4834,6 +5365,8 @@ func (m *RoomdetailMutation) EdgeCleared(name string) bool {
 		return m.clearedquantity
 	case roomdetail.EdgeStaytype:
 		return m.clearedstaytype
+	case roomdetail.EdgeRoomdetails:
+		return m.clearedroomdetails
 	}
 	return false
 }
@@ -4859,6 +5392,9 @@ func (m *RoomdetailMutation) ClearEdge(name string) error {
 		return nil
 	case roomdetail.EdgeStaytype:
 		m.ClearStaytype()
+		return nil
+	case roomdetail.EdgeRoomdetails:
+		m.ClearRoomdetails()
 		return nil
 	}
 	return fmt.Errorf("unknown Roomdetail unique edge %s", name)
@@ -4886,6 +5422,9 @@ func (m *RoomdetailMutation) ResetEdge(name string) error {
 		return nil
 	case roomdetail.EdgeStaytype:
 		m.ResetStaytype()
+		return nil
+	case roomdetail.EdgeRoomdetails:
+		m.ResetRoomdetails()
 		return nil
 	}
 	return fmt.Errorf("unknown Roomdetail edge %s", name)
@@ -5625,4 +6164,372 @@ func (m *StaytypeMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Staytype edge %s", name)
+}
+
+// WifiMutation represents an operation that mutate the Wifis
+// nodes in the graph.
+type WifiMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	wifiname      *string
+	clearedFields map[string]struct{}
+	wifis         map[int]struct{}
+	removedwifis  map[int]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Wifi, error)
+}
+
+var _ ent.Mutation = (*WifiMutation)(nil)
+
+// wifiOption allows to manage the mutation configuration using functional options.
+type wifiOption func(*WifiMutation)
+
+// newWifiMutation creates new mutation for $n.Name.
+func newWifiMutation(c config, op Op, opts ...wifiOption) *WifiMutation {
+	m := &WifiMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeWifi,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withWifiID sets the id field of the mutation.
+func withWifiID(id int) wifiOption {
+	return func(m *WifiMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Wifi
+		)
+		m.oldValue = func(ctx context.Context) (*Wifi, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Wifi.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withWifi sets the old Wifi of the mutation.
+func withWifi(node *Wifi) wifiOption {
+	return func(m *WifiMutation) {
+		m.oldValue = func(context.Context) (*Wifi, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m WifiMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m WifiMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *WifiMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetWifiname sets the wifiname field.
+func (m *WifiMutation) SetWifiname(s string) {
+	m.wifiname = &s
+}
+
+// Wifiname returns the wifiname value in the mutation.
+func (m *WifiMutation) Wifiname() (r string, exists bool) {
+	v := m.wifiname
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWifiname returns the old wifiname value of the Wifi.
+// If the Wifi object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *WifiMutation) OldWifiname(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldWifiname is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldWifiname requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWifiname: %w", err)
+	}
+	return oldValue.Wifiname, nil
+}
+
+// ResetWifiname reset all changes of the "wifiname" field.
+func (m *WifiMutation) ResetWifiname() {
+	m.wifiname = nil
+}
+
+// AddWifiIDs adds the wifis edge to Lease by ids.
+func (m *WifiMutation) AddWifiIDs(ids ...int) {
+	if m.wifis == nil {
+		m.wifis = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.wifis[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveWifiIDs removes the wifis edge to Lease by ids.
+func (m *WifiMutation) RemoveWifiIDs(ids ...int) {
+	if m.removedwifis == nil {
+		m.removedwifis = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedwifis[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedWifis returns the removed ids of wifis.
+func (m *WifiMutation) RemovedWifisIDs() (ids []int) {
+	for id := range m.removedwifis {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// WifisIDs returns the wifis ids in the mutation.
+func (m *WifiMutation) WifisIDs() (ids []int) {
+	for id := range m.wifis {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetWifis reset all changes of the "wifis" edge.
+func (m *WifiMutation) ResetWifis() {
+	m.wifis = nil
+	m.removedwifis = nil
+}
+
+// Op returns the operation name.
+func (m *WifiMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Wifi).
+func (m *WifiMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *WifiMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.wifiname != nil {
+		fields = append(fields, wifi.FieldWifiname)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *WifiMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case wifi.FieldWifiname:
+		return m.Wifiname()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *WifiMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case wifi.FieldWifiname:
+		return m.OldWifiname(ctx)
+	}
+	return nil, fmt.Errorf("unknown Wifi field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *WifiMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case wifi.FieldWifiname:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWifiname(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Wifi field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *WifiMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *WifiMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *WifiMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Wifi numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *WifiMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *WifiMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *WifiMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Wifi nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *WifiMutation) ResetField(name string) error {
+	switch name {
+	case wifi.FieldWifiname:
+		m.ResetWifiname()
+		return nil
+	}
+	return fmt.Errorf("unknown Wifi field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *WifiMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.wifis != nil {
+		edges = append(edges, wifi.EdgeWifis)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *WifiMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case wifi.EdgeWifis:
+		ids := make([]ent.Value, 0, len(m.wifis))
+		for id := range m.wifis {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *WifiMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedwifis != nil {
+		edges = append(edges, wifi.EdgeWifis)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *WifiMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case wifi.EdgeWifis:
+		ids := make([]ent.Value, 0, len(m.removedwifis))
+		for id := range m.removedwifis {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *WifiMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *WifiMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *WifiMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Wifi unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *WifiMutation) ResetEdge(name string) error {
+	switch name {
+	case wifi.EdgeWifis:
+		m.ResetWifis()
+		return nil
+	}
+	return fmt.Errorf("unknown Wifi edge %s", name)
 }
