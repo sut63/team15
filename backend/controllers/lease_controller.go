@@ -17,9 +17,10 @@ type LeaseController struct {
 }
 
 type Lease struct {
-	Added string
-	Lease string
-	Wifi  int
+	Added   string
+	Tenant  string
+	Roomnum string
+	Wifi    int
 }
 
 // CreateLease handles POST requests for adding lease entities
@@ -58,6 +59,7 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 	ret, err := ctl.client.Lease.
 		Create().
 		SetAddedtime(time).
+		SetTenant(obj.Tenant).
 		SetWifi(wf).
 		Save(context.Background())
 	if err != nil {

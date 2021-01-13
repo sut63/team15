@@ -20,8 +20,8 @@ type Lease struct {
 	ID int `json:"id,omitempty"`
 	// Addedtime holds the value of the "addedtime" field.
 	Addedtime time.Time `json:"addedtime,omitempty"`
-	// Lease holds the value of the "lease" field.
-	Lease string `json:"lease,omitempty"`
+	// Tenant holds the value of the "tenant" field.
+	Tenant string `json:"tenant,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LeaseQuery when eager-loading is set.
 	Edges    LeaseEdges `json:"edges"`
@@ -73,7 +73,7 @@ func (*Lease) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullTime{},   // addedtime
-		&sql.NullString{}, // lease
+		&sql.NullString{}, // tenant
 	}
 }
 
@@ -103,9 +103,9 @@ func (l *Lease) assignValues(values ...interface{}) error {
 		l.Addedtime = value.Time
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field lease", values[1])
+		return fmt.Errorf("unexpected type %T for field tenant", values[1])
 	} else if value.Valid {
-		l.Lease = value.String
+		l.Tenant = value.String
 	}
 	values = values[2:]
 	if len(values) == len(lease.ForeignKeys) {
@@ -160,8 +160,8 @@ func (l *Lease) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", l.ID))
 	builder.WriteString(", addedtime=")
 	builder.WriteString(l.Addedtime.Format(time.ANSIC))
-	builder.WriteString(", lease=")
-	builder.WriteString(l.Lease)
+	builder.WriteString(", tenant=")
+	builder.WriteString(l.Tenant)
 	builder.WriteByte(')')
 	return builder.String()
 }

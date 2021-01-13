@@ -15,7 +15,7 @@ type Lease struct {
 func (Lease) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("addedtime"),
-		field.String("lease"),
+		field.String("tenant"),
 	}
 }
 
