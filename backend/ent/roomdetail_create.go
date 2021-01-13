@@ -26,6 +26,12 @@ type RoomdetailCreate struct {
 	hooks    []Hook
 }
 
+// SetRoomnumber sets the roomnumber field.
+func (rc *RoomdetailCreate) SetRoomnumber(s string) *RoomdetailCreate {
+	rc.mutation.SetRoomnumber(s)
+	return rc
+}
+
 // SetRoomtypename sets the roomtypename field.
 func (rc *RoomdetailCreate) SetRoomtypename(s string) *RoomdetailCreate {
 	rc.mutation.SetRoomtypename(s)
@@ -178,6 +184,14 @@ func (rc *RoomdetailCreate) Mutation() *RoomdetailMutation {
 
 // Save creates the Roomdetail in the database.
 func (rc *RoomdetailCreate) Save(ctx context.Context) (*Roomdetail, error) {
+	if _, ok := rc.mutation.Roomnumber(); !ok {
+		return nil, &ValidationError{Name: "roomnumber", err: errors.New("ent: missing required field \"roomnumber\"")}
+	}
+	if v, ok := rc.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
 	if _, ok := rc.mutation.Roomtypename(); !ok {
 		return nil, &ValidationError{Name: "roomtypename", err: errors.New("ent: missing required field \"roomtypename\"")}
 	}
@@ -254,6 +268,14 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := rc.mutation.Roomnumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldRoomnumber,
+		})
+		r.Roomnumber = value
+	}
 	if value, ok := rc.mutation.Roomtypename(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

@@ -88,7 +88,7 @@ export default function Login(props: any) {
 
     const resetEmployeeData = async () => {
       setLoading(false);
-      localStorage.setItem("employeedata", JSON.stringify(null));
+      localStorage.setItem("employeedata", JSON.stringify(null)); 
       localStorage.setItem("jobpositiondata", JSON.stringify(null));
     }
     resetEmployeeData();
@@ -107,35 +107,17 @@ export default function Login(props: any) {
     employees.map((item: any) => {
       console.log(item.email);
       if ((item.email == email) && (item.password == password)) {
-       
        setAlert(true);
         localStorage.setItem("employeedata",JSON.stringify(item.id));
         console.log(item.email);
-        localStorage.setItem("employeelogindata", JSON.stringify(item.name))
-        console.log(item.name);
+        localStorage.setItem("jobpositiondata", JSON.stringify(item.edges?.jobposition?.positionname))
+        console.log(item.edges?.jobposition?.positionname);
       
-      if (item.name == "โรเจอร์") {
-        
-          history.pushState("", "", "/RoomDetails");
+      if (item.edges?.jobposition?.positionname == "พนักงานหอพัก") {
+          history.pushState("", "", "/DormEmployee");
         }
-        else if (item.name == "พนักงานหอพัก2") {
-          history.pushState("", "", "/");
+          window.location.reload(false);
         }
-        else if (item.name == "พนักงานหอพัก3") {
-          history.pushState("", "", "/");
-        }
-        else if (item.name == "พนักงานหอพัก4") {
-          history.pushState("", "", "/");
-        }
-        else if (item.name == "พนักงานหอพัก5") {
-          history.pushState("", "", "/");
-        }
-        else if (item.name == "พนักงานหอพัก6") {
-          history.pushState("", "", "/");
-        }
-       window.location.reload(false);
-
-      }
     })
     setStatus(true);
      //const timer = setTimeout(() => {

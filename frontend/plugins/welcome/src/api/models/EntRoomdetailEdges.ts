@@ -26,6 +26,10 @@ import {
     EntFacilitieFromJSON,
     EntFacilitieFromJSONTyped,
     EntFacilitieToJSON,
+    EntLease,
+    EntLeaseFromJSON,
+    EntLeaseFromJSONTyped,
+    EntLeaseToJSON,
     EntNearbyplace,
     EntNearbyplaceFromJSON,
     EntNearbyplaceFromJSONTyped,
@@ -78,6 +82,12 @@ export interface EntRoomdetailEdges {
     quantity?: EntQuantity;
     /**
      * 
+     * @type {EntLease}
+     * @memberof EntRoomdetailEdges
+     */
+    roomdetails?: EntLease;
+    /**
+     * 
      * @type {EntStaytype}
      * @memberof EntRoomdetailEdges
      */
@@ -99,6 +109,7 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
         'facilities': !exists(json, 'Facilities') ? undefined : EntFacilitieFromJSON(json['Facilities']),
         'nearbyplaces': !exists(json, 'Nearbyplaces') ? undefined : EntNearbyplaceFromJSON(json['Nearbyplaces']),
         'quantity': !exists(json, 'Quantity') ? undefined : EntQuantityFromJSON(json['Quantity']),
+        'roomdetails': !exists(json, 'Roomdetails') ? undefined : EntLeaseFromJSON(json['Roomdetails']),
         'staytype': !exists(json, 'Staytype') ? undefined : EntStaytypeFromJSON(json['Staytype']),
     };
 }
@@ -117,6 +128,7 @@ export function EntRoomdetailEdgesToJSON(value?: EntRoomdetailEdges | null): any
         'facilities': EntFacilitieToJSON(value.facilities),
         'nearbyplaces': EntNearbyplaceToJSON(value.nearbyplaces),
         'quantity': EntQuantityToJSON(value.quantity),
+        'roomdetails': EntLeaseToJSON(value.roomdetails),
         'staytype': EntStaytypeToJSON(value.staytype),
     };
 }

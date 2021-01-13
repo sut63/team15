@@ -45,6 +45,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "jobposition" package.
 	JobpositionInverseTable = "jobpositions"
 	// JobpositionColumn is the table column denoting the jobposition relation/edge.
+<<<<<<< Updated upstream
 	JobpositionColumn = "jobposition_id"
 	// RepairinvoicesTable is the table the holds the repairinvoices relation/edge.
 	RepairinvoicesTable = "repairinvoices"
@@ -53,6 +54,9 @@ const (
 	RepairinvoicesInverseTable = "repairinvoices"
 	// RepairinvoicesColumn is the table column denoting the repairinvoices relation/edge.
 	RepairinvoicesColumn = "employee_id"
+=======
+	JobpositionColumn = "jobposition_employees"
+>>>>>>> Stashed changes
 )
 
 // Columns holds all SQL columns for employee fields.
@@ -65,7 +69,7 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Employee type.
 var ForeignKeys = []string{
-	"jobposition_id",
+	"jobposition_employees",
 }
 
 var (

@@ -39,6 +39,12 @@ export interface EntRoomdetail {
      */
     id?: number;
     /**
+     * Roomnumber holds the value of the "roomnumber" field.
+     * @type {string}
+     * @memberof EntRoomdetail
+     */
+    roomnumber?: string;
+    /**
      * Roomprice holds the value of the "roomprice" field.
      * @type {string}
      * @memberof EntRoomdetail
@@ -64,6 +70,7 @@ export function EntRoomdetailFromJSONTyped(json: any, ignoreDiscriminator: boole
         
         'edges': !exists(json, 'edges') ? undefined : EntRoomdetailEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
         'roomprice': !exists(json, 'roomprice') ? undefined : json['roomprice'],
         'roomtypename': !exists(json, 'roomtypename') ? undefined : json['roomtypename'],
     };
@@ -80,6 +87,7 @@ export function EntRoomdetailToJSON(value?: EntRoomdetail | null): any {
         
         'edges': EntRoomdetailEdgesToJSON(value.edges),
         'id': value.id,
+        'roomnumber': value.roomnumber,
         'roomprice': value.roomprice,
         'roomtypename': value.roomtypename,
     };

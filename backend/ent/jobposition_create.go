@@ -20,9 +20,9 @@ type JobpositionCreate struct {
 	hooks    []Hook
 }
 
-// SetPositionName sets the position_name field.
-func (jc *JobpositionCreate) SetPositionName(s string) *JobpositionCreate {
-	jc.mutation.SetPositionName(s)
+// SetPositionname sets the positionname field.
+func (jc *JobpositionCreate) SetPositionname(s string) *JobpositionCreate {
+	jc.mutation.SetPositionname(s)
 	return jc
 }
 
@@ -48,13 +48,8 @@ func (jc *JobpositionCreate) Mutation() *JobpositionMutation {
 
 // Save creates the Jobposition in the database.
 func (jc *JobpositionCreate) Save(ctx context.Context) (*Jobposition, error) {
-	if _, ok := jc.mutation.PositionName(); !ok {
-		return nil, &ValidationError{Name: "position_name", err: errors.New("ent: missing required field \"position_name\"")}
-	}
-	if v, ok := jc.mutation.PositionName(); ok {
-		if err := jobposition.PositionNameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "position_name", err: fmt.Errorf("ent: validator failed for field \"position_name\": %w", err)}
-		}
+	if _, ok := jc.mutation.Positionname(); !ok {
+		return nil, &ValidationError{Name: "positionname", err: errors.New("ent: missing required field \"positionname\"")}
 	}
 	var (
 		err  error
@@ -116,13 +111,13 @@ func (jc *JobpositionCreate) createSpec() (*Jobposition, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := jc.mutation.PositionName(); ok {
+	if value, ok := jc.mutation.Positionname(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: jobposition.FieldPositionName,
+			Column: jobposition.FieldPositionname,
 		})
-		j.PositionName = value
+		j.Positionname = value
 	}
 	if nodes := jc.mutation.EmployeesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

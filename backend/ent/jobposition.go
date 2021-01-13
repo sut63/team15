@@ -15,8 +15,8 @@ type Jobposition struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// PositionName holds the value of the "position_name" field.
-	PositionName string `json:"position_name,omitempty"`
+	// Positionname holds the value of the "positionname" field.
+	Positionname string `json:"positionname,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the JobpositionQuery when eager-loading is set.
 	Edges JobpositionEdges `json:"edges"`
@@ -44,7 +44,7 @@ func (e JobpositionEdges) EmployeesOrErr() ([]*Employee, error) {
 func (*Jobposition) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // position_name
+		&sql.NullString{}, // positionname
 	}
 }
 
@@ -61,9 +61,9 @@ func (j *Jobposition) assignValues(values ...interface{}) error {
 	j.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field position_name", values[0])
+		return fmt.Errorf("unexpected type %T for field positionname", values[0])
 	} else if value.Valid {
-		j.PositionName = value.String
+		j.Positionname = value.String
 	}
 	return nil
 }
@@ -96,8 +96,8 @@ func (j *Jobposition) String() string {
 	var builder strings.Builder
 	builder.WriteString("Jobposition(")
 	builder.WriteString(fmt.Sprintf("id=%v", j.ID))
-	builder.WriteString(", position_name=")
-	builder.WriteString(j.PositionName)
+	builder.WriteString(", positionname=")
+	builder.WriteString(j.Positionname)
 	builder.WriteByte(')')
 	return builder.String()
 }

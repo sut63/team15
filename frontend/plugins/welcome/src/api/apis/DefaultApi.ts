@@ -18,6 +18,9 @@ import {
     ControllersDeposit,
     ControllersDepositFromJSON,
     ControllersDepositToJSON,
+    ControllersLease,
+    ControllersLeaseFromJSON,
+    ControllersLeaseToJSON,
     ControllersRoomdetail,
     ControllersRoomdetailFromJSON,
     ControllersRoomdetailToJSON,
@@ -39,6 +42,9 @@ import {
     EntFacilitie,
     EntFacilitieFromJSON,
     EntFacilitieToJSON,
+    EntLease,
+    EntLeaseFromJSON,
+    EntLeaseToJSON,
     EntLengthTime,
     EntLengthTimeFromJSON,
     EntLengthTimeToJSON,
@@ -57,6 +63,9 @@ import {
     EntStaytype,
     EntStaytypeFromJSON,
     EntStaytypeToJSON,
+    EntWifi,
+    EntWifiFromJSON,
+    EntWifiToJSON,
 } from '../models';
 
 export interface CreateCleaningroomRequest {
@@ -73,6 +82,10 @@ export interface CreateEquipmentRequest {
 
 export interface CreateFacilitieRequest {
     facilitie: EntFacilitie;
+}
+
+export interface CreateLeaseRequest {
+    lease: ControllersLease;
 }
 
 export interface CreateNearbyplaceRequest {
@@ -93,6 +106,10 @@ export interface CreateStatusdRequest {
 
 export interface CreateStaytypeRequest {
     staytype: EntStaytype;
+}
+
+export interface CreateWifiRequest {
+    wifi: EntWifi;
 }
 
 export interface DeleteEmployeeRequest {
@@ -124,6 +141,10 @@ export interface DeleteStatusdRequest {
 }
 
 export interface DeleteStaytypeRequest {
+    id: number;
+}
+
+export interface DeleteWifiRequest {
     id: number;
 }
 
@@ -171,6 +192,10 @@ export interface GetStaytypeRequest {
     id: number;
 }
 
+export interface GetWifiRequest {
+    id: number;
+}
+
 export interface ListCleanernameRequest {
     limit?: number;
     offset?: number;
@@ -196,6 +221,11 @@ export interface ListFacilitieRequest {
     offset?: number;
 }
 
+export interface ListLeaseRequest {
+    limit?: number;
+    offset?: number;
+}
+
 export interface ListLengthtimeRequest {
     limit?: number;
     offset?: number;
@@ -217,6 +247,11 @@ export interface ListStatusdRequest {
 }
 
 export interface ListStaytypeRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListWifiRequest {
     limit?: number;
     offset?: number;
 }
@@ -363,6 +398,41 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async createFacilitie(requestParameters: CreateFacilitieRequest): Promise<EntFacilitie> {
         const response = await this.createFacilitieRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create lease
+     * Create lease
+     */
+    async createLeaseRaw(requestParameters: CreateLeaseRequest): Promise<runtime.ApiResponse<ControllersLease>> {
+        if (requestParameters.lease === null || requestParameters.lease === undefined) {
+            throw new runtime.RequiredError('lease','Required parameter requestParameters.lease was null or undefined when calling createLease.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/leases`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ControllersLeaseToJSON(requestParameters.lease),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ControllersLeaseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create lease
+     * Create lease
+     */
+    async createLease(requestParameters: CreateLeaseRequest): Promise<ControllersLease> {
+        const response = await this.createLeaseRaw(requestParameters);
         return await response.value();
     }
 
@@ -538,6 +608,41 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async createStaytype(requestParameters: CreateStaytypeRequest): Promise<EntStaytype> {
         const response = await this.createStaytypeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create wifi
+     * Create wifi
+     */
+    async createWifiRaw(requestParameters: CreateWifiRequest): Promise<runtime.ApiResponse<EntWifi>> {
+        if (requestParameters.wifi === null || requestParameters.wifi === undefined) {
+            throw new runtime.RequiredError('wifi','Required parameter requestParameters.wifi was null or undefined when calling createWifi.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wifis`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntWifiToJSON(requestParameters.wifi),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntWifiFromJSON(jsonValue));
+    }
+
+    /**
+     * Create wifi
+     * Create wifi
+     */
+    async createWifi(requestParameters: CreateWifiRequest): Promise<EntWifi> {
+        const response = await this.createWifiRaw(requestParameters);
         return await response.value();
     }
 
@@ -794,6 +899,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async deleteStaytype(requestParameters: DeleteStaytypeRequest): Promise<object> {
         const response = await this.deleteStaytypeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get wifi by ID
+     * Delete a wifi entity by ID
+     */
+    async deleteWifiRaw(requestParameters: DeleteWifiRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteWifi.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wifis/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get wifi by ID
+     * Delete a wifi entity by ID
+     */
+    async deleteWifi(requestParameters: DeleteWifiRequest): Promise<object> {
+        const response = await this.deleteWifiRaw(requestParameters);
         return await response.value();
     }
 
@@ -1150,6 +1287,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get wifi by ID
+     * Get a wifi entity by ID
+     */
+    async getWifiRaw(requestParameters: GetWifiRequest): Promise<runtime.ApiResponse<EntWifi>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getWifi.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wifis/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntWifiFromJSON(jsonValue));
+    }
+
+    /**
+     * get wifi by ID
+     * Get a wifi entity by ID
+     */
+    async getWifi(requestParameters: GetWifiRequest): Promise<EntWifi> {
+        const response = await this.getWifiRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * list cleanername entities
      * List cleanername entities
      */
@@ -1358,6 +1527,42 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * list lease entities
+     * List lease entities
+     */
+    async listLeaseRaw(requestParameters: ListLeaseRequest): Promise<runtime.ApiResponse<Array<EntLease>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/leases`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntLeaseFromJSON));
+    }
+
+    /**
+     * list lease entities
+     * List lease entities
+     */
+    async listLease(requestParameters: ListLeaseRequest): Promise<Array<EntLease>> {
+        const response = await this.listLeaseRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * list lengthtime entities
      * List lengthtime entities
      */
@@ -1562,6 +1767,42 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listStaytype(requestParameters: ListStaytypeRequest): Promise<Array<EntStaytype>> {
         const response = await this.listStaytypeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list wifi entities
+     * List wifi entities
+     */
+    async listWifiRaw(requestParameters: ListWifiRequest): Promise<runtime.ApiResponse<Array<EntWifi>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wifis`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntWifiFromJSON));
+    }
+
+    /**
+     * list wifi entities
+     * List wifi entities
+     */
+    async listWifi(requestParameters: ListWifiRequest): Promise<Array<EntWifi>> {
+        const response = await this.listWifiRaw(requestParameters);
         return await response.value();
     }
 

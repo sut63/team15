@@ -7,8 +7,8 @@ const (
 	Label = "jobposition"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldPositionName holds the string denoting the position_name field in the database.
-	FieldPositionName = "position_name"
+	// FieldPositionname holds the string denoting the positionname field in the database.
+	FieldPositionname = "positionname"
 
 	// EdgeEmployees holds the string denoting the employees edge name in mutations.
 	EdgeEmployees = "employees"
@@ -21,16 +21,11 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
 	EmployeesInverseTable = "employees"
 	// EmployeesColumn is the table column denoting the employees relation/edge.
-	EmployeesColumn = "jobposition_id"
+	EmployeesColumn = "jobposition_employees"
 )
 
 // Columns holds all SQL columns for jobposition fields.
 var Columns = []string{
 	FieldID,
-	FieldPositionName,
+	FieldPositionname,
 }
-
-var (
-	// PositionNameValidator is a validator for the "position_name" field. It is called by the builders before save.
-	PositionNameValidator func(string) error
-)

@@ -86,7 +86,7 @@ var (
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "email", Type: field.TypeString},
 		{Name: "password", Type: field.TypeString},
-		{Name: "jobposition_id", Type: field.TypeInt, Nullable: true},
+		{Name: "jobposition_employees", Type: field.TypeInt, Nullable: true},
 	}
 	// EmployeesTable holds the schema information for the "employees" table.
 	EmployeesTable = &schema.Table{
@@ -130,7 +130,7 @@ var (
 	// JobpositionsColumns holds the columns for the "jobpositions" table.
 	JobpositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "position_name", Type: field.TypeString, Unique: true},
+		{Name: "positionname", Type: field.TypeString, Unique: true},
 	}
 	// JobpositionsTable holds the schema information for the "jobpositions" table.
 	JobpositionsTable = &schema.Table{
@@ -249,7 +249,8 @@ var (
 	// RoomdetailsColumns holds the columns for the "roomdetails" table.
 	RoomdetailsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "roomtypename", Type: field.TypeString, Unique: true},
+		{Name: "roomnumber", Type: field.TypeString, Unique: true},
+		{Name: "roomtypename", Type: field.TypeString},
 		{Name: "roomprice", Type: field.TypeString},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "equipment_roomdetail", Type: field.TypeInt, Nullable: true},
@@ -266,42 +267,42 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "roomdetails_employees_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[3]},
+				Columns: []*schema.Column{RoomdetailsColumns[4]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_equipment_roomdetail",
-				Columns: []*schema.Column{RoomdetailsColumns[4]},
+				Columns: []*schema.Column{RoomdetailsColumns[5]},
 
 				RefColumns: []*schema.Column{EquipmentColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_facilities_roomdetail",
-				Columns: []*schema.Column{RoomdetailsColumns[5]},
+				Columns: []*schema.Column{RoomdetailsColumns[6]},
 
 				RefColumns: []*schema.Column{FacilitiesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_nearbyplaces_roomdetail",
-				Columns: []*schema.Column{RoomdetailsColumns[6]},
+				Columns: []*schema.Column{RoomdetailsColumns[7]},
 
 				RefColumns: []*schema.Column{NearbyplacesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_quantities_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[7]},
+				Columns: []*schema.Column{RoomdetailsColumns[8]},
 
 				RefColumns: []*schema.Column{QuantitiesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_staytypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[8]},
+				Columns: []*schema.Column{RoomdetailsColumns[9]},
 
 				RefColumns: []*schema.Column{StaytypesColumns[0]},
 				OnDelete:   schema.SetNull,

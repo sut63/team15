@@ -91,6 +91,13 @@ func IDLTE(id int) predicate.Roomdetail {
 	})
 }
 
+// Roomnumber applies equality check predicate on the "roomnumber" field. It's identical to RoomnumberEQ.
+func Roomnumber(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
 // Roomtypename applies equality check predicate on the "roomtypename" field. It's identical to RoomtypenameEQ.
 func Roomtypename(v string) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
@@ -102,6 +109,117 @@ func Roomtypename(v string) predicate.Roomdetail {
 func Roomprice(v string) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRoomprice), v))
+	})
+}
+
+// RoomnumberEQ applies the EQ predicate on the "roomnumber" field.
+func RoomnumberEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberNEQ applies the NEQ predicate on the "roomnumber" field.
+func RoomnumberNEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberIn applies the In predicate on the "roomnumber" field.
+func RoomnumberIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberNotIn applies the NotIn predicate on the "roomnumber" field.
+func RoomnumberNotIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRoomnumber), v...))
+	})
+}
+
+// RoomnumberGT applies the GT predicate on the "roomnumber" field.
+func RoomnumberGT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberGTE applies the GTE predicate on the "roomnumber" field.
+func RoomnumberGTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLT applies the LT predicate on the "roomnumber" field.
+func RoomnumberLT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberLTE applies the LTE predicate on the "roomnumber" field.
+func RoomnumberLTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContains applies the Contains predicate on the "roomnumber" field.
+func RoomnumberContains(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasPrefix applies the HasPrefix predicate on the "roomnumber" field.
+func RoomnumberHasPrefix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberHasSuffix applies the HasSuffix predicate on the "roomnumber" field.
+func RoomnumberHasSuffix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberEqualFold applies the EqualFold predicate on the "roomnumber" field.
+func RoomnumberEqualFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldRoomnumber), v))
+	})
+}
+
+// RoomnumberContainsFold applies the ContainsFold predicate on the "roomnumber" field.
+func RoomnumberContainsFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldRoomnumber), v))
 	})
 }
 

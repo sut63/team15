@@ -39,11 +39,11 @@ export interface EntJobposition {
      */
     id?: number;
     /**
-     * PositionName holds the value of the "position_name" field.
+     * Positionname holds the value of the "positionname" field.
      * @type {string}
      * @memberof EntJobposition
      */
-    positionName?: string;
+    positionname?: string;
 }
 
 export function EntJobpositionFromJSON(json: any): EntJobposition {
@@ -58,7 +58,7 @@ export function EntJobpositionFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'edges': !exists(json, 'edges') ? undefined : EntJobpositionEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'positionName': !exists(json, 'position_name') ? undefined : json['position_name'],
+        'positionname': !exists(json, 'positionname') ? undefined : json['positionname'],
     };
 }
 
@@ -73,7 +73,7 @@ export function EntJobpositionToJSON(value?: EntJobposition | null): any {
         
         'edges': EntJobpositionEdgesToJSON(value.edges),
         'id': value.id,
-        'position_name': value.positionName,
+        'positionname': value.positionname,
     };
 }
 

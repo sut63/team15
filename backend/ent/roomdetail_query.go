@@ -457,12 +457,12 @@ func (rq *RoomdetailQuery) WithRoomdetails(opts ...func(*LeaseQuery)) *Roomdetai
 // Example:
 //
 //	var v []struct {
-//		Roomtypename string `json:"roomtypename,omitempty"`
+//		Roomnumber string `json:"roomnumber,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Roomdetail.Query().
-//		GroupBy(roomdetail.FieldRoomtypename).
+//		GroupBy(roomdetail.FieldRoomnumber).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -483,11 +483,11 @@ func (rq *RoomdetailQuery) GroupBy(field string, fields ...string) *RoomdetailGr
 // Example:
 //
 //	var v []struct {
-//		Roomtypename string `json:"roomtypename,omitempty"`
+//		Roomnumber string `json:"roomnumber,omitempty"`
 //	}
 //
 //	client.Roomdetail.Query().
-//		Select(roomdetail.FieldRoomtypename).
+//		Select(roomdetail.FieldRoomnumber).
 //		Scan(ctx, &v)
 //
 func (rq *RoomdetailQuery) Select(field string, fields ...string) *RoomdetailSelect {

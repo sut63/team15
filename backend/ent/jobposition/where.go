@@ -91,29 +91,29 @@ func IDLTE(id int) predicate.Jobposition {
 	})
 }
 
-// PositionName applies equality check predicate on the "position_name" field. It's identical to PositionNameEQ.
-func PositionName(v string) predicate.Jobposition {
+// Positionname applies equality check predicate on the "positionname" field. It's identical to PositionnameEQ.
+func Positionname(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPositionName), v))
+		s.Where(sql.EQ(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameEQ applies the EQ predicate on the "position_name" field.
-func PositionNameEQ(v string) predicate.Jobposition {
+// PositionnameEQ applies the EQ predicate on the "positionname" field.
+func PositionnameEQ(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPositionName), v))
+		s.Where(sql.EQ(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameNEQ applies the NEQ predicate on the "position_name" field.
-func PositionNameNEQ(v string) predicate.Jobposition {
+// PositionnameNEQ applies the NEQ predicate on the "positionname" field.
+func PositionnameNEQ(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPositionName), v))
+		s.Where(sql.NEQ(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameIn applies the In predicate on the "position_name" field.
-func PositionNameIn(vs ...string) predicate.Jobposition {
+// PositionnameIn applies the In predicate on the "positionname" field.
+func PositionnameIn(vs ...string) predicate.Jobposition {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -125,12 +125,12 @@ func PositionNameIn(vs ...string) predicate.Jobposition {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldPositionName), v...))
+		s.Where(sql.In(s.C(FieldPositionname), v...))
 	})
 }
 
-// PositionNameNotIn applies the NotIn predicate on the "position_name" field.
-func PositionNameNotIn(vs ...string) predicate.Jobposition {
+// PositionnameNotIn applies the NotIn predicate on the "positionname" field.
+func PositionnameNotIn(vs ...string) predicate.Jobposition {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -142,70 +142,70 @@ func PositionNameNotIn(vs ...string) predicate.Jobposition {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldPositionName), v...))
+		s.Where(sql.NotIn(s.C(FieldPositionname), v...))
 	})
 }
 
-// PositionNameGT applies the GT predicate on the "position_name" field.
-func PositionNameGT(v string) predicate.Jobposition {
+// PositionnameGT applies the GT predicate on the "positionname" field.
+func PositionnameGT(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPositionName), v))
+		s.Where(sql.GT(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameGTE applies the GTE predicate on the "position_name" field.
-func PositionNameGTE(v string) predicate.Jobposition {
+// PositionnameGTE applies the GTE predicate on the "positionname" field.
+func PositionnameGTE(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPositionName), v))
+		s.Where(sql.GTE(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameLT applies the LT predicate on the "position_name" field.
-func PositionNameLT(v string) predicate.Jobposition {
+// PositionnameLT applies the LT predicate on the "positionname" field.
+func PositionnameLT(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPositionName), v))
+		s.Where(sql.LT(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameLTE applies the LTE predicate on the "position_name" field.
-func PositionNameLTE(v string) predicate.Jobposition {
+// PositionnameLTE applies the LTE predicate on the "positionname" field.
+func PositionnameLTE(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPositionName), v))
+		s.Where(sql.LTE(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameContains applies the Contains predicate on the "position_name" field.
-func PositionNameContains(v string) predicate.Jobposition {
+// PositionnameContains applies the Contains predicate on the "positionname" field.
+func PositionnameContains(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldPositionName), v))
+		s.Where(sql.Contains(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameHasPrefix applies the HasPrefix predicate on the "position_name" field.
-func PositionNameHasPrefix(v string) predicate.Jobposition {
+// PositionnameHasPrefix applies the HasPrefix predicate on the "positionname" field.
+func PositionnameHasPrefix(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldPositionName), v))
+		s.Where(sql.HasPrefix(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameHasSuffix applies the HasSuffix predicate on the "position_name" field.
-func PositionNameHasSuffix(v string) predicate.Jobposition {
+// PositionnameHasSuffix applies the HasSuffix predicate on the "positionname" field.
+func PositionnameHasSuffix(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldPositionName), v))
+		s.Where(sql.HasSuffix(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameEqualFold applies the EqualFold predicate on the "position_name" field.
-func PositionNameEqualFold(v string) predicate.Jobposition {
+// PositionnameEqualFold applies the EqualFold predicate on the "positionname" field.
+func PositionnameEqualFold(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldPositionName), v))
+		s.Where(sql.EqualFold(s.C(FieldPositionname), v))
 	})
 }
 
-// PositionNameContainsFold applies the ContainsFold predicate on the "position_name" field.
-func PositionNameContainsFold(v string) predicate.Jobposition {
+// PositionnameContainsFold applies the ContainsFold predicate on the "positionname" field.
+func PositionnameContainsFold(v string) predicate.Jobposition {
 	return predicate.Jobposition(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldPositionName), v))
+		s.Where(sql.ContainsFold(s.C(FieldPositionname), v))
 	})
 }
 
