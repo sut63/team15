@@ -45,11 +45,11 @@ export interface EntLease {
      */
     id?: number;
     /**
-     * Lease holds the value of the "lease" field.
+     * Tenant holds the value of the "tenant" field.
      * @type {string}
      * @memberof EntLease
      */
-    lease?: string;
+    tenant?: string;
 }
 
 export function EntLeaseFromJSON(json: any): EntLease {
@@ -65,7 +65,7 @@ export function EntLeaseFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'addedtime': !exists(json, 'addedtime') ? undefined : json['addedtime'],
         'edges': !exists(json, 'edges') ? undefined : EntLeaseEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'lease': !exists(json, 'lease') ? undefined : json['lease'],
+        'tenant': !exists(json, 'tenant') ? undefined : json['tenant'],
     };
 }
 
@@ -81,7 +81,7 @@ export function EntLeaseToJSON(value?: EntLease | null): any {
         'addedtime': value.addedtime,
         'edges': EntLeaseEdgesToJSON(value.edges),
         'id': value.id,
-        'lease': value.lease,
+        'tenant': value.tenant,
     };
 }
 

@@ -266,6 +266,7 @@ func main() {
 	// Set Quantity Data
 	quantitys := Quantitys{
 		Quantity: []Quantity{
+			Quantity{"1 people"},
 			Quantity{"2 people"},
 			Quantity{"4 people"},
 			Quantity{"6 people"},

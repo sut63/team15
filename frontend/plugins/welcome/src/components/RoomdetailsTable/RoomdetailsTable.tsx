@@ -61,7 +61,7 @@ export default function ComponentsTable() {
      <Table className={classes.table} aria-label="simple table">
        <TableHead>
          <TableRow>
-           <TableCell align="center">เลขที่</TableCell>
+           <TableCell align="center">เลขห้อง</TableCell>
            <TableCell align="center">ประเภทห้อง</TableCell>
            <TableCell align="center">ราคาห้อง</TableCell>
            <TableCell align="center">จำนวนผู้ที่สามารถเข้าพักได้</TableCell>
@@ -74,7 +74,6 @@ export default function ComponentsTable() {
        <TableBody>
          {roomdetails.map((item:any) => (
            <TableRow key={item.id}>
-             <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.roomnumber}</TableCell>
              <TableCell align="center">{item.roomtypename}</TableCell>
              <TableCell align="center">{item.roomprice}</TableCell>

@@ -15,9 +15,20 @@ definitions:
     properties:
       added:
         type: string
-      lease:
+      roomnum:
+        type: string
+      tenant:
         type: string
       wifi:
+        type: integer
+    type: object
+  controllers.Repairinvoice:
+    properties:
+      bequipment:
+        type: string
+      employee:
+        type: integer
+      rentalstatus:
         type: integer
     type: object
   controllers.Roomdetail:
@@ -154,6 +165,11 @@ definitions:
         $ref: '#/definitions/ent.Jobposition'
         description: Jobposition holds the value of the jobposition edge.
         type: object
+      repairinvoices:
+        description: Repairinvoices holds the value of the repairinvoices edge.
+        items:
+          $ref: '#/definitions/ent.Repairinvoice'
+        type: array
       roomdetails:
         description: Roomdetails holds the value of the roomdetails edge.
         items:
@@ -243,8 +259,8 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
-      lease:
-        description: Lease holds the value of the "lease" field.
+      tenant:
+        description: Tenant holds the value of the "tenant" field.
         type: string
     type: object
   ent.LeaseEdges:
@@ -326,6 +342,55 @@ definitions:
         items:
           $ref: '#/definitions/ent.Roomdetail'
         type: array
+    type: object
+  ent.Rentalstatus:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.RentalstatusEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the RentalstatusQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      rentalstatus:
+        description: Rentalstatus holds the value of the "rentalstatus" field.
+        type: string
+    type: object
+  ent.RentalstatusEdges:
+    properties:
+      repairinvoices:
+        description: Repairinvoices holds the value of the repairinvoices edge.
+        items:
+          $ref: '#/definitions/ent.Repairinvoice'
+        type: array
+    type: object
+  ent.Repairinvoice:
+    properties:
+      bequipment:
+        description: Bequipment holds the value of the "bequipment" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.RepairinvoiceEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the RepairinvoiceQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.RepairinvoiceEdges:
+    properties:
+      employee:
+        $ref: '#/definitions/ent.Employee'
+        description: Employee holds the value of the employee edge.
+        type: object
+      rentalstatus:
+        $ref: '#/definitions/ent.Rentalstatus'
+        description: Rentalstatus holds the value of the Rentalstatus edge.
+        type: object
     type: object
   ent.Roomdetail:
     properties:
@@ -465,6 +530,36 @@ info:
   title: SUT SA Example API
   version: "1.0"
 paths:
+  /Rentalstatuss/{id}:
+    get:
+      description: get rentalstatus by ID
+      operationId: get-rentalstatus
+      parameters:
+      - description: Rentalstatus ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Rentalstatus'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a rentalstatus entity by ID
   /cleanernames:
     get:
       description: list cleanername entities
@@ -1352,6 +1447,124 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a quantity entity by ID
+  /rentalstatuss:
+    get:
+      description: list rentalstatus entities
+      operationId: list-rentalstatus
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Rentalstatus'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List rentalstatus entities
+    post:
+      consumes:
+      - application/json
+      description: Create rentalstatus
+      operationId: create-rentalstatus
+      parameters:
+      - description: Rentalstatus entity
+        in: body
+        name: rentalstatus
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Rentalstatus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Rentalstatus'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create rentalstatus
+  /repairinvoices:
+    get:
+      description: list repairinvoice entities
+      operationId: list-repairinvoice
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Repairinvoice'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List repairinvoice entities
+    post:
+      consumes:
+      - application/json
+      description: Create repairinvoice
+      operationId: create-repairinvoice
+      parameters:
+      - description: Repairinvoice entity
+        in: body
+        name: repairinvoice
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Repairinvoice'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Repairinvoice'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create repairinvoice
   /roomdetails:
     get:
       description: list roomdetail entities
