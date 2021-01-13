@@ -44,7 +44,7 @@ export function EntNearbyplaceEdgesFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'roomdetail': !exists(json, 'roomdetail') ? undefined : ((json['roomdetail'] as Array<any>).map(EntRoomdetailFromJSON)),
+        'roomdetail': !exists(json, 'Roomdetail') ? undefined : ((json['Roomdetail'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 

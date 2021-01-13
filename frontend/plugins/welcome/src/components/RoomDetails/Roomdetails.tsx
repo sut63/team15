@@ -238,8 +238,10 @@ export default function CreateRoomdetail() {
              setAlert(false);
              setAlerts(false);
              //window.location.reload(false);
+      console.log(roomname)
       }
       else{
+        console.log("ไม่เข้าอันแรก")
         CreateRoomdetail();
       }
     }
@@ -266,7 +268,7 @@ export default function CreateRoomdetail() {
     setStatus(true);
     if (res.id != '') {
       setAlert(true);
-     // window.location.reload(false);
+      //window.location.reload(false);
     }
   }
      else {

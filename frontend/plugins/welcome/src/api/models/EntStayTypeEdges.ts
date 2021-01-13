@@ -44,7 +44,7 @@ export function EntStaytypeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'roomdetails': !exists(json, 'roomdetails') ? undefined : ((json['roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
+        'roomdetails': !exists(json, 'Roomdetails') ? undefined : ((json['Roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 

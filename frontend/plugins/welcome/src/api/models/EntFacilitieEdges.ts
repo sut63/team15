@@ -44,7 +44,7 @@ export function EntFacilitieEdgesFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'roomdetail': !exists(json, 'roomdetail') ? undefined : ((json['roomdetail'] as Array<any>).map(EntRoomdetailFromJSON)),
+        'roomdetail': !exists(json, 'Roomdetail') ? undefined : ((json['Roomdetail'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 
