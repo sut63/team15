@@ -179,7 +179,7 @@ var (
 	RoomdetailsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "roomtypename", Type: field.TypeString, Unique: true},
-		{Name: "roomprice", Type: field.TypeString, Unique: true},
+		{Name: "roomprice", Type: field.TypeString},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "equipment_roomdetail", Type: field.TypeInt, Nullable: true},
 		{Name: "facilitie_roomdetail", Type: field.TypeInt, Nullable: true},

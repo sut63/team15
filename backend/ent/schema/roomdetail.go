@@ -14,8 +14,8 @@ type Roomdetail struct {
 // Fields of the Roomdetail.
 func (Roomdetail) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("roomtypename").Unique(),
-		field.String("roomprice").Unique(),
+		field.String("roomtypename").Unique().NotEmpty(),
+		field.String("roomprice").NotEmpty(),
 	}
 }
 

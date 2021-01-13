@@ -87,3 +87,10 @@ var ForeignKeys = []string{
 	"quantity_roomdetails",
 	"staytype_roomdetails",
 }
+
+var (
+	// RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
+	RoomtypenameValidator func(string) error
+	// RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
+	RoompriceValidator func(string) error
+)

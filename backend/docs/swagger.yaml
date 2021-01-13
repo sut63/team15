@@ -638,15 +638,6 @@ paths:
     get:
       description: list employee entities
       operationId: list-employee
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
       produces:
       - application/json
       responses:
@@ -1236,15 +1227,6 @@ paths:
     get:
       description: list roomdetail entities
       operationId: list-roomdetail
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
       produces:
       - application/json
       responses:
@@ -1321,6 +1303,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Delete a roomdetail entity by ID
+    get:
+      description: get roomdetail by ID
+      operationId: get-roomdetail
+      parameters:
+      - description: Roomdetail ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Roomdetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a roomdetail entity by ID
   /statusd/{id}:
     delete:
       description: get statusd by ID

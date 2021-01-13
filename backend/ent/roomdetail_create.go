@@ -161,8 +161,18 @@ func (rc *RoomdetailCreate) Save(ctx context.Context) (*Roomdetail, error) {
 	if _, ok := rc.mutation.Roomtypename(); !ok {
 		return nil, &ValidationError{Name: "roomtypename", err: errors.New("ent: missing required field \"roomtypename\"")}
 	}
+	if v, ok := rc.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
 	if _, ok := rc.mutation.Roomprice(); !ok {
 		return nil, &ValidationError{Name: "roomprice", err: errors.New("ent: missing required field \"roomprice\"")}
+	}
+	if v, ok := rc.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
 	}
 	var (
 		err  error

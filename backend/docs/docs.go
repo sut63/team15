@@ -401,20 +401,6 @@ var doc = `{
                 ],
                 "summary": "List employee entities",
                 "operationId": "list-employee",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1301,20 +1287,6 @@ var doc = `{
                 ],
                 "summary": "List roomdetail entities",
                 "operationId": "list-roomdetail",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1383,6 +1355,49 @@ var doc = `{
             }
         },
         "/roomdetails/{id}": {
+            "get": {
+                "description": "get roomdetail by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a roomdetail entity by ID",
+                "operationId": "get-roomdetail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Roomdetail ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Roomdetail"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "get roomdetail by ID",
                 "produces": [
