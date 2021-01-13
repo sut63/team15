@@ -30,7 +30,13 @@ export interface ControllersLease {
      * @type {string}
      * @memberof ControllersLease
      */
-    lease?: string;
+    roomnum?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersLease
+     */
+    tenant?: string;
     /**
      * 
      * @type {number}
@@ -50,7 +56,8 @@ export function ControllersLeaseFromJSONTyped(json: any, ignoreDiscriminator: bo
     return {
         
         'added': !exists(json, 'added') ? undefined : json['added'],
-        'lease': !exists(json, 'lease') ? undefined : json['lease'],
+        'roomnum': !exists(json, 'roomnum') ? undefined : json['roomnum'],
+        'tenant': !exists(json, 'tenant') ? undefined : json['tenant'],
         'wifi': !exists(json, 'wifi') ? undefined : json['wifi'],
     };
 }
@@ -65,7 +72,8 @@ export function ControllersLeaseToJSON(value?: ControllersLease | null): any {
     return {
         
         'added': value.added,
-        'lease': value.lease,
+        'roomnum': value.roomnum,
+        'tenant': value.tenant,
         'wifi': value.wifi,
     };
 }

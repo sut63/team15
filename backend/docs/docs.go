@@ -33,6 +33,51 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/Rentalstatuss/{id}": {
+            "get": {
+                "description": "get rentalstatus by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a rentalstatus entity by ID",
+                "operationId": "get-rentalstatus",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Rentalstatus ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Rentalstatus"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/cleanernames": {
             "get": {
                 "description": "list cleanername entities",
@@ -1368,6 +1413,184 @@ var doc = `{
                 }
             }
         },
+        "/rentalstatuss": {
+            "get": {
+                "description": "list rentalstatus entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List rentalstatus entities",
+                "operationId": "list-rentalstatus",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Rentalstatus"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create rentalstatus",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create rentalstatus",
+                "operationId": "create-rentalstatus",
+                "parameters": [
+                    {
+                        "description": "Rentalstatus entity",
+                        "name": "rentalstatus",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Rentalstatus"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Rentalstatus"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/repairinvoices": {
+            "get": {
+                "description": "list repairinvoice entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List repairinvoice entities",
+                "operationId": "list-repairinvoice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Repairinvoice"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create repairinvoice",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create repairinvoice",
+                "operationId": "create-repairinvoice",
+                "parameters": [
+                    {
+                        "description": "Repairinvoice entity",
+                        "name": "repairinvoice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Repairinvoice"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Repairinvoice"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/roomdetails": {
             "get": {
                 "description": "list roomdetail entities",
@@ -2091,10 +2314,27 @@ var doc = `{
                 "added": {
                     "type": "string"
                 },
-                "lease": {
+                "roomnum": {
+                    "type": "string"
+                },
+                "tenant": {
                     "type": "string"
                 },
                 "wifi": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.Repairinvoice": {
+            "type": "object",
+            "properties": {
+                "bequipment": {
+                    "type": "string"
+                },
+                "employee": {
+                    "type": "integer"
+                },
+                "rentalstatus": {
                     "type": "integer"
                 }
             }
@@ -2276,6 +2516,13 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Jobposition"
                 },
+                "repairinvoices": {
+                    "description": "Repairinvoices holds the value of the repairinvoices edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Repairinvoice"
+                    }
+                },
                 "roomdetails": {
                     "description": "Roomdetails holds the value of the roomdetails edge.",
                     "type": "array",
@@ -2391,8 +2638,8 @@ var doc = `{
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "lease": {
-                    "description": "Lease holds the value of the \"lease\" field.",
+                "tenant": {
+                    "description": "Tenant holds the value of the \"tenant\" field.",
                     "type": "string"
                 }
             }
@@ -2499,6 +2746,69 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/ent.Roomdetail"
                     }
+                }
+            }
+        },
+        "ent.Rentalstatus": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RentalstatusQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.RentalstatusEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "rentalstatus": {
+                    "description": "Rentalstatus holds the value of the \"rentalstatus\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.RentalstatusEdges": {
+            "type": "object",
+            "properties": {
+                "repairinvoices": {
+                    "description": "Repairinvoices holds the value of the repairinvoices edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Repairinvoice"
+                    }
+                }
+            }
+        },
+        "ent.Repairinvoice": {
+            "type": "object",
+            "properties": {
+                "bequipment": {
+                    "description": "Bequipment holds the value of the \"bequipment\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RepairinvoiceQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.RepairinvoiceEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.RepairinvoiceEdges": {
+            "type": "object",
+            "properties": {
+                "employee": {
+                    "description": "Employee holds the value of the employee edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Employee"
+                },
+                "rentalstatus": {
+                    "description": "Rentalstatus holds the value of the Rentalstatus edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Rentalstatus"
                 }
             }
         },

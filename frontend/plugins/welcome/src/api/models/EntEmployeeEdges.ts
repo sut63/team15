@@ -22,6 +22,10 @@ import {
     EntJobpositionFromJSON,
     EntJobpositionFromJSONTyped,
     EntJobpositionToJSON,
+    EntRepairinvoice,
+    EntRepairinvoiceFromJSON,
+    EntRepairinvoiceFromJSONTyped,
+    EntRepairinvoiceToJSON,
     EntRoomdetail,
     EntRoomdetailFromJSON,
     EntRoomdetailFromJSONTyped,
@@ -47,6 +51,12 @@ export interface EntEmployeeEdges {
      */
     jobposition?: EntJobposition;
     /**
+     * Repairinvoices holds the value of the repairinvoices edge.
+     * @type {Array<EntRepairinvoice>}
+     * @memberof EntEmployeeEdges
+     */
+    repairinvoices?: Array<EntRepairinvoice>;
+    /**
      * Roomdetails holds the value of the roomdetails edge.
      * @type {Array<EntRoomdetail>}
      * @memberof EntEmployeeEdges
@@ -66,6 +76,7 @@ export function EntEmployeeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'employees': !exists(json, 'Employees') ? undefined : ((json['Employees'] as Array<any>).map(EntDepositFromJSON)),
         'jobposition': !exists(json, 'Jobposition') ? undefined : EntJobpositionFromJSON(json['Jobposition']),
+        'repairinvoices': !exists(json, 'Repairinvoices') ? undefined : ((json['Repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
         'roomdetails': !exists(json, 'Roomdetails') ? undefined : ((json['Roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
@@ -81,6 +92,7 @@ export function EntEmployeeEdgesToJSON(value?: EntEmployeeEdges | null): any {
         
         'employees': value.employees === undefined ? undefined : ((value.employees as Array<any>).map(EntDepositToJSON)),
         'jobposition': EntJobpositionToJSON(value.jobposition),
+        'repairinvoices': value.repairinvoices === undefined ? undefined : ((value.repairinvoices as Array<any>).map(EntRepairinvoiceToJSON)),
         'roomdetails': value.roomdetails === undefined ? undefined : ((value.roomdetails as Array<any>).map(EntRoomdetailToJSON)),
     };
 }

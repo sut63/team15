@@ -45,8 +45,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "jobposition" package.
 	JobpositionInverseTable = "jobpositions"
 	// JobpositionColumn is the table column denoting the jobposition relation/edge.
-<<<<<<< Updated upstream
-	JobpositionColumn = "jobposition_id"
+	JobpositionColumn = "jobposition_employees"
 	// RepairinvoicesTable is the table the holds the repairinvoices relation/edge.
 	RepairinvoicesTable = "repairinvoices"
 	// RepairinvoicesInverseTable is the table name for the Repairinvoice entity.
@@ -54,9 +53,6 @@ const (
 	RepairinvoicesInverseTable = "repairinvoices"
 	// RepairinvoicesColumn is the table column denoting the repairinvoices relation/edge.
 	RepairinvoicesColumn = "employee_id"
-=======
-	JobpositionColumn = "jobposition_employees"
->>>>>>> Stashed changes
 )
 
 // Columns holds all SQL columns for employee fields.

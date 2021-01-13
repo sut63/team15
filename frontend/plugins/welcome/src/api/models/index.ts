@@ -1,5 +1,6 @@
 export * from './ControllersDeposit';
 export * from './ControllersLease';
+export * from './ControllersRepairinvoice';
 export * from './ControllersRoomdetail';
 export * from './EntCleanerName';
 export * from './EntCleanerNameEdges';
@@ -23,6 +24,10 @@ export * from './EntNearbyplace';
 export * from './EntNearbyplaceEdges';
 export * from './EntQuantity';
 export * from './EntQuantityEdges';
+export * from './EntRentalstatus';
+export * from './EntRentalstatusEdges';
+export * from './EntRepairinvoice';
+export * from './EntRepairinvoiceEdges';
 export * from './EntRoomdetail';
 export * from './EntRoomdetailEdges';
 export * from './EntStatusd';

@@ -21,6 +21,9 @@ import {
     ControllersLease,
     ControllersLeaseFromJSON,
     ControllersLeaseToJSON,
+    ControllersRepairinvoice,
+    ControllersRepairinvoiceFromJSON,
+    ControllersRepairinvoiceToJSON,
     ControllersRoomdetail,
     ControllersRoomdetailFromJSON,
     ControllersRoomdetailToJSON,
@@ -54,6 +57,12 @@ import {
     EntQuantity,
     EntQuantityFromJSON,
     EntQuantityToJSON,
+    EntRentalstatus,
+    EntRentalstatusFromJSON,
+    EntRentalstatusToJSON,
+    EntRepairinvoice,
+    EntRepairinvoiceFromJSON,
+    EntRepairinvoiceToJSON,
     EntRoomdetail,
     EntRoomdetailFromJSON,
     EntRoomdetailToJSON,
@@ -94,6 +103,14 @@ export interface CreateNearbyplaceRequest {
 
 export interface CreateQuantityRequest {
     quantity: EntQuantity;
+}
+
+export interface CreateRentalstatusRequest {
+    rentalstatus: EntRentalstatus;
+}
+
+export interface CreateRepairinvoiceRequest {
+    repairinvoice: ControllersRepairinvoice;
 }
 
 export interface CreateRoomdetailRequest {
@@ -180,6 +197,10 @@ export interface GetQuantityRequest {
     id: number;
 }
 
+export interface GetRentalstatusRequest {
+    id: number;
+}
+
 export interface GetRoomdetailRequest {
     id: number;
 }
@@ -237,6 +258,16 @@ export interface ListNearbyplaceRequest {
 }
 
 export interface ListQuantityRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListRentalstatusRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListRepairinvoiceRequest {
     limit?: number;
     offset?: number;
 }
@@ -503,6 +534,76 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async createQuantity(requestParameters: CreateQuantityRequest): Promise<EntQuantity> {
         const response = await this.createQuantityRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create rentalstatus
+     * Create rentalstatus
+     */
+    async createRentalstatusRaw(requestParameters: CreateRentalstatusRequest): Promise<runtime.ApiResponse<EntRentalstatus>> {
+        if (requestParameters.rentalstatus === null || requestParameters.rentalstatus === undefined) {
+            throw new runtime.RequiredError('rentalstatus','Required parameter requestParameters.rentalstatus was null or undefined when calling createRentalstatus.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/rentalstatuss`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntRentalstatusToJSON(requestParameters.rentalstatus),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntRentalstatusFromJSON(jsonValue));
+    }
+
+    /**
+     * Create rentalstatus
+     * Create rentalstatus
+     */
+    async createRentalstatus(requestParameters: CreateRentalstatusRequest): Promise<EntRentalstatus> {
+        const response = await this.createRentalstatusRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create repairinvoice
+     * Create repairinvoice
+     */
+    async createRepairinvoiceRaw(requestParameters: CreateRepairinvoiceRequest): Promise<runtime.ApiResponse<ControllersRepairinvoice>> {
+        if (requestParameters.repairinvoice === null || requestParameters.repairinvoice === undefined) {
+            throw new runtime.RequiredError('repairinvoice','Required parameter requestParameters.repairinvoice was null or undefined when calling createRepairinvoice.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/repairinvoices`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ControllersRepairinvoiceToJSON(requestParameters.repairinvoice),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ControllersRepairinvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     * Create repairinvoice
+     * Create repairinvoice
+     */
+    async createRepairinvoice(requestParameters: CreateRepairinvoiceRequest): Promise<ControllersRepairinvoice> {
+        const response = await this.createRepairinvoiceRaw(requestParameters);
         return await response.value();
     }
 
@@ -1191,6 +1292,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get rentalstatus by ID
+     * Get a rentalstatus entity by ID
+     */
+    async getRentalstatusRaw(requestParameters: GetRentalstatusRequest): Promise<runtime.ApiResponse<EntRentalstatus>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getRentalstatus.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/Rentalstatuss/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntRentalstatusFromJSON(jsonValue));
+    }
+
+    /**
+     * get rentalstatus by ID
+     * Get a rentalstatus entity by ID
+     */
+    async getRentalstatus(requestParameters: GetRentalstatusRequest): Promise<EntRentalstatus> {
+        const response = await this.getRentalstatusRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get roomdetail by ID
      * Get a roomdetail entity by ID
      */
@@ -1667,6 +1800,78 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listQuantity(requestParameters: ListQuantityRequest): Promise<Array<EntQuantity>> {
         const response = await this.listQuantityRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list rentalstatus entities
+     * List rentalstatus entities
+     */
+    async listRentalstatusRaw(requestParameters: ListRentalstatusRequest): Promise<runtime.ApiResponse<Array<EntRentalstatus>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/rentalstatuss`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntRentalstatusFromJSON));
+    }
+
+    /**
+     * list rentalstatus entities
+     * List rentalstatus entities
+     */
+    async listRentalstatus(requestParameters: ListRentalstatusRequest): Promise<Array<EntRentalstatus>> {
+        const response = await this.listRentalstatusRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list repairinvoice entities
+     * List repairinvoice entities
+     */
+    async listRepairinvoiceRaw(requestParameters: ListRepairinvoiceRequest): Promise<runtime.ApiResponse<Array<EntRepairinvoice>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/repairinvoices`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntRepairinvoiceFromJSON));
+    }
+
+    /**
+     * list repairinvoice entities
+     * List repairinvoice entities
+     */
+    async listRepairinvoice(requestParameters: ListRepairinvoiceRequest): Promise<Array<EntRepairinvoice>> {
+        const response = await this.listRepairinvoiceRaw(requestParameters);
         return await response.value();
     }
 
