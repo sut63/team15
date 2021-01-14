@@ -60,5 +60,3 @@ export function EntWifiEdgesToJSON(value?: EntWifiEdges | null): any {
         'wifis': value.wifis === undefined ? undefined : ((value.wifis as Array<any>).map(EntLeaseToJSON)),
     };
 }
-
-

@@ -104,13 +104,13 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
-        'equipments': !exists(json, 'Equipments') ? undefined : EntEquipmentFromJSON(json['Equipments']),
-        'facilities': !exists(json, 'Facilities') ? undefined : EntFacilitieFromJSON(json['Facilities']),
-        'nearbyplaces': !exists(json, 'Nearbyplaces') ? undefined : EntNearbyplaceFromJSON(json['Nearbyplaces']),
-        'quantity': !exists(json, 'Quantity') ? undefined : EntQuantityFromJSON(json['Quantity']),
-        'roomdetails': !exists(json, 'Roomdetails') ? undefined : EntLeaseFromJSON(json['Roomdetails']),
-        'staytype': !exists(json, 'Staytype') ? undefined : EntStaytypeFromJSON(json['Staytype']),
+        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
+        'equipments': !exists(json, 'equipments') ? undefined : EntEquipmentFromJSON(json['equipments']),
+        'facilities': !exists(json, 'facilities') ? undefined : EntFacilitieFromJSON(json['facilities']),
+        'nearbyplaces': !exists(json, 'nearbyplaces') ? undefined : EntNearbyplaceFromJSON(json['nearbyplaces']),
+        'quantity': !exists(json, 'quantity') ? undefined : EntQuantityFromJSON(json['quantity']),
+        'roomdetails': !exists(json, 'roomdetails') ? undefined : EntLeaseFromJSON(json['roomdetails']),
+        'staytype': !exists(json, 'staytype') ? undefined : EntStaytypeFromJSON(json['staytype']),
     };
 }
 

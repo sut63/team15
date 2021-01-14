@@ -31,6 +31,7 @@ import { DefaultApi } from '../../api/apis';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import { EntStatusd } from '../../api/models/EntStatusd'; // import interface Statusd
 import { EntDeposit } from '../../api/models/EntDeposit'; // import interface Deposit
+import ComponanceDepositTable from '../DepositTable';
 
 // css style 
 const useStyles = makeStyles((theme: Theme) =>
@@ -108,10 +109,6 @@ export default function recordDeposit() {
   const checkEmployee = async () => {
     const edata = JSON.parse(String(localStorage.getItem("employeedata")));
     setLoading(false);
-	if(edata == ''){
-    history.pushState("","","./");
-	   window.location.href = "http://localhost:3000";
-	}
     setEmployee(edata)
 	console.log(edata);
   };
@@ -141,6 +138,27 @@ const getDeposit = async () => {
     setStatusd(event.target.value as number);
   };
 
+  const listDeposit = () => {
+    window.location.href ="http://localhost:3000/DepositTable";
+  };
+
+const checkEmployeeLoginData = async () => {
+            const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
+            setLoading(false);
+            if(jobdata != "พนักงานหอพัก"){
+              localStorage.setItem("employeedata", JSON.stringify(null));
+              localStorage.setItem("jobpositiondata", JSON.stringify(null));
+              history.pushState("", "", "./");
+              window.location.reload(false);
+            }
+            else{
+              listDeposit()
+            }
+          }
+const listRoom = () => {
+    window.location.href ="http://localhost:3000/RoomDetails";
+  };
+
 // create deposit
 const CreateDeposit = async () => {
   const deposits = {
@@ -163,7 +181,8 @@ const CreateDeposit = async () => {
   setStatus(true);
   const timer = setTimeout(() => {
      setStatus(false);
-  }, 3000);
+	 //window.location.reload(false);
+  }, 7000);
   
   console.log(deposits);
 };
@@ -171,15 +190,9 @@ const CreateDeposit = async () => {
     return (
     <Page theme={pageTheme.tool}>
 
-      <Header
-        title={`Create Deposit Invoice`}
-        type="Deposit systems"> 
-      </Header>
-
       <Content>
         <ContentHeader title="Deposit invoice"> 
               <Button onClick={() => {CreateDeposit();}} variant="contained"  color="primary" startIcon={<SaveRoundedIcon/>}> Create new deposit invoice </Button>
-              <Button style={{ marginLeft: 20 }} component={RouterLink} to="/DepositTable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Dismiss </Button>
         </ContentHeader>  
         <div className={classes.root}>
           <form noValidate autoComplete="off">
@@ -196,7 +209,7 @@ const CreateDeposit = async () => {
                   label="employee"
                   type="string"
 				  style={{ width: 400 }}
-                  value={employees.filter((filter: EntEmployee) => filter.id == employee).map((item: EntEmployee) => `${item.employeename}`)}
+                  value={employees.filter((filter: EntEmployee) => filter.id == employee).map((item: EntEmployee) => `${item.name}`)}
                 />
                </FormControl>
               </div>
@@ -252,17 +265,21 @@ const CreateDeposit = async () => {
 			  {status ? ( 
                       <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
               {alert ? ( 
-                      <strong> Successfull Save </strong>) 
+			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {listRoom()}}>Successfull Save</Alert>
+                      ) 
               : null} </div>
             ) : null}
 			{status2 ? ( 
                       <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
               {alert ? ( 
                       null) 
-              : (<strong> Unsuccessfull Save!! </strong>)} </div>
+              : (<Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }}> Unsuccessfull Save!! </Alert>)} </div>
             ) : null}
 		
             </FormControl>
+			<div>
+			<ComponanceDepositTable></ComponanceDepositTable>
+			</div>
 
           </form>
         </div>

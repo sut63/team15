@@ -112,7 +112,7 @@ export default function Login(props: any) {
         console.log(item.email);
         localStorage.setItem("jobpositiondata", JSON.stringify(item.edges?.jobposition?.positionname))
         console.log(item.edges?.jobposition?.positionname);
-      
+        
       if (item.edges?.jobposition?.positionname == "พนักงานหอพัก") {
           history.pushState("", "", "/DormEmployee");
         }

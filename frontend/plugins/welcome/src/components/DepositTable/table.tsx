@@ -38,23 +38,14 @@ export default function ComponentsDepositTable() {
 	  const edata = JSON.parse(Number(localStorage.getItem("employeedata")));
       setLoading(true);
       setDeposits(res);
-	  if(edata == ''){
-	    window.location.href = "http://localhost:3000";
-	  }
       console.log(res);
     };
     getDeposits();
   }, [loading]);
-  
  
   
  return (
   <Page theme={pageTheme.tool}>
-    <Header title={`Deposit invoice`} type="Deposit systems" >
-    <Button variant="contained" color="default" href="/recordDeposit" startIcon={<PersonAddRoundedIcon />}> New Deposit</Button>
-    <div>&nbsp;&nbsp;&nbsp;</div>
-    <Button variant="contained" color="primary" href="/Home" startIcon={<HomeRoundedIcon/>}> home</Button>
-    </Header>
     
     <Content>
    <TableContainer component={Paper}>
@@ -76,7 +67,7 @@ export default function ComponentsDepositTable() {
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.info}</TableCell>
-             <TableCell align="center">{item.edges?.employee?.employeename}</TableCell>
+             <TableCell align="center">{item.edges?.employee?.name}</TableCell>
              <TableCell align="center">{item.edges?.statusd?.statusdname}</TableCell>
 			 <TableCell align="center">{item.addedtime}</TableCell>
            </TableRow>
