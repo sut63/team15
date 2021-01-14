@@ -12,13 +12,12 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/employee"
-	"github.com/team15/app/ent/equipment"
-	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/lease"
-	"github.com/team15/app/ent/nearbyplace"
+	"github.com/team15/app/ent/petrule"
+	"github.com/team15/app/ent/pledge"
 	"github.com/team15/app/ent/predicate"
-	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/staytype"
 )
@@ -32,14 +31,13 @@ type RoomdetailQuery struct {
 	unique     []string
 	predicates []predicate.Roomdetail
 	// eager-loading edges.
-	withEquipments   *EquipmentQuery
-	withFacilities   *FacilitieQuery
-	withNearbyplaces *NearbyplaceQuery
-	withEmployee     *EmployeeQuery
-	withQuantity     *QuantityQuery
-	withStaytype     *StaytypeQuery
-	withRoomdetails  *LeaseQuery
-	withFKs          bool
+	withPledge      *PledgeQuery
+	withPetrule     *PetruleQuery
+	withBedtype     *BedtypeQuery
+	withEmployee    *EmployeeQuery
+	withStaytype    *StaytypeQuery
+	withRoomdetails *LeaseQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -69,17 +67,17 @@ func (rq *RoomdetailQuery) Order(o ...OrderFunc) *RoomdetailQuery {
 	return rq
 }
 
-// QueryEquipments chains the current query on the equipments edge.
-func (rq *RoomdetailQuery) QueryEquipments() *EquipmentQuery {
-	query := &EquipmentQuery{config: rq.config}
+// QueryPledge chains the current query on the pledge edge.
+func (rq *RoomdetailQuery) QueryPledge() *PledgeQuery {
+	query := &PledgeQuery{config: rq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
-			sqlgraph.To(equipment.Table, equipment.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EquipmentsTable, roomdetail.EquipmentsColumn),
+			sqlgraph.To(pledge.Table, pledge.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.PledgeTable, roomdetail.PledgeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -87,17 +85,17 @@ func (rq *RoomdetailQuery) QueryEquipments() *EquipmentQuery {
 	return query
 }
 
-// QueryFacilities chains the current query on the facilities edge.
-func (rq *RoomdetailQuery) QueryFacilities() *FacilitieQuery {
-	query := &FacilitieQuery{config: rq.config}
+// QueryPetrule chains the current query on the petrule edge.
+func (rq *RoomdetailQuery) QueryPetrule() *PetruleQuery {
+	query := &PetruleQuery{config: rq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
-			sqlgraph.To(facilitie.Table, facilitie.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.FacilitiesTable, roomdetail.FacilitiesColumn),
+			sqlgraph.To(petrule.Table, petrule.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.PetruleTable, roomdetail.PetruleColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -105,17 +103,17 @@ func (rq *RoomdetailQuery) QueryFacilities() *FacilitieQuery {
 	return query
 }
 
-// QueryNearbyplaces chains the current query on the nearbyplaces edge.
-func (rq *RoomdetailQuery) QueryNearbyplaces() *NearbyplaceQuery {
-	query := &NearbyplaceQuery{config: rq.config}
+// QueryBedtype chains the current query on the bedtype edge.
+func (rq *RoomdetailQuery) QueryBedtype() *BedtypeQuery {
+	query := &BedtypeQuery{config: rq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
-			sqlgraph.To(nearbyplace.Table, nearbyplace.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.NearbyplacesTable, roomdetail.NearbyplacesColumn),
+			sqlgraph.To(bedtype.Table, bedtype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.BedtypeTable, roomdetail.BedtypeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -134,24 +132,6 @@ func (rq *RoomdetailQuery) QueryEmployee() *EmployeeQuery {
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EmployeeTable, roomdetail.EmployeeColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryQuantity chains the current query on the quantity edge.
-func (rq *RoomdetailQuery) QueryQuantity() *QuantityQuery {
-	query := &QuantityQuery{config: rq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := rq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
-			sqlgraph.To(quantity.Table, quantity.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.QuantityTable, roomdetail.QuantityColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -374,36 +354,36 @@ func (rq *RoomdetailQuery) Clone() *RoomdetailQuery {
 	}
 }
 
-//  WithEquipments tells the query-builder to eager-loads the nodes that are connected to
-// the "equipments" edge. The optional arguments used to configure the query builder of the edge.
-func (rq *RoomdetailQuery) WithEquipments(opts ...func(*EquipmentQuery)) *RoomdetailQuery {
-	query := &EquipmentQuery{config: rq.config}
+//  WithPledge tells the query-builder to eager-loads the nodes that are connected to
+// the "pledge" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomdetailQuery) WithPledge(opts ...func(*PledgeQuery)) *RoomdetailQuery {
+	query := &PledgeQuery{config: rq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	rq.withEquipments = query
+	rq.withPledge = query
 	return rq
 }
 
-//  WithFacilities tells the query-builder to eager-loads the nodes that are connected to
-// the "facilities" edge. The optional arguments used to configure the query builder of the edge.
-func (rq *RoomdetailQuery) WithFacilities(opts ...func(*FacilitieQuery)) *RoomdetailQuery {
-	query := &FacilitieQuery{config: rq.config}
+//  WithPetrule tells the query-builder to eager-loads the nodes that are connected to
+// the "petrule" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomdetailQuery) WithPetrule(opts ...func(*PetruleQuery)) *RoomdetailQuery {
+	query := &PetruleQuery{config: rq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	rq.withFacilities = query
+	rq.withPetrule = query
 	return rq
 }
 
-//  WithNearbyplaces tells the query-builder to eager-loads the nodes that are connected to
-// the "nearbyplaces" edge. The optional arguments used to configure the query builder of the edge.
-func (rq *RoomdetailQuery) WithNearbyplaces(opts ...func(*NearbyplaceQuery)) *RoomdetailQuery {
-	query := &NearbyplaceQuery{config: rq.config}
+//  WithBedtype tells the query-builder to eager-loads the nodes that are connected to
+// the "bedtype" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomdetailQuery) WithBedtype(opts ...func(*BedtypeQuery)) *RoomdetailQuery {
+	query := &BedtypeQuery{config: rq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	rq.withNearbyplaces = query
+	rq.withBedtype = query
 	return rq
 }
 
@@ -415,17 +395,6 @@ func (rq *RoomdetailQuery) WithEmployee(opts ...func(*EmployeeQuery)) *Roomdetai
 		opt(query)
 	}
 	rq.withEmployee = query
-	return rq
-}
-
-//  WithQuantity tells the query-builder to eager-loads the nodes that are connected to
-// the "quantity" edge. The optional arguments used to configure the query builder of the edge.
-func (rq *RoomdetailQuery) WithQuantity(opts ...func(*QuantityQuery)) *RoomdetailQuery {
-	query := &QuantityQuery{config: rq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	rq.withQuantity = query
 	return rq
 }
 
@@ -518,17 +487,16 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		nodes       = []*Roomdetail{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [7]bool{
-			rq.withEquipments != nil,
-			rq.withFacilities != nil,
-			rq.withNearbyplaces != nil,
+		loadedTypes = [6]bool{
+			rq.withPledge != nil,
+			rq.withPetrule != nil,
+			rq.withBedtype != nil,
 			rq.withEmployee != nil,
-			rq.withQuantity != nil,
 			rq.withStaytype != nil,
 			rq.withRoomdetails != nil,
 		}
 	)
-	if rq.withEquipments != nil || rq.withFacilities != nil || rq.withNearbyplaces != nil || rq.withEmployee != nil || rq.withQuantity != nil || rq.withStaytype != nil {
+	if rq.withPledge != nil || rq.withPetrule != nil || rq.withBedtype != nil || rq.withEmployee != nil || rq.withStaytype != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -558,16 +526,16 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		return nodes, nil
 	}
 
-	if query := rq.withEquipments; query != nil {
+	if query := rq.withPledge; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Roomdetail)
 		for i := range nodes {
-			if fk := nodes[i].equipment_roomdetail; fk != nil {
+			if fk := nodes[i].pledge_roomdetails; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(equipment.IDIn(ids...))
+		query.Where(pledge.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -575,24 +543,24 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "equipment_roomdetail" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "pledge_roomdetails" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Equipments = n
+				nodes[i].Edges.Pledge = n
 			}
 		}
 	}
 
-	if query := rq.withFacilities; query != nil {
+	if query := rq.withPetrule; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Roomdetail)
 		for i := range nodes {
-			if fk := nodes[i].facilitie_roomdetail; fk != nil {
+			if fk := nodes[i].petrule_roomdetails; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(facilitie.IDIn(ids...))
+		query.Where(petrule.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -600,24 +568,24 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "facilitie_roomdetail" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "petrule_roomdetails" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Facilities = n
+				nodes[i].Edges.Petrule = n
 			}
 		}
 	}
 
-	if query := rq.withNearbyplaces; query != nil {
+	if query := rq.withBedtype; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Roomdetail)
 		for i := range nodes {
-			if fk := nodes[i].nearbyplace_roomdetail; fk != nil {
+			if fk := nodes[i].bedtype_roomdetails; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(nearbyplace.IDIn(ids...))
+		query.Where(bedtype.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -625,10 +593,10 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "nearbyplace_roomdetail" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "bedtype_roomdetails" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Nearbyplaces = n
+				nodes[i].Edges.Bedtype = n
 			}
 		}
 	}
@@ -654,31 +622,6 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Employee = n
-			}
-		}
-	}
-
-	if query := rq.withQuantity; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*Roomdetail)
-		for i := range nodes {
-			if fk := nodes[i].quantity_roomdetails; fk != nil {
-				ids = append(ids, *fk)
-				nodeids[*fk] = append(nodeids[*fk], nodes[i])
-			}
-		}
-		query.Where(quantity.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "quantity_roomdetails" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Quantity = n
 			}
 		}
 	}

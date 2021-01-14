@@ -6,7 +6,6 @@ import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
-	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/schema"
 	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/wifi"
@@ -42,20 +41,6 @@ func init() {
 	lengthtimeDescLengthtime := lengthtimeFields[0].Descriptor()
 	// lengthtime.LengthtimeValidator is a validator for the "lengthtime" field. It is called by the builders before save.
 	lengthtime.LengthtimeValidator = lengthtimeDescLengthtime.Validators[0].(func(string) error)
-	roomdetailFields := schema.Roomdetail{}.Fields()
-	_ = roomdetailFields
-	// roomdetailDescRoomnumber is the schema descriptor for roomnumber field.
-	roomdetailDescRoomnumber := roomdetailFields[0].Descriptor()
-	// roomdetail.RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
-	roomdetail.RoomnumberValidator = roomdetailDescRoomnumber.Validators[0].(func(string) error)
-	// roomdetailDescRoomtypename is the schema descriptor for roomtypename field.
-	roomdetailDescRoomtypename := roomdetailFields[1].Descriptor()
-	// roomdetail.RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
-	roomdetail.RoomtypenameValidator = roomdetailDescRoomtypename.Validators[0].(func(string) error)
-	// roomdetailDescRoomprice is the schema descriptor for roomprice field.
-	roomdetailDescRoomprice := roomdetailFields[2].Descriptor()
-	// roomdetail.RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
-	roomdetail.RoompriceValidator = roomdetailDescRoomprice.Validators[0].(func(string) error)
 	statusdFields := schema.Statusd{}.Fields()
 	_ = statusdFields
 	// statusdDescStatusdname is the schema descriptor for statusdname field.

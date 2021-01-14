@@ -7,11 +7,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/team15/app/ent"
+	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/employee"
-	"github.com/team15/app/ent/equipment"
-	"github.com/team15/app/ent/facilitie"
-	"github.com/team15/app/ent/nearbyplace"
-	"github.com/team15/app/ent/quantity"
+	"github.com/team15/app/ent/petrule"
+	"github.com/team15/app/ent/pledge"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/staytype"
 )
@@ -25,11 +24,12 @@ type Roomdetail struct {
 	Roomnumber   string
 	Roomtypename string
 	Roomprice    string
-	Quantity     int
+	Sleep        string
+	Bed          string
 	Staytype     int
-	Equipment    int
-	Facilitie    int
-	Nearbyplace  int
+	Pledge       int
+	Petrule      int
+	Bedtype      int
 	Employee     int
 }
 
@@ -53,18 +53,6 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 		return
 	}
 
-	qu, err := ctl.client.Quantity.
-		Query().
-		Where(quantity.IDEQ(int(obj.Quantity))).
-		Only(context.Background())
-
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "quantity not found",
-		})
-		return
-	}
-
 	st, err := ctl.client.Staytype.
 		Query().
 		Where(staytype.IDEQ(int(obj.Staytype))).
@@ -77,38 +65,38 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 		return
 	}
 
-	eq, err := ctl.client.Equipment.
+	p, err := ctl.client.Pledge.
 		Query().
-		Where(equipment.IDEQ(int(obj.Equipment))).
+		Where(pledge.IDEQ(int(obj.Pledge))).
 		Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "equipment not found",
+			"error": "pledge not found",
 		})
 		return
 	}
 
-	fa, err := ctl.client.Facilitie.
+	pr, err := ctl.client.Petrule.
 		Query().
-		Where(facilitie.IDEQ(int(obj.Facilitie))).
+		Where(petrule.IDEQ(int(obj.Petrule))).
 		Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "facilitie not found",
+			"error": "petrule not found",
 		})
 		return
 	}
 
-	nb, err := ctl.client.Nearbyplace.
+	bt, err := ctl.client.Bedtype.
 		Query().
-		Where(nearbyplace.IDEQ(int(obj.Nearbyplace))).
+		Where(bedtype.IDEQ(int(obj.Bedtype))).
 		Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "nearbyplace not found",
+			"error": "bedtype not found",
 		})
 		return
 	}
@@ -130,12 +118,13 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 		SetRoomnumber(obj.Roomnumber).
 		SetRoomprice(obj.Roomprice).
 		SetRoomtypename(obj.Roomtypename).
-		SetQuantity(qu).
+		SetSleep(obj.Sleep).
+		SetBed(obj.Bed).
+		SetBedtype(bt).
+		SetPetrule(pr).
+		SetPledge(p).
 		SetStaytype(st).
 		SetEmployee(em).
-		SetEquipments(eq).
-		SetFacilities(fa).
-		SetNearbyplaces(nb).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -203,11 +192,10 @@ func (ctl *RoomdetailController) GetRoomdetail(c *gin.Context) {
 	rd, err := ctl.client.Roomdetail.
 		Query().
 		WithEmployee().
-		WithEquipments().
-		WithFacilities().
-		WithNearbyplaces().
-		WithQuantity().
 		WithStaytype().
+		WithBedtype().
+		WithPetrule().
+		WithPledge().
 		Where(roomdetail.IDEQ(int(id))).
 		Only(context.Background())
 	if err != nil {
@@ -232,11 +220,10 @@ func (ctl *RoomdetailController) GetRoomdetail(c *gin.Context) {
 func (ctl *RoomdetailController) ListRoomdetail(c *gin.Context) {
 	roomdetails, err := ctl.client.Roomdetail.
 		Query().
-		WithQuantity().
+		WithBedtype().
+		WithPetrule().
+		WithPledge().
 		WithStaytype().
-		WithEquipments().
-		WithFacilities().
-		WithNearbyplaces().
 		WithEmployee().
 		All(context.Background())
 

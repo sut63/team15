@@ -12,6 +12,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Bedtype is the client for interacting with the Bedtype builders.
+	Bedtype *BedtypeClient
 	// CleanerName is the client for interacting with the CleanerName builders.
 	CleanerName *CleanerNameClient
 	// CleaningRoom is the client for interacting with the CleaningRoom builders.
@@ -20,20 +22,16 @@ type Tx struct {
 	Deposit *DepositClient
 	// Employee is the client for interacting with the Employee builders.
 	Employee *EmployeeClient
-	// Equipment is the client for interacting with the Equipment builders.
-	Equipment *EquipmentClient
-	// Facilitie is the client for interacting with the Facilitie builders.
-	Facilitie *FacilitieClient
 	// Jobposition is the client for interacting with the Jobposition builders.
 	Jobposition *JobpositionClient
 	// Lease is the client for interacting with the Lease builders.
 	Lease *LeaseClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
-	// Nearbyplace is the client for interacting with the Nearbyplace builders.
-	Nearbyplace *NearbyplaceClient
-	// Quantity is the client for interacting with the Quantity builders.
-	Quantity *QuantityClient
+	// Petrule is the client for interacting with the Petrule builders.
+	Petrule *PetruleClient
+	// Pledge is the client for interacting with the Pledge builders.
+	Pledge *PledgeClient
 	// Rentalstatus is the client for interacting with the Rentalstatus builders.
 	Rentalstatus *RentalstatusClient
 	// Repairinvoice is the client for interacting with the Repairinvoice builders.
@@ -181,17 +179,16 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Bedtype = NewBedtypeClient(tx.config)
 	tx.CleanerName = NewCleanerNameClient(tx.config)
 	tx.CleaningRoom = NewCleaningRoomClient(tx.config)
 	tx.Deposit = NewDepositClient(tx.config)
 	tx.Employee = NewEmployeeClient(tx.config)
-	tx.Equipment = NewEquipmentClient(tx.config)
-	tx.Facilitie = NewFacilitieClient(tx.config)
 	tx.Jobposition = NewJobpositionClient(tx.config)
 	tx.Lease = NewLeaseClient(tx.config)
 	tx.LengthTime = NewLengthTimeClient(tx.config)
-	tx.Nearbyplace = NewNearbyplaceClient(tx.config)
-	tx.Quantity = NewQuantityClient(tx.config)
+	tx.Petrule = NewPetruleClient(tx.config)
+	tx.Pledge = NewPledgeClient(tx.config)
 	tx.Rentalstatus = NewRentalstatusClient(tx.config)
 	tx.Repairinvoice = NewRepairinvoiceClient(tx.config)
 	tx.Roomdetail = NewRoomdetailClient(tx.config)
@@ -207,7 +204,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: CleanerName.QueryXXX(), the query will be executed
+// applies a query, for example: Bedtype.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

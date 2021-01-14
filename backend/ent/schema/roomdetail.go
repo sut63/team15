@@ -14,27 +14,22 @@ type Roomdetail struct {
 // Fields of the Roomdetail.
 func (Roomdetail) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("roomnumber").NotEmpty().Unique(),
-		field.String("roomtypename").NotEmpty(),
-		field.String("roomprice").NotEmpty(),
+		field.String("roomnumber").Unique(),
+		field.String("roomtypename"),
+		field.String("roomprice"),
+		field.String("sleep"),
+		field.String("bed"),
 	}
 }
 
 // Edges of the Roomdetail.
 func (Roomdetail) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("equipments", Equipment.Type).Ref("roomdetail").Unique(),
-		edge.From("facilities", Facilitie.Type).Ref("roomdetail").Unique(),
-		edge.From("nearbyplaces", Nearbyplace.Type).Ref("roomdetail").Unique(),
-		edge.From("employee", Employee.Type).
-			Ref("roomdetails").
-			Unique(),
-		edge.From("quantity", Quantity.Type).
-			Ref("roomdetails").
-			Unique(),
-		edge.From("staytype", Staytype.Type).
-			Ref("roomdetails").
-			Unique(),
+		edge.From("pledge", Pledge.Type).Ref("roomdetails").Unique(),
+		edge.From("petrule", Petrule.Type).Ref("roomdetails").Unique(),
+		edge.From("bedtype", Bedtype.Type).Ref("roomdetails").Unique(),
+		edge.From("employee", Employee.Type).Ref("roomdetails").Unique(),
+		edge.From("staytype", Staytype.Type).Ref("roomdetails").Unique(),
 		edge.To("roomdetails", Lease.Type).Unique().StorageKey(edge.Column("room_num")),
 	}
 }

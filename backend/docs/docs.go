@@ -78,6 +78,171 @@ var doc = `{
                 }
             }
         },
+        "/bedtype/{id}": {
+            "delete": {
+                "description": "get bedtype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a bedtype entity by ID",
+                "operationId": "delete-bedtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bedtype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/bedtypes": {
+            "get": {
+                "description": "list bedtype entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List bedtype entities",
+                "operationId": "list-bedtype",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Bedtype"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create bedtype",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create bedtype",
+                "operationId": "create-bedtype",
+                "parameters": [
+                    {
+                        "description": "Bedtype entity",
+                        "name": "bedtype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Bedtype"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Bedtype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/bedtypes/{id}": {
+            "get": {
+                "description": "get bedtype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a bedtype entity by ID",
+                "operationId": "get-bedtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bedtype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Bedtype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/cleanernames": {
             "get": {
                 "description": "list cleanername entities",
@@ -516,364 +681,6 @@ var doc = `{
                 }
             }
         },
-        "/equipment/{id}": {
-            "delete": {
-                "description": "get equipment by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete a equipment entity by ID",
-                "operationId": "delete-equipment",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Equipment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/equipments": {
-            "get": {
-                "description": "list equipment entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List equipment entities",
-                "operationId": "list-equipment",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Equipment"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create equipment",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create equipment",
-                "operationId": "create-equipment",
-                "parameters": [
-                    {
-                        "description": "Equipment entity",
-                        "name": "equipment",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Equipment"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Equipment"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/equipments/{id}": {
-            "get": {
-                "description": "get equipment by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a equipment entity by ID",
-                "operationId": "get-equipment",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Equipment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Equipment"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/facilitie/{id}": {
-            "delete": {
-                "description": "get facilitie by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete a facilitie entity by ID",
-                "operationId": "delete-facilitie",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Facilitie ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/facilities": {
-            "get": {
-                "description": "list facilitie entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List facilitie entities",
-                "operationId": "list-facilitie",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Facilitie"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create facilitie",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create facilitie",
-                "operationId": "create-facilitie",
-                "parameters": [
-                    {
-                        "description": "Facilitie entity",
-                        "name": "facilitie",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Facilitie"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Facilitie"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/facilities/{id}": {
-            "get": {
-                "description": "get facilitie by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a facilitie entity by ID",
-                "operationId": "get-facilitie",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Facilitie ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Facilitie"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
         "/leases": {
             "get": {
                 "description": "list lease entities",
@@ -1055,18 +862,18 @@ var doc = `{
                 }
             }
         },
-        "/nearbyplace/{id}": {
+        "/petrule/{id}": {
             "delete": {
-                "description": "get nearbyplace by ID",
+                "description": "get petrule by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a nearbyplace entity by ID",
-                "operationId": "delete-nearbyplace",
+                "summary": "Delete a petrule entity by ID",
+                "operationId": "delete-petrule",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Nearbyplace ID",
+                        "description": "Petrule ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1100,35 +907,21 @@ var doc = `{
                 }
             }
         },
-        "/nearbyplaces": {
+        "/petrules": {
             "get": {
-                "description": "list nearbyplace entities",
+                "description": "list petrule entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List nearbyplace entities",
-                "operationId": "list-nearbyplace",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
+                "summary": "List petrule entities",
+                "operationId": "list-petrule",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Nearbyplace"
+                                "$ref": "#/definitions/ent.Petrule"
                             }
                         }
                     },
@@ -1147,23 +940,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create nearbyplace",
+                "description": "Create petrule",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create nearbyplace",
-                "operationId": "create-nearbyplace",
+                "summary": "Create petrule",
+                "operationId": "create-petrule",
                 "parameters": [
                     {
-                        "description": "Nearbyplace entity",
-                        "name": "nearbyplace",
+                        "description": "Petrule entity",
+                        "name": "petrule",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Nearbyplace"
+                            "$ref": "#/definitions/ent.Petrule"
                         }
                     }
                 ],
@@ -1171,7 +964,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Nearbyplace"
+                            "$ref": "#/definitions/ent.Petrule"
                         }
                     },
                     "400": {
@@ -1189,18 +982,18 @@ var doc = `{
                 }
             }
         },
-        "/nearbyplaces/{id}": {
+        "/petrules/{id}": {
             "get": {
-                "description": "get nearbyplace by ID",
+                "description": "get petrule by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a nearbyplace entity by ID",
-                "operationId": "get-nearbyplace",
+                "summary": "Get a petrule entity by ID",
+                "operationId": "get-petrule",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Nearbyplace ID",
+                        "description": "Petrule ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1210,7 +1003,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Nearbyplace"
+                            "$ref": "#/definitions/ent.Petrule"
                         }
                     },
                     "400": {
@@ -1234,18 +1027,18 @@ var doc = `{
                 }
             }
         },
-        "/quantity/{id}": {
+        "/pledge/{id}": {
             "delete": {
-                "description": "get quantity by ID",
+                "description": "get pledge by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a quantity entity by ID",
-                "operationId": "delete-quantity",
+                "summary": "Delete a pledge entity by ID",
+                "operationId": "delete-pledge",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Quantity ID",
+                        "description": "Pledge ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1279,35 +1072,21 @@ var doc = `{
                 }
             }
         },
-        "/quantitys": {
+        "/pledges": {
             "get": {
-                "description": "list quantity entities",
+                "description": "list pledge entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List quantity entities",
-                "operationId": "list-quantity",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
+                "summary": "List pledge entities",
+                "operationId": "list-pledge",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Quantity"
+                                "$ref": "#/definitions/ent.Pledge"
                             }
                         }
                     },
@@ -1326,23 +1105,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create quantity",
+                "description": "Create pledge",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create quantity",
-                "operationId": "create-quantity",
+                "summary": "Create pledge",
+                "operationId": "create-pledge",
                 "parameters": [
                     {
-                        "description": "Quantity entity",
-                        "name": "quantity",
+                        "description": "Pledge entity",
+                        "name": "pledge",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Quantity"
+                            "$ref": "#/definitions/ent.Pledge"
                         }
                     }
                 ],
@@ -1350,7 +1129,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Quantity"
+                            "$ref": "#/definitions/ent.Pledge"
                         }
                     },
                     "400": {
@@ -1368,18 +1147,18 @@ var doc = `{
                 }
             }
         },
-        "/quantitys/{id}": {
+        "/pledges/{id}": {
             "get": {
-                "description": "get quantity by ID",
+                "description": "get pledge by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a quantity entity by ID",
-                "operationId": "get-quantity",
+                "summary": "Get a pledge entity by ID",
+                "operationId": "get-pledge",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Quantity ID",
+                        "description": "Pledge ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1389,7 +1168,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Quantity"
+                            "$ref": "#/definitions/ent.Pledge"
                         }
                     },
                     "400": {
@@ -2342,19 +2121,19 @@ var doc = `{
         "controllers.Roomdetail": {
             "type": "object",
             "properties": {
+                "bed": {
+                    "type": "string"
+                },
+                "bedtype": {
+                    "type": "integer"
+                },
                 "employee": {
                     "type": "integer"
                 },
-                "equipment": {
+                "petrule": {
                     "type": "integer"
                 },
-                "facilitie": {
-                    "type": "integer"
-                },
-                "nearbyplace": {
-                    "type": "integer"
-                },
-                "quantity": {
+                "pledge": {
                     "type": "integer"
                 },
                 "roomnumber": {
@@ -2366,8 +2145,41 @@ var doc = `{
                 "roomtypename": {
                     "type": "string"
                 },
+                "sleep": {
+                    "type": "string"
+                },
                 "staytype": {
                     "type": "integer"
+                }
+            }
+        },
+        "ent.Bedtype": {
+            "type": "object",
+            "properties": {
+                "bedtypename": {
+                    "description": "Bedtypename holds the value of the \"bedtypename\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the BedtypeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.BedtypeEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.BedtypeEdges": {
+            "type": "object",
+            "properties": {
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
+                    }
                 }
             }
         },
@@ -2532,66 +2344,6 @@ var doc = `{
                 }
             }
         },
-        "ent.Equipment": {
-            "type": "object",
-            "properties": {
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the EquipmentQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.EquipmentEdges"
-                },
-                "equipment": {
-                    "description": "Equipment holds the value of the \"equipment\" field.",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "ID of the ent.",
-                    "type": "integer"
-                }
-            }
-        },
-        "ent.EquipmentEdges": {
-            "type": "object",
-            "properties": {
-                "roomdetail": {
-                    "description": "Roomdetail holds the value of the roomdetail edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Roomdetail"
-                    }
-                }
-            }
-        },
-        "ent.Facilitie": {
-            "type": "object",
-            "properties": {
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the FacilitieQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.FacilitieEdges"
-                },
-                "facilitie": {
-                    "description": "Facilitie holds the value of the \"facilitie\" field.",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "ID of the ent.",
-                    "type": "integer"
-                }
-            }
-        },
-        "ent.FacilitieEdges": {
-            "type": "object",
-            "properties": {
-                "roomdetail": {
-                    "description": "Roomdetail holds the value of the roomdetail edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Roomdetail"
-                    }
-                }
-            }
-        },
         "ent.Jobposition": {
             "type": "object",
             "properties": {
@@ -2689,29 +2441,29 @@ var doc = `{
                 }
             }
         },
-        "ent.Nearbyplace": {
+        "ent.Petrule": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the NearbyplaceQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PetruleQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.NearbyplaceEdges"
+                    "$ref": "#/definitions/ent.PetruleEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "nearbyplace": {
-                    "description": "Nearbyplace holds the value of the \"nearbyplace\" field.",
+                "petrule": {
+                    "description": "Petrule holds the value of the \"petrule\" field.",
                     "type": "string"
                 }
             }
         },
-        "ent.NearbyplaceEdges": {
+        "ent.PetruleEdges": {
             "type": "object",
             "properties": {
-                "roomdetail": {
-                    "description": "Roomdetail holds the value of the roomdetail edge.",
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Roomdetail"
@@ -2719,25 +2471,25 @@ var doc = `{
                 }
             }
         },
-        "ent.Quantity": {
+        "ent.Pledge": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the QuantityQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PledgeQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.QuantityEdges"
+                    "$ref": "#/definitions/ent.PledgeEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "quantity": {
-                    "description": "Quantity holds the value of the \"quantity\" field.",
+                "provision": {
+                    "description": "Provision holds the value of the \"provision\" field.",
                     "type": "string"
                 }
             }
         },
-        "ent.QuantityEdges": {
+        "ent.PledgeEdges": {
             "type": "object",
             "properties": {
                 "roomdetails": {
@@ -2815,6 +2567,10 @@ var doc = `{
         "ent.Roomdetail": {
             "type": "object",
             "properties": {
+                "bed": {
+                    "description": "Bed holds the value of the \"bed\" field.",
+                    "type": "string"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RoomdetailQuery when eager-loading is set.",
                     "type": "object",
@@ -2835,36 +2591,35 @@ var doc = `{
                 "roomtypename": {
                     "description": "Roomtypename holds the value of the \"roomtypename\" field.",
                     "type": "string"
+                },
+                "sleep": {
+                    "description": "Sleep holds the value of the \"sleep\" field.",
+                    "type": "string"
                 }
             }
         },
         "ent.RoomdetailEdges": {
             "type": "object",
             "properties": {
+                "bedtype": {
+                    "description": "Bedtype holds the value of the bedtype edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Bedtype"
+                },
                 "employee": {
                     "description": "Employee holds the value of the employee edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Employee"
                 },
-                "equipments": {
-                    "description": "Equipments holds the value of the equipments edge.",
+                "petrule": {
+                    "description": "Petrule holds the value of the petrule edge.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.Equipment"
+                    "$ref": "#/definitions/ent.Petrule"
                 },
-                "facilities": {
-                    "description": "Facilities holds the value of the facilities edge.",
+                "pledge": {
+                    "description": "Pledge holds the value of the pledge edge.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.Facilitie"
-                },
-                "nearbyplaces": {
-                    "description": "Nearbyplaces holds the value of the nearbyplaces edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Nearbyplace"
-                },
-                "quantity": {
-                    "description": "Quantity holds the value of the quantity edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Quantity"
+                    "$ref": "#/definitions/ent.Pledge"
                 },
                 "roomdetails": {
                     "description": "Roomdetails holds the value of the roomdetails edge.",

@@ -33,15 +33,15 @@ definitions:
     type: object
   controllers.Roomdetail:
     properties:
+      bed:
+        type: string
+      bedtype:
+        type: integer
       employee:
         type: integer
-      equipment:
+      petrule:
         type: integer
-      facilitie:
-        type: integer
-      nearbyplace:
-        type: integer
-      quantity:
+      pledge:
         type: integer
       roomnumber:
         type: string
@@ -49,8 +49,33 @@ definitions:
         type: string
       roomtypename:
         type: string
+      sleep:
+        type: string
       staytype:
         type: integer
+    type: object
+  ent.Bedtype:
+    properties:
+      bedtypename:
+        description: Bedtypename holds the value of the "bedtypename" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.BedtypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the BedtypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.BedtypeEdges:
+    properties:
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
     type: object
   ent.CleanerName:
     properties:
@@ -176,52 +201,6 @@ definitions:
           $ref: '#/definitions/ent.Roomdetail'
         type: array
     type: object
-  ent.Equipment:
-    properties:
-      edges:
-        $ref: '#/definitions/ent.EquipmentEdges'
-        description: |-
-          Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the EquipmentQuery when eager-loading is set.
-        type: object
-      equipment:
-        description: Equipment holds the value of the "equipment" field.
-        type: string
-      id:
-        description: ID of the ent.
-        type: integer
-    type: object
-  ent.EquipmentEdges:
-    properties:
-      roomdetail:
-        description: Roomdetail holds the value of the roomdetail edge.
-        items:
-          $ref: '#/definitions/ent.Roomdetail'
-        type: array
-    type: object
-  ent.Facilitie:
-    properties:
-      edges:
-        $ref: '#/definitions/ent.FacilitieEdges'
-        description: |-
-          Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the FacilitieQuery when eager-loading is set.
-        type: object
-      facilitie:
-        description: Facilitie holds the value of the "facilitie" field.
-        type: string
-      id:
-        description: ID of the ent.
-        type: integer
-    type: object
-  ent.FacilitieEdges:
-    properties:
-      roomdetail:
-        description: Roomdetail holds the value of the roomdetail edge.
-        items:
-          $ref: '#/definitions/ent.Roomdetail'
-        type: array
-    type: object
   ent.Jobposition:
     properties:
       edges:
@@ -297,45 +276,45 @@ definitions:
           $ref: '#/definitions/ent.CleaningRoom'
         type: array
     type: object
-  ent.Nearbyplace:
+  ent.Petrule:
     properties:
       edges:
-        $ref: '#/definitions/ent.NearbyplaceEdges'
+        $ref: '#/definitions/ent.PetruleEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the NearbyplaceQuery when eager-loading is set.
+          The values are being populated by the PetruleQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
         type: integer
-      nearbyplace:
-        description: Nearbyplace holds the value of the "nearbyplace" field.
+      petrule:
+        description: Petrule holds the value of the "petrule" field.
         type: string
     type: object
-  ent.NearbyplaceEdges:
+  ent.PetruleEdges:
     properties:
-      roomdetail:
-        description: Roomdetail holds the value of the roomdetail edge.
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
         items:
           $ref: '#/definitions/ent.Roomdetail'
         type: array
     type: object
-  ent.Quantity:
+  ent.Pledge:
     properties:
       edges:
-        $ref: '#/definitions/ent.QuantityEdges'
+        $ref: '#/definitions/ent.PledgeEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the QuantityQuery when eager-loading is set.
+          The values are being populated by the PledgeQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
         type: integer
-      quantity:
-        description: Quantity holds the value of the "quantity" field.
+      provision:
+        description: Provision holds the value of the "provision" field.
         type: string
     type: object
-  ent.QuantityEdges:
+  ent.PledgeEdges:
     properties:
       roomdetails:
         description: Roomdetails holds the value of the roomdetails edge.
@@ -394,6 +373,9 @@ definitions:
     type: object
   ent.Roomdetail:
     properties:
+      bed:
+        description: Bed holds the value of the "bed" field.
+        type: string
       edges:
         $ref: '#/definitions/ent.RoomdetailEdges'
         description: |-
@@ -412,28 +394,27 @@ definitions:
       roomtypename:
         description: Roomtypename holds the value of the "roomtypename" field.
         type: string
+      sleep:
+        description: Sleep holds the value of the "sleep" field.
+        type: string
     type: object
   ent.RoomdetailEdges:
     properties:
+      bedtype:
+        $ref: '#/definitions/ent.Bedtype'
+        description: Bedtype holds the value of the bedtype edge.
+        type: object
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.
         type: object
-      equipments:
-        $ref: '#/definitions/ent.Equipment'
-        description: Equipments holds the value of the equipments edge.
+      petrule:
+        $ref: '#/definitions/ent.Petrule'
+        description: Petrule holds the value of the petrule edge.
         type: object
-      facilities:
-        $ref: '#/definitions/ent.Facilitie'
-        description: Facilities holds the value of the facilities edge.
-        type: object
-      nearbyplaces:
-        $ref: '#/definitions/ent.Nearbyplace'
-        description: Nearbyplaces holds the value of the nearbyplaces edge.
-        type: object
-      quantity:
-        $ref: '#/definitions/ent.Quantity'
-        description: Quantity holds the value of the quantity edge.
+      pledge:
+        $ref: '#/definitions/ent.Pledge'
+        description: Pledge holds the value of the pledge edge.
         type: object
       roomdetails:
         $ref: '#/definitions/ent.Lease'
@@ -560,6 +541,116 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a rentalstatus entity by ID
+  /bedtype/{id}:
+    delete:
+      description: get bedtype by ID
+      operationId: delete-bedtype
+      parameters:
+      - description: Bedtype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a bedtype entity by ID
+  /bedtypes:
+    get:
+      description: list bedtype entities
+      operationId: list-bedtype
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Bedtype'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List bedtype entities
+    post:
+      consumes:
+      - application/json
+      description: Create bedtype
+      operationId: create-bedtype
+      parameters:
+      - description: Bedtype entity
+        in: body
+        name: bedtype
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Bedtype'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Bedtype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create bedtype
+  /bedtypes/{id}:
+    get:
+      description: get bedtype by ID
+      operationId: get-bedtype
+      parameters:
+      - description: Bedtype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Bedtype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a bedtype entity by ID
   /cleanernames:
     get:
       description: list cleanername entities
@@ -851,244 +942,6 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a employee entity by ID
-  /equipment/{id}:
-    delete:
-      description: get equipment by ID
-      operationId: delete-equipment
-      parameters:
-      - description: Equipment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/gin.H'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Delete a equipment entity by ID
-  /equipments:
-    get:
-      description: list equipment entities
-      operationId: list-equipment
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/ent.Equipment'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: List equipment entities
-    post:
-      consumes:
-      - application/json
-      description: Create equipment
-      operationId: create-equipment
-      parameters:
-      - description: Equipment entity
-        in: body
-        name: equipment
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Equipment'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Equipment'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Create equipment
-  /equipments/{id}:
-    get:
-      description: get equipment by ID
-      operationId: get-equipment
-      parameters:
-      - description: Equipment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Equipment'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Get a equipment entity by ID
-  /facilitie/{id}:
-    delete:
-      description: get facilitie by ID
-      operationId: delete-facilitie
-      parameters:
-      - description: Facilitie ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/gin.H'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Delete a facilitie entity by ID
-  /facilities:
-    get:
-      description: list facilitie entities
-      operationId: list-facilitie
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/ent.Facilitie'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: List facilitie entities
-    post:
-      consumes:
-      - application/json
-      description: Create facilitie
-      operationId: create-facilitie
-      parameters:
-      - description: Facilitie entity
-        in: body
-        name: facilitie
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Facilitie'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Facilitie'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Create facilitie
-  /facilities/{id}:
-    get:
-      description: get facilitie by ID
-      operationId: get-facilitie
-      parameters:
-      - description: Facilitie ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Facilitie'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Get a facilitie entity by ID
   /leases:
     get:
       description: list lease entities
@@ -1209,12 +1062,12 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a lengthtime entity by ID
-  /nearbyplace/{id}:
+  /petrule/{id}:
     delete:
-      description: get nearbyplace by ID
-      operationId: delete-nearbyplace
+      description: get petrule by ID
+      operationId: delete-petrule
       parameters:
-      - description: Nearbyplace ID
+      - description: Petrule ID
         in: path
         name: id
         required: true
@@ -1238,20 +1091,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete a nearbyplace entity by ID
-  /nearbyplaces:
+      summary: Delete a petrule entity by ID
+  /petrules:
     get:
-      description: list nearbyplace entities
-      operationId: list-nearbyplace
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
+      description: list petrule entities
+      operationId: list-petrule
       produces:
       - application/json
       responses:
@@ -1259,7 +1103,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Nearbyplace'
+              $ref: '#/definitions/ent.Petrule'
             type: array
         "400":
           description: Bad Request
@@ -1269,26 +1113,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List nearbyplace entities
+      summary: List petrule entities
     post:
       consumes:
       - application/json
-      description: Create nearbyplace
-      operationId: create-nearbyplace
+      description: Create petrule
+      operationId: create-petrule
       parameters:
-      - description: Nearbyplace entity
+      - description: Petrule entity
         in: body
-        name: nearbyplace
+        name: petrule
         required: true
         schema:
-          $ref: '#/definitions/ent.Nearbyplace'
+          $ref: '#/definitions/ent.Petrule'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Nearbyplace'
+            $ref: '#/definitions/ent.Petrule'
         "400":
           description: Bad Request
           schema:
@@ -1297,13 +1141,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create nearbyplace
-  /nearbyplaces/{id}:
+      summary: Create petrule
+  /petrules/{id}:
     get:
-      description: get nearbyplace by ID
-      operationId: get-nearbyplace
+      description: get petrule by ID
+      operationId: get-petrule
       parameters:
-      - description: Nearbyplace ID
+      - description: Petrule ID
         in: path
         name: id
         required: true
@@ -1314,7 +1158,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Nearbyplace'
+            $ref: '#/definitions/ent.Petrule'
         "400":
           description: Bad Request
           schema:
@@ -1327,13 +1171,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a nearbyplace entity by ID
-  /quantity/{id}:
+      summary: Get a petrule entity by ID
+  /pledge/{id}:
     delete:
-      description: get quantity by ID
-      operationId: delete-quantity
+      description: get pledge by ID
+      operationId: delete-pledge
       parameters:
-      - description: Quantity ID
+      - description: Pledge ID
         in: path
         name: id
         required: true
@@ -1357,20 +1201,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete a quantity entity by ID
-  /quantitys:
+      summary: Delete a pledge entity by ID
+  /pledges:
     get:
-      description: list quantity entities
-      operationId: list-quantity
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
+      description: list pledge entities
+      operationId: list-pledge
       produces:
       - application/json
       responses:
@@ -1378,7 +1213,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Quantity'
+              $ref: '#/definitions/ent.Pledge'
             type: array
         "400":
           description: Bad Request
@@ -1388,26 +1223,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List quantity entities
+      summary: List pledge entities
     post:
       consumes:
       - application/json
-      description: Create quantity
-      operationId: create-quantity
+      description: Create pledge
+      operationId: create-pledge
       parameters:
-      - description: Quantity entity
+      - description: Pledge entity
         in: body
-        name: quantity
+        name: pledge
         required: true
         schema:
-          $ref: '#/definitions/ent.Quantity'
+          $ref: '#/definitions/ent.Pledge'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Quantity'
+            $ref: '#/definitions/ent.Pledge'
         "400":
           description: Bad Request
           schema:
@@ -1416,13 +1251,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create quantity
-  /quantitys/{id}:
+      summary: Create pledge
+  /pledges/{id}:
     get:
-      description: get quantity by ID
-      operationId: get-quantity
+      description: get pledge by ID
+      operationId: get-pledge
       parameters:
-      - description: Quantity ID
+      - description: Pledge ID
         in: path
         name: id
         required: true
@@ -1433,7 +1268,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Quantity'
+            $ref: '#/definitions/ent.Pledge'
         "400":
           description: Bad Request
           schema:
@@ -1446,7 +1281,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a quantity entity by ID
+      summary: Get a pledge entity by ID
   /rentalstatuss:
     get:
       description: list rentalstatus entities

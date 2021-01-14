@@ -19,6 +19,7 @@ import {
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import { Box, Chip, Grid, Link, Typography } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -31,8 +32,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
-import { EntEquipment, EntFacilitie, EntQuantity, EntNearbyplace, EntStaytype } from '../../api';
+import { EntStaytype, EntBedtype, EntPetrule, EntPledge } from '../../api';
 import RoomDetails from '.';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
@@ -61,9 +61,8 @@ const useStyles = makeStyles((theme: Theme) =>
     marginRight:-7,
    },
     select: {
-      width: 500 ,
+      width: 400 ,
       marginLeft:7,
-      marginRight:-7,
     },
     paper: {
       marginTop: theme.spacing(1),
@@ -75,7 +74,16 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(23),
     },
     cardtable: {
-      marginTop: theme.spacing(5),
+      marginTop: theme.spacing(2),
+    },
+    fieldText: {
+      width: 200,
+      marginLeft:7,
+    },
+    fieldLabel: {
+      marginLeft:8,
+      marginRight: 20,
+
     }
   }),
 );
@@ -90,80 +98,64 @@ export default function CreateRoomdetail() {
 
   //เก็บข้อมูลที่จะดึงมา
   const [roomdetail, setRoomdetail] = useState<EntRoomdetail[]>([]);
-  const [quantitys, setQuantitys] = useState<EntQuantity[]>([]);
+  const [bedtypes, setBedtypes] = useState<EntBedtype[]>([]);
   const [staytypes, setStaytypes] = useState<EntStaytype[]>([]);
-  const [equipments, setEquipments] = useState<EntEquipment[]>([]);
-  const [facilities, setFacilities] = useState<EntFacilitie[]>([]);
-  const [nearbyplaces, setNearbyplaces] = useState<EntNearbyplace[]>([]);
+  const [petrules, setPetrules] = useState<EntPetrule[]>([]);
+  const [pledges, setPledges] = useState<EntPledge[]>([]);
   const [employees, setEmployees] = useState<EntEmployee[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [price, setRoomprice] = useState(String);
   const [noroom, setRoomnumber] = useState(String);
   const [roomname, setRoomtypename] = useState(String);
-  const [quantity, setQuantity] = useState(Number);
+  const [sleep, setSleep] = useState(String);
+  const [bed, setBed] = useState(String);
   const [staytype, setStaytype] = useState(Number);
-  const [equipment, setEquipment] = useState(Number);
-  const [facilitie, setFacilitie] = useState(Number);
-  const [nearbyplace, setNearbyplace] = useState(Number);
+  const [bedtype, setBedtype] = useState(Number);
+  const [petrule, setPetrule] = useState(Number);
+  const [pledge, setPledge] = useState(Number);
   const [employeeid, setEmployee] = useState(Number);
 
   
 
   useEffect(() => {
-
-
     const getRoomdetais = async () => {
- 
       const rd = await api.listRoomdetail();
       setLoading(false);
       setRoomdetail(rd);
     };
     getRoomdetais();
  
-
-    const getQuantitys = async () => {
- 
-      const qu = await api.listQuantity({ offset: 0 });
+    const getBedtypes = async () => {
+    const bt = await api.listBedtype();
       setLoading(false);
-      setQuantitys(qu);
+      setBedtypes(bt);
     };
-    getQuantitys();
+    getBedtypes();
+
  
     const getStaytypes = async () => {
- 
     const st = await api.listStaytype({ offset: 0 });
       setLoading(false);
       setStaytypes(st);
     };
     getStaytypes();
  
-    const getEquipments = async () => {
- 
-     const eq = await api.listEquipment({ offset: 0 });
+    const getPetrules = async () => {
+     const pr = await api.listPetrule();
        setLoading(false);
-       setEquipments(eq);
+       setPetrules(pr);
      };
-     getEquipments();
+     getPetrules();
 
-     const getFacilitys = async () => {
- 
-      const fa = await api.listFacilitie({ offset: 0 });
+     const getPledges = async () => {
+      const p = await api.listPledge();
         setLoading(false);
-        setFacilities(fa);
+        setPledges(p);
       };
-      getFacilitys();
-
-      const getNearbyplaces = async () => {
- 
-        const np = await api.listNearbyplace({ offset: 0 });
-          setLoading(false);
-          setNearbyplaces(np);
-        };
-        getNearbyplaces();
+      getPledges();
 
         const getEmployees = async () => {
- 
           const em = await api.listEmployee();
             setLoading(false);
             setEmployees(em);
@@ -203,25 +195,30 @@ export default function CreateRoomdetail() {
   const handleRoomtypenameChange = (event: any) => {
     setRoomtypename(event.target.value as string);
   };
+
+  const handleSleepChange = (event: any) => {
+    setSleep(event.target.value as string);
+  };
   
-  const QuantityhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setQuantity(event.target.value as number);
+  const handleBedChange = (event: any) => {
+    setBed(event.target.value as string);
+  };
+  
+  
+  const BedtypehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setBedtype(event.target.value as number);
   };
 
   const StaytypehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setStaytype(event.target.value as number);
   };
 
-  const EquipmenthandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setEquipment(event.target.value as number);
+  const PetrulehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setPetrule(event.target.value as number);
   };
 
-  const FacilitiehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setFacilitie(event.target.value as number);
-  };
-
-  const NearbyplacehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setNearbyplace(event.target.value as number);
+  const PledgehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setPledge(event.target.value as number);
   };
 
   const EmployeehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -231,35 +228,43 @@ export default function CreateRoomdetail() {
   const listRoom = () => {
     window.location.href ="http://localhost:3000/RoomDetails";
   };
-  const forCheck = () => {
-    for (const color of roomdetail){
-      if(noroom === color.roomnumber){
-             setStatus(true);
-             setAlert(false);
-             setAlerts(false);
-             //window.location.reload(false);
-      console.log(roomname)
-      }
-      else{
-        console.log("ไม่เข้าอันแรก")
-        CreateRoomdetail();
-      }
-    }
-  };
+          const forCheck = () => {
+            var i = 0;
+            for (const rdt of roomdetail){
+            i++;
+            }
+            if(i === 0){
+              CreateRoomdetail();
+          }
+          else{
+            for (const rdt of roomdetail){
+              if(noroom === rdt.roomnumber){
+                setStatus(true);
+                setAlert(false);
+                setAlerts(false);
+                //window.location.reload(false);
+        }
+        else{
+          CreateRoomdetail();
+        }
+     }
+   }
+  }
 
   const CreateRoomdetail = async () => {
     if ((noroom != "") && (noroom != null) && (roomname != "") && (roomname != null) && (price != "") && (price != null)
-    && (quantity != null) && (quantity != null) && (equipment != null) && (facilitie != null) && (staytype != null)
-    && (nearbyplace != null)){
+    && (sleep != null) && (sleep != null)  && (bed != null) && (bed != null) 
+    && (bedtype != null) && (petrule != null) && (pledge != null) && (staytype != null)){
     
       const roomdetail = {
       roomnumber: noroom,
       roomprice: price,
       roomtypename: roomname,
-      quantity: quantity,
-      equipment: equipment,
-      facilitie: facilitie,
-      nearbyplace: nearbyplace,
+      sleep: sleep,
+      bed: bed,
+      bedtype: bedtype,
+      petrule: petrule,
+      pledge: pledge,
       staytype: staytype,
       employee: employeeid,
     };
@@ -282,59 +287,120 @@ export default function CreateRoomdetail() {
  <Page theme={pageTheme.service}>
       <Content>
         <InfoCard title="Add room details" subheader="เพิ่มรายละเอียดห้องพักเข้าสู่ระบบ">
-          <div className={classes.root}>
+        <div className={classes.root}>
           <form noValidate autoComplete="off">
-            <FormControl
-              variant="outlined"
-            >
 
-            <div className={classes.paper}><strong>เลขห้อง(No room)</strong></div>
-              <TextField className={classes.textField}
+
+        <Grid container>
+          
+    <Grid item xs container>
+      <Grid item xs={12}>
+        <InfoCard title="กรอกข้อมูลห้องพัก">
+          <FormControl>
+
+              {/*///////// Field กรอก ///////////*/}
+              <div>
+                <div>
+                  <strong className={classes.fieldLabel}>เลขห้อง(No room)</strong>
+              <FormControl>
+              <TextField 
+                style={{ width: 70, marginBottom: 5}}
                 id="roomnumber"
                 label=""
-                variant="outlined"
+                variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
                 value={noroom}
                 onChange={handleNoroomChange}
-              />      
-               <div className={classes.paper}><strong>ประเภทห้อง(Room type)</strong></div>
-              <TextField className={classes.textField}
+              /> 
+              </FormControl>
+
+                 <strong className={classes.fieldLabel}>ชื่อประเภทห้อง(Room type)</strong>
+              <FormControl>
+              <TextField 
+                style={{ width: 250}}
                 id="roomtypename"
                 label=""
-                variant="outlined"
+                variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
                 value={roomname}
                 onChange={handleRoomtypenameChange}
-              />
+              /> 
+              </FormControl>
+                </div>
 
-            <div className={classes.paper}><strong>ราคาห้อง(Price)</strong></div>
-              <TextField className={classes.textField}
+                <strong className={classes.fieldLabel}>ราคาห้อง(Price)</strong>
+              <FormControl>
+              <TextField 
+                style={{ width: 100}}
                 id="roomprice"
                 label=""
-                variant="outlined"
+                variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
                 value={price}
                 onChange={handleRoompriceChange}
               />
+              </FormControl>
+                <strong className={classes.fieldLabel}>จำนวนผู้พักได้สูงสุด(Sleeps)</strong>
+              <FormControl>
+              <TextField 
+                style={{ width: 50}}
+                id="sleep"
+                label=""
+                variant="standard"
+                //color="secondary"
+                type="string"
+                size="medium"
+                value={sleep}
+                onChange={handleSleepChange}
+              />
+              </FormControl>
 
-              <div className={classes.paper}><strong>จำนวนผู้ที่สามารถเข้าพักได้(Quantity)</strong></div>
+              <strong className={classes.fieldLabel}>จำนวนเตียง(Beds)</strong>
+              <FormControl>
+              <TextField 
+                style={{ width: 50}}
+                id="bed"
+                label=""
+                variant="standard"
+                //color="secondary"
+                type="string"
+                size="medium"
+                value={bed}
+                onChange={handleBedChange}
+              />
+              </FormControl>
+              
+            </div> 
+          </FormControl>
+        </InfoCard>
+      </Grid>
+
+    </Grid>
+    
+
+    <Grid item xs={5}>
+      <InfoCard
+        title="เลือกข้อมูลห้องพัก"
+      >
+      {/*///////// Combobox ///////////*/}
+
+      <div className={classes.paper}><strong>ประเภทเตียงนอน(Bed type)</strong></div>
               <Select className={classes.select}
                 //color="secondary"
-                labelId="quantity-label"
-                id="quantity"
-                value={quantity}
-                onChange={QuantityhandleChange}
+                labelId="bedtype-label"
+                id="bedtype"
+                value={bedtype}
+                variant="outlined"
+                onChange={BedtypehandleChange}
               >
-                <InputLabel className={classes.insideLabel} id="faculty-label">Quantity</InputLabel>
-
-                {quantitys.map((item: EntQuantity) => (
-                  <MenuItem value={item.id}>{item.quantity}</MenuItem>
+                {bedtypes.map((item: EntBedtype) => (
+                  <MenuItem value={item.id}>{item.bedtypename}</MenuItem>
                 ))}
               </Select>
 
@@ -343,54 +409,37 @@ export default function CreateRoomdetail() {
                 //color="secondary"
                 id="staytype"
                 value={staytype}
+                variant="outlined"
                 onChange={StaytypehandleChange}
               >
-                <InputLabel className={classes.insideLabel}>Stay type</InputLabel>
-
                 {staytypes.map((item: EntStaytype) => (
                   <MenuItem value={item.id}>{item.staytype}</MenuItem>
                 ))}
               </Select>
 
-              <div className={classes.paper}><strong>สิ่งที่ติดตั้งให้ภายในห้อง(Equipment)</strong></div>
+              <div className={classes.paper}><strong>ข้อจำกัดการจ่ายมัดจำ</strong></div>
               <Select className={classes.select}
                 //color="secondary"
-                id="equipment"
-                value={equipment}
-                onChange={EquipmenthandleChange}
+                id="pledge"
+                value={pledge}
+                variant="outlined"
+                onChange={PledgehandleChange}
               >
-                <InputLabel className={classes.insideLabel}>Equipment</InputLabel>
-
-                {equipments.map((item: EntEquipment) => (
-                  <MenuItem value={item.id}>{item.equipment}</MenuItem>
+                {pledges.map((item: EntPledge) => (
+                  <MenuItem value={item.id}>{item.provision}</MenuItem>
                 ))}
               </Select>
 
-              <div className={classes.paper}><strong>สิ่งอำนวยความสะดวกทั่วไป(General facilities)</strong></div>
+              <div className={classes.paper}><strong>ข้อจำกัดในการเลี้ยงสัตว์</strong></div>
               <Select className={classes.select}
                 //color="secondary"
-                id="facilitie"
-                value={facilitie}
-                onChange={FacilitiehandleChange}
+                id="petrule"
+                value={petrule}
+                variant="outlined"
+                onChange={PetrulehandleChange}
               >
-                <InputLabel className={classes.insideLabel}>Facilities</InputLabel>
-
-                {facilities.map((item: EntFacilitie) => (
-                  <MenuItem value={item.id}>{item.facilitie}</MenuItem>
-                ))}
-              </Select>
-
-              <div className={classes.paper}><strong>สถานที่ใกล้เคียง(Nearby place)</strong></div>
-              <Select className={classes.select}
-                //color="secondary"
-                id="nearbyplace"
-                value={nearbyplace}
-                onChange={NearbyplacehandleChange}
-              >
-                <InputLabel className={classes.insideLabel}>Nearby place</InputLabel>
-
-                {nearbyplaces.map((item: EntNearbyplace) => (
-                  <MenuItem value={item.id}>{item.nearbyplace}</MenuItem>
+                {petrules.map((item: EntPetrule) => (
+                  <MenuItem value={item.id}>{item.petrule}</MenuItem>
                 ))}
               </Select>
 
@@ -399,12 +448,10 @@ export default function CreateRoomdetail() {
                     id="employee"
                     size="medium"
                     value={employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => `${item.name} (${item.email}) ตำแหน่ง (${item.edges?.jobposition?.positionname})`)}
-                    style={{ width: 500 }}/>
+                    style={{ width: 400 }}/>
              
-
-
               <Button
-                style={{ width: 500, backgroundColor: "#5319e7",marginTop: 30,marginLeft: 7}}
+                style={{ width: 200, backgroundColor: "#5319e7",marginTop: 30,marginLeft: 7}}
                 onClick={() => {
                   forCheck();
                 }}
@@ -426,24 +473,25 @@ export default function CreateRoomdetail() {
               {status ? (
                         <div>
                     {(!alert2) ?
-                          <Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {window.location.reload(false)}}>
+                          <Alert severity="warning" style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => {window.location.reload(false)}}>
                           มีข้อมูลนี้อยู่ในระบบแล้ว
                           </Alert>
                       :
                       (alert) ? (
-                        <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {listRoom()}}>
+                        <Alert severity="success" style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => {listRoom()}}>
                             บันทึกสำเร็จ
                         </Alert>
                     ) : (
-                            <Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {setStatus(false)}}>
+                            <Alert severity="warning" style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => {setStatus(false)}}>
                                 บันทึกไม่สำเร็จ กรุณาใส่ข้อมูลให้ครบ
                             </Alert>
                         )
                     }
                         </div>
                       ) : null}</div>
-          
-            </FormControl>
+      </InfoCard>
+    </Grid>
+  </Grid>
           </form>
         </div>
         </InfoCard>

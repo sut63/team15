@@ -8,6 +8,18 @@ import (
 )
 
 var (
+	// BedtypesColumns holds the columns for the "bedtypes" table.
+	BedtypesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "bedtypename", Type: field.TypeString, Unique: true},
+	}
+	// BedtypesTable holds the schema information for the "bedtypes" table.
+	BedtypesTable = &schema.Table{
+		Name:        "bedtypes",
+		Columns:     BedtypesColumns,
+		PrimaryKey:  []*schema.Column{BedtypesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// CleanerNamesColumns holds the columns for the "cleaner_names" table.
 	CleanerNamesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -103,30 +115,6 @@ var (
 			},
 		},
 	}
-	// EquipmentColumns holds the columns for the "equipment" table.
-	EquipmentColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "equipment", Type: field.TypeString, Unique: true},
-	}
-	// EquipmentTable holds the schema information for the "equipment" table.
-	EquipmentTable = &schema.Table{
-		Name:        "equipment",
-		Columns:     EquipmentColumns,
-		PrimaryKey:  []*schema.Column{EquipmentColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
-	// FacilitiesColumns holds the columns for the "facilities" table.
-	FacilitiesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "facilitie", Type: field.TypeString, Unique: true},
-	}
-	// FacilitiesTable holds the schema information for the "facilities" table.
-	FacilitiesTable = &schema.Table{
-		Name:        "facilities",
-		Columns:     FacilitiesColumns,
-		PrimaryKey:  []*schema.Column{FacilitiesColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
 	// JobpositionsColumns holds the columns for the "jobpositions" table.
 	JobpositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -181,28 +169,28 @@ var (
 		PrimaryKey:  []*schema.Column{LengthTimesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// NearbyplacesColumns holds the columns for the "nearbyplaces" table.
-	NearbyplacesColumns = []*schema.Column{
+	// PetrulesColumns holds the columns for the "petrules" table.
+	PetrulesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "nearbyplace", Type: field.TypeString, Unique: true},
+		{Name: "petrule", Type: field.TypeString, Unique: true},
 	}
-	// NearbyplacesTable holds the schema information for the "nearbyplaces" table.
-	NearbyplacesTable = &schema.Table{
-		Name:        "nearbyplaces",
-		Columns:     NearbyplacesColumns,
-		PrimaryKey:  []*schema.Column{NearbyplacesColumns[0]},
+	// PetrulesTable holds the schema information for the "petrules" table.
+	PetrulesTable = &schema.Table{
+		Name:        "petrules",
+		Columns:     PetrulesColumns,
+		PrimaryKey:  []*schema.Column{PetrulesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// QuantitiesColumns holds the columns for the "quantities" table.
-	QuantitiesColumns = []*schema.Column{
+	// PledgesColumns holds the columns for the "pledges" table.
+	PledgesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "quantity", Type: field.TypeString, Unique: true},
+		{Name: "provision", Type: field.TypeString, Unique: true},
 	}
-	// QuantitiesTable holds the schema information for the "quantities" table.
-	QuantitiesTable = &schema.Table{
-		Name:        "quantities",
-		Columns:     QuantitiesColumns,
-		PrimaryKey:  []*schema.Column{QuantitiesColumns[0]},
+	// PledgesTable holds the schema information for the "pledges" table.
+	PledgesTable = &schema.Table{
+		Name:        "pledges",
+		Columns:     PledgesColumns,
+		PrimaryKey:  []*schema.Column{PledgesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// RentalstatusesColumns holds the columns for the "rentalstatuses" table.
@@ -252,11 +240,12 @@ var (
 		{Name: "roomnumber", Type: field.TypeString, Unique: true},
 		{Name: "roomtypename", Type: field.TypeString},
 		{Name: "roomprice", Type: field.TypeString},
+		{Name: "sleep", Type: field.TypeString},
+		{Name: "bed", Type: field.TypeString},
+		{Name: "bedtype_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
-		{Name: "equipment_roomdetail", Type: field.TypeInt, Nullable: true},
-		{Name: "facilitie_roomdetail", Type: field.TypeInt, Nullable: true},
-		{Name: "nearbyplace_roomdetail", Type: field.TypeInt, Nullable: true},
-		{Name: "quantity_roomdetails", Type: field.TypeInt, Nullable: true},
+		{Name: "petrule_roomdetails", Type: field.TypeInt, Nullable: true},
+		{Name: "pledge_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "staytype_roomdetails", Type: field.TypeInt, Nullable: true},
 	}
 	// RoomdetailsTable holds the schema information for the "roomdetails" table.
@@ -266,43 +255,36 @@ var (
 		PrimaryKey: []*schema.Column{RoomdetailsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
+				Symbol:  "roomdetails_bedtypes_roomdetails",
+				Columns: []*schema.Column{RoomdetailsColumns[6]},
+
+				RefColumns: []*schema.Column{BedtypesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "roomdetails_employees_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[4]},
+				Columns: []*schema.Column{RoomdetailsColumns[7]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "roomdetails_equipment_roomdetail",
-				Columns: []*schema.Column{RoomdetailsColumns[5]},
-
-				RefColumns: []*schema.Column{EquipmentColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "roomdetails_facilities_roomdetail",
-				Columns: []*schema.Column{RoomdetailsColumns[6]},
-
-				RefColumns: []*schema.Column{FacilitiesColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "roomdetails_nearbyplaces_roomdetail",
-				Columns: []*schema.Column{RoomdetailsColumns[7]},
-
-				RefColumns: []*schema.Column{NearbyplacesColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "roomdetails_quantities_roomdetails",
+				Symbol:  "roomdetails_petrules_roomdetails",
 				Columns: []*schema.Column{RoomdetailsColumns[8]},
 
-				RefColumns: []*schema.Column{QuantitiesColumns[0]},
+				RefColumns: []*schema.Column{PetrulesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "roomdetails_pledges_roomdetails",
+				Columns: []*schema.Column{RoomdetailsColumns[9]},
+
+				RefColumns: []*schema.Column{PledgesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_staytypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[9]},
+				Columns: []*schema.Column{RoomdetailsColumns[10]},
 
 				RefColumns: []*schema.Column{StaytypesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -347,17 +329,16 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		BedtypesTable,
 		CleanerNamesTable,
 		CleaningRoomsTable,
 		DepositsTable,
 		EmployeesTable,
-		EquipmentTable,
-		FacilitiesTable,
 		JobpositionsTable,
 		LeasesTable,
 		LengthTimesTable,
-		NearbyplacesTable,
-		QuantitiesTable,
+		PetrulesTable,
+		PledgesTable,
 		RentalstatusesTable,
 		RepairinvoicesTable,
 		RoomdetailsTable,
@@ -377,10 +358,9 @@ func init() {
 	LeasesTable.ForeignKeys[1].RefTable = WifisTable
 	RepairinvoicesTable.ForeignKeys[0].RefTable = EmployeesTable
 	RepairinvoicesTable.ForeignKeys[1].RefTable = RentalstatusesTable
-	RoomdetailsTable.ForeignKeys[0].RefTable = EmployeesTable
-	RoomdetailsTable.ForeignKeys[1].RefTable = EquipmentTable
-	RoomdetailsTable.ForeignKeys[2].RefTable = FacilitiesTable
-	RoomdetailsTable.ForeignKeys[3].RefTable = NearbyplacesTable
-	RoomdetailsTable.ForeignKeys[4].RefTable = QuantitiesTable
-	RoomdetailsTable.ForeignKeys[5].RefTable = StaytypesTable
+	RoomdetailsTable.ForeignKeys[0].RefTable = BedtypesTable
+	RoomdetailsTable.ForeignKeys[1].RefTable = EmployeesTable
+	RoomdetailsTable.ForeignKeys[2].RefTable = PetrulesTable
+	RoomdetailsTable.ForeignKeys[3].RefTable = PledgesTable
+	RoomdetailsTable.ForeignKeys[4].RefTable = StaytypesTable
 }
