@@ -10,6 +10,7 @@ import {
 } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ComponanceRoomDetails from '../RoomDetails';
+import ComponanceRecordDeposit from '../RecordDeposit';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 
@@ -67,8 +68,8 @@ const DormEmployee: FC<{}> = () => {
           
           </div>
         </CardTab>
-        <CardTab label="Option 2">
-          <div style={cardContentStyle}>Some content 2</div>
+        <CardTab label="รับฝากของ">
+          <div><ComponanceRecordDeposit></ComponanceRecordDeposit></div>
         </CardTab>
         <CardTab label="Option 3">
           <div style={cardContentStyle}>Some content 3</div>
