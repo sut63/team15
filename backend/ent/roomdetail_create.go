@@ -9,12 +9,11 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/employee"
-	"github.com/team15/app/ent/equipment"
-	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/lease"
-	"github.com/team15/app/ent/nearbyplace"
-	"github.com/team15/app/ent/quantity"
+	"github.com/team15/app/ent/petrule"
+	"github.com/team15/app/ent/pledge"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/staytype"
 )
@@ -44,61 +43,73 @@ func (rc *RoomdetailCreate) SetRoomprice(s string) *RoomdetailCreate {
 	return rc
 }
 
-// SetEquipmentsID sets the equipments edge to Equipment by id.
-func (rc *RoomdetailCreate) SetEquipmentsID(id int) *RoomdetailCreate {
-	rc.mutation.SetEquipmentsID(id)
+// SetSleep sets the sleep field.
+func (rc *RoomdetailCreate) SetSleep(s string) *RoomdetailCreate {
+	rc.mutation.SetSleep(s)
 	return rc
 }
 
-// SetNillableEquipmentsID sets the equipments edge to Equipment by id if the given value is not nil.
-func (rc *RoomdetailCreate) SetNillableEquipmentsID(id *int) *RoomdetailCreate {
+// SetBed sets the bed field.
+func (rc *RoomdetailCreate) SetBed(s string) *RoomdetailCreate {
+	rc.mutation.SetBed(s)
+	return rc
+}
+
+// SetPledgeID sets the pledge edge to Pledge by id.
+func (rc *RoomdetailCreate) SetPledgeID(id int) *RoomdetailCreate {
+	rc.mutation.SetPledgeID(id)
+	return rc
+}
+
+// SetNillablePledgeID sets the pledge edge to Pledge by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillablePledgeID(id *int) *RoomdetailCreate {
 	if id != nil {
-		rc = rc.SetEquipmentsID(*id)
+		rc = rc.SetPledgeID(*id)
 	}
 	return rc
 }
 
-// SetEquipments sets the equipments edge to Equipment.
-func (rc *RoomdetailCreate) SetEquipments(e *Equipment) *RoomdetailCreate {
-	return rc.SetEquipmentsID(e.ID)
+// SetPledge sets the pledge edge to Pledge.
+func (rc *RoomdetailCreate) SetPledge(p *Pledge) *RoomdetailCreate {
+	return rc.SetPledgeID(p.ID)
 }
 
-// SetFacilitiesID sets the facilities edge to Facilitie by id.
-func (rc *RoomdetailCreate) SetFacilitiesID(id int) *RoomdetailCreate {
-	rc.mutation.SetFacilitiesID(id)
+// SetPetruleID sets the petrule edge to Petrule by id.
+func (rc *RoomdetailCreate) SetPetruleID(id int) *RoomdetailCreate {
+	rc.mutation.SetPetruleID(id)
 	return rc
 }
 
-// SetNillableFacilitiesID sets the facilities edge to Facilitie by id if the given value is not nil.
-func (rc *RoomdetailCreate) SetNillableFacilitiesID(id *int) *RoomdetailCreate {
+// SetNillablePetruleID sets the petrule edge to Petrule by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillablePetruleID(id *int) *RoomdetailCreate {
 	if id != nil {
-		rc = rc.SetFacilitiesID(*id)
+		rc = rc.SetPetruleID(*id)
 	}
 	return rc
 }
 
-// SetFacilities sets the facilities edge to Facilitie.
-func (rc *RoomdetailCreate) SetFacilities(f *Facilitie) *RoomdetailCreate {
-	return rc.SetFacilitiesID(f.ID)
+// SetPetrule sets the petrule edge to Petrule.
+func (rc *RoomdetailCreate) SetPetrule(p *Petrule) *RoomdetailCreate {
+	return rc.SetPetruleID(p.ID)
 }
 
-// SetNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id.
-func (rc *RoomdetailCreate) SetNearbyplacesID(id int) *RoomdetailCreate {
-	rc.mutation.SetNearbyplacesID(id)
+// SetBedtypeID sets the bedtype edge to Bedtype by id.
+func (rc *RoomdetailCreate) SetBedtypeID(id int) *RoomdetailCreate {
+	rc.mutation.SetBedtypeID(id)
 	return rc
 }
 
-// SetNillableNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id if the given value is not nil.
-func (rc *RoomdetailCreate) SetNillableNearbyplacesID(id *int) *RoomdetailCreate {
+// SetNillableBedtypeID sets the bedtype edge to Bedtype by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableBedtypeID(id *int) *RoomdetailCreate {
 	if id != nil {
-		rc = rc.SetNearbyplacesID(*id)
+		rc = rc.SetBedtypeID(*id)
 	}
 	return rc
 }
 
-// SetNearbyplaces sets the nearbyplaces edge to Nearbyplace.
-func (rc *RoomdetailCreate) SetNearbyplaces(n *Nearbyplace) *RoomdetailCreate {
-	return rc.SetNearbyplacesID(n.ID)
+// SetBedtype sets the bedtype edge to Bedtype.
+func (rc *RoomdetailCreate) SetBedtype(b *Bedtype) *RoomdetailCreate {
+	return rc.SetBedtypeID(b.ID)
 }
 
 // SetEmployeeID sets the employee edge to Employee by id.
@@ -118,25 +129,6 @@ func (rc *RoomdetailCreate) SetNillableEmployeeID(id *int) *RoomdetailCreate {
 // SetEmployee sets the employee edge to Employee.
 func (rc *RoomdetailCreate) SetEmployee(e *Employee) *RoomdetailCreate {
 	return rc.SetEmployeeID(e.ID)
-}
-
-// SetQuantityID sets the quantity edge to Quantity by id.
-func (rc *RoomdetailCreate) SetQuantityID(id int) *RoomdetailCreate {
-	rc.mutation.SetQuantityID(id)
-	return rc
-}
-
-// SetNillableQuantityID sets the quantity edge to Quantity by id if the given value is not nil.
-func (rc *RoomdetailCreate) SetNillableQuantityID(id *int) *RoomdetailCreate {
-	if id != nil {
-		rc = rc.SetQuantityID(*id)
-	}
-	return rc
-}
-
-// SetQuantity sets the quantity edge to Quantity.
-func (rc *RoomdetailCreate) SetQuantity(q *Quantity) *RoomdetailCreate {
-	return rc.SetQuantityID(q.ID)
 }
 
 // SetStaytypeID sets the staytype edge to Staytype by id.
@@ -187,26 +179,17 @@ func (rc *RoomdetailCreate) Save(ctx context.Context) (*Roomdetail, error) {
 	if _, ok := rc.mutation.Roomnumber(); !ok {
 		return nil, &ValidationError{Name: "roomnumber", err: errors.New("ent: missing required field \"roomnumber\"")}
 	}
-	if v, ok := rc.mutation.Roomnumber(); ok {
-		if err := roomdetail.RoomnumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
-		}
-	}
 	if _, ok := rc.mutation.Roomtypename(); !ok {
 		return nil, &ValidationError{Name: "roomtypename", err: errors.New("ent: missing required field \"roomtypename\"")}
-	}
-	if v, ok := rc.mutation.Roomtypename(); ok {
-		if err := roomdetail.RoomtypenameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
-		}
 	}
 	if _, ok := rc.mutation.Roomprice(); !ok {
 		return nil, &ValidationError{Name: "roomprice", err: errors.New("ent: missing required field \"roomprice\"")}
 	}
-	if v, ok := rc.mutation.Roomprice(); ok {
-		if err := roomdetail.RoompriceValidator(v); err != nil {
-			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
-		}
+	if _, ok := rc.mutation.Sleep(); !ok {
+		return nil, &ValidationError{Name: "sleep", err: errors.New("ent: missing required field \"sleep\"")}
+	}
+	if _, ok := rc.mutation.Bed(); !ok {
+		return nil, &ValidationError{Name: "bed", err: errors.New("ent: missing required field \"bed\"")}
 	}
 	var (
 		err  error
@@ -292,17 +275,33 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 		})
 		r.Roomprice = value
 	}
-	if nodes := rc.mutation.EquipmentsIDs(); len(nodes) > 0 {
+	if value, ok := rc.mutation.Sleep(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+		r.Sleep = value
+	}
+	if value, ok := rc.mutation.Bed(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+		r.Bed = value
+	}
+	if nodes := rc.mutation.PledgeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.EquipmentsTable,
-			Columns: []string{roomdetail.EquipmentsColumn},
+			Table:   roomdetail.PledgeTable,
+			Columns: []string{roomdetail.PledgeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: equipment.FieldID,
+					Column: pledge.FieldID,
 				},
 			},
 		}
@@ -311,17 +310,17 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.FacilitiesIDs(); len(nodes) > 0 {
+	if nodes := rc.mutation.PetruleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.FacilitiesTable,
-			Columns: []string{roomdetail.FacilitiesColumn},
+			Table:   roomdetail.PetruleTable,
+			Columns: []string{roomdetail.PetruleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: facilitie.FieldID,
+					Column: petrule.FieldID,
 				},
 			},
 		}
@@ -330,17 +329,17 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+	if nodes := rc.mutation.BedtypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Table:   roomdetail.BedtypeTable,
+			Columns: []string{roomdetail.BedtypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: bedtype.FieldID,
 				},
 			},
 		}
@@ -360,25 +359,6 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := rc.mutation.QuantityIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   roomdetail.QuantityTable,
-			Columns: []string{roomdetail.QuantityColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: quantity.FieldID,
 				},
 			},
 		}

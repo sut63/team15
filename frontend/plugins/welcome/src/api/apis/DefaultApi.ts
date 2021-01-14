@@ -27,6 +27,9 @@ import {
     ControllersRoomdetail,
     ControllersRoomdetailFromJSON,
     ControllersRoomdetailToJSON,
+    EntBedtype,
+    EntBedtypeFromJSON,
+    EntBedtypeToJSON,
     EntCleanerName,
     EntCleanerNameFromJSON,
     EntCleanerNameToJSON,
@@ -39,24 +42,18 @@ import {
     EntEmployee,
     EntEmployeeFromJSON,
     EntEmployeeToJSON,
-    EntEquipment,
-    EntEquipmentFromJSON,
-    EntEquipmentToJSON,
-    EntFacilitie,
-    EntFacilitieFromJSON,
-    EntFacilitieToJSON,
     EntLease,
     EntLeaseFromJSON,
     EntLeaseToJSON,
     EntLengthTime,
     EntLengthTimeFromJSON,
     EntLengthTimeToJSON,
-    EntNearbyplace,
-    EntNearbyplaceFromJSON,
-    EntNearbyplaceToJSON,
-    EntQuantity,
-    EntQuantityFromJSON,
-    EntQuantityToJSON,
+    EntPetrule,
+    EntPetruleFromJSON,
+    EntPetruleToJSON,
+    EntPledge,
+    EntPledgeFromJSON,
+    EntPledgeToJSON,
     EntRentalstatus,
     EntRentalstatusFromJSON,
     EntRentalstatusToJSON,
@@ -77,6 +74,10 @@ import {
     EntWifiToJSON,
 } from '../models';
 
+export interface CreateBedtypeRequest {
+    bedtype: EntBedtype;
+}
+
 export interface CreateCleaningroomRequest {
     cleaningroom: EntCleaningRoom;
 }
@@ -85,24 +86,16 @@ export interface CreateDepositRequest {
     deposit: ControllersDeposit;
 }
 
-export interface CreateEquipmentRequest {
-    equipment: EntEquipment;
-}
-
-export interface CreateFacilitieRequest {
-    facilitie: EntFacilitie;
-}
-
 export interface CreateLeaseRequest {
     lease: ControllersLease;
 }
 
-export interface CreateNearbyplaceRequest {
-    nearbyplace: EntNearbyplace;
+export interface CreatePetruleRequest {
+    petrule: EntPetrule;
 }
 
-export interface CreateQuantityRequest {
-    quantity: EntQuantity;
+export interface CreatePledgeRequest {
+    pledge: EntPledge;
 }
 
 export interface CreateRentalstatusRequest {
@@ -129,23 +122,19 @@ export interface CreateWifiRequest {
     wifi: EntWifi;
 }
 
+export interface DeleteBedtypeRequest {
+    id: number;
+}
+
 export interface DeleteEmployeeRequest {
     id: number;
 }
 
-export interface DeleteEquipmentRequest {
+export interface DeletePetruleRequest {
     id: number;
 }
 
-export interface DeleteFacilitieRequest {
-    id: number;
-}
-
-export interface DeleteNearbyplaceRequest {
-    id: number;
-}
-
-export interface DeleteQuantityRequest {
+export interface DeletePledgeRequest {
     id: number;
 }
 
@@ -165,6 +154,10 @@ export interface DeleteWifiRequest {
     id: number;
 }
 
+export interface GetBedtypeRequest {
+    id: number;
+}
+
 export interface GetCleanernameRequest {
     id: number;
 }
@@ -177,23 +170,15 @@ export interface GetEmployeeRequest {
     id: number;
 }
 
-export interface GetEquipmentRequest {
-    id: number;
-}
-
-export interface GetFacilitieRequest {
-    id: number;
-}
-
 export interface GetLengthtimeRequest {
     id: number;
 }
 
-export interface GetNearbyplaceRequest {
+export interface GetPetruleRequest {
     id: number;
 }
 
-export interface GetQuantityRequest {
+export interface GetPledgeRequest {
     id: number;
 }
 
@@ -232,32 +217,12 @@ export interface ListDepositRequest {
     offset?: number;
 }
 
-export interface ListEquipmentRequest {
-    limit?: number;
-    offset?: number;
-}
-
-export interface ListFacilitieRequest {
-    limit?: number;
-    offset?: number;
-}
-
 export interface ListLeaseRequest {
     limit?: number;
     offset?: number;
 }
 
 export interface ListLengthtimeRequest {
-    limit?: number;
-    offset?: number;
-}
-
-export interface ListNearbyplaceRequest {
-    limit?: number;
-    offset?: number;
-}
-
-export interface ListQuantityRequest {
     limit?: number;
     offset?: number;
 }
@@ -291,6 +256,41 @@ export interface ListWifiRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * Create bedtype
+     * Create bedtype
+     */
+    async createBedtypeRaw(requestParameters: CreateBedtypeRequest): Promise<runtime.ApiResponse<EntBedtype>> {
+        if (requestParameters.bedtype === null || requestParameters.bedtype === undefined) {
+            throw new runtime.RequiredError('bedtype','Required parameter requestParameters.bedtype was null or undefined when calling createBedtype.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bedtypes`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntBedtypeToJSON(requestParameters.bedtype),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntBedtypeFromJSON(jsonValue));
+    }
+
+    /**
+     * Create bedtype
+     * Create bedtype
+     */
+    async createBedtype(requestParameters: CreateBedtypeRequest): Promise<EntBedtype> {
+        const response = await this.createBedtypeRaw(requestParameters);
+        return await response.value();
+    }
 
     /**
      * Create cleaningroom
@@ -363,76 +363,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create equipment
-     * Create equipment
-     */
-    async createEquipmentRaw(requestParameters: CreateEquipmentRequest): Promise<runtime.ApiResponse<EntEquipment>> {
-        if (requestParameters.equipment === null || requestParameters.equipment === undefined) {
-            throw new runtime.RequiredError('equipment','Required parameter requestParameters.equipment was null or undefined when calling createEquipment.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/equipments`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: EntEquipmentToJSON(requestParameters.equipment),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntEquipmentFromJSON(jsonValue));
-    }
-
-    /**
-     * Create equipment
-     * Create equipment
-     */
-    async createEquipment(requestParameters: CreateEquipmentRequest): Promise<EntEquipment> {
-        const response = await this.createEquipmentRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * Create facilitie
-     * Create facilitie
-     */
-    async createFacilitieRaw(requestParameters: CreateFacilitieRequest): Promise<runtime.ApiResponse<EntFacilitie>> {
-        if (requestParameters.facilitie === null || requestParameters.facilitie === undefined) {
-            throw new runtime.RequiredError('facilitie','Required parameter requestParameters.facilitie was null or undefined when calling createFacilitie.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/facilities`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: EntFacilitieToJSON(requestParameters.facilitie),
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntFacilitieFromJSON(jsonValue));
-    }
-
-    /**
-     * Create facilitie
-     * Create facilitie
-     */
-    async createFacilitie(requestParameters: CreateFacilitieRequest): Promise<EntFacilitie> {
-        const response = await this.createFacilitieRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
      * Create lease
      * Create lease
      */
@@ -468,12 +398,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * Create nearbyplace
-     * Create nearbyplace
+     * Create petrule
+     * Create petrule
      */
-    async createNearbyplaceRaw(requestParameters: CreateNearbyplaceRequest): Promise<runtime.ApiResponse<EntNearbyplace>> {
-        if (requestParameters.nearbyplace === null || requestParameters.nearbyplace === undefined) {
-            throw new runtime.RequiredError('nearbyplace','Required parameter requestParameters.nearbyplace was null or undefined when calling createNearbyplace.');
+    async createPetruleRaw(requestParameters: CreatePetruleRequest): Promise<runtime.ApiResponse<EntPetrule>> {
+        if (requestParameters.petrule === null || requestParameters.petrule === undefined) {
+            throw new runtime.RequiredError('petrule','Required parameter requestParameters.petrule was null or undefined when calling createPetrule.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -483,32 +413,32 @@ export class DefaultApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/nearbyplaces`,
+            path: `/petrules`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntNearbyplaceToJSON(requestParameters.nearbyplace),
+            body: EntPetruleToJSON(requestParameters.petrule),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntNearbyplaceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPetruleFromJSON(jsonValue));
     }
 
     /**
-     * Create nearbyplace
-     * Create nearbyplace
+     * Create petrule
+     * Create petrule
      */
-    async createNearbyplace(requestParameters: CreateNearbyplaceRequest): Promise<EntNearbyplace> {
-        const response = await this.createNearbyplaceRaw(requestParameters);
+    async createPetrule(requestParameters: CreatePetruleRequest): Promise<EntPetrule> {
+        const response = await this.createPetruleRaw(requestParameters);
         return await response.value();
     }
 
     /**
-     * Create quantity
-     * Create quantity
+     * Create pledge
+     * Create pledge
      */
-    async createQuantityRaw(requestParameters: CreateQuantityRequest): Promise<runtime.ApiResponse<EntQuantity>> {
-        if (requestParameters.quantity === null || requestParameters.quantity === undefined) {
-            throw new runtime.RequiredError('quantity','Required parameter requestParameters.quantity was null or undefined when calling createQuantity.');
+    async createPledgeRaw(requestParameters: CreatePledgeRequest): Promise<runtime.ApiResponse<EntPledge>> {
+        if (requestParameters.pledge === null || requestParameters.pledge === undefined) {
+            throw new runtime.RequiredError('pledge','Required parameter requestParameters.pledge was null or undefined when calling createPledge.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -518,22 +448,22 @@ export class DefaultApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/quantitys`,
+            path: `/pledges`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntQuantityToJSON(requestParameters.quantity),
+            body: EntPledgeToJSON(requestParameters.pledge),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntQuantityFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPledgeFromJSON(jsonValue));
     }
 
     /**
-     * Create quantity
-     * Create quantity
+     * Create pledge
+     * Create pledge
      */
-    async createQuantity(requestParameters: CreateQuantityRequest): Promise<EntQuantity> {
-        const response = await this.createQuantityRaw(requestParameters);
+    async createPledge(requestParameters: CreatePledgeRequest): Promise<EntPledge> {
+        const response = await this.createPledgeRaw(requestParameters);
         return await response.value();
     }
 
@@ -748,6 +678,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get bedtype by ID
+     * Delete a bedtype entity by ID
+     */
+    async deleteBedtypeRaw(requestParameters: DeleteBedtypeRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteBedtype.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bedtype/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get bedtype by ID
+     * Delete a bedtype entity by ID
+     */
+    async deleteBedtype(requestParameters: DeleteBedtypeRequest): Promise<object> {
+        const response = await this.deleteBedtypeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get employee by ID
      * Delete a employee entity by ID
      */
@@ -780,12 +742,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get equipment by ID
-     * Delete a equipment entity by ID
+     * get petrule by ID
+     * Delete a petrule entity by ID
      */
-    async deleteEquipmentRaw(requestParameters: DeleteEquipmentRequest): Promise<runtime.ApiResponse<object>> {
+    async deletePetruleRaw(requestParameters: DeletePetruleRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteEquipment.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deletePetrule.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -793,7 +755,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/equipment/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/petrule/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -803,21 +765,21 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get equipment by ID
-     * Delete a equipment entity by ID
+     * get petrule by ID
+     * Delete a petrule entity by ID
      */
-    async deleteEquipment(requestParameters: DeleteEquipmentRequest): Promise<object> {
-        const response = await this.deleteEquipmentRaw(requestParameters);
+    async deletePetrule(requestParameters: DeletePetruleRequest): Promise<object> {
+        const response = await this.deletePetruleRaw(requestParameters);
         return await response.value();
     }
 
     /**
-     * get facilitie by ID
-     * Delete a facilitie entity by ID
+     * get pledge by ID
+     * Delete a pledge entity by ID
      */
-    async deleteFacilitieRaw(requestParameters: DeleteFacilitieRequest): Promise<runtime.ApiResponse<object>> {
+    async deletePledgeRaw(requestParameters: DeletePledgeRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteFacilitie.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deletePledge.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -825,7 +787,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/facilitie/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/pledge/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -835,75 +797,11 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get facilitie by ID
-     * Delete a facilitie entity by ID
+     * get pledge by ID
+     * Delete a pledge entity by ID
      */
-    async deleteFacilitie(requestParameters: DeleteFacilitieRequest): Promise<object> {
-        const response = await this.deleteFacilitieRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * get nearbyplace by ID
-     * Delete a nearbyplace entity by ID
-     */
-    async deleteNearbyplaceRaw(requestParameters: DeleteNearbyplaceRequest): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteNearbyplace.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/nearbyplace/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     * get nearbyplace by ID
-     * Delete a nearbyplace entity by ID
-     */
-    async deleteNearbyplace(requestParameters: DeleteNearbyplaceRequest): Promise<object> {
-        const response = await this.deleteNearbyplaceRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * get quantity by ID
-     * Delete a quantity entity by ID
-     */
-    async deleteQuantityRaw(requestParameters: DeleteQuantityRequest): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteQuantity.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/quantity/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse<any>(response);
-    }
-
-    /**
-     * get quantity by ID
-     * Delete a quantity entity by ID
-     */
-    async deleteQuantity(requestParameters: DeleteQuantityRequest): Promise<object> {
-        const response = await this.deleteQuantityRaw(requestParameters);
+    async deletePledge(requestParameters: DeletePledgeRequest): Promise<object> {
+        const response = await this.deletePledgeRaw(requestParameters);
         return await response.value();
     }
 
@@ -1036,6 +934,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get bedtype by ID
+     * Get a bedtype entity by ID
+     */
+    async getBedtypeRaw(requestParameters: GetBedtypeRequest): Promise<runtime.ApiResponse<EntBedtype>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getBedtype.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bedtypes/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntBedtypeFromJSON(jsonValue));
+    }
+
+    /**
+     * get bedtype by ID
+     * Get a bedtype entity by ID
+     */
+    async getBedtype(requestParameters: GetBedtypeRequest): Promise<EntBedtype> {
+        const response = await this.getBedtypeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get cleanername by ID
      * Get a cleanername entity by ID
      */
@@ -1132,70 +1062,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get equipment by ID
-     * Get a equipment entity by ID
-     */
-    async getEquipmentRaw(requestParameters: GetEquipmentRequest): Promise<runtime.ApiResponse<EntEquipment>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getEquipment.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/equipments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntEquipmentFromJSON(jsonValue));
-    }
-
-    /**
-     * get equipment by ID
-     * Get a equipment entity by ID
-     */
-    async getEquipment(requestParameters: GetEquipmentRequest): Promise<EntEquipment> {
-        const response = await this.getEquipmentRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * get facilitie by ID
-     * Get a facilitie entity by ID
-     */
-    async getFacilitieRaw(requestParameters: GetFacilitieRequest): Promise<runtime.ApiResponse<EntFacilitie>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getFacilitie.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/facilities/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntFacilitieFromJSON(jsonValue));
-    }
-
-    /**
-     * get facilitie by ID
-     * Get a facilitie entity by ID
-     */
-    async getFacilitie(requestParameters: GetFacilitieRequest): Promise<EntFacilitie> {
-        const response = await this.getFacilitieRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
      * get lengthtime by ID
      * Get a lengthtime entity by ID
      */
@@ -1228,12 +1094,12 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get nearbyplace by ID
-     * Get a nearbyplace entity by ID
+     * get petrule by ID
+     * Get a petrule entity by ID
      */
-    async getNearbyplaceRaw(requestParameters: GetNearbyplaceRequest): Promise<runtime.ApiResponse<EntNearbyplace>> {
+    async getPetruleRaw(requestParameters: GetPetruleRequest): Promise<runtime.ApiResponse<EntPetrule>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getNearbyplace.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getPetrule.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -1241,31 +1107,31 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/nearbyplaces/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/petrules/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntNearbyplaceFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPetruleFromJSON(jsonValue));
     }
 
     /**
-     * get nearbyplace by ID
-     * Get a nearbyplace entity by ID
+     * get petrule by ID
+     * Get a petrule entity by ID
      */
-    async getNearbyplace(requestParameters: GetNearbyplaceRequest): Promise<EntNearbyplace> {
-        const response = await this.getNearbyplaceRaw(requestParameters);
+    async getPetrule(requestParameters: GetPetruleRequest): Promise<EntPetrule> {
+        const response = await this.getPetruleRaw(requestParameters);
         return await response.value();
     }
 
     /**
-     * get quantity by ID
-     * Get a quantity entity by ID
+     * get pledge by ID
+     * Get a pledge entity by ID
      */
-    async getQuantityRaw(requestParameters: GetQuantityRequest): Promise<runtime.ApiResponse<EntQuantity>> {
+    async getPledgeRaw(requestParameters: GetPledgeRequest): Promise<runtime.ApiResponse<EntPledge>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getQuantity.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getPledge.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -1273,21 +1139,21 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/quantitys/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/pledges/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntQuantityFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPledgeFromJSON(jsonValue));
     }
 
     /**
-     * get quantity by ID
-     * Get a quantity entity by ID
+     * get pledge by ID
+     * Get a pledge entity by ID
      */
-    async getQuantity(requestParameters: GetQuantityRequest): Promise<EntQuantity> {
-        const response = await this.getQuantityRaw(requestParameters);
+    async getPledge(requestParameters: GetPledgeRequest): Promise<EntPledge> {
+        const response = await this.getPledgeRaw(requestParameters);
         return await response.value();
     }
 
@@ -1452,6 +1318,34 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * list bedtype entities
+     * List bedtype entities
+     */
+    async listBedtypeRaw(): Promise<runtime.ApiResponse<Array<EntBedtype>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bedtypes`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntBedtypeFromJSON));
+    }
+
+    /**
+     * list bedtype entities
+     * List bedtype entities
+     */
+    async listBedtype(): Promise<Array<EntBedtype>> {
+        const response = await this.listBedtypeRaw();
+        return await response.value();
+    }
+
+    /**
      * list cleanername entities
      * List cleanername entities
      */
@@ -1588,78 +1482,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * list equipment entities
-     * List equipment entities
-     */
-    async listEquipmentRaw(requestParameters: ListEquipmentRequest): Promise<runtime.ApiResponse<Array<EntEquipment>>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/equipments`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntEquipmentFromJSON));
-    }
-
-    /**
-     * list equipment entities
-     * List equipment entities
-     */
-    async listEquipment(requestParameters: ListEquipmentRequest): Promise<Array<EntEquipment>> {
-        const response = await this.listEquipmentRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * list facilitie entities
-     * List facilitie entities
-     */
-    async listFacilitieRaw(requestParameters: ListFacilitieRequest): Promise<runtime.ApiResponse<Array<EntFacilitie>>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/facilities`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntFacilitieFromJSON));
-    }
-
-    /**
-     * list facilitie entities
-     * List facilitie entities
-     */
-    async listFacilitie(requestParameters: ListFacilitieRequest): Promise<Array<EntFacilitie>> {
-        const response = await this.listFacilitieRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
      * list lease entities
      * List lease entities
      */
@@ -1732,74 +1554,58 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * list nearbyplace entities
-     * List nearbyplace entities
+     * list petrule entities
+     * List petrule entities
      */
-    async listNearbyplaceRaw(requestParameters: ListNearbyplaceRequest): Promise<runtime.ApiResponse<Array<EntNearbyplace>>> {
+    async listPetruleRaw(): Promise<runtime.ApiResponse<Array<EntPetrule>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/nearbyplaces`,
+            path: `/petrules`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntNearbyplaceFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntPetruleFromJSON));
     }
 
     /**
-     * list nearbyplace entities
-     * List nearbyplace entities
+     * list petrule entities
+     * List petrule entities
      */
-    async listNearbyplace(requestParameters: ListNearbyplaceRequest): Promise<Array<EntNearbyplace>> {
-        const response = await this.listNearbyplaceRaw(requestParameters);
+    async listPetrule(): Promise<Array<EntPetrule>> {
+        const response = await this.listPetruleRaw();
         return await response.value();
     }
 
     /**
-     * list quantity entities
-     * List quantity entities
+     * list pledge entities
+     * List pledge entities
      */
-    async listQuantityRaw(requestParameters: ListQuantityRequest): Promise<runtime.ApiResponse<Array<EntQuantity>>> {
+    async listPledgeRaw(): Promise<runtime.ApiResponse<Array<EntPledge>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/quantitys`,
+            path: `/pledges`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntQuantityFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntPledgeFromJSON));
     }
 
     /**
-     * list quantity entities
-     * List quantity entities
+     * list pledge entities
+     * List pledge entities
      */
-    async listQuantity(requestParameters: ListQuantityRequest): Promise<Array<EntQuantity>> {
-        const response = await this.listQuantityRaw(requestParameters);
+    async listPledge(): Promise<Array<EntPledge>> {
+        const response = await this.listPledgeRaw();
         return await response.value();
     }
 

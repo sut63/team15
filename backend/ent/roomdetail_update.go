@@ -9,13 +9,12 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/employee"
-	"github.com/team15/app/ent/equipment"
-	"github.com/team15/app/ent/facilitie"
 	"github.com/team15/app/ent/lease"
-	"github.com/team15/app/ent/nearbyplace"
+	"github.com/team15/app/ent/petrule"
+	"github.com/team15/app/ent/pledge"
 	"github.com/team15/app/ent/predicate"
-	"github.com/team15/app/ent/quantity"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/staytype"
 )
@@ -52,61 +51,73 @@ func (ru *RoomdetailUpdate) SetRoomprice(s string) *RoomdetailUpdate {
 	return ru
 }
 
-// SetEquipmentsID sets the equipments edge to Equipment by id.
-func (ru *RoomdetailUpdate) SetEquipmentsID(id int) *RoomdetailUpdate {
-	ru.mutation.SetEquipmentsID(id)
+// SetSleep sets the sleep field.
+func (ru *RoomdetailUpdate) SetSleep(s string) *RoomdetailUpdate {
+	ru.mutation.SetSleep(s)
 	return ru
 }
 
-// SetNillableEquipmentsID sets the equipments edge to Equipment by id if the given value is not nil.
-func (ru *RoomdetailUpdate) SetNillableEquipmentsID(id *int) *RoomdetailUpdate {
+// SetBed sets the bed field.
+func (ru *RoomdetailUpdate) SetBed(s string) *RoomdetailUpdate {
+	ru.mutation.SetBed(s)
+	return ru
+}
+
+// SetPledgeID sets the pledge edge to Pledge by id.
+func (ru *RoomdetailUpdate) SetPledgeID(id int) *RoomdetailUpdate {
+	ru.mutation.SetPledgeID(id)
+	return ru
+}
+
+// SetNillablePledgeID sets the pledge edge to Pledge by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillablePledgeID(id *int) *RoomdetailUpdate {
 	if id != nil {
-		ru = ru.SetEquipmentsID(*id)
+		ru = ru.SetPledgeID(*id)
 	}
 	return ru
 }
 
-// SetEquipments sets the equipments edge to Equipment.
-func (ru *RoomdetailUpdate) SetEquipments(e *Equipment) *RoomdetailUpdate {
-	return ru.SetEquipmentsID(e.ID)
+// SetPledge sets the pledge edge to Pledge.
+func (ru *RoomdetailUpdate) SetPledge(p *Pledge) *RoomdetailUpdate {
+	return ru.SetPledgeID(p.ID)
 }
 
-// SetFacilitiesID sets the facilities edge to Facilitie by id.
-func (ru *RoomdetailUpdate) SetFacilitiesID(id int) *RoomdetailUpdate {
-	ru.mutation.SetFacilitiesID(id)
+// SetPetruleID sets the petrule edge to Petrule by id.
+func (ru *RoomdetailUpdate) SetPetruleID(id int) *RoomdetailUpdate {
+	ru.mutation.SetPetruleID(id)
 	return ru
 }
 
-// SetNillableFacilitiesID sets the facilities edge to Facilitie by id if the given value is not nil.
-func (ru *RoomdetailUpdate) SetNillableFacilitiesID(id *int) *RoomdetailUpdate {
+// SetNillablePetruleID sets the petrule edge to Petrule by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillablePetruleID(id *int) *RoomdetailUpdate {
 	if id != nil {
-		ru = ru.SetFacilitiesID(*id)
+		ru = ru.SetPetruleID(*id)
 	}
 	return ru
 }
 
-// SetFacilities sets the facilities edge to Facilitie.
-func (ru *RoomdetailUpdate) SetFacilities(f *Facilitie) *RoomdetailUpdate {
-	return ru.SetFacilitiesID(f.ID)
+// SetPetrule sets the petrule edge to Petrule.
+func (ru *RoomdetailUpdate) SetPetrule(p *Petrule) *RoomdetailUpdate {
+	return ru.SetPetruleID(p.ID)
 }
 
-// SetNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id.
-func (ru *RoomdetailUpdate) SetNearbyplacesID(id int) *RoomdetailUpdate {
-	ru.mutation.SetNearbyplacesID(id)
+// SetBedtypeID sets the bedtype edge to Bedtype by id.
+func (ru *RoomdetailUpdate) SetBedtypeID(id int) *RoomdetailUpdate {
+	ru.mutation.SetBedtypeID(id)
 	return ru
 }
 
-// SetNillableNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id if the given value is not nil.
-func (ru *RoomdetailUpdate) SetNillableNearbyplacesID(id *int) *RoomdetailUpdate {
+// SetNillableBedtypeID sets the bedtype edge to Bedtype by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableBedtypeID(id *int) *RoomdetailUpdate {
 	if id != nil {
-		ru = ru.SetNearbyplacesID(*id)
+		ru = ru.SetBedtypeID(*id)
 	}
 	return ru
 }
 
-// SetNearbyplaces sets the nearbyplaces edge to Nearbyplace.
-func (ru *RoomdetailUpdate) SetNearbyplaces(n *Nearbyplace) *RoomdetailUpdate {
-	return ru.SetNearbyplacesID(n.ID)
+// SetBedtype sets the bedtype edge to Bedtype.
+func (ru *RoomdetailUpdate) SetBedtype(b *Bedtype) *RoomdetailUpdate {
+	return ru.SetBedtypeID(b.ID)
 }
 
 // SetEmployeeID sets the employee edge to Employee by id.
@@ -126,25 +137,6 @@ func (ru *RoomdetailUpdate) SetNillableEmployeeID(id *int) *RoomdetailUpdate {
 // SetEmployee sets the employee edge to Employee.
 func (ru *RoomdetailUpdate) SetEmployee(e *Employee) *RoomdetailUpdate {
 	return ru.SetEmployeeID(e.ID)
-}
-
-// SetQuantityID sets the quantity edge to Quantity by id.
-func (ru *RoomdetailUpdate) SetQuantityID(id int) *RoomdetailUpdate {
-	ru.mutation.SetQuantityID(id)
-	return ru
-}
-
-// SetNillableQuantityID sets the quantity edge to Quantity by id if the given value is not nil.
-func (ru *RoomdetailUpdate) SetNillableQuantityID(id *int) *RoomdetailUpdate {
-	if id != nil {
-		ru = ru.SetQuantityID(*id)
-	}
-	return ru
-}
-
-// SetQuantity sets the quantity edge to Quantity.
-func (ru *RoomdetailUpdate) SetQuantity(q *Quantity) *RoomdetailUpdate {
-	return ru.SetQuantityID(q.ID)
 }
 
 // SetStaytypeID sets the staytype edge to Staytype by id.
@@ -190,33 +182,27 @@ func (ru *RoomdetailUpdate) Mutation() *RoomdetailMutation {
 	return ru.mutation
 }
 
-// ClearEquipments clears the equipments edge to Equipment.
-func (ru *RoomdetailUpdate) ClearEquipments() *RoomdetailUpdate {
-	ru.mutation.ClearEquipments()
+// ClearPledge clears the pledge edge to Pledge.
+func (ru *RoomdetailUpdate) ClearPledge() *RoomdetailUpdate {
+	ru.mutation.ClearPledge()
 	return ru
 }
 
-// ClearFacilities clears the facilities edge to Facilitie.
-func (ru *RoomdetailUpdate) ClearFacilities() *RoomdetailUpdate {
-	ru.mutation.ClearFacilities()
+// ClearPetrule clears the petrule edge to Petrule.
+func (ru *RoomdetailUpdate) ClearPetrule() *RoomdetailUpdate {
+	ru.mutation.ClearPetrule()
 	return ru
 }
 
-// ClearNearbyplaces clears the nearbyplaces edge to Nearbyplace.
-func (ru *RoomdetailUpdate) ClearNearbyplaces() *RoomdetailUpdate {
-	ru.mutation.ClearNearbyplaces()
+// ClearBedtype clears the bedtype edge to Bedtype.
+func (ru *RoomdetailUpdate) ClearBedtype() *RoomdetailUpdate {
+	ru.mutation.ClearBedtype()
 	return ru
 }
 
 // ClearEmployee clears the employee edge to Employee.
 func (ru *RoomdetailUpdate) ClearEmployee() *RoomdetailUpdate {
 	ru.mutation.ClearEmployee()
-	return ru
-}
-
-// ClearQuantity clears the quantity edge to Quantity.
-func (ru *RoomdetailUpdate) ClearQuantity() *RoomdetailUpdate {
-	ru.mutation.ClearQuantity()
 	return ru
 }
 
@@ -234,21 +220,6 @@ func (ru *RoomdetailUpdate) ClearRoomdetails() *RoomdetailUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomdetailUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ru.mutation.Roomnumber(); ok {
-		if err := roomdetail.RoomnumberValidator(v); err != nil {
-			return 0, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
-		}
-	}
-	if v, ok := ru.mutation.Roomtypename(); ok {
-		if err := roomdetail.RoomtypenameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
-		}
-	}
-	if v, ok := ru.mutation.Roomprice(); ok {
-		if err := roomdetail.RoompriceValidator(v); err != nil {
-			return 0, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
-		}
-	}
 
 	var (
 		err      error
@@ -338,33 +309,47 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if ru.mutation.EquipmentsCleared() {
+	if value, ok := ru.mutation.Sleep(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+	}
+	if value, ok := ru.mutation.Bed(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+	}
+	if ru.mutation.PledgeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.EquipmentsTable,
-			Columns: []string{roomdetail.EquipmentsColumn},
+			Table:   roomdetail.PledgeTable,
+			Columns: []string{roomdetail.PledgeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: equipment.FieldID,
+					Column: pledge.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.EquipmentsIDs(); len(nodes) > 0 {
+	if nodes := ru.mutation.PledgeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.EquipmentsTable,
-			Columns: []string{roomdetail.EquipmentsColumn},
+			Table:   roomdetail.PledgeTable,
+			Columns: []string{roomdetail.PledgeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: equipment.FieldID,
+					Column: pledge.FieldID,
 				},
 			},
 		}
@@ -373,33 +358,33 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ru.mutation.FacilitiesCleared() {
+	if ru.mutation.PetruleCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.FacilitiesTable,
-			Columns: []string{roomdetail.FacilitiesColumn},
+			Table:   roomdetail.PetruleTable,
+			Columns: []string{roomdetail.PetruleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: facilitie.FieldID,
+					Column: petrule.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.FacilitiesIDs(); len(nodes) > 0 {
+	if nodes := ru.mutation.PetruleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.FacilitiesTable,
-			Columns: []string{roomdetail.FacilitiesColumn},
+			Table:   roomdetail.PetruleTable,
+			Columns: []string{roomdetail.PetruleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: facilitie.FieldID,
+					Column: petrule.FieldID,
 				},
 			},
 		}
@@ -408,33 +393,33 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ru.mutation.NearbyplacesCleared() {
+	if ru.mutation.BedtypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Table:   roomdetail.BedtypeTable,
+			Columns: []string{roomdetail.BedtypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: bedtype.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+	if nodes := ru.mutation.BedtypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Table:   roomdetail.BedtypeTable,
+			Columns: []string{roomdetail.BedtypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: bedtype.FieldID,
 				},
 			},
 		}
@@ -470,41 +455,6 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ru.mutation.QuantityCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   roomdetail.QuantityTable,
-			Columns: []string{roomdetail.QuantityColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: quantity.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ru.mutation.QuantityIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   roomdetail.QuantityTable,
-			Columns: []string{roomdetail.QuantityColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: quantity.FieldID,
 				},
 			},
 		}
@@ -619,61 +569,73 @@ func (ruo *RoomdetailUpdateOne) SetRoomprice(s string) *RoomdetailUpdateOne {
 	return ruo
 }
 
-// SetEquipmentsID sets the equipments edge to Equipment by id.
-func (ruo *RoomdetailUpdateOne) SetEquipmentsID(id int) *RoomdetailUpdateOne {
-	ruo.mutation.SetEquipmentsID(id)
+// SetSleep sets the sleep field.
+func (ruo *RoomdetailUpdateOne) SetSleep(s string) *RoomdetailUpdateOne {
+	ruo.mutation.SetSleep(s)
 	return ruo
 }
 
-// SetNillableEquipmentsID sets the equipments edge to Equipment by id if the given value is not nil.
-func (ruo *RoomdetailUpdateOne) SetNillableEquipmentsID(id *int) *RoomdetailUpdateOne {
+// SetBed sets the bed field.
+func (ruo *RoomdetailUpdateOne) SetBed(s string) *RoomdetailUpdateOne {
+	ruo.mutation.SetBed(s)
+	return ruo
+}
+
+// SetPledgeID sets the pledge edge to Pledge by id.
+func (ruo *RoomdetailUpdateOne) SetPledgeID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetPledgeID(id)
+	return ruo
+}
+
+// SetNillablePledgeID sets the pledge edge to Pledge by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillablePledgeID(id *int) *RoomdetailUpdateOne {
 	if id != nil {
-		ruo = ruo.SetEquipmentsID(*id)
+		ruo = ruo.SetPledgeID(*id)
 	}
 	return ruo
 }
 
-// SetEquipments sets the equipments edge to Equipment.
-func (ruo *RoomdetailUpdateOne) SetEquipments(e *Equipment) *RoomdetailUpdateOne {
-	return ruo.SetEquipmentsID(e.ID)
+// SetPledge sets the pledge edge to Pledge.
+func (ruo *RoomdetailUpdateOne) SetPledge(p *Pledge) *RoomdetailUpdateOne {
+	return ruo.SetPledgeID(p.ID)
 }
 
-// SetFacilitiesID sets the facilities edge to Facilitie by id.
-func (ruo *RoomdetailUpdateOne) SetFacilitiesID(id int) *RoomdetailUpdateOne {
-	ruo.mutation.SetFacilitiesID(id)
+// SetPetruleID sets the petrule edge to Petrule by id.
+func (ruo *RoomdetailUpdateOne) SetPetruleID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetPetruleID(id)
 	return ruo
 }
 
-// SetNillableFacilitiesID sets the facilities edge to Facilitie by id if the given value is not nil.
-func (ruo *RoomdetailUpdateOne) SetNillableFacilitiesID(id *int) *RoomdetailUpdateOne {
+// SetNillablePetruleID sets the petrule edge to Petrule by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillablePetruleID(id *int) *RoomdetailUpdateOne {
 	if id != nil {
-		ruo = ruo.SetFacilitiesID(*id)
+		ruo = ruo.SetPetruleID(*id)
 	}
 	return ruo
 }
 
-// SetFacilities sets the facilities edge to Facilitie.
-func (ruo *RoomdetailUpdateOne) SetFacilities(f *Facilitie) *RoomdetailUpdateOne {
-	return ruo.SetFacilitiesID(f.ID)
+// SetPetrule sets the petrule edge to Petrule.
+func (ruo *RoomdetailUpdateOne) SetPetrule(p *Petrule) *RoomdetailUpdateOne {
+	return ruo.SetPetruleID(p.ID)
 }
 
-// SetNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id.
-func (ruo *RoomdetailUpdateOne) SetNearbyplacesID(id int) *RoomdetailUpdateOne {
-	ruo.mutation.SetNearbyplacesID(id)
+// SetBedtypeID sets the bedtype edge to Bedtype by id.
+func (ruo *RoomdetailUpdateOne) SetBedtypeID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetBedtypeID(id)
 	return ruo
 }
 
-// SetNillableNearbyplacesID sets the nearbyplaces edge to Nearbyplace by id if the given value is not nil.
-func (ruo *RoomdetailUpdateOne) SetNillableNearbyplacesID(id *int) *RoomdetailUpdateOne {
+// SetNillableBedtypeID sets the bedtype edge to Bedtype by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableBedtypeID(id *int) *RoomdetailUpdateOne {
 	if id != nil {
-		ruo = ruo.SetNearbyplacesID(*id)
+		ruo = ruo.SetBedtypeID(*id)
 	}
 	return ruo
 }
 
-// SetNearbyplaces sets the nearbyplaces edge to Nearbyplace.
-func (ruo *RoomdetailUpdateOne) SetNearbyplaces(n *Nearbyplace) *RoomdetailUpdateOne {
-	return ruo.SetNearbyplacesID(n.ID)
+// SetBedtype sets the bedtype edge to Bedtype.
+func (ruo *RoomdetailUpdateOne) SetBedtype(b *Bedtype) *RoomdetailUpdateOne {
+	return ruo.SetBedtypeID(b.ID)
 }
 
 // SetEmployeeID sets the employee edge to Employee by id.
@@ -693,25 +655,6 @@ func (ruo *RoomdetailUpdateOne) SetNillableEmployeeID(id *int) *RoomdetailUpdate
 // SetEmployee sets the employee edge to Employee.
 func (ruo *RoomdetailUpdateOne) SetEmployee(e *Employee) *RoomdetailUpdateOne {
 	return ruo.SetEmployeeID(e.ID)
-}
-
-// SetQuantityID sets the quantity edge to Quantity by id.
-func (ruo *RoomdetailUpdateOne) SetQuantityID(id int) *RoomdetailUpdateOne {
-	ruo.mutation.SetQuantityID(id)
-	return ruo
-}
-
-// SetNillableQuantityID sets the quantity edge to Quantity by id if the given value is not nil.
-func (ruo *RoomdetailUpdateOne) SetNillableQuantityID(id *int) *RoomdetailUpdateOne {
-	if id != nil {
-		ruo = ruo.SetQuantityID(*id)
-	}
-	return ruo
-}
-
-// SetQuantity sets the quantity edge to Quantity.
-func (ruo *RoomdetailUpdateOne) SetQuantity(q *Quantity) *RoomdetailUpdateOne {
-	return ruo.SetQuantityID(q.ID)
 }
 
 // SetStaytypeID sets the staytype edge to Staytype by id.
@@ -757,33 +700,27 @@ func (ruo *RoomdetailUpdateOne) Mutation() *RoomdetailMutation {
 	return ruo.mutation
 }
 
-// ClearEquipments clears the equipments edge to Equipment.
-func (ruo *RoomdetailUpdateOne) ClearEquipments() *RoomdetailUpdateOne {
-	ruo.mutation.ClearEquipments()
+// ClearPledge clears the pledge edge to Pledge.
+func (ruo *RoomdetailUpdateOne) ClearPledge() *RoomdetailUpdateOne {
+	ruo.mutation.ClearPledge()
 	return ruo
 }
 
-// ClearFacilities clears the facilities edge to Facilitie.
-func (ruo *RoomdetailUpdateOne) ClearFacilities() *RoomdetailUpdateOne {
-	ruo.mutation.ClearFacilities()
+// ClearPetrule clears the petrule edge to Petrule.
+func (ruo *RoomdetailUpdateOne) ClearPetrule() *RoomdetailUpdateOne {
+	ruo.mutation.ClearPetrule()
 	return ruo
 }
 
-// ClearNearbyplaces clears the nearbyplaces edge to Nearbyplace.
-func (ruo *RoomdetailUpdateOne) ClearNearbyplaces() *RoomdetailUpdateOne {
-	ruo.mutation.ClearNearbyplaces()
+// ClearBedtype clears the bedtype edge to Bedtype.
+func (ruo *RoomdetailUpdateOne) ClearBedtype() *RoomdetailUpdateOne {
+	ruo.mutation.ClearBedtype()
 	return ruo
 }
 
 // ClearEmployee clears the employee edge to Employee.
 func (ruo *RoomdetailUpdateOne) ClearEmployee() *RoomdetailUpdateOne {
 	ruo.mutation.ClearEmployee()
-	return ruo
-}
-
-// ClearQuantity clears the quantity edge to Quantity.
-func (ruo *RoomdetailUpdateOne) ClearQuantity() *RoomdetailUpdateOne {
-	ruo.mutation.ClearQuantity()
 	return ruo
 }
 
@@ -801,21 +738,6 @@ func (ruo *RoomdetailUpdateOne) ClearRoomdetails() *RoomdetailUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *RoomdetailUpdateOne) Save(ctx context.Context) (*Roomdetail, error) {
-	if v, ok := ruo.mutation.Roomnumber(); ok {
-		if err := roomdetail.RoomnumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
-		}
-	}
-	if v, ok := ruo.mutation.Roomtypename(); ok {
-		if err := roomdetail.RoomtypenameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
-		}
-	}
-	if v, ok := ruo.mutation.Roomprice(); ok {
-		if err := roomdetail.RoompriceValidator(v); err != nil {
-			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
-		}
-	}
 
 	var (
 		err  error
@@ -903,33 +825,47 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if ruo.mutation.EquipmentsCleared() {
+	if value, ok := ruo.mutation.Sleep(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+	}
+	if value, ok := ruo.mutation.Bed(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+	}
+	if ruo.mutation.PledgeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.EquipmentsTable,
-			Columns: []string{roomdetail.EquipmentsColumn},
+			Table:   roomdetail.PledgeTable,
+			Columns: []string{roomdetail.PledgeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: equipment.FieldID,
+					Column: pledge.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.EquipmentsIDs(); len(nodes) > 0 {
+	if nodes := ruo.mutation.PledgeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.EquipmentsTable,
-			Columns: []string{roomdetail.EquipmentsColumn},
+			Table:   roomdetail.PledgeTable,
+			Columns: []string{roomdetail.PledgeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: equipment.FieldID,
+					Column: pledge.FieldID,
 				},
 			},
 		}
@@ -938,33 +874,33 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ruo.mutation.FacilitiesCleared() {
+	if ruo.mutation.PetruleCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.FacilitiesTable,
-			Columns: []string{roomdetail.FacilitiesColumn},
+			Table:   roomdetail.PetruleTable,
+			Columns: []string{roomdetail.PetruleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: facilitie.FieldID,
+					Column: petrule.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.FacilitiesIDs(); len(nodes) > 0 {
+	if nodes := ruo.mutation.PetruleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.FacilitiesTable,
-			Columns: []string{roomdetail.FacilitiesColumn},
+			Table:   roomdetail.PetruleTable,
+			Columns: []string{roomdetail.PetruleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: facilitie.FieldID,
+					Column: petrule.FieldID,
 				},
 			},
 		}
@@ -973,33 +909,33 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ruo.mutation.NearbyplacesCleared() {
+	if ruo.mutation.BedtypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Table:   roomdetail.BedtypeTable,
+			Columns: []string{roomdetail.BedtypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: bedtype.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.NearbyplacesIDs(); len(nodes) > 0 {
+	if nodes := ruo.mutation.BedtypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   roomdetail.NearbyplacesTable,
-			Columns: []string{roomdetail.NearbyplacesColumn},
+			Table:   roomdetail.BedtypeTable,
+			Columns: []string{roomdetail.BedtypeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: nearbyplace.FieldID,
+					Column: bedtype.FieldID,
 				},
 			},
 		}
@@ -1035,41 +971,6 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if ruo.mutation.QuantityCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   roomdetail.QuantityTable,
-			Columns: []string{roomdetail.QuantityColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: quantity.FieldID,
-				},
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := ruo.mutation.QuantityIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   roomdetail.QuantityTable,
-			Columns: []string{roomdetail.QuantityColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: quantity.FieldID,
 				},
 			},
 		}

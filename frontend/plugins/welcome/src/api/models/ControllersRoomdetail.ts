@@ -21,6 +21,18 @@ import { exists, mapValues } from '../runtime';
 export interface ControllersRoomdetail {
     /**
      * 
+     * @type {string}
+     * @memberof ControllersRoomdetail
+     */
+    bed?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersRoomdetail
+     */
+    bedtype?: number;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersRoomdetail
      */
@@ -30,25 +42,13 @@ export interface ControllersRoomdetail {
      * @type {number}
      * @memberof ControllersRoomdetail
      */
-    equipment?: number;
+    petrule?: number;
     /**
      * 
      * @type {number}
      * @memberof ControllersRoomdetail
      */
-    facilitie?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ControllersRoomdetail
-     */
-    nearbyplace?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ControllersRoomdetail
-     */
-    quantity?: number;
+    pledge?: number;
     /**
      * 
      * @type {string}
@@ -69,6 +69,12 @@ export interface ControllersRoomdetail {
     roomtypename?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersRoomdetail
+     */
+    sleep?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersRoomdetail
      */
@@ -85,14 +91,15 @@ export function ControllersRoomdetailFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
+        'bed': !exists(json, 'bed') ? undefined : json['bed'],
+        'bedtype': !exists(json, 'bedtype') ? undefined : json['bedtype'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
-        'equipment': !exists(json, 'equipment') ? undefined : json['equipment'],
-        'facilitie': !exists(json, 'facilitie') ? undefined : json['facilitie'],
-        'nearbyplace': !exists(json, 'nearbyplace') ? undefined : json['nearbyplace'],
-        'quantity': !exists(json, 'quantity') ? undefined : json['quantity'],
+        'petrule': !exists(json, 'petrule') ? undefined : json['petrule'],
+        'pledge': !exists(json, 'pledge') ? undefined : json['pledge'],
         'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
         'roomprice': !exists(json, 'roomprice') ? undefined : json['roomprice'],
         'roomtypename': !exists(json, 'roomtypename') ? undefined : json['roomtypename'],
+        'sleep': !exists(json, 'sleep') ? undefined : json['sleep'],
         'staytype': !exists(json, 'staytype') ? undefined : json['staytype'],
     };
 }
@@ -106,14 +113,15 @@ export function ControllersRoomdetailToJSON(value?: ControllersRoomdetail | null
     }
     return {
         
+        'bed': value.bed,
+        'bedtype': value.bedtype,
         'employee': value.employee,
-        'equipment': value.equipment,
-        'facilitie': value.facilitie,
-        'nearbyplace': value.nearbyplace,
-        'quantity': value.quantity,
+        'petrule': value.petrule,
+        'pledge': value.pledge,
         'roomnumber': value.roomnumber,
         'roomprice': value.roomprice,
         'roomtypename': value.roomtypename,
+        'sleep': value.sleep,
         'staytype': value.staytype,
     };
 }

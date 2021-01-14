@@ -14,30 +14,26 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    EntBedtype,
+    EntBedtypeFromJSON,
+    EntBedtypeFromJSONTyped,
+    EntBedtypeToJSON,
     EntEmployee,
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
     EntEmployeeToJSON,
-    EntEquipment,
-    EntEquipmentFromJSON,
-    EntEquipmentFromJSONTyped,
-    EntEquipmentToJSON,
-    EntFacilitie,
-    EntFacilitieFromJSON,
-    EntFacilitieFromJSONTyped,
-    EntFacilitieToJSON,
     EntLease,
     EntLeaseFromJSON,
     EntLeaseFromJSONTyped,
     EntLeaseToJSON,
-    EntNearbyplace,
-    EntNearbyplaceFromJSON,
-    EntNearbyplaceFromJSONTyped,
-    EntNearbyplaceToJSON,
-    EntQuantity,
-    EntQuantityFromJSON,
-    EntQuantityFromJSONTyped,
-    EntQuantityToJSON,
+    EntPetrule,
+    EntPetruleFromJSON,
+    EntPetruleFromJSONTyped,
+    EntPetruleToJSON,
+    EntPledge,
+    EntPledgeFromJSON,
+    EntPledgeFromJSONTyped,
+    EntPledgeToJSON,
     EntStaytype,
     EntStaytypeFromJSON,
     EntStaytypeFromJSONTyped,
@@ -52,34 +48,28 @@ import {
 export interface EntRoomdetailEdges {
     /**
      * 
+     * @type {EntBedtype}
+     * @memberof EntRoomdetailEdges
+     */
+    bedtype?: EntBedtype;
+    /**
+     * 
      * @type {EntEmployee}
      * @memberof EntRoomdetailEdges
      */
     employee?: EntEmployee;
     /**
      * 
-     * @type {EntEquipment}
+     * @type {EntPetrule}
      * @memberof EntRoomdetailEdges
      */
-    equipments?: EntEquipment;
+    petrule?: EntPetrule;
     /**
      * 
-     * @type {EntFacilitie}
+     * @type {EntPledge}
      * @memberof EntRoomdetailEdges
      */
-    facilities?: EntFacilitie;
-    /**
-     * 
-     * @type {EntNearbyplace}
-     * @memberof EntRoomdetailEdges
-     */
-    nearbyplaces?: EntNearbyplace;
-    /**
-     * 
-     * @type {EntQuantity}
-     * @memberof EntRoomdetailEdges
-     */
-    quantity?: EntQuantity;
+    pledge?: EntPledge;
     /**
      * 
      * @type {EntLease}
@@ -104,13 +94,12 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
-        'equipments': !exists(json, 'equipments') ? undefined : EntEquipmentFromJSON(json['equipments']),
-        'facilities': !exists(json, 'facilities') ? undefined : EntFacilitieFromJSON(json['facilities']),
-        'nearbyplaces': !exists(json, 'nearbyplaces') ? undefined : EntNearbyplaceFromJSON(json['nearbyplaces']),
-        'quantity': !exists(json, 'quantity') ? undefined : EntQuantityFromJSON(json['quantity']),
-        'roomdetails': !exists(json, 'roomdetails') ? undefined : EntLeaseFromJSON(json['roomdetails']),
-        'staytype': !exists(json, 'staytype') ? undefined : EntStaytypeFromJSON(json['staytype']),
+        'bedtype': !exists(json, 'Bedtype') ? undefined : EntBedtypeFromJSON(json['Bedtype']),
+        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
+        'petrule': !exists(json, 'Petrule') ? undefined : EntPetruleFromJSON(json['Petrule']),
+        'pledge': !exists(json, 'Pledge') ? undefined : EntPledgeFromJSON(json['Pledge']),
+        'roomdetails': !exists(json, 'Roomdetails') ? undefined : EntLeaseFromJSON(json['Roomdetails']),
+        'staytype': !exists(json, 'Staytype') ? undefined : EntStaytypeFromJSON(json['Staytype']),
     };
 }
 
@@ -123,11 +112,10 @@ export function EntRoomdetailEdgesToJSON(value?: EntRoomdetailEdges | null): any
     }
     return {
         
+        'bedtype': EntBedtypeToJSON(value.bedtype),
         'employee': EntEmployeeToJSON(value.employee),
-        'equipments': EntEquipmentToJSON(value.equipments),
-        'facilities': EntFacilitieToJSON(value.facilities),
-        'nearbyplaces': EntNearbyplaceToJSON(value.nearbyplaces),
-        'quantity': EntQuantityToJSON(value.quantity),
+        'petrule': EntPetruleToJSON(value.petrule),
+        'pledge': EntPledgeToJSON(value.pledge),
         'roomdetails': EntLeaseToJSON(value.roomdetails),
         'staytype': EntStaytypeToJSON(value.staytype),
     };

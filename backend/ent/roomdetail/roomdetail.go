@@ -13,17 +13,19 @@ const (
 	FieldRoomtypename = "roomtypename"
 	// FieldRoomprice holds the string denoting the roomprice field in the database.
 	FieldRoomprice = "roomprice"
+	// FieldSleep holds the string denoting the sleep field in the database.
+	FieldSleep = "sleep"
+	// FieldBed holds the string denoting the bed field in the database.
+	FieldBed = "bed"
 
-	// EdgeEquipments holds the string denoting the equipments edge name in mutations.
-	EdgeEquipments = "equipments"
-	// EdgeFacilities holds the string denoting the facilities edge name in mutations.
-	EdgeFacilities = "facilities"
-	// EdgeNearbyplaces holds the string denoting the nearbyplaces edge name in mutations.
-	EdgeNearbyplaces = "nearbyplaces"
+	// EdgePledge holds the string denoting the pledge edge name in mutations.
+	EdgePledge = "pledge"
+	// EdgePetrule holds the string denoting the petrule edge name in mutations.
+	EdgePetrule = "petrule"
+	// EdgeBedtype holds the string denoting the bedtype edge name in mutations.
+	EdgeBedtype = "bedtype"
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "employee"
-	// EdgeQuantity holds the string denoting the quantity edge name in mutations.
-	EdgeQuantity = "quantity"
 	// EdgeStaytype holds the string denoting the staytype edge name in mutations.
 	EdgeStaytype = "staytype"
 	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
@@ -31,27 +33,27 @@ const (
 
 	// Table holds the table name of the roomdetail in the database.
 	Table = "roomdetails"
-	// EquipmentsTable is the table the holds the equipments relation/edge.
-	EquipmentsTable = "roomdetails"
-	// EquipmentsInverseTable is the table name for the Equipment entity.
-	// It exists in this package in order to avoid circular dependency with the "equipment" package.
-	EquipmentsInverseTable = "equipment"
-	// EquipmentsColumn is the table column denoting the equipments relation/edge.
-	EquipmentsColumn = "equipment_roomdetail"
-	// FacilitiesTable is the table the holds the facilities relation/edge.
-	FacilitiesTable = "roomdetails"
-	// FacilitiesInverseTable is the table name for the Facilitie entity.
-	// It exists in this package in order to avoid circular dependency with the "facilitie" package.
-	FacilitiesInverseTable = "facilities"
-	// FacilitiesColumn is the table column denoting the facilities relation/edge.
-	FacilitiesColumn = "facilitie_roomdetail"
-	// NearbyplacesTable is the table the holds the nearbyplaces relation/edge.
-	NearbyplacesTable = "roomdetails"
-	// NearbyplacesInverseTable is the table name for the Nearbyplace entity.
-	// It exists in this package in order to avoid circular dependency with the "nearbyplace" package.
-	NearbyplacesInverseTable = "nearbyplaces"
-	// NearbyplacesColumn is the table column denoting the nearbyplaces relation/edge.
-	NearbyplacesColumn = "nearbyplace_roomdetail"
+	// PledgeTable is the table the holds the pledge relation/edge.
+	PledgeTable = "roomdetails"
+	// PledgeInverseTable is the table name for the Pledge entity.
+	// It exists in this package in order to avoid circular dependency with the "pledge" package.
+	PledgeInverseTable = "pledges"
+	// PledgeColumn is the table column denoting the pledge relation/edge.
+	PledgeColumn = "pledge_roomdetails"
+	// PetruleTable is the table the holds the petrule relation/edge.
+	PetruleTable = "roomdetails"
+	// PetruleInverseTable is the table name for the Petrule entity.
+	// It exists in this package in order to avoid circular dependency with the "petrule" package.
+	PetruleInverseTable = "petrules"
+	// PetruleColumn is the table column denoting the petrule relation/edge.
+	PetruleColumn = "petrule_roomdetails"
+	// BedtypeTable is the table the holds the bedtype relation/edge.
+	BedtypeTable = "roomdetails"
+	// BedtypeInverseTable is the table name for the Bedtype entity.
+	// It exists in this package in order to avoid circular dependency with the "bedtype" package.
+	BedtypeInverseTable = "bedtypes"
+	// BedtypeColumn is the table column denoting the bedtype relation/edge.
+	BedtypeColumn = "bedtype_roomdetails"
 	// EmployeeTable is the table the holds the employee relation/edge.
 	EmployeeTable = "roomdetails"
 	// EmployeeInverseTable is the table name for the Employee entity.
@@ -59,13 +61,6 @@ const (
 	EmployeeInverseTable = "employees"
 	// EmployeeColumn is the table column denoting the employee relation/edge.
 	EmployeeColumn = "employee_id"
-	// QuantityTable is the table the holds the quantity relation/edge.
-	QuantityTable = "roomdetails"
-	// QuantityInverseTable is the table name for the Quantity entity.
-	// It exists in this package in order to avoid circular dependency with the "quantity" package.
-	QuantityInverseTable = "quantities"
-	// QuantityColumn is the table column denoting the quantity relation/edge.
-	QuantityColumn = "quantity_roomdetails"
 	// StaytypeTable is the table the holds the staytype relation/edge.
 	StaytypeTable = "roomdetails"
 	// StaytypeInverseTable is the table name for the Staytype entity.
@@ -88,23 +83,15 @@ var Columns = []string{
 	FieldRoomnumber,
 	FieldRoomtypename,
 	FieldRoomprice,
+	FieldSleep,
+	FieldBed,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Roomdetail type.
 var ForeignKeys = []string{
+	"bedtype_roomdetails",
 	"employee_id",
-	"equipment_roomdetail",
-	"facilitie_roomdetail",
-	"nearbyplace_roomdetail",
-	"quantity_roomdetails",
+	"petrule_roomdetails",
+	"pledge_roomdetails",
 	"staytype_roomdetails",
 }
-
-var (
-	// RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
-	RoomnumberValidator func(string) error
-	// RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
-	RoomtypenameValidator func(string) error
-	// RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
-	RoompriceValidator func(string) error
-)

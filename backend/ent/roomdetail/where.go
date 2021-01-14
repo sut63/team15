@@ -112,6 +112,20 @@ func Roomprice(v string) predicate.Roomdetail {
 	})
 }
 
+// Sleep applies equality check predicate on the "sleep" field. It's identical to SleepEQ.
+func Sleep(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSleep), v))
+	})
+}
+
+// Bed applies equality check predicate on the "bed" field. It's identical to BedEQ.
+func Bed(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBed), v))
+	})
+}
+
 // RoomnumberEQ applies the EQ predicate on the "roomnumber" field.
 func RoomnumberEQ(v string) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
@@ -445,25 +459,247 @@ func RoompriceContainsFold(v string) predicate.Roomdetail {
 	})
 }
 
-// HasEquipments applies the HasEdge predicate on the "equipments" edge.
-func HasEquipments() predicate.Roomdetail {
+// SleepEQ applies the EQ predicate on the "sleep" field.
+func SleepEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldSleep), v))
+	})
+}
+
+// SleepNEQ applies the NEQ predicate on the "sleep" field.
+func SleepNEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldSleep), v))
+	})
+}
+
+// SleepIn applies the In predicate on the "sleep" field.
+func SleepIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldSleep), v...))
+	})
+}
+
+// SleepNotIn applies the NotIn predicate on the "sleep" field.
+func SleepNotIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldSleep), v...))
+	})
+}
+
+// SleepGT applies the GT predicate on the "sleep" field.
+func SleepGT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldSleep), v))
+	})
+}
+
+// SleepGTE applies the GTE predicate on the "sleep" field.
+func SleepGTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldSleep), v))
+	})
+}
+
+// SleepLT applies the LT predicate on the "sleep" field.
+func SleepLT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldSleep), v))
+	})
+}
+
+// SleepLTE applies the LTE predicate on the "sleep" field.
+func SleepLTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldSleep), v))
+	})
+}
+
+// SleepContains applies the Contains predicate on the "sleep" field.
+func SleepContains(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldSleep), v))
+	})
+}
+
+// SleepHasPrefix applies the HasPrefix predicate on the "sleep" field.
+func SleepHasPrefix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldSleep), v))
+	})
+}
+
+// SleepHasSuffix applies the HasSuffix predicate on the "sleep" field.
+func SleepHasSuffix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldSleep), v))
+	})
+}
+
+// SleepEqualFold applies the EqualFold predicate on the "sleep" field.
+func SleepEqualFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldSleep), v))
+	})
+}
+
+// SleepContainsFold applies the ContainsFold predicate on the "sleep" field.
+func SleepContainsFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldSleep), v))
+	})
+}
+
+// BedEQ applies the EQ predicate on the "bed" field.
+func BedEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBed), v))
+	})
+}
+
+// BedNEQ applies the NEQ predicate on the "bed" field.
+func BedNEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldBed), v))
+	})
+}
+
+// BedIn applies the In predicate on the "bed" field.
+func BedIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldBed), v...))
+	})
+}
+
+// BedNotIn applies the NotIn predicate on the "bed" field.
+func BedNotIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldBed), v...))
+	})
+}
+
+// BedGT applies the GT predicate on the "bed" field.
+func BedGT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldBed), v))
+	})
+}
+
+// BedGTE applies the GTE predicate on the "bed" field.
+func BedGTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldBed), v))
+	})
+}
+
+// BedLT applies the LT predicate on the "bed" field.
+func BedLT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldBed), v))
+	})
+}
+
+// BedLTE applies the LTE predicate on the "bed" field.
+func BedLTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldBed), v))
+	})
+}
+
+// BedContains applies the Contains predicate on the "bed" field.
+func BedContains(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldBed), v))
+	})
+}
+
+// BedHasPrefix applies the HasPrefix predicate on the "bed" field.
+func BedHasPrefix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldBed), v))
+	})
+}
+
+// BedHasSuffix applies the HasSuffix predicate on the "bed" field.
+func BedHasSuffix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldBed), v))
+	})
+}
+
+// BedEqualFold applies the EqualFold predicate on the "bed" field.
+func BedEqualFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldBed), v))
+	})
+}
+
+// BedContainsFold applies the ContainsFold predicate on the "bed" field.
+func BedContainsFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldBed), v))
+	})
+}
+
+// HasPledge applies the HasEdge predicate on the "pledge" edge.
+func HasPledge() predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EquipmentsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EquipmentsTable, EquipmentsColumn),
+			sqlgraph.To(PledgeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PledgeTable, PledgeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasEquipmentsWith applies the HasEdge predicate on the "equipments" edge with a given conditions (other predicates).
-func HasEquipmentsWith(preds ...predicate.Equipment) predicate.Roomdetail {
+// HasPledgeWith applies the HasEdge predicate on the "pledge" edge with a given conditions (other predicates).
+func HasPledgeWith(preds ...predicate.Pledge) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(EquipmentsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EquipmentsTable, EquipmentsColumn),
+			sqlgraph.To(PledgeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PledgeTable, PledgeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -473,25 +709,25 @@ func HasEquipmentsWith(preds ...predicate.Equipment) predicate.Roomdetail {
 	})
 }
 
-// HasFacilities applies the HasEdge predicate on the "facilities" edge.
-func HasFacilities() predicate.Roomdetail {
+// HasPetrule applies the HasEdge predicate on the "petrule" edge.
+func HasPetrule() predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(FacilitiesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, FacilitiesTable, FacilitiesColumn),
+			sqlgraph.To(PetruleTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PetruleTable, PetruleColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasFacilitiesWith applies the HasEdge predicate on the "facilities" edge with a given conditions (other predicates).
-func HasFacilitiesWith(preds ...predicate.Facilitie) predicate.Roomdetail {
+// HasPetruleWith applies the HasEdge predicate on the "petrule" edge with a given conditions (other predicates).
+func HasPetruleWith(preds ...predicate.Petrule) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(FacilitiesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, FacilitiesTable, FacilitiesColumn),
+			sqlgraph.To(PetruleInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PetruleTable, PetruleColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -501,25 +737,25 @@ func HasFacilitiesWith(preds ...predicate.Facilitie) predicate.Roomdetail {
 	})
 }
 
-// HasNearbyplaces applies the HasEdge predicate on the "nearbyplaces" edge.
-func HasNearbyplaces() predicate.Roomdetail {
+// HasBedtype applies the HasEdge predicate on the "bedtype" edge.
+func HasBedtype() predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(NearbyplacesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, NearbyplacesTable, NearbyplacesColumn),
+			sqlgraph.To(BedtypeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, BedtypeTable, BedtypeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasNearbyplacesWith applies the HasEdge predicate on the "nearbyplaces" edge with a given conditions (other predicates).
-func HasNearbyplacesWith(preds ...predicate.Nearbyplace) predicate.Roomdetail {
+// HasBedtypeWith applies the HasEdge predicate on the "bedtype" edge with a given conditions (other predicates).
+func HasBedtypeWith(preds ...predicate.Bedtype) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(NearbyplacesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, NearbyplacesTable, NearbyplacesColumn),
+			sqlgraph.To(BedtypeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, BedtypeTable, BedtypeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -548,34 +784,6 @@ func HasEmployeeWith(preds ...predicate.Employee) predicate.Roomdetail {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(EmployeeInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTable, EmployeeColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasQuantity applies the HasEdge predicate on the "quantity" edge.
-func HasQuantity() predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(QuantityTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, QuantityTable, QuantityColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasQuantityWith applies the HasEdge predicate on the "quantity" edge with a given conditions (other predicates).
-func HasQuantityWith(preds ...predicate.Quantity) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(QuantityInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, QuantityTable, QuantityColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

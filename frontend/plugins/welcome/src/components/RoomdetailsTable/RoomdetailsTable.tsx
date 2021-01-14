@@ -14,7 +14,6 @@ import { DefaultApi } from '../../api/apis';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee';
 import { InfoCard, Content, Header, pageTheme, Page } from '@backstage/core';
-import { EntCleanerName, EntEquipment, EntFacilitie, EntNearbyplace } from '../../api';
  
 const useStyles = makeStyles({
  table: {
@@ -57,31 +56,32 @@ export default function ComponentsTable() {
  
  return (
     <Page theme={pageTheme.service}>
-     <Content><TableContainer component={Paper}>
+     <Content>
+       
+    <TableContainer component={Paper}>
      <Table className={classes.table} aria-label="simple table">
        <TableHead>
          <TableRow>
            <TableCell align="center">เลขห้อง</TableCell>
-           <TableCell align="center">ประเภทห้อง</TableCell>
-           <TableCell align="center">ราคาห้อง</TableCell>
-           <TableCell align="center">จำนวนผู้ที่สามารถเข้าพักได้</TableCell>
+           <TableCell align="center">ชื่อประเภทห้อง</TableCell>
+           <TableCell align="center">ราคาห้อง/ประเภทการเข้าพัก</TableCell>
+           <TableCell align="center">จำนวนผู้เข้าพักสูงสุด</TableCell>
+           <TableCell align="center">ประเภทเตียงนอน/จำนวนเตียง</TableCell>
            <TableCell align="center">ประเภทการเข้าพัก</TableCell>
-           <TableCell align="center">สิ่งที่ติดตั้งให้ภายในห้อง</TableCell>
-           <TableCell align="center">สิ่งอำนวยความสะดวกทั่วไป</TableCell>
-           <TableCell align="center">สถานที่ใกล้เคียง</TableCell>
+           <TableCell align="center">ข้อจำกัดการจ่ายมัดจำ</TableCell>
+           <TableCell align="center">ลบข้อมูล</TableCell>
          </TableRow>
        </TableHead>
        <TableBody>
-         {roomdetails.map((item:any) => (
+         {roomdetails.map((item:any ) => (
            <TableRow key={item.id}>
              <TableCell align="center">{item.roomnumber}</TableCell>
              <TableCell align="center">{item.roomtypename}</TableCell>
-             <TableCell align="center">{item.roomprice}</TableCell>
-             <TableCell align="center">{item.edges?.quantity?.quantity}</TableCell>
-             <TableCell align="center">{item.edges?.staytype?.staytype}</TableCell>
-             <TableCell align="center">{item.edges?.equipments?.equipment}</TableCell>
-             <TableCell align="center">{item.edges?.facilities?.facilitie}</TableCell>
-             <TableCell align="center">{item.edges?.nearbyplaces?.nearbyplace}</TableCell>
+             <TableCell align="center">{item.roomprice} / {item.edges?.staytype?.staytype}</TableCell>
+             <TableCell align="center">{item.sleep} คน</TableCell>
+             <TableCell align="center">{item.edges?.bedtype?.bedtypename} / {item.bed} เตียง</TableCell>
+             <TableCell align="center">{item.edges?.pledge?.provision}</TableCell>
+             <TableCell align="center">{item.edges?.petrule?.petrule}</TableCell>
              <TableCell align="center">
                <Button 
                onClick={() => {

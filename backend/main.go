@@ -57,15 +57,6 @@ type LengthTimes struct {
 type LengthTime struct {
 	lengthtime string
 }
-
-type Quantitys struct {
-	Quantity []Quantity
-}
-
-type Quantity struct {
-	Quantity string
-}
-
 type Staytypes struct {
 	Staytype []Staytype
 }
@@ -74,28 +65,28 @@ type Staytype struct {
 	Staytype string
 }
 
-type Equipments struct {
-	Equipment []Equipment
+type Pledges struct {
+	Pledge []Pledge
 }
 
-type Equipment struct {
-	Equipment string
+type Pledge struct {
+	provision string
 }
 
-type Facilities struct {
-	Facilitie []Facilitie
+type Petrules struct {
+	Petrule []Petrule
 }
 
-type Facilitie struct {
-	Facilitie string
+type Petrule struct {
+	petrule string
 }
 
-type Nearbyplaces struct {
-	Nearbyplace []Nearbyplace
+type Bedtypes struct {
+	Bedtype []Bedtype
 }
 
-type Nearbyplace struct {
-	Nearbyplace string
+type Bedtype struct {
+	bedtypename string
 }
 
 type Wifis struct {
@@ -174,10 +165,9 @@ func main() {
 	controllers.NewCleanerNameController(v1, client)
 	controllers.NewLengthTimeController(v1, client)
 	controllers.NewRoomdetailController(v1, client)
-	controllers.NewQuantityController(v1, client)
-	controllers.NewEquipmentController(v1, client)
-	controllers.NewFacilitieController(v1, client)
-	controllers.NewNearbyplaceController(v1, client)
+	controllers.NewBedtypeController(v1, client)
+	controllers.NewPetruleController(v1, client)
+	controllers.NewPledgeController(v1, client)
 	controllers.NewStaytypeController(v1, client)
 	controllers.NewWifiController(v1, client)
 	controllers.NewRepairinvoiceController(v1, client)
@@ -263,29 +253,26 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Quantity Data
-	quantitys := Quantitys{
-		Quantity: []Quantity{
-			Quantity{"1 people"},
-			Quantity{"2 people"},
-			Quantity{"4 people"},
-			Quantity{"6 people"},
-			Quantity{"10 people"},
+	// Set Pledge Data
+	pledges := Pledges{
+		Pledge: []Pledge{
+			Pledge{"ต้องวางเงินมัดจำก่อน"},
+			Pledge{"ไม่ต้องวางเงินมัดจำก่อน"},
 		},
 	}
-	for _, qu := range quantitys.Quantity {
-		client.Quantity.
+	for _, p := range pledges.Pledge {
+		client.Pledge.
 			Create().
-			SetQuantity(qu.Quantity).
+			SetProvision(p.provision).
 			Save(context.Background())
 	}
 
 	// Set StayType Data
 	staytypes := Staytypes{
 		Staytype: []Staytype{
-			Staytype{"Days"},
+			Staytype{"Day"},
 			Staytype{"Month"},
-			Staytype{"Days & Month"},
+			Staytype{"Day & Month"},
 		},
 	}
 	for _, st := range staytypes.Staytype {
@@ -295,51 +282,34 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Equipment Data
-	equipments := Equipments{
-		Equipment: []Equipment{
-			Equipment{"Shared bathroom"},
-			Equipment{"Ensuite bathroom"},
-			Equipment{"Living zone in room"},
-			Equipment{"Small Kitchen"},
+	// Set Bedtype Data
+	bedtypes := Bedtypes{
+		Bedtype: []Bedtype{
+			Bedtype{"King bed"},
+			Bedtype{"Twin bed"},
+			Bedtype{"Full bed"},
+			Bedtype{"Single bed"},
 		},
 	}
-	for _, eq := range equipments.Equipment {
-		client.Equipment.
+	for _, bt := range bedtypes.Bedtype {
+		client.Bedtype.
 			Create().
-			SetEquipment(eq.Equipment).
+			SetBedtypename(bt.bedtypename).
 			Save(context.Background())
 	}
-	// Set Facility Data
-	facilities := Facilities{
-		Facilitie: []Facilitie{
-			Facilitie{"No service facilities"},
-			Facilitie{"Swimming pool"},
-			Facilitie{"Fitness"},
+	// Set Petrule Data
+	petrules := Petrules{
+		Petrule: []Petrule{
+			Petrule{"ไม่อนุญาติเลี้ยงสัตว์"},
+			Petrule{"อนุญาติเลี้ยงสัตว์ได้"},
 		},
 	}
-	for _, fa := range facilities.Facilitie {
-		client.Facilitie.
+	for _, pr := range petrules.Petrule {
+		client.Petrule.
 			Create().
-			SetFacilitie(fa.Facilitie).
+			SetPetrule(pr.petrule).
 			Save(context.Background())
 	}
-
-	// Set NearbyPlace Data
-	nearbyplaces := Nearbyplaces{
-		Nearbyplace: []Nearbyplace{
-			Nearbyplace{"Shopping mall"},
-			Nearbyplace{"Supermarket"},
-			Nearbyplace{"BTS"},
-		},
-	}
-	for _, np := range nearbyplaces.Nearbyplace {
-		client.Nearbyplace.
-			Create().
-			SetNearbyplace(np.Nearbyplace).
-			Save(context.Background())
-	}
-
 	// Set Wifis Data
 	wifis := Wifis{
 		Wifi: []Wifi{
