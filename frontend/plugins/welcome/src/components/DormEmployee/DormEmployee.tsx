@@ -64,20 +64,31 @@ const DormEmployee: FC<{}> = () => {
       <Header style={HeaderCustom} title={`Dormitory`} subtitle={'ยินดีต้อนรับเข้าสู่หน้า หอพัก สำหรับพนักงานหอพัก'}></Header>
       <Content>
         <TabbedCard title="">
+
         <CardTab label="เพิ่มข้อมูลห้องพัก">
-          <div><ComponanceRoomDetails></ComponanceRoomDetails>
-          
-          </div>
+          <div><ComponanceRoomDetails></ComponanceRoomDetails></div>
         </CardTab>
-        <CardTab label="รับฝากของ">
-          <div><ComponanceRecordDeposit></ComponanceRecordDeposit></div>
+
+        <CardTab label="สัญญาเช่า">
+          <div style={cardContentStyle}>Some content 4</div>
         </CardTab>
+
+        <CardTab label="ออกใบเสร็จ">
+          <div style={cardContentStyle}>Some content 4</div>
+        </CardTab>
+
         <CardTab label="แจ้งซ่อมอุปกรณ์ที่ชำรุด">
           <div><ComponanceRepairinvoice></ComponanceRepairinvoice></div>
         </CardTab>
-        <CardTab label="Option 4">
+
+        <CardTab label="แจ้งทำความสะอาด">
           <div style={cardContentStyle}>Some content 4</div>
         </CardTab>
+
+        <CardTab label="รับฝากของ">
+          <div><ComponanceRecordDeposit></ComponanceRecordDeposit></div>
+        </CardTab>
+       
       </TabbedCard>
       </Content>
     </Page>
