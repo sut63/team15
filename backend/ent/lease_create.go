@@ -10,6 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/wifi"
@@ -62,6 +63,25 @@ func (lc *LeaseCreate) SetRoomdetailID(id int) *LeaseCreate {
 // SetRoomdetail sets the Roomdetail edge to Roomdetail.
 func (lc *LeaseCreate) SetRoomdetail(r *Roomdetail) *LeaseCreate {
 	return lc.SetRoomdetailID(r.ID)
+}
+
+// SetEmployeeID sets the employee edge to Employee by id.
+func (lc *LeaseCreate) SetEmployeeID(id int) *LeaseCreate {
+	lc.mutation.SetEmployeeID(id)
+	return lc
+}
+
+// SetNillableEmployeeID sets the employee edge to Employee by id if the given value is not nil.
+func (lc *LeaseCreate) SetNillableEmployeeID(id *int) *LeaseCreate {
+	if id != nil {
+		lc = lc.SetEmployeeID(*id)
+	}
+	return lc
+}
+
+// SetEmployee sets the employee edge to Employee.
+func (lc *LeaseCreate) SetEmployee(e *Employee) *LeaseCreate {
+	return lc.SetEmployeeID(e.ID)
 }
 
 // Mutation returns the LeaseMutation object of the builder.
@@ -186,6 +206,25 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := lc.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   lease.EmployeeTable,
+			Columns: []string{lease.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}

@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/roomdetail"
@@ -73,6 +74,25 @@ func (lu *LeaseUpdate) SetRoomdetail(r *Roomdetail) *LeaseUpdate {
 	return lu.SetRoomdetailID(r.ID)
 }
 
+// SetEmployeeID sets the employee edge to Employee by id.
+func (lu *LeaseUpdate) SetEmployeeID(id int) *LeaseUpdate {
+	lu.mutation.SetEmployeeID(id)
+	return lu
+}
+
+// SetNillableEmployeeID sets the employee edge to Employee by id if the given value is not nil.
+func (lu *LeaseUpdate) SetNillableEmployeeID(id *int) *LeaseUpdate {
+	if id != nil {
+		lu = lu.SetEmployeeID(*id)
+	}
+	return lu
+}
+
+// SetEmployee sets the employee edge to Employee.
+func (lu *LeaseUpdate) SetEmployee(e *Employee) *LeaseUpdate {
+	return lu.SetEmployeeID(e.ID)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (lu *LeaseUpdate) Mutation() *LeaseMutation {
 	return lu.mutation
@@ -90,12 +110,19 @@ func (lu *LeaseUpdate) ClearRoomdetail() *LeaseUpdate {
 	return lu
 }
 
+// ClearEmployee clears the employee edge to Employee.
+func (lu *LeaseUpdate) ClearEmployee() *LeaseUpdate {
+	lu.mutation.ClearEmployee()
+	return lu
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (lu *LeaseUpdate) Save(ctx context.Context) (int, error) {
 
 	if _, ok := lu.mutation.RoomdetailID(); lu.mutation.RoomdetailCleared() && !ok {
 		return 0, errors.New("ent: clearing a unique edge \"Roomdetail\"")
 	}
+
 	var (
 		err      error
 		affected int
@@ -247,6 +274,41 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if lu.mutation.EmployeeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   lease.EmployeeTable,
+			Columns: []string{lease.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := lu.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   lease.EmployeeTable,
+			Columns: []string{lease.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, lu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{lease.Label}
@@ -307,6 +369,25 @@ func (luo *LeaseUpdateOne) SetRoomdetail(r *Roomdetail) *LeaseUpdateOne {
 	return luo.SetRoomdetailID(r.ID)
 }
 
+// SetEmployeeID sets the employee edge to Employee by id.
+func (luo *LeaseUpdateOne) SetEmployeeID(id int) *LeaseUpdateOne {
+	luo.mutation.SetEmployeeID(id)
+	return luo
+}
+
+// SetNillableEmployeeID sets the employee edge to Employee by id if the given value is not nil.
+func (luo *LeaseUpdateOne) SetNillableEmployeeID(id *int) *LeaseUpdateOne {
+	if id != nil {
+		luo = luo.SetEmployeeID(*id)
+	}
+	return luo
+}
+
+// SetEmployee sets the employee edge to Employee.
+func (luo *LeaseUpdateOne) SetEmployee(e *Employee) *LeaseUpdateOne {
+	return luo.SetEmployeeID(e.ID)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (luo *LeaseUpdateOne) Mutation() *LeaseMutation {
 	return luo.mutation
@@ -324,12 +405,19 @@ func (luo *LeaseUpdateOne) ClearRoomdetail() *LeaseUpdateOne {
 	return luo
 }
 
+// ClearEmployee clears the employee edge to Employee.
+func (luo *LeaseUpdateOne) ClearEmployee() *LeaseUpdateOne {
+	luo.mutation.ClearEmployee()
+	return luo
+}
+
 // Save executes the query and returns the updated entity.
 func (luo *LeaseUpdateOne) Save(ctx context.Context) (*Lease, error) {
 
 	if _, ok := luo.mutation.RoomdetailID(); luo.mutation.RoomdetailCleared() && !ok {
 		return nil, errors.New("ent: clearing a unique edge \"Roomdetail\"")
 	}
+
 	var (
 		err  error
 		node *Lease
@@ -471,6 +559,41 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if luo.mutation.EmployeeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   lease.EmployeeTable,
+			Columns: []string{lease.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := luo.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   lease.EmployeeTable,
+			Columns: []string{lease.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}

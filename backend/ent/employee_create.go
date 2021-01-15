@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 )
@@ -54,6 +55,21 @@ func (ec *EmployeeCreate) AddEmployees(d ...*Deposit) *EmployeeCreate {
 		ids[i] = d[i].ID
 	}
 	return ec.AddEmployeeIDs(ids...)
+}
+
+// AddLeaseIDs adds the leases edge to Lease by ids.
+func (ec *EmployeeCreate) AddLeaseIDs(ids ...int) *EmployeeCreate {
+	ec.mutation.AddLeaseIDs(ids...)
+	return ec
+}
+
+// AddLeases adds the leases edges to Lease.
+func (ec *EmployeeCreate) AddLeases(l ...*Lease) *EmployeeCreate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return ec.AddLeaseIDs(ids...)
 }
 
 // AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
@@ -231,6 +247,25 @@ func (ec *EmployeeCreate) createSpec() (*Employee, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.LeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.LeasesTable,
+			Columns: []string{employee.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

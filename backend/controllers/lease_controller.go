@@ -7,6 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/team15/app/ent"
+	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/wifi"
 )
 
@@ -17,10 +19,11 @@ type LeaseController struct {
 }
 
 type Lease struct {
-	Added   string
-	Tenant  string
-	Roomnum string
-	Wifi    int
+	Added      string
+	Tenant     string
+	Employee   int
+	Roomdetail int
+	Wifi       int
 }
 
 // CreateLease handles POST requests for adding lease entities
@@ -43,6 +46,30 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 		return
 	}
 
+	em, err := ctl.client.Employee.
+		Query().
+		Where(employee.IDEQ(int(obj.Employee))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "employee not found",
+		})
+		return
+	}
+
+	rdc, err := ctl.client.Roomdetail.
+		Query().
+		Where(roomdetail.IDEQ(int(obj.Roomdetail))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "roomnumber not found",
+		})
+		return
+	}
+
 	wf, err := ctl.client.Wifi.
 		Query().
 		Where(wifi.IDEQ(int(obj.Wifi))).
@@ -56,11 +83,13 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 	}
 
 	time, err := time.Parse(time.RFC3339, obj.Added)
-	ret, err := ctl.client.Lease.
+	lea, err := ctl.client.Lease.
 		Create().
 		SetAddedtime(time).
 		SetTenant(obj.Tenant).
+		SetRoomdetail(rdc).
 		SetWifi(wf).
+		SetEmployee(em).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -69,7 +98,7 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, ret)
+	c.JSON(200, lea)
 }
 
 // ListLease handles request to get a list of lease entities
@@ -104,6 +133,7 @@ func (ctl *LeaseController) ListLease(c *gin.Context) {
 
 	leases, err := ctl.client.Lease.
 		Query().
+		WithRoomdetail().
 		WithWifi().
 		Limit(limit).
 		Offset(offset).

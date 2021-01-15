@@ -32,6 +32,8 @@ type Employee struct {
 type EmployeeEdges struct {
 	// Employees holds the value of the employees edge.
 	Employees []*Deposit
+	// Leases holds the value of the leases edge.
+	Leases []*Lease
 	// Roomdetails holds the value of the roomdetails edge.
 	Roomdetails []*Roomdetail
 	// Jobposition holds the value of the jobposition edge.
@@ -40,7 +42,7 @@ type EmployeeEdges struct {
 	Repairinvoices []*Repairinvoice
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // EmployeesOrErr returns the Employees value or an error if the edge
@@ -52,10 +54,19 @@ func (e EmployeeEdges) EmployeesOrErr() ([]*Deposit, error) {
 	return nil, &NotLoadedError{edge: "employees"}
 }
 
+// LeasesOrErr returns the Leases value or an error if the edge
+// was not loaded in eager-loading.
+func (e EmployeeEdges) LeasesOrErr() ([]*Lease, error) {
+	if e.loadedTypes[1] {
+		return e.Leases, nil
+	}
+	return nil, &NotLoadedError{edge: "leases"}
+}
+
 // RoomdetailsOrErr returns the Roomdetails value or an error if the edge
 // was not loaded in eager-loading.
 func (e EmployeeEdges) RoomdetailsOrErr() ([]*Roomdetail, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.Roomdetails, nil
 	}
 	return nil, &NotLoadedError{edge: "roomdetails"}
@@ -64,7 +75,7 @@ func (e EmployeeEdges) RoomdetailsOrErr() ([]*Roomdetail, error) {
 // JobpositionOrErr returns the Jobposition value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e EmployeeEdges) JobpositionOrErr() (*Jobposition, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		if e.Jobposition == nil {
 			// The edge jobposition was loaded in eager-loading,
 			// but was not found.
@@ -78,7 +89,7 @@ func (e EmployeeEdges) JobpositionOrErr() (*Jobposition, error) {
 // RepairinvoicesOrErr returns the Repairinvoices value or an error if the edge
 // was not loaded in eager-loading.
 func (e EmployeeEdges) RepairinvoicesOrErr() ([]*Repairinvoice, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.Repairinvoices, nil
 	}
 	return nil, &NotLoadedError{edge: "repairinvoices"}
@@ -143,6 +154,11 @@ func (e *Employee) assignValues(values ...interface{}) error {
 // QueryEmployees queries the employees edge of the Employee.
 func (e *Employee) QueryEmployees() *DepositQuery {
 	return (&EmployeeClient{config: e.config}).QueryEmployees(e)
+}
+
+// QueryLeases queries the leases edge of the Employee.
+func (e *Employee) QueryLeases() *LeaseQuery {
+	return (&EmployeeClient{config: e.config}).QueryLeases(e)
 }
 
 // QueryRoomdetails queries the roomdetails edge of the Employee.

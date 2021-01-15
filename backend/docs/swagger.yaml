@@ -28,8 +28,10 @@ definitions:
     properties:
       added:
         type: string
-      roomnum:
-        type: string
+      employee:
+        type: integer
+      roomdetail:
+        type: integer
       tenant:
         type: string
       wifi:
@@ -232,6 +234,11 @@ definitions:
         $ref: '#/definitions/ent.Jobposition'
         description: Jobposition holds the value of the jobposition edge.
         type: object
+      leases:
+        description: Leases holds the value of the leases edge.
+        items:
+          $ref: '#/definitions/ent.Lease'
+        type: array
       repairinvoices:
         description: Repairinvoices holds the value of the repairinvoices edge.
         items:
@@ -286,6 +293,10 @@ definitions:
     type: object
   ent.LeaseEdges:
     properties:
+      employee:
+        $ref: '#/definitions/ent.Employee'
+        description: Employee holds the value of the employee edge.
+        type: object
       roomdetail:
         $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the Roomdetail edge.

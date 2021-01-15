@@ -29,5 +29,6 @@ func (Lease) Edges() []ent.Edge {
 			Ref("roomdetails").
 			Unique().
 			Required(),
+		edge.From("employee", Employee.Type).Ref("leases").Unique(),
 	}
 }
