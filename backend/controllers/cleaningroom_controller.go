@@ -9,7 +9,9 @@ import (
 	"github.com/team15/app/ent"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // CleaningRoomController defines the struct for the cleaningroom controller
@@ -23,6 +25,8 @@ type CleaningRoom struct {
 	Note             string
 	CleanerName      int
 	LengthTime       int
+	Employee         int
+	Roomdetail       int
 }
 
 // CreateCleaningRoom handles POST requests for adding cleaningroom entities
@@ -68,6 +72,31 @@ func (ctl *CleaningRoomController) CreateCleaningRoom(c *gin.Context) {
 		})
 		return
 	}
+
+	em, err := ctl.client.Employee.
+		Query().
+		Where(employee.IDEQ(int(obj.Employee))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "lengthtime not found",
+		})
+		return
+	}
+
+	rt, err := ctl.client.Roomdetail.
+		Query().
+		Where(roomdetail.IDEQ(int(obj.Roomdetail))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "lengthtime not found",
+		})
+		return
+	}
+
 	time, err := time.Parse(time.RFC3339, obj.Dateandstarttime)
 	cr, err := ctl.client.CleaningRoom.
 		Create().
@@ -75,6 +104,8 @@ func (ctl *CleaningRoomController) CreateCleaningRoom(c *gin.Context) {
 		SetNote(obj.Note).
 		SetCleanerName(cn).
 		SetLengthTime(lt).
+		SetRoomdetail(rt).
+		SetEmployee(em).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -121,6 +152,9 @@ func (ctl *CleaningRoomController) ListCleaningRoom(c *gin.Context) {
 
 	cleaningrooms, err := ctl.client.CleaningRoom.
 		Query().
+		WithCleanerName().
+		WithLengthTime().
+		WithRoomdetail().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
