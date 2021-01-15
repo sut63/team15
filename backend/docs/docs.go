@@ -2560,8 +2560,11 @@ var doc = `{
                 "added": {
                     "type": "string"
                 },
-                "roomnum": {
-                    "type": "string"
+                "employee": {
+                    "type": "integer"
+                },
+                "roomdetail": {
+                    "type": "integer"
                 },
                 "tenant": {
                     "type": "string"
@@ -2832,6 +2835,13 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Jobposition"
                 },
+                "leases": {
+                    "description": "Leases holds the value of the leases edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Lease"
+                    }
+                },
                 "repairinvoices": {
                     "description": "Repairinvoices holds the value of the repairinvoices edge.",
                     "type": "array",
@@ -2903,6 +2913,11 @@ var doc = `{
         "ent.LeaseEdges": {
             "type": "object",
             "properties": {
+                "employee": {
+                    "description": "Employee holds the value of the employee edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Employee"
+                },
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the Roomdetail edge.",
                     "type": "object",

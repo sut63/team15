@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/wifi"
@@ -24,9 +25,10 @@ type Lease struct {
 	Tenant string `json:"tenant,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LeaseQuery when eager-loading is set.
-	Edges    LeaseEdges `json:"edges"`
-	room_num *int
-	wifi_id  *int
+	Edges       LeaseEdges `json:"edges"`
+	employee_id *int
+	room_num    *int
+	wifi_id     *int
 }
 
 // LeaseEdges holds the relations/edges for other nodes in the graph.
@@ -35,9 +37,11 @@ type LeaseEdges struct {
 	Wifi *Wifi
 	// Roomdetail holds the value of the Roomdetail edge.
 	Roomdetail *Roomdetail
+	// Employee holds the value of the employee edge.
+	Employee *Employee
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // WifiOrErr returns the Wifi value or an error if the edge
@@ -68,6 +72,20 @@ func (e LeaseEdges) RoomdetailOrErr() (*Roomdetail, error) {
 	return nil, &NotLoadedError{edge: "Roomdetail"}
 }
 
+// EmployeeOrErr returns the Employee value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e LeaseEdges) EmployeeOrErr() (*Employee, error) {
+	if e.loadedTypes[2] {
+		if e.Employee == nil {
+			// The edge employee was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: employee.Label}
+		}
+		return e.Employee, nil
+	}
+	return nil, &NotLoadedError{edge: "employee"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Lease) scanValues() []interface{} {
 	return []interface{}{
@@ -80,6 +98,7 @@ func (*Lease) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Lease) fkValues() []interface{} {
 	return []interface{}{
+		&sql.NullInt64{}, // employee_id
 		&sql.NullInt64{}, // room_num
 		&sql.NullInt64{}, // wifi_id
 	}
@@ -110,12 +129,18 @@ func (l *Lease) assignValues(values ...interface{}) error {
 	values = values[2:]
 	if len(values) == len(lease.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
+		} else if value.Valid {
+			l.employee_id = new(int)
+			*l.employee_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field room_num", value)
 		} else if value.Valid {
 			l.room_num = new(int)
 			*l.room_num = int(value.Int64)
 		}
-		if value, ok := values[1].(*sql.NullInt64); !ok {
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field wifi_id", value)
 		} else if value.Valid {
 			l.wifi_id = new(int)
@@ -133,6 +158,11 @@ func (l *Lease) QueryWifi() *WifiQuery {
 // QueryRoomdetail queries the Roomdetail edge of the Lease.
 func (l *Lease) QueryRoomdetail() *RoomdetailQuery {
 	return (&LeaseClient{config: l.config}).QueryRoomdetail(l)
+}
+
+// QueryEmployee queries the employee edge of the Lease.
+func (l *Lease) QueryEmployee() *EmployeeQuery {
+	return (&LeaseClient{config: l.config}).QueryEmployee(l)
 }
 
 // Update returns a builder for updating this Lease.

@@ -187,6 +187,7 @@ func main() {
 	controllers.NewPledgeController(v1, client)
 	controllers.NewStaytypeController(v1, client)
 	controllers.NewWifiController(v1, client)
+	controllers.NewLeaseController(v1, client)
 	controllers.NewRepairinvoiceController(v1, client)
 	controllers.NewRentalstatusController(v1, client)
 	controllers.NewSituationController(v1, client)
@@ -268,7 +269,6 @@ func main() {
 			SetSituationname(si.Situationname).
 			Save(context.Background())
 	}
-
 
 	// Set CleanerNames Data
 	cleanernames := CleanerNames{
@@ -361,8 +361,8 @@ func main() {
 	// Set Wifis Data
 	wifis := Wifis{
 		Wifi: []Wifi{
-			Wifi{"no service"},
-			Wifi{"service"},
+			Wifi{"no serviced"},
+			Wifi{"serviced"},
 		},
 	}
 	for _, s := range wifis.Wifi {

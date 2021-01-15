@@ -473,6 +473,34 @@ func HasEmployeesWith(preds ...predicate.Deposit) predicate.Employee {
 	})
 }
 
+// HasLeases applies the HasEdge predicate on the "leases" edge.
+func HasLeases() predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LeasesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, LeasesTable, LeasesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasLeasesWith applies the HasEdge predicate on the "leases" edge with a given conditions (other predicates).
+func HasLeasesWith(preds ...predicate.Lease) predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LeasesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, LeasesTable, LeasesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasRoomdetails applies the HasEdge predicate on the "roomdetails" edge.
 func HasRoomdetails() predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {

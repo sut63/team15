@@ -16,6 +16,8 @@ const (
 
 	// EdgeEmployees holds the string denoting the employees edge name in mutations.
 	EdgeEmployees = "employees"
+	// EdgeLeases holds the string denoting the leases edge name in mutations.
+	EdgeLeases = "leases"
 	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
 	EdgeRoomdetails = "roomdetails"
 	// EdgeJobposition holds the string denoting the jobposition edge name in mutations.
@@ -32,6 +34,13 @@ const (
 	EmployeesInverseTable = "deposits"
 	// EmployeesColumn is the table column denoting the employees relation/edge.
 	EmployeesColumn = "employee_id"
+	// LeasesTable is the table the holds the leases relation/edge.
+	LeasesTable = "leases"
+	// LeasesInverseTable is the table name for the Lease entity.
+	// It exists in this package in order to avoid circular dependency with the "lease" package.
+	LeasesInverseTable = "leases"
+	// LeasesColumn is the table column denoting the leases relation/edge.
+	LeasesColumn = "employee_id"
 	// RoomdetailsTable is the table the holds the roomdetails relation/edge.
 	RoomdetailsTable = "roomdetails"
 	// RoomdetailsInverseTable is the table name for the Roomdetail entity.

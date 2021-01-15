@@ -16,6 +16,8 @@ const (
 	EdgeWifi = "Wifi"
 	// EdgeRoomdetail holds the string denoting the roomdetail edge name in mutations.
 	EdgeRoomdetail = "Roomdetail"
+	// EdgeEmployee holds the string denoting the employee edge name in mutations.
+	EdgeEmployee = "employee"
 
 	// Table holds the table name of the lease in the database.
 	Table = "leases"
@@ -33,6 +35,13 @@ const (
 	RoomdetailInverseTable = "roomdetails"
 	// RoomdetailColumn is the table column denoting the Roomdetail relation/edge.
 	RoomdetailColumn = "room_num"
+	// EmployeeTable is the table the holds the employee relation/edge.
+	EmployeeTable = "leases"
+	// EmployeeInverseTable is the table name for the Employee entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	EmployeeInverseTable = "employees"
+	// EmployeeColumn is the table column denoting the employee relation/edge.
+	EmployeeColumn = "employee_id"
 )
 
 // Columns holds all SQL columns for lease fields.
@@ -44,6 +53,7 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Lease type.
 var ForeignKeys = []string{
+	"employee_id",
 	"room_num",
 	"wifi_id",
 }

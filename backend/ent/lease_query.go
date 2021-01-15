@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/roomdetail"
@@ -28,6 +29,7 @@ type LeaseQuery struct {
 	// eager-loading edges.
 	withWifi       *WifiQuery
 	withRoomdetail *RoomdetailQuery
+	withEmployee   *EmployeeQuery
 	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -87,6 +89,24 @@ func (lq *LeaseQuery) QueryRoomdetail() *RoomdetailQuery {
 			sqlgraph.From(lease.Table, lease.FieldID, lq.sqlQuery()),
 			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, lease.RoomdetailTable, lease.RoomdetailColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryEmployee chains the current query on the employee edge.
+func (lq *LeaseQuery) QueryEmployee() *EmployeeQuery {
+	query := &EmployeeQuery{config: lq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := lq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, lq.sqlQuery()),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, lease.EmployeeTable, lease.EmployeeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,6 +315,17 @@ func (lq *LeaseQuery) WithRoomdetail(opts ...func(*RoomdetailQuery)) *LeaseQuery
 	return lq
 }
 
+//  WithEmployee tells the query-builder to eager-loads the nodes that are connected to
+// the "employee" edge. The optional arguments used to configure the query builder of the edge.
+func (lq *LeaseQuery) WithEmployee(opts ...func(*EmployeeQuery)) *LeaseQuery {
+	query := &EmployeeQuery{config: lq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	lq.withEmployee = query
+	return lq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -362,12 +393,13 @@ func (lq *LeaseQuery) sqlAll(ctx context.Context) ([]*Lease, error) {
 		nodes       = []*Lease{}
 		withFKs     = lq.withFKs
 		_spec       = lq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			lq.withWifi != nil,
 			lq.withRoomdetail != nil,
+			lq.withEmployee != nil,
 		}
 	)
-	if lq.withWifi != nil || lq.withRoomdetail != nil {
+	if lq.withWifi != nil || lq.withRoomdetail != nil || lq.withEmployee != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -443,6 +475,31 @@ func (lq *LeaseQuery) sqlAll(ctx context.Context) ([]*Lease, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Roomdetail = n
+			}
+		}
+	}
+
+	if query := lq.withEmployee; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Lease)
+		for i := range nodes {
+			if fk := nodes[i].employee_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(employee.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Employee = n
 			}
 		}
 	}

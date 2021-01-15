@@ -162,6 +162,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
 		{Name: "tenant", Type: field.TypeString},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "room_num", Type: field.TypeInt, Unique: true, Nullable: true},
 		{Name: "wifi_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -172,15 +173,22 @@ var (
 		PrimaryKey: []*schema.Column{LeasesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "leases_roomdetails_roomdetails",
+				Symbol:  "leases_employees_leases",
 				Columns: []*schema.Column{LeasesColumns[3]},
+
+				RefColumns: []*schema.Column{EmployeesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "leases_roomdetails_roomdetails",
+				Columns: []*schema.Column{LeasesColumns[4]},
 
 				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "leases_wifis_wifis",
-				Columns: []*schema.Column{LeasesColumns[4]},
+				Columns: []*schema.Column{LeasesColumns[5]},
 
 				RefColumns: []*schema.Column{WifisColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -413,8 +421,9 @@ func init() {
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
 	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
 	EmployeesTable.ForeignKeys[0].RefTable = JobpositionsTable
-	LeasesTable.ForeignKeys[0].RefTable = RoomdetailsTable
-	LeasesTable.ForeignKeys[1].RefTable = WifisTable
+	LeasesTable.ForeignKeys[0].RefTable = EmployeesTable
+	LeasesTable.ForeignKeys[1].RefTable = RoomdetailsTable
+	LeasesTable.ForeignKeys[2].RefTable = WifisTable
 	RepairinvoicesTable.ForeignKeys[0].RefTable = EmployeesTable
 	RepairinvoicesTable.ForeignKeys[1].RefTable = RentalstatusesTable
 	RoomdetailsTable.ForeignKeys[0].RefTable = BedtypesTable

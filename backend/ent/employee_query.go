@@ -15,6 +15,7 @@ import (
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
@@ -30,6 +31,7 @@ type EmployeeQuery struct {
 	predicates []predicate.Employee
 	// eager-loading edges.
 	withEmployees      *DepositQuery
+	withLeases         *LeaseQuery
 	withRoomdetails    *RoomdetailQuery
 	withJobposition    *JobpositionQuery
 	withRepairinvoices *RepairinvoiceQuery
@@ -74,6 +76,24 @@ func (eq *EmployeeQuery) QueryEmployees() *DepositQuery {
 			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
 			sqlgraph.To(deposit.Table, deposit.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, employee.EmployeesTable, employee.EmployeesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryLeases chains the current query on the leases edge.
+func (eq *EmployeeQuery) QueryLeases() *LeaseQuery {
+	query := &LeaseQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.LeasesTable, employee.LeasesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -325,6 +345,17 @@ func (eq *EmployeeQuery) WithEmployees(opts ...func(*DepositQuery)) *EmployeeQue
 	return eq
 }
 
+//  WithLeases tells the query-builder to eager-loads the nodes that are connected to
+// the "leases" edge. The optional arguments used to configure the query builder of the edge.
+func (eq *EmployeeQuery) WithLeases(opts ...func(*LeaseQuery)) *EmployeeQuery {
+	query := &LeaseQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withLeases = query
+	return eq
+}
+
 //  WithRoomdetails tells the query-builder to eager-loads the nodes that are connected to
 // the "roomdetails" edge. The optional arguments used to configure the query builder of the edge.
 func (eq *EmployeeQuery) WithRoomdetails(opts ...func(*RoomdetailQuery)) *EmployeeQuery {
@@ -425,8 +456,9 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		nodes       = []*Employee{}
 		withFKs     = eq.withFKs
 		_spec       = eq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			eq.withEmployees != nil,
+			eq.withLeases != nil,
 			eq.withRoomdetails != nil,
 			eq.withJobposition != nil,
 			eq.withRepairinvoices != nil,
@@ -487,6 +519,34 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Employees = append(node.Edges.Employees, n)
+		}
+	}
+
+	if query := eq.withLeases; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Employee)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Lease(func(s *sql.Selector) {
+			s.Where(sql.InValues(employee.LeasesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.employee_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "employee_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Leases = append(node.Edges.Leases, n)
 		}
 	}
 

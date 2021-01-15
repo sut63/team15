@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
@@ -62,6 +63,21 @@ func (eu *EmployeeUpdate) AddEmployees(d ...*Deposit) *EmployeeUpdate {
 		ids[i] = d[i].ID
 	}
 	return eu.AddEmployeeIDs(ids...)
+}
+
+// AddLeaseIDs adds the leases edge to Lease by ids.
+func (eu *EmployeeUpdate) AddLeaseIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.AddLeaseIDs(ids...)
+	return eu
+}
+
+// AddLeases adds the leases edges to Lease.
+func (eu *EmployeeUpdate) AddLeases(l ...*Lease) *EmployeeUpdate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return eu.AddLeaseIDs(ids...)
 }
 
 // AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
@@ -131,6 +147,21 @@ func (eu *EmployeeUpdate) RemoveEmployees(d ...*Deposit) *EmployeeUpdate {
 		ids[i] = d[i].ID
 	}
 	return eu.RemoveEmployeeIDs(ids...)
+}
+
+// RemoveLeaseIDs removes the leases edge to Lease by ids.
+func (eu *EmployeeUpdate) RemoveLeaseIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.RemoveLeaseIDs(ids...)
+	return eu
+}
+
+// RemoveLeases removes leases edges to Lease.
+func (eu *EmployeeUpdate) RemoveLeases(l ...*Lease) *EmployeeUpdate {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return eu.RemoveLeaseIDs(ids...)
 }
 
 // RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
@@ -313,6 +344,44 @@ func (eu *EmployeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := eu.mutation.RemovedLeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.LeasesTable,
+			Columns: []string{employee.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.LeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.LeasesTable,
+			Columns: []string{employee.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if nodes := eu.mutation.RemovedRoomdetailsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -475,6 +544,21 @@ func (euo *EmployeeUpdateOne) AddEmployees(d ...*Deposit) *EmployeeUpdateOne {
 	return euo.AddEmployeeIDs(ids...)
 }
 
+// AddLeaseIDs adds the leases edge to Lease by ids.
+func (euo *EmployeeUpdateOne) AddLeaseIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.AddLeaseIDs(ids...)
+	return euo
+}
+
+// AddLeases adds the leases edges to Lease.
+func (euo *EmployeeUpdateOne) AddLeases(l ...*Lease) *EmployeeUpdateOne {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return euo.AddLeaseIDs(ids...)
+}
+
 // AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
 func (euo *EmployeeUpdateOne) AddRoomdetailIDs(ids ...int) *EmployeeUpdateOne {
 	euo.mutation.AddRoomdetailIDs(ids...)
@@ -542,6 +626,21 @@ func (euo *EmployeeUpdateOne) RemoveEmployees(d ...*Deposit) *EmployeeUpdateOne 
 		ids[i] = d[i].ID
 	}
 	return euo.RemoveEmployeeIDs(ids...)
+}
+
+// RemoveLeaseIDs removes the leases edge to Lease by ids.
+func (euo *EmployeeUpdateOne) RemoveLeaseIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.RemoveLeaseIDs(ids...)
+	return euo
+}
+
+// RemoveLeases removes leases edges to Lease.
+func (euo *EmployeeUpdateOne) RemoveLeases(l ...*Lease) *EmployeeUpdateOne {
+	ids := make([]int, len(l))
+	for i := range l {
+		ids[i] = l[i].ID
+	}
+	return euo.RemoveLeaseIDs(ids...)
 }
 
 // RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
@@ -714,6 +813,44 @@ func (euo *EmployeeUpdateOne) sqlSave(ctx context.Context) (e *Employee, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := euo.mutation.RemovedLeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.LeasesTable,
+			Columns: []string{employee.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.LeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.LeasesTable,
+			Columns: []string{employee.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}
