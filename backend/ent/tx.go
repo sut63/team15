@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Bedtype is the client for interacting with the Bedtype builders.
 	Bedtype *BedtypeClient
+	// Bill is the client for interacting with the Bill builders.
+	Bill *BillClient
 	// CleanerName is the client for interacting with the CleanerName builders.
 	CleanerName *CleanerNameClient
 	// CleaningRoom is the client for interacting with the CleaningRoom builders.
@@ -28,6 +30,8 @@ type Tx struct {
 	Lease *LeaseClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
+	// Payment is the client for interacting with the Payment builders.
+	Payment *PaymentClient
 	// Petrule is the client for interacting with the Petrule builders.
 	Petrule *PetruleClient
 	// Pledge is the client for interacting with the Pledge builders.
@@ -38,6 +42,8 @@ type Tx struct {
 	Repairinvoice *RepairinvoiceClient
 	// Roomdetail is the client for interacting with the Roomdetail builders.
 	Roomdetail *RoomdetailClient
+	// Situation is the client for interacting with the Situation builders.
+	Situation *SituationClient
 	// Statusd is the client for interacting with the Statusd builders.
 	Statusd *StatusdClient
 	// Staytype is the client for interacting with the Staytype builders.
@@ -180,6 +186,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Bedtype = NewBedtypeClient(tx.config)
+	tx.Bill = NewBillClient(tx.config)
 	tx.CleanerName = NewCleanerNameClient(tx.config)
 	tx.CleaningRoom = NewCleaningRoomClient(tx.config)
 	tx.Deposit = NewDepositClient(tx.config)
@@ -187,11 +194,13 @@ func (tx *Tx) init() {
 	tx.Jobposition = NewJobpositionClient(tx.config)
 	tx.Lease = NewLeaseClient(tx.config)
 	tx.LengthTime = NewLengthTimeClient(tx.config)
+	tx.Payment = NewPaymentClient(tx.config)
 	tx.Petrule = NewPetruleClient(tx.config)
 	tx.Pledge = NewPledgeClient(tx.config)
 	tx.Rentalstatus = NewRentalstatusClient(tx.config)
 	tx.Repairinvoice = NewRepairinvoiceClient(tx.config)
 	tx.Roomdetail = NewRoomdetailClient(tx.config)
+	tx.Situation = NewSituationClient(tx.config)
 	tx.Statusd = NewStatusdClient(tx.config)
 	tx.Staytype = NewStaytypeClient(tx.config)
 	tx.Wifi = NewWifiClient(tx.config)

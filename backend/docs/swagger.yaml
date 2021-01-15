@@ -1,5 +1,18 @@
 basePath: /api/v1
 definitions:
+  controllers.Bill:
+    properties:
+      added:
+        type: string
+      payment:
+        type: integer
+      room:
+        type: integer
+      situation:
+        type: integer
+      total:
+        type: integer
+    type: object
   controllers.Deposit:
     properties:
       added:
@@ -76,6 +89,35 @@ definitions:
         items:
           $ref: '#/definitions/ent.Roomdetail'
         type: array
+    type: object
+  ent.Bill:
+    properties:
+      addedtime:
+        description: Addedtime holds the value of the "addedtime" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.BillEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the BillQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      total:
+        description: Total holds the value of the "total" field.
+        type: integer
+    type: object
+  ent.BillEdges:
+    properties:
+      payment:
+        $ref: '#/definitions/ent.Payment'
+        description: Payment holds the value of the Payment edge.
+        type: object
+      situation:
+        $ref: '#/definitions/ent.Situation'
+        description: Situation holds the value of the Situation edge.
+        type: object
     type: object
   ent.CleanerName:
     properties:
@@ -276,6 +318,29 @@ definitions:
           $ref: '#/definitions/ent.CleaningRoom'
         type: array
     type: object
+  ent.Payment:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.PaymentEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the PaymentQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      paymentname:
+        description: Paymentname holds the value of the "paymentname" field.
+        type: string
+    type: object
+  ent.PaymentEdges:
+    properties:
+      payments:
+        description: Payments holds the value of the payments edge.
+        items:
+          $ref: '#/definitions/ent.Bill'
+        type: array
+    type: object
   ent.Petrule:
     properties:
       edges:
@@ -424,6 +489,29 @@ definitions:
         $ref: '#/definitions/ent.Staytype'
         description: Staytype holds the value of the staytype edge.
         type: object
+    type: object
+  ent.Situation:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.SituationEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the SituationQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      situationname:
+        description: Situationname holds the value of the "situationname" field.
+        type: string
+    type: object
+  ent.SituationEdges:
+    properties:
+      situations:
+        description: Situations holds the value of the situations edge.
+        items:
+          $ref: '#/definitions/ent.Bill'
+        type: array
     type: object
   ent.Statusd:
     properties:
@@ -651,6 +739,65 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a bedtype entity by ID
+  /bills:
+    get:
+      description: list bill entities
+      operationId: list-bill
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Bill'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List bill entities
+    post:
+      consumes:
+      - application/json
+      description: Create bill
+      operationId: create-bill
+      parameters:
+      - description: Bill entity
+        in: body
+        name: bill
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Bill'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Bill'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create bill
   /cleanernames:
     get:
       description: list cleanername entities
@@ -1062,6 +1209,125 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a lengthtime entity by ID
+  /payment/{id}:
+    delete:
+      description: get payment by ID
+      operationId: delete-payment
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a payment entity by ID
+  /payments:
+    get:
+      description: list payment entities
+      operationId: list-payment
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Payment'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List payment entities
+    post:
+      consumes:
+      - application/json
+      description: Create payment
+      operationId: create-payment
+      parameters:
+      - description: Payment entity
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Payment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create payment
+  /payments/{id}:
+    get:
+      description: get payment by ID
+      operationId: get-payment
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a payment entity by ID
   /petrule/{id}:
     delete:
       description: get petrule by ID
@@ -1509,6 +1775,125 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a roomdetail entity by ID
+  /situation/{id}:
+    delete:
+      description: get situation by ID
+      operationId: delete-situation
+      parameters:
+      - description: Situation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a situation entity by ID
+  /situations:
+    get:
+      description: list situation entities
+      operationId: list-situation
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Situation'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List situation entities
+    post:
+      consumes:
+      - application/json
+      description: Create situation
+      operationId: create-situation
+      parameters:
+      - description: Situation entity
+        in: body
+        name: situation
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Situation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Situation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create situation
+  /situations/{id}:
+    get:
+      description: get situation by ID
+      operationId: get-situation
+      parameters:
+      - description: Situation ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Situation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a situation entity by ID
   /statusd/{id}:
     delete:
       description: get statusd by ID

@@ -20,6 +20,36 @@ var (
 		PrimaryKey:  []*schema.Column{BedtypesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// BillsColumns holds the columns for the "bills" table.
+	BillsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "addedtime", Type: field.TypeTime},
+		{Name: "total", Type: field.TypeInt},
+		{Name: "payment_id", Type: field.TypeInt, Nullable: true},
+		{Name: "situation_id", Type: field.TypeInt, Nullable: true},
+	}
+	// BillsTable holds the schema information for the "bills" table.
+	BillsTable = &schema.Table{
+		Name:       "bills",
+		Columns:    BillsColumns,
+		PrimaryKey: []*schema.Column{BillsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "bills_payments_payments",
+				Columns: []*schema.Column{BillsColumns[3]},
+
+				RefColumns: []*schema.Column{PaymentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "bills_situations_situations",
+				Columns: []*schema.Column{BillsColumns[4]},
+
+				RefColumns: []*schema.Column{SituationsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// CleanerNamesColumns holds the columns for the "cleaner_names" table.
 	CleanerNamesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -169,6 +199,18 @@ var (
 		PrimaryKey:  []*schema.Column{LengthTimesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// PaymentsColumns holds the columns for the "payments" table.
+	PaymentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "paymentname", Type: field.TypeString, Unique: true},
+	}
+	// PaymentsTable holds the schema information for the "payments" table.
+	PaymentsTable = &schema.Table{
+		Name:        "payments",
+		Columns:     PaymentsColumns,
+		PrimaryKey:  []*schema.Column{PaymentsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// PetrulesColumns holds the columns for the "petrules" table.
 	PetrulesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -291,6 +333,18 @@ var (
 			},
 		},
 	}
+	// SituationsColumns holds the columns for the "situations" table.
+	SituationsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "situationname", Type: field.TypeString, Unique: true},
+	}
+	// SituationsTable holds the schema information for the "situations" table.
+	SituationsTable = &schema.Table{
+		Name:        "situations",
+		Columns:     SituationsColumns,
+		PrimaryKey:  []*schema.Column{SituationsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// StatusdsColumns holds the columns for the "statusds" table.
 	StatusdsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -330,6 +384,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		BedtypesTable,
+		BillsTable,
 		CleanerNamesTable,
 		CleaningRoomsTable,
 		DepositsTable,
@@ -337,11 +392,13 @@ var (
 		JobpositionsTable,
 		LeasesTable,
 		LengthTimesTable,
+		PaymentsTable,
 		PetrulesTable,
 		PledgesTable,
 		RentalstatusesTable,
 		RepairinvoicesTable,
 		RoomdetailsTable,
+		SituationsTable,
 		StatusdsTable,
 		StaytypesTable,
 		WifisTable,
@@ -349,6 +406,8 @@ var (
 )
 
 func init() {
+	BillsTable.ForeignKeys[0].RefTable = PaymentsTable
+	BillsTable.ForeignKeys[1].RefTable = SituationsTable
 	CleaningRoomsTable.ForeignKeys[0].RefTable = CleanerNamesTable
 	CleaningRoomsTable.ForeignKeys[1].RefTable = LengthTimesTable
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable

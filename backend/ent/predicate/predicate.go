@@ -9,6 +9,9 @@ import (
 // Bedtype is the predicate function for bedtype builders.
 type Bedtype func(*sql.Selector)
 
+// Bill is the predicate function for bill builders.
+type Bill func(*sql.Selector)
+
 // CleanerName is the predicate function for cleanername builders.
 type CleanerName func(*sql.Selector)
 
@@ -30,6 +33,9 @@ type Lease func(*sql.Selector)
 // LengthTime is the predicate function for lengthtime builders.
 type LengthTime func(*sql.Selector)
 
+// Payment is the predicate function for payment builders.
+type Payment func(*sql.Selector)
+
 // Petrule is the predicate function for petrule builders.
 type Petrule func(*sql.Selector)
 
@@ -44,6 +50,9 @@ type Repairinvoice func(*sql.Selector)
 
 // Roomdetail is the predicate function for roomdetail builders.
 type Roomdetail func(*sql.Selector)
+
+// Situation is the predicate function for situation builders.
+type Situation func(*sql.Selector)
 
 // Statusd is the predicate function for statusd builders.
 type Statusd func(*sql.Selector)

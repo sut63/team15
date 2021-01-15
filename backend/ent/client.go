@@ -10,6 +10,7 @@ import (
 	"github.com/team15/app/ent/migrate"
 
 	"github.com/team15/app/ent/bedtype"
+	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
@@ -17,11 +18,13 @@ import (
 	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/lengthtime"
+	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/petrule"
 	"github.com/team15/app/ent/pledge"
 	"github.com/team15/app/ent/rentalstatus"
 	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
+	"github.com/team15/app/ent/situation"
 	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/staytype"
 	"github.com/team15/app/ent/wifi"
@@ -38,6 +41,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Bedtype is the client for interacting with the Bedtype builders.
 	Bedtype *BedtypeClient
+	// Bill is the client for interacting with the Bill builders.
+	Bill *BillClient
 	// CleanerName is the client for interacting with the CleanerName builders.
 	CleanerName *CleanerNameClient
 	// CleaningRoom is the client for interacting with the CleaningRoom builders.
@@ -52,6 +57,8 @@ type Client struct {
 	Lease *LeaseClient
 	// LengthTime is the client for interacting with the LengthTime builders.
 	LengthTime *LengthTimeClient
+	// Payment is the client for interacting with the Payment builders.
+	Payment *PaymentClient
 	// Petrule is the client for interacting with the Petrule builders.
 	Petrule *PetruleClient
 	// Pledge is the client for interacting with the Pledge builders.
@@ -62,6 +69,8 @@ type Client struct {
 	Repairinvoice *RepairinvoiceClient
 	// Roomdetail is the client for interacting with the Roomdetail builders.
 	Roomdetail *RoomdetailClient
+	// Situation is the client for interacting with the Situation builders.
+	Situation *SituationClient
 	// Statusd is the client for interacting with the Statusd builders.
 	Statusd *StatusdClient
 	// Staytype is the client for interacting with the Staytype builders.
@@ -82,6 +91,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Bedtype = NewBedtypeClient(c.config)
+	c.Bill = NewBillClient(c.config)
 	c.CleanerName = NewCleanerNameClient(c.config)
 	c.CleaningRoom = NewCleaningRoomClient(c.config)
 	c.Deposit = NewDepositClient(c.config)
@@ -89,11 +99,13 @@ func (c *Client) init() {
 	c.Jobposition = NewJobpositionClient(c.config)
 	c.Lease = NewLeaseClient(c.config)
 	c.LengthTime = NewLengthTimeClient(c.config)
+	c.Payment = NewPaymentClient(c.config)
 	c.Petrule = NewPetruleClient(c.config)
 	c.Pledge = NewPledgeClient(c.config)
 	c.Rentalstatus = NewRentalstatusClient(c.config)
 	c.Repairinvoice = NewRepairinvoiceClient(c.config)
 	c.Roomdetail = NewRoomdetailClient(c.config)
+	c.Situation = NewSituationClient(c.config)
 	c.Statusd = NewStatusdClient(c.config)
 	c.Staytype = NewStaytypeClient(c.config)
 	c.Wifi = NewWifiClient(c.config)
@@ -130,6 +142,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:           ctx,
 		config:        cfg,
 		Bedtype:       NewBedtypeClient(cfg),
+		Bill:          NewBillClient(cfg),
 		CleanerName:   NewCleanerNameClient(cfg),
 		CleaningRoom:  NewCleaningRoomClient(cfg),
 		Deposit:       NewDepositClient(cfg),
@@ -137,11 +150,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Jobposition:   NewJobpositionClient(cfg),
 		Lease:         NewLeaseClient(cfg),
 		LengthTime:    NewLengthTimeClient(cfg),
+		Payment:       NewPaymentClient(cfg),
 		Petrule:       NewPetruleClient(cfg),
 		Pledge:        NewPledgeClient(cfg),
 		Rentalstatus:  NewRentalstatusClient(cfg),
 		Repairinvoice: NewRepairinvoiceClient(cfg),
 		Roomdetail:    NewRoomdetailClient(cfg),
+		Situation:     NewSituationClient(cfg),
 		Statusd:       NewStatusdClient(cfg),
 		Staytype:      NewStaytypeClient(cfg),
 		Wifi:          NewWifiClient(cfg),
@@ -161,6 +176,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		config:        cfg,
 		Bedtype:       NewBedtypeClient(cfg),
+		Bill:          NewBillClient(cfg),
 		CleanerName:   NewCleanerNameClient(cfg),
 		CleaningRoom:  NewCleaningRoomClient(cfg),
 		Deposit:       NewDepositClient(cfg),
@@ -168,11 +184,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Jobposition:   NewJobpositionClient(cfg),
 		Lease:         NewLeaseClient(cfg),
 		LengthTime:    NewLengthTimeClient(cfg),
+		Payment:       NewPaymentClient(cfg),
 		Petrule:       NewPetruleClient(cfg),
 		Pledge:        NewPledgeClient(cfg),
 		Rentalstatus:  NewRentalstatusClient(cfg),
 		Repairinvoice: NewRepairinvoiceClient(cfg),
 		Roomdetail:    NewRoomdetailClient(cfg),
+		Situation:     NewSituationClient(cfg),
 		Statusd:       NewStatusdClient(cfg),
 		Staytype:      NewStaytypeClient(cfg),
 		Wifi:          NewWifiClient(cfg),
@@ -205,6 +223,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Bedtype.Use(hooks...)
+	c.Bill.Use(hooks...)
 	c.CleanerName.Use(hooks...)
 	c.CleaningRoom.Use(hooks...)
 	c.Deposit.Use(hooks...)
@@ -212,11 +231,13 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Jobposition.Use(hooks...)
 	c.Lease.Use(hooks...)
 	c.LengthTime.Use(hooks...)
+	c.Payment.Use(hooks...)
 	c.Petrule.Use(hooks...)
 	c.Pledge.Use(hooks...)
 	c.Rentalstatus.Use(hooks...)
 	c.Repairinvoice.Use(hooks...)
 	c.Roomdetail.Use(hooks...)
+	c.Situation.Use(hooks...)
 	c.Statusd.Use(hooks...)
 	c.Staytype.Use(hooks...)
 	c.Wifi.Use(hooks...)
@@ -319,6 +340,121 @@ func (c *BedtypeClient) QueryRoomdetails(b *Bedtype) *RoomdetailQuery {
 // Hooks returns the client hooks.
 func (c *BedtypeClient) Hooks() []Hook {
 	return c.hooks.Bedtype
+}
+
+// BillClient is a client for the Bill schema.
+type BillClient struct {
+	config
+}
+
+// NewBillClient returns a client for the Bill from the given config.
+func NewBillClient(c config) *BillClient {
+	return &BillClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `bill.Hooks(f(g(h())))`.
+func (c *BillClient) Use(hooks ...Hook) {
+	c.hooks.Bill = append(c.hooks.Bill, hooks...)
+}
+
+// Create returns a create builder for Bill.
+func (c *BillClient) Create() *BillCreate {
+	mutation := newBillMutation(c.config, OpCreate)
+	return &BillCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Bill.
+func (c *BillClient) Update() *BillUpdate {
+	mutation := newBillMutation(c.config, OpUpdate)
+	return &BillUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *BillClient) UpdateOne(b *Bill) *BillUpdateOne {
+	mutation := newBillMutation(c.config, OpUpdateOne, withBill(b))
+	return &BillUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *BillClient) UpdateOneID(id int) *BillUpdateOne {
+	mutation := newBillMutation(c.config, OpUpdateOne, withBillID(id))
+	return &BillUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Bill.
+func (c *BillClient) Delete() *BillDelete {
+	mutation := newBillMutation(c.config, OpDelete)
+	return &BillDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *BillClient) DeleteOne(b *Bill) *BillDeleteOne {
+	return c.DeleteOneID(b.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *BillClient) DeleteOneID(id int) *BillDeleteOne {
+	builder := c.Delete().Where(bill.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &BillDeleteOne{builder}
+}
+
+// Create returns a query builder for Bill.
+func (c *BillClient) Query() *BillQuery {
+	return &BillQuery{config: c.config}
+}
+
+// Get returns a Bill entity by its id.
+func (c *BillClient) Get(ctx context.Context, id int) (*Bill, error) {
+	return c.Query().Where(bill.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *BillClient) GetX(ctx context.Context, id int) *Bill {
+	b, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
+// QuerySituation queries the Situation edge of a Bill.
+func (c *BillClient) QuerySituation(b *Bill) *SituationQuery {
+	query := &SituationQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(bill.Table, bill.FieldID, id),
+			sqlgraph.To(situation.Table, situation.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, bill.SituationTable, bill.SituationColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPayment queries the Payment edge of a Bill.
+func (c *BillClient) QueryPayment(b *Bill) *PaymentQuery {
+	query := &PaymentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(bill.Table, bill.FieldID, id),
+			sqlgraph.To(payment.Table, payment.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, bill.PaymentTable, bill.PaymentColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *BillClient) Hooks() []Hook {
+	return c.hooks.Bill
 }
 
 // CleanerNameClient is a client for the CleanerName schema.
@@ -1110,6 +1246,105 @@ func (c *LengthTimeClient) Hooks() []Hook {
 	return c.hooks.LengthTime
 }
 
+// PaymentClient is a client for the Payment schema.
+type PaymentClient struct {
+	config
+}
+
+// NewPaymentClient returns a client for the Payment from the given config.
+func NewPaymentClient(c config) *PaymentClient {
+	return &PaymentClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `payment.Hooks(f(g(h())))`.
+func (c *PaymentClient) Use(hooks ...Hook) {
+	c.hooks.Payment = append(c.hooks.Payment, hooks...)
+}
+
+// Create returns a create builder for Payment.
+func (c *PaymentClient) Create() *PaymentCreate {
+	mutation := newPaymentMutation(c.config, OpCreate)
+	return &PaymentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Payment.
+func (c *PaymentClient) Update() *PaymentUpdate {
+	mutation := newPaymentMutation(c.config, OpUpdate)
+	return &PaymentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PaymentClient) UpdateOne(pa *Payment) *PaymentUpdateOne {
+	mutation := newPaymentMutation(c.config, OpUpdateOne, withPayment(pa))
+	return &PaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PaymentClient) UpdateOneID(id int) *PaymentUpdateOne {
+	mutation := newPaymentMutation(c.config, OpUpdateOne, withPaymentID(id))
+	return &PaymentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Payment.
+func (c *PaymentClient) Delete() *PaymentDelete {
+	mutation := newPaymentMutation(c.config, OpDelete)
+	return &PaymentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *PaymentClient) DeleteOne(pa *Payment) *PaymentDeleteOne {
+	return c.DeleteOneID(pa.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *PaymentClient) DeleteOneID(id int) *PaymentDeleteOne {
+	builder := c.Delete().Where(payment.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PaymentDeleteOne{builder}
+}
+
+// Create returns a query builder for Payment.
+func (c *PaymentClient) Query() *PaymentQuery {
+	return &PaymentQuery{config: c.config}
+}
+
+// Get returns a Payment entity by its id.
+func (c *PaymentClient) Get(ctx context.Context, id int) (*Payment, error) {
+	return c.Query().Where(payment.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PaymentClient) GetX(ctx context.Context, id int) *Payment {
+	pa, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return pa
+}
+
+// QueryPayments queries the payments edge of a Payment.
+func (c *PaymentClient) QueryPayments(pa *Payment) *BillQuery {
+	query := &BillQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pa.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(payment.Table, payment.FieldID, id),
+			sqlgraph.To(bill.Table, bill.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, payment.PaymentsTable, payment.PaymentsColumn),
+		)
+		fromV = sqlgraph.Neighbors(pa.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PaymentClient) Hooks() []Hook {
+	return c.hooks.Payment
+}
+
 // PetruleClient is a client for the Petrule schema.
 type PetruleClient struct {
 	config
@@ -1699,6 +1934,105 @@ func (c *RoomdetailClient) QueryRoomdetails(r *Roomdetail) *LeaseQuery {
 // Hooks returns the client hooks.
 func (c *RoomdetailClient) Hooks() []Hook {
 	return c.hooks.Roomdetail
+}
+
+// SituationClient is a client for the Situation schema.
+type SituationClient struct {
+	config
+}
+
+// NewSituationClient returns a client for the Situation from the given config.
+func NewSituationClient(c config) *SituationClient {
+	return &SituationClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `situation.Hooks(f(g(h())))`.
+func (c *SituationClient) Use(hooks ...Hook) {
+	c.hooks.Situation = append(c.hooks.Situation, hooks...)
+}
+
+// Create returns a create builder for Situation.
+func (c *SituationClient) Create() *SituationCreate {
+	mutation := newSituationMutation(c.config, OpCreate)
+	return &SituationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Situation.
+func (c *SituationClient) Update() *SituationUpdate {
+	mutation := newSituationMutation(c.config, OpUpdate)
+	return &SituationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SituationClient) UpdateOne(s *Situation) *SituationUpdateOne {
+	mutation := newSituationMutation(c.config, OpUpdateOne, withSituation(s))
+	return &SituationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SituationClient) UpdateOneID(id int) *SituationUpdateOne {
+	mutation := newSituationMutation(c.config, OpUpdateOne, withSituationID(id))
+	return &SituationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Situation.
+func (c *SituationClient) Delete() *SituationDelete {
+	mutation := newSituationMutation(c.config, OpDelete)
+	return &SituationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *SituationClient) DeleteOne(s *Situation) *SituationDeleteOne {
+	return c.DeleteOneID(s.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *SituationClient) DeleteOneID(id int) *SituationDeleteOne {
+	builder := c.Delete().Where(situation.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SituationDeleteOne{builder}
+}
+
+// Create returns a query builder for Situation.
+func (c *SituationClient) Query() *SituationQuery {
+	return &SituationQuery{config: c.config}
+}
+
+// Get returns a Situation entity by its id.
+func (c *SituationClient) Get(ctx context.Context, id int) (*Situation, error) {
+	return c.Query().Where(situation.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SituationClient) GetX(ctx context.Context, id int) *Situation {
+	s, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return s
+}
+
+// QuerySituations queries the situations edge of a Situation.
+func (c *SituationClient) QuerySituations(s *Situation) *BillQuery {
+	query := &BillQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := s.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(situation.Table, situation.FieldID, id),
+			sqlgraph.To(bill.Table, bill.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, situation.SituationsTable, situation.SituationsColumn),
+		)
+		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *SituationClient) Hooks() []Hook {
+	return c.hooks.Situation
 }
 
 // StatusdClient is a client for the Statusd schema.

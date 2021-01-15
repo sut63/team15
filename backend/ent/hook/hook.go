@@ -22,6 +22,19 @@ func (f BedtypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, err
 	return f(ctx, mv)
 }
 
+// The BillFunc type is an adapter to allow the use of ordinary
+// function as Bill mutator.
+type BillFunc func(context.Context, *ent.BillMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f BillFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.BillMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BillMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The CleanerNameFunc type is an adapter to allow the use of ordinary
 // function as CleanerName mutator.
 type CleanerNameFunc func(context.Context, *ent.CleanerNameMutation) (ent.Value, error)
@@ -113,6 +126,19 @@ func (f LengthTimeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
+// The PaymentFunc type is an adapter to allow the use of ordinary
+// function as Payment mutator.
+type PaymentFunc func(context.Context, *ent.PaymentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PaymentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PaymentMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PaymentMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PetruleFunc type is an adapter to allow the use of ordinary
 // function as Petrule mutator.
 type PetruleFunc func(context.Context, *ent.PetruleMutation) (ent.Value, error)
@@ -174,6 +200,19 @@ func (f RoomdetailFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	mv, ok := m.(*ent.RoomdetailMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoomdetailMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The SituationFunc type is an adapter to allow the use of ordinary
+// function as Situation mutator.
+type SituationFunc func(context.Context, *ent.SituationMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f SituationFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.SituationMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SituationMutation", m)
 	}
 	return f(ctx, mv)
 }

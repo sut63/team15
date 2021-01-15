@@ -234,6 +234,30 @@ func (f BedtypeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutatio
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.BedtypeMutation", m)
 }
 
+// The BillQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type BillQueryRuleFunc func(context.Context, *ent.BillQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f BillQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.BillQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.BillQuery", q)
+}
+
+// The BillMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type BillMutationRuleFunc func(context.Context, *ent.BillMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f BillMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.BillMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.BillMutation", m)
+}
+
 // The CleanerNameQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type CleanerNameQueryRuleFunc func(context.Context, *ent.CleanerNameQuery) error
@@ -402,6 +426,30 @@ func (f LengthTimeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LengthTimeMutation", m)
 }
 
+// The PaymentQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PaymentQueryRuleFunc func(context.Context, *ent.PaymentQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PaymentQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PaymentQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PaymentQuery", q)
+}
+
+// The PaymentMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PaymentMutationRuleFunc func(context.Context, *ent.PaymentMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PaymentMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PaymentMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PaymentMutation", m)
+}
+
 // The PetruleQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type PetruleQueryRuleFunc func(context.Context, *ent.PetruleQuery) error
@@ -520,6 +568,30 @@ func (f RoomdetailMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RoomdetailMutation", m)
+}
+
+// The SituationQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type SituationQueryRuleFunc func(context.Context, *ent.SituationQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f SituationQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.SituationQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.SituationQuery", q)
+}
+
+// The SituationMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type SituationMutationRuleFunc func(context.Context, *ent.SituationMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f SituationMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.SituationMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.SituationMutation", m)
 }
 
 // The StatusdQueryRuleFunc type is an adapter to allow the use of ordinary

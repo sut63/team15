@@ -6,7 +6,9 @@ import (
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
+	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/schema"
+	"github.com/team15/app/ent/situation"
 	"github.com/team15/app/ent/statusd"
 	"github.com/team15/app/ent/wifi"
 )
@@ -41,6 +43,18 @@ func init() {
 	lengthtimeDescLengthtime := lengthtimeFields[0].Descriptor()
 	// lengthtime.LengthtimeValidator is a validator for the "lengthtime" field. It is called by the builders before save.
 	lengthtime.LengthtimeValidator = lengthtimeDescLengthtime.Validators[0].(func(string) error)
+	paymentFields := schema.Payment{}.Fields()
+	_ = paymentFields
+	// paymentDescPaymentname is the schema descriptor for paymentname field.
+	paymentDescPaymentname := paymentFields[0].Descriptor()
+	// payment.PaymentnameValidator is a validator for the "paymentname" field. It is called by the builders before save.
+	payment.PaymentnameValidator = paymentDescPaymentname.Validators[0].(func(string) error)
+	situationFields := schema.Situation{}.Fields()
+	_ = situationFields
+	// situationDescSituationname is the schema descriptor for situationname field.
+	situationDescSituationname := situationFields[0].Descriptor()
+	// situation.SituationnameValidator is a validator for the "situationname" field. It is called by the builders before save.
+	situation.SituationnameValidator = situationDescSituationname.Validators[0].(func(string) error)
 	statusdFields := schema.Statusd{}.Fields()
 	_ = statusdFields
 	// statusdDescStatusdname is the schema descriptor for statusdname field.
