@@ -42,6 +42,22 @@ type Statusd struct {
 	Statusdname string
 }
 
+type Payments struct {
+	Payment []Payment
+}
+
+type Payment struct {
+	Paymentname string
+}
+
+type Situations struct {
+	Situation []Situation
+}
+
+type Situation struct {
+	Situationname string
+}
+
 type CleanerNames struct {
 	CleanerName []CleanerName
 }
@@ -161,6 +177,7 @@ func main() {
 	controllers.NewStatusdController(v1, client)
 	controllers.NewEmployeeController(v1, client)
 	controllers.NewDepositController(v1, client)
+	controllers.NewBillController(v1, client)
 	controllers.NewCleaningRoomController(v1, client)
 	controllers.NewCleanerNameController(v1, client)
 	controllers.NewLengthTimeController(v1, client)
@@ -172,6 +189,8 @@ func main() {
 	controllers.NewWifiController(v1, client)
 	controllers.NewRepairinvoiceController(v1, client)
 	controllers.NewRentalstatusController(v1, client)
+	controllers.NewSituationController(v1, client)
+	controllers.NewPaymentController(v1, client)
 
 	// Set Employees Data
 
@@ -221,6 +240,35 @@ func main() {
 			SetStatusdname(s.Statusdname).
 			Save(context.Background())
 	}
+	// Set Payments Data
+	payments := Payments{
+		Payment: []Payment{
+			Payment{"เงินสด"},
+			Payment{"เช็คเงินสด"},
+			Payment{"อื่นๆ"},
+		},
+	}
+	for _, p := range payments.Payment {
+		client.Payment.
+			Create().
+			SetPaymentname(p.Paymentname).
+			Save(context.Background())
+	}
+	// Set Situations Data
+	situations := Situations{
+		Situation: []Situation{
+			Situation{"ชำระแล้ว"},
+			Situation{"ค้างชำระ"},
+			Situation{"อิ่นๆ"},
+		},
+	}
+	for _, si := range situations.Situation {
+		client.Situation.
+			Create().
+			SetSituationname(si.Situationname).
+			Save(context.Background())
+	}
+
 
 	// Set CleanerNames Data
 	cleanernames := CleanerNames{

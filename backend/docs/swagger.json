@@ -228,6 +228,95 @@
                 }
             }
         },
+        "/bills": {
+            "get": {
+                "description": "list bill entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List bill entities",
+                "operationId": "list-bill",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Bill"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create bill",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create bill",
+                "operationId": "create-bill",
+                "parameters": [
+                    {
+                        "description": "Bill entity",
+                        "name": "bill",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Bill"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Bill"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/cleanernames": {
             "get": {
                 "description": "list cleanername entities",
@@ -824,6 +913,185 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/ent.LengthTime"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/{id}": {
+            "delete": {
+                "description": "get payment by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a payment entity by ID",
+                "operationId": "delete-payment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Payment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/payments": {
+            "get": {
+                "description": "list payment entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List payment entities",
+                "operationId": "list-payment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Payment"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create payment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create payment",
+                "operationId": "create-payment",
+                "parameters": [
+                    {
+                        "description": "Payment entity",
+                        "name": "payment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Payment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Payment"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/payments/{id}": {
+            "get": {
+                "description": "get payment by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a payment entity by ID",
+                "operationId": "get-payment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Payment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Payment"
                         }
                     },
                     "400": {
@@ -1518,6 +1786,185 @@
                 }
             }
         },
+        "/situation/{id}": {
+            "delete": {
+                "description": "get situation by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a situation entity by ID",
+                "operationId": "delete-situation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Situation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/situations": {
+            "get": {
+                "description": "list situation entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List situation entities",
+                "operationId": "list-situation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Situation"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create situation",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create situation",
+                "operationId": "create-situation",
+                "parameters": [
+                    {
+                        "description": "Situation entity",
+                        "name": "situation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Situation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Situation"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/situations/{id}": {
+            "get": {
+                "description": "get situation by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a situation entity by ID",
+                "operationId": "get-situation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Situation ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Situation"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/statusd/{id}": {
             "delete": {
                 "description": "get statusd by ID",
@@ -2055,6 +2502,26 @@
         }
     },
     "definitions": {
+        "controllers.Bill": {
+            "type": "object",
+            "properties": {
+                "added": {
+                    "type": "string"
+                },
+                "payment": {
+                    "type": "integer"
+                },
+                "room": {
+                    "type": "integer"
+                },
+                "situation": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Deposit": {
             "type": "object",
             "properties": {
@@ -2165,6 +2632,43 @@
                     "items": {
                         "$ref": "#/definitions/ent.Roomdetail"
                     }
+                }
+            }
+        },
+        "ent.Bill": {
+            "type": "object",
+            "properties": {
+                "addedtime": {
+                    "description": "Addedtime holds the value of the \"addedtime\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the BillQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.BillEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "Total holds the value of the \"total\" field.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.BillEdges": {
+            "type": "object",
+            "properties": {
+                "payment": {
+                    "description": "Payment holds the value of the Payment edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Payment"
+                },
+                "situation": {
+                    "description": "Situation holds the value of the Situation edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Situation"
                 }
             }
         },
@@ -2426,6 +2930,36 @@
                 }
             }
         },
+        "ent.Payment": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PaymentQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.PaymentEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "paymentname": {
+                    "description": "Paymentname holds the value of the \"paymentname\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.PaymentEdges": {
+            "type": "object",
+            "properties": {
+                "payments": {
+                    "description": "Payments holds the value of the payments edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Bill"
+                    }
+                }
+            }
+        },
         "ent.Petrule": {
             "type": "object",
             "properties": {
@@ -2615,6 +3149,36 @@
                     "description": "Staytype holds the value of the staytype edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Staytype"
+                }
+            }
+        },
+        "ent.Situation": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the SituationQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.SituationEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "situationname": {
+                    "description": "Situationname holds the value of the \"situationname\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.SituationEdges": {
+            "type": "object",
+            "properties": {
+                "situations": {
+                    "description": "Situations holds the value of the situations edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Bill"
+                    }
                 }
             }
         },
