@@ -22,9 +22,9 @@ func (CleaningRoom) Fields() []ent.Field {
 // Edges of the CleaningRoom.
 func (CleaningRoom) Edges() []ent.Edge {
 	return []ent.Edge{
-		/*edge.From("Room", Room.Type).
-		  Ref("cleaningrooms").
-		  Unique(),*/
+		edge.From("roomdetail", Roomdetail.Type).
+			Ref("cleaningrooms").
+			Unique(),
 
 		edge.From("CleanerName", CleanerName.Type).
 			Ref("cleaningrooms").
@@ -33,5 +33,10 @@ func (CleaningRoom) Edges() []ent.Edge {
 		edge.From("LengthTime", LengthTime.Type).
 			Ref("cleaningrooms").
 			Unique(),
+
+		edge.From("Employee", Employee.Type).
+			Ref("cleaningrooms").
+			Unique(),
+	
 	}
 }
