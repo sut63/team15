@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/bedtype"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/petrule"
@@ -177,6 +178,21 @@ func (ru *RoomdetailUpdate) SetRoomdetails(l *Lease) *RoomdetailUpdate {
 	return ru.SetRoomdetailsID(l.ID)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ru *RoomdetailUpdate) AddCleaningroomIDs(ids ...int) *RoomdetailUpdate {
+	ru.mutation.AddCleaningroomIDs(ids...)
+	return ru
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ru *RoomdetailUpdate) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (ru *RoomdetailUpdate) Mutation() *RoomdetailMutation {
 	return ru.mutation
@@ -216,6 +232,21 @@ func (ru *RoomdetailUpdate) ClearStaytype() *RoomdetailUpdate {
 func (ru *RoomdetailUpdate) ClearRoomdetails() *RoomdetailUpdate {
 	ru.mutation.ClearRoomdetails()
 	return ru
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (ru *RoomdetailUpdate) RemoveCleaningroomIDs(ids ...int) *RoomdetailUpdate {
+	ru.mutation.RemoveCleaningroomIDs(ids...)
+	return ru
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (ru *RoomdetailUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -533,6 +564,44 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := ru.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{roomdetail.Label}
@@ -695,6 +764,21 @@ func (ruo *RoomdetailUpdateOne) SetRoomdetails(l *Lease) *RoomdetailUpdateOne {
 	return ruo.SetRoomdetailsID(l.ID)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ruo *RoomdetailUpdateOne) AddCleaningroomIDs(ids ...int) *RoomdetailUpdateOne {
+	ruo.mutation.AddCleaningroomIDs(ids...)
+	return ruo
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ruo *RoomdetailUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (ruo *RoomdetailUpdateOne) Mutation() *RoomdetailMutation {
 	return ruo.mutation
@@ -734,6 +818,21 @@ func (ruo *RoomdetailUpdateOne) ClearStaytype() *RoomdetailUpdateOne {
 func (ruo *RoomdetailUpdateOne) ClearRoomdetails() *RoomdetailUpdateOne {
 	ruo.mutation.ClearRoomdetails()
 	return ruo
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (ruo *RoomdetailUpdateOne) RemoveCleaningroomIDs(ids ...int) *RoomdetailUpdateOne {
+	ruo.mutation.RemoveCleaningroomIDs(ids...)
+	return ruo
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (ruo *RoomdetailUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -1041,6 +1140,44 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := ruo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}

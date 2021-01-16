@@ -10,6 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/roomdetail"
@@ -82,6 +83,21 @@ func (lc *LeaseCreate) SetNillableEmployeeID(id *int) *LeaseCreate {
 // SetEmployee sets the employee edge to Employee.
 func (lc *LeaseCreate) SetEmployee(e *Employee) *LeaseCreate {
 	return lc.SetEmployeeID(e.ID)
+}
+
+// AddLeaseIDs adds the leases edge to Deposit by ids.
+func (lc *LeaseCreate) AddLeaseIDs(ids ...int) *LeaseCreate {
+	lc.mutation.AddLeaseIDs(ids...)
+	return lc
+}
+
+// AddLeases adds the leases edges to Deposit.
+func (lc *LeaseCreate) AddLeases(d ...*Deposit) *LeaseCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return lc.AddLeaseIDs(ids...)
 }
 
 // Mutation returns the LeaseMutation object of the builder.
@@ -225,6 +241,25 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := lc.mutation.LeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.LeasesTable,
+			Columns: []string{lease.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: deposit.FieldID,
 				},
 			},
 		}

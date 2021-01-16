@@ -12,13 +12,24 @@ const (
 	// FieldNote holds the string denoting the note field in the database.
 	FieldNote = "note"
 
+	// EdgeRoomdetail holds the string denoting the roomdetail edge name in mutations.
+	EdgeRoomdetail = "roomdetail"
 	// EdgeCleanerName holds the string denoting the cleanername edge name in mutations.
 	EdgeCleanerName = "CleanerName"
 	// EdgeLengthTime holds the string denoting the lengthtime edge name in mutations.
 	EdgeLengthTime = "LengthTime"
+	// EdgeEmployee holds the string denoting the employee edge name in mutations.
+	EdgeEmployee = "Employee"
 
 	// Table holds the table name of the cleaningroom in the database.
 	Table = "cleaning_rooms"
+	// RoomdetailTable is the table the holds the roomdetail relation/edge.
+	RoomdetailTable = "cleaning_rooms"
+	// RoomdetailInverseTable is the table name for the Roomdetail entity.
+	// It exists in this package in order to avoid circular dependency with the "roomdetail" package.
+	RoomdetailInverseTable = "roomdetails"
+	// RoomdetailColumn is the table column denoting the roomdetail relation/edge.
+	RoomdetailColumn = "roomdetail_id"
 	// CleanerNameTable is the table the holds the CleanerName relation/edge.
 	CleanerNameTable = "cleaning_rooms"
 	// CleanerNameInverseTable is the table name for the CleanerName entity.
@@ -33,6 +44,13 @@ const (
 	LengthTimeInverseTable = "length_times"
 	// LengthTimeColumn is the table column denoting the LengthTime relation/edge.
 	LengthTimeColumn = "lengthtime_id"
+	// EmployeeTable is the table the holds the Employee relation/edge.
+	EmployeeTable = "cleaning_rooms"
+	// EmployeeInverseTable is the table name for the Employee entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	EmployeeInverseTable = "employees"
+	// EmployeeColumn is the table column denoting the Employee relation/edge.
+	EmployeeColumn = "employee_id"
 )
 
 // Columns holds all SQL columns for cleaningroom fields.
@@ -45,5 +63,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the CleaningRoom type.
 var ForeignKeys = []string{
 	"cleanerroom_id",
+	"employee_id",
 	"lengthtime_id",
+	"roomdetail_id",
 }

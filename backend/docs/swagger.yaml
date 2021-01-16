@@ -21,6 +21,8 @@ definitions:
         type: integer
       info:
         type: string
+      lease:
+        type: integer
       statusd:
         type: integer
     type: object
@@ -168,9 +170,17 @@ definitions:
         $ref: '#/definitions/ent.CleanerName'
         description: CleanerName holds the value of the CleanerName edge.
         type: object
+      employee:
+        $ref: '#/definitions/ent.Employee'
+        description: Employee holds the value of the Employee edge.
+        type: object
       lengthTime:
         $ref: '#/definitions/ent.LengthTime'
         description: LengthTime holds the value of the LengthTime edge.
+        type: object
+      roomdetail:
+        $ref: '#/definitions/ent.Roomdetail'
+        description: Roomdetail holds the value of the roomdetail edge.
         type: object
     type: object
   ent.Deposit:
@@ -196,6 +206,10 @@ definitions:
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the Employee edge.
+        type: object
+      lease:
+        $ref: '#/definitions/ent.Lease'
+        description: Lease holds the value of the Lease edge.
         type: object
       statusd:
         $ref: '#/definitions/ent.Statusd'
@@ -225,6 +239,11 @@ definitions:
     type: object
   ent.EmployeeEdges:
     properties:
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
       employees:
         description: Employees holds the value of the employees edge.
         items:
@@ -297,6 +316,11 @@ definitions:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.
         type: object
+      leases:
+        description: Leases holds the value of the leases edge.
+        items:
+          $ref: '#/definitions/ent.Deposit'
+        type: array
       roomdetail:
         $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the Roomdetail edge.
@@ -480,6 +504,11 @@ definitions:
         $ref: '#/definitions/ent.Bedtype'
         description: Bedtype holds the value of the bedtype edge.
         type: object
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.

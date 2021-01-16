@@ -30,6 +30,8 @@ const (
 	EdgeStaytype = "staytype"
 	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
 	EdgeRoomdetails = "roomdetails"
+	// EdgeCleaningrooms holds the string denoting the cleaningrooms edge name in mutations.
+	EdgeCleaningrooms = "cleaningrooms"
 
 	// Table holds the table name of the roomdetail in the database.
 	Table = "roomdetails"
@@ -75,6 +77,13 @@ const (
 	RoomdetailsInverseTable = "leases"
 	// RoomdetailsColumn is the table column denoting the roomdetails relation/edge.
 	RoomdetailsColumn = "room_num"
+	// CleaningroomsTable is the table the holds the cleaningrooms relation/edge.
+	CleaningroomsTable = "cleaning_rooms"
+	// CleaningroomsInverseTable is the table name for the CleaningRoom entity.
+	// It exists in this package in order to avoid circular dependency with the "cleaningroom" package.
+	CleaningroomsInverseTable = "cleaning_rooms"
+	// CleaningroomsColumn is the table column denoting the cleaningrooms relation/edge.
+	CleaningroomsColumn = "roomdetail_id"
 )
 
 // Columns holds all SQL columns for roomdetail fields.

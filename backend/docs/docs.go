@@ -2549,6 +2549,9 @@ var doc = `{
                 "info": {
                     "type": "string"
                 },
+                "lease": {
+                    "type": "integer"
+                },
                 "statusd": {
                     "type": "integer"
                 }
@@ -2750,10 +2753,20 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.CleanerName"
                 },
+                "employee": {
+                    "description": "Employee holds the value of the Employee edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Employee"
+                },
                 "lengthTime": {
                     "description": "LengthTime holds the value of the LengthTime edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.LengthTime"
+                },
+                "roomdetail": {
+                    "description": "Roomdetail holds the value of the roomdetail edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Roomdetail"
                 }
             }
         },
@@ -2786,6 +2799,11 @@ var doc = `{
                     "description": "Employee holds the value of the Employee edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Employee"
+                },
+                "lease": {
+                    "description": "Lease holds the value of the Lease edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Lease"
                 },
                 "statusd": {
                     "description": "Statusd holds the value of the Statusd edge.",
@@ -2823,6 +2841,13 @@ var doc = `{
         "ent.EmployeeEdges": {
             "type": "object",
             "properties": {
+                "cleaningrooms": {
+                    "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.CleaningRoom"
+                    }
+                },
                 "employees": {
                     "description": "Employees holds the value of the employees edge.",
                     "type": "array",
@@ -2917,6 +2942,13 @@ var doc = `{
                     "description": "Employee holds the value of the employee edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Employee"
+                },
+                "leases": {
+                    "description": "Leases holds the value of the leases edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Deposit"
+                    }
                 },
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the Roomdetail edge.",
@@ -3154,6 +3186,13 @@ var doc = `{
                     "description": "Bedtype holds the value of the bedtype edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Bedtype"
+                },
+                "cleaningrooms": {
+                    "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.CleaningRoom"
+                    }
                 },
                 "employee": {
                     "description": "Employee holds the value of the employee edge.",

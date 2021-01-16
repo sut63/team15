@@ -31,6 +31,7 @@ import { DefaultApi } from '../../api/apis';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import { EntStatusd } from '../../api/models/EntStatusd'; // import interface Statusd
 import { EntDeposit } from '../../api/models/EntDeposit'; // import interface Deposit
+import { EntLease } from '../../api/models/EntLease'; // import interface Lease
 import ComponanceDepositTable from '../DepositTable';
 
 // css style 
@@ -77,6 +78,7 @@ export default function recordDeposit() {
 
  const [employees, setEmployees] = React.useState<EntEmployee[]>([]);
  const [statusds, setStatusds] = React.useState<EntStatusd[]>([]);
+ const [leases, setLeases] = React.useState<EntLease[]>([]);
 
  const [status, setStatus] = useState(false);
  const [status2, setStatus2] = useState(false);
@@ -88,10 +90,19 @@ export default function recordDeposit() {
  const [info, setInfo] = useState(String);
  const [added, setAdded] = useState(String);
  const [statusd, setStatusd] = useState(Number);
+ const [lease, setLease] = useState(Number);
 
  useEffect(() => {
+  const getLeases = async () => {
+    const res = await http.listLease({ offset: 0 });
+    setLoading(false);
+    setLeases(res);
+    console.log(res);
+  };
+  getLeases();
+
   const getEmployees = async () => {
-    const res = await http.listEmployee({ offset: 0 });
+    const res = await http.listEmployee();
     setLoading(false);
     setEmployees(res);
     console.log(res);
@@ -134,18 +145,23 @@ const getDeposit = async () => {
   const EmployeehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setEmployee(event.target.value as number);
   };
+
   const StatusdhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setStatusd(event.target.value as number);
   };
 
-  const listDeposit = () => {
+  const LeasehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setLease(event.target.value as number);
+  };
+
+  /*const listDeposit = () => {
     window.location.href ="http://localhost:3000/DepositTable";
   };
 
 const checkEmployeeLoginData = async () => {
             const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
             setLoading(false);
-            if(jobdata != "��ѡ�ҹ�;ѡ"){
+            if(jobdata != "พนักงานหอพัก"){
               localStorage.setItem("employeedata", JSON.stringify(null));
               localStorage.setItem("jobpositiondata", JSON.stringify(null));
               history.pushState("", "", "./");
@@ -157,7 +173,7 @@ const checkEmployeeLoginData = async () => {
           }
 const listRoom = () => {
     window.location.href ="http://localhost:3000/RoomDetails";
-  };
+  };*/
 
 // create deposit
 const CreateDeposit = async () => {
@@ -165,6 +181,7 @@ const CreateDeposit = async () => {
     added: added + ":00+07:00",
     info: info,
     statusd: statusd,
+    lease: lease,
     employee: employee,
   };
   const timer2 = setTimeout(() => {
@@ -213,6 +230,20 @@ const CreateDeposit = async () => {
                 />
                </FormControl>
               </div>
+
+              <div className={classes.paper}><strong>Name</strong></div>
+			  <Select
+                  name="Lease"
+				  id="lease"
+                  value={lease} 
+                  onChange={LeasehandleChange}
+                >
+                {leases.map(item => {
+                    return (
+                      <MenuItem key={item.id} value={item.id}>{item.tenant}</MenuItem>
+                    );
+                  })}
+              </Select>
 
               <div className={classes.paper}><strong>Status Deposit</strong></div>
 			  <Select
@@ -265,7 +296,7 @@ const CreateDeposit = async () => {
 			  {status ? ( 
                       <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
               {alert ? ( 
-			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {listRoom()}}>Successfull Save</Alert>
+			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }}>Successfull Save</Alert>
                       ) 
               : null} </div>
             ) : null}

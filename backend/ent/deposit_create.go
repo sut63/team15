@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/statusd"
 )
 
@@ -70,6 +71,25 @@ func (dc *DepositCreate) SetNillableStatusdID(id *int) *DepositCreate {
 // SetStatusd sets the Statusd edge to Statusd.
 func (dc *DepositCreate) SetStatusd(s *Statusd) *DepositCreate {
 	return dc.SetStatusdID(s.ID)
+}
+
+// SetLeaseID sets the Lease edge to Lease by id.
+func (dc *DepositCreate) SetLeaseID(id int) *DepositCreate {
+	dc.mutation.SetLeaseID(id)
+	return dc
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (dc *DepositCreate) SetNillableLeaseID(id *int) *DepositCreate {
+	if id != nil {
+		dc = dc.SetLeaseID(*id)
+	}
+	return dc
+}
+
+// SetLease sets the Lease edge to Lease.
+func (dc *DepositCreate) SetLease(l *Lease) *DepositCreate {
+	return dc.SetLeaseID(l.ID)
 }
 
 // Mutation returns the DepositMutation object of the builder.
@@ -191,6 +211,25 @@ func (dc *DepositCreate) createSpec() (*Deposit, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: statusd.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

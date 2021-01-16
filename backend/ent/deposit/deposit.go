@@ -16,6 +16,8 @@ const (
 	EdgeEmployee = "Employee"
 	// EdgeStatusd holds the string denoting the statusd edge name in mutations.
 	EdgeStatusd = "Statusd"
+	// EdgeLease holds the string denoting the lease edge name in mutations.
+	EdgeLease = "Lease"
 
 	// Table holds the table name of the deposit in the database.
 	Table = "deposits"
@@ -33,6 +35,13 @@ const (
 	StatusdInverseTable = "statusds"
 	// StatusdColumn is the table column denoting the Statusd relation/edge.
 	StatusdColumn = "statusd_id"
+	// LeaseTable is the table the holds the Lease relation/edge.
+	LeaseTable = "deposits"
+	// LeaseInverseTable is the table name for the Lease entity.
+	// It exists in this package in order to avoid circular dependency with the "lease" package.
+	LeaseInverseTable = "leases"
+	// LeaseColumn is the table column denoting the Lease relation/edge.
+	LeaseColumn = "lease_id"
 )
 
 // Columns holds all SQL columns for deposit fields.
@@ -45,5 +54,6 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the Deposit type.
 var ForeignKeys = []string{
 	"employee_id",
+	"lease_id",
 	"statusd_id",
 }

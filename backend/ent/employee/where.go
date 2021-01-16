@@ -585,6 +585,34 @@ func HasRepairinvoicesWith(preds ...predicate.Repairinvoice) predicate.Employee 
 	})
 }
 
+// HasCleaningrooms applies the HasEdge predicate on the "cleaningrooms" edge.
+func HasCleaningrooms() predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CleaningroomsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CleaningroomsTable, CleaningroomsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
+func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.Employee {
+	return predicate.Employee(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CleaningroomsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CleaningroomsTable, CleaningroomsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Employee) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {

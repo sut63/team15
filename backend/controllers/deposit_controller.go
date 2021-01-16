@@ -9,6 +9,7 @@ import (
 	"github.com/team15/app/ent"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/statusd"
+	"github.com/team15/app/ent/lease"
 )
 
 // DepositController defines the struct for the deposit controller
@@ -22,6 +23,7 @@ type Deposit struct {
 	Info     string
 	Employee int
 	Statusd  int
+	Lease  int
 }
 
 // CreateDeposit handles POST requests for adding deposit entities
@@ -68,6 +70,18 @@ func (ctl *DepositController) CreateDeposit(c *gin.Context) {
 		return
 	}
 
+	le, err := ctl.client.Lease.
+		Query().
+		Where(lease.IDEQ(int(obj.Lease))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "lease not found",
+		})
+		return
+	}
+
 	time, err := time.Parse(time.RFC3339, obj.Added)
 	ret, err := ctl.client.Deposit.
 		Create().
@@ -75,6 +89,7 @@ func (ctl *DepositController) CreateDeposit(c *gin.Context) {
 		SetInfo(obj.Info).
 		SetEmployee(em).
 		SetStatusd(st).
+		SetLease(le).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -120,6 +135,7 @@ func (ctl *DepositController) ListDeposit(c *gin.Context) {
 		Query().
 		WithEmployee().
 		WithStatusd().
+		WithLease().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

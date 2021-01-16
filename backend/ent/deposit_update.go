@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/statusd"
 )
@@ -80,6 +81,25 @@ func (du *DepositUpdate) SetStatusd(s *Statusd) *DepositUpdate {
 	return du.SetStatusdID(s.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (du *DepositUpdate) SetLeaseID(id int) *DepositUpdate {
+	du.mutation.SetLeaseID(id)
+	return du
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (du *DepositUpdate) SetNillableLeaseID(id *int) *DepositUpdate {
+	if id != nil {
+		du = du.SetLeaseID(*id)
+	}
+	return du
+}
+
+// SetLease sets the Lease edge to Lease.
+func (du *DepositUpdate) SetLease(l *Lease) *DepositUpdate {
+	return du.SetLeaseID(l.ID)
+}
+
 // Mutation returns the DepositMutation object of the builder.
 func (du *DepositUpdate) Mutation() *DepositMutation {
 	return du.mutation
@@ -94,6 +114,12 @@ func (du *DepositUpdate) ClearEmployee() *DepositUpdate {
 // ClearStatusd clears the Statusd edge to Statusd.
 func (du *DepositUpdate) ClearStatusd() *DepositUpdate {
 	du.mutation.ClearStatusd()
+	return du
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (du *DepositUpdate) ClearLease() *DepositUpdate {
+	du.mutation.ClearLease()
 	return du
 }
 
@@ -251,6 +277,41 @@ func (du *DepositUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if du.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{deposit.Label}
@@ -319,6 +380,25 @@ func (duo *DepositUpdateOne) SetStatusd(s *Statusd) *DepositUpdateOne {
 	return duo.SetStatusdID(s.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (duo *DepositUpdateOne) SetLeaseID(id int) *DepositUpdateOne {
+	duo.mutation.SetLeaseID(id)
+	return duo
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (duo *DepositUpdateOne) SetNillableLeaseID(id *int) *DepositUpdateOne {
+	if id != nil {
+		duo = duo.SetLeaseID(*id)
+	}
+	return duo
+}
+
+// SetLease sets the Lease edge to Lease.
+func (duo *DepositUpdateOne) SetLease(l *Lease) *DepositUpdateOne {
+	return duo.SetLeaseID(l.ID)
+}
+
 // Mutation returns the DepositMutation object of the builder.
 func (duo *DepositUpdateOne) Mutation() *DepositMutation {
 	return duo.mutation
@@ -333,6 +413,12 @@ func (duo *DepositUpdateOne) ClearEmployee() *DepositUpdateOne {
 // ClearStatusd clears the Statusd edge to Statusd.
 func (duo *DepositUpdateOne) ClearStatusd() *DepositUpdateOne {
 	duo.mutation.ClearStatusd()
+	return duo
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (duo *DepositUpdateOne) ClearLease() *DepositUpdateOne {
+	duo.mutation.ClearLease()
 	return duo
 }
 
@@ -480,6 +566,41 @@ func (duo *DepositUpdateOne) sqlSave(ctx context.Context) (d *Deposit, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: statusd.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

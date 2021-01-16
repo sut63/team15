@@ -68,7 +68,9 @@ var (
 		{Name: "dateandstarttime", Type: field.TypeTime},
 		{Name: "note", Type: field.TypeString},
 		{Name: "cleanerroom_id", Type: field.TypeInt, Nullable: true},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "lengthtime_id", Type: field.TypeInt, Nullable: true},
+		{Name: "roomdetail_id", Type: field.TypeInt, Nullable: true},
 	}
 	// CleaningRoomsTable holds the schema information for the "cleaning_rooms" table.
 	CleaningRoomsTable = &schema.Table{
@@ -84,10 +86,24 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "cleaning_rooms_length_times_cleaningrooms",
+				Symbol:  "cleaning_rooms_employees_cleaningrooms",
 				Columns: []*schema.Column{CleaningRoomsColumns[4]},
 
+				RefColumns: []*schema.Column{EmployeesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "cleaning_rooms_length_times_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[5]},
+
 				RefColumns: []*schema.Column{LengthTimesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "cleaning_rooms_roomdetails_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[6]},
+
+				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -98,6 +114,7 @@ var (
 		{Name: "addedtime", Type: field.TypeTime},
 		{Name: "info", Type: field.TypeString},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "lease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "statusd_id", Type: field.TypeInt, Nullable: true},
 	}
 	// DepositsTable holds the schema information for the "deposits" table.
@@ -114,8 +131,15 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "deposits_statusds_statusds",
+				Symbol:  "deposits_leases_leases",
 				Columns: []*schema.Column{DepositsColumns[4]},
+
+				RefColumns: []*schema.Column{LeasesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "deposits_statusds_statusds",
+				Columns: []*schema.Column{DepositsColumns[5]},
 
 				RefColumns: []*schema.Column{StatusdsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -417,9 +441,12 @@ func init() {
 	BillsTable.ForeignKeys[0].RefTable = PaymentsTable
 	BillsTable.ForeignKeys[1].RefTable = SituationsTable
 	CleaningRoomsTable.ForeignKeys[0].RefTable = CleanerNamesTable
-	CleaningRoomsTable.ForeignKeys[1].RefTable = LengthTimesTable
+	CleaningRoomsTable.ForeignKeys[1].RefTable = EmployeesTable
+	CleaningRoomsTable.ForeignKeys[2].RefTable = LengthTimesTable
+	CleaningRoomsTable.ForeignKeys[3].RefTable = RoomdetailsTable
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
-	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
+	DepositsTable.ForeignKeys[1].RefTable = LeasesTable
+	DepositsTable.ForeignKeys[2].RefTable = StatusdsTable
 	EmployeesTable.ForeignKeys[0].RefTable = JobpositionsTable
 	LeasesTable.ForeignKeys[0].RefTable = EmployeesTable
 	LeasesTable.ForeignKeys[1].RefTable = RoomdetailsTable

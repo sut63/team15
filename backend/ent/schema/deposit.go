@@ -29,5 +29,9 @@ func (Deposit) Edges() []ent.Edge {
 		edge.From("Statusd", Statusd.Type).
             Ref("statusds").
 			Unique(),
+
+	    edge.From("Lease", Lease.Type).
+            Ref("leases").
+            Unique(),
 	}
 }

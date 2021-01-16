@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
@@ -129,6 +130,21 @@ func (eu *EmployeeUpdate) AddRepairinvoices(r ...*Repairinvoice) *EmployeeUpdate
 	return eu.AddRepairinvoiceIDs(ids...)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (eu *EmployeeUpdate) AddCleaningroomIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.AddCleaningroomIDs(ids...)
+	return eu
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (eu *EmployeeUpdate) AddCleaningrooms(c ...*CleaningRoom) *EmployeeUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return eu.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (eu *EmployeeUpdate) Mutation() *EmployeeMutation {
 	return eu.mutation
@@ -198,6 +214,21 @@ func (eu *EmployeeUpdate) RemoveRepairinvoices(r ...*Repairinvoice) *EmployeeUpd
 		ids[i] = r[i].ID
 	}
 	return eu.RemoveRepairinvoiceIDs(ids...)
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (eu *EmployeeUpdate) RemoveCleaningroomIDs(ids ...int) *EmployeeUpdate {
+	eu.mutation.RemoveCleaningroomIDs(ids...)
+	return eu
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (eu *EmployeeUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *EmployeeUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return eu.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -493,6 +524,44 @@ func (eu *EmployeeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := eu.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.CleaningroomsTable,
+			Columns: []string{employee.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.CleaningroomsTable,
+			Columns: []string{employee.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, eu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{employee.Label}
@@ -608,6 +677,21 @@ func (euo *EmployeeUpdateOne) AddRepairinvoices(r ...*Repairinvoice) *EmployeeUp
 	return euo.AddRepairinvoiceIDs(ids...)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (euo *EmployeeUpdateOne) AddCleaningroomIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.AddCleaningroomIDs(ids...)
+	return euo
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (euo *EmployeeUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *EmployeeUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return euo.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the EmployeeMutation object of the builder.
 func (euo *EmployeeUpdateOne) Mutation() *EmployeeMutation {
 	return euo.mutation
@@ -677,6 +761,21 @@ func (euo *EmployeeUpdateOne) RemoveRepairinvoices(r ...*Repairinvoice) *Employe
 		ids[i] = r[i].ID
 	}
 	return euo.RemoveRepairinvoiceIDs(ids...)
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (euo *EmployeeUpdateOne) RemoveCleaningroomIDs(ids ...int) *EmployeeUpdateOne {
+	euo.mutation.RemoveCleaningroomIDs(ids...)
+	return euo
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (euo *EmployeeUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *EmployeeUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return euo.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -962,6 +1061,44 @@ func (euo *EmployeeUpdateOne) sqlSave(ctx context.Context) (e *Employee, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := euo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.CleaningroomsTable,
+			Columns: []string{employee.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.CleaningroomsTable,
+			Columns: []string{employee.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}

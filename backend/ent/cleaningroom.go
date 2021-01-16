@@ -10,7 +10,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // CleaningRoom is the model entity for the CleaningRoom schema.
@@ -26,24 +28,44 @@ type CleaningRoom struct {
 	// The values are being populated by the CleaningRoomQuery when eager-loading is set.
 	Edges          CleaningRoomEdges `json:"edges"`
 	cleanerroom_id *int
+	employee_id    *int
 	lengthtime_id  *int
+	roomdetail_id  *int
 }
 
 // CleaningRoomEdges holds the relations/edges for other nodes in the graph.
 type CleaningRoomEdges struct {
+	// Roomdetail holds the value of the roomdetail edge.
+	Roomdetail *Roomdetail
 	// CleanerName holds the value of the CleanerName edge.
 	CleanerName *CleanerName
 	// LengthTime holds the value of the LengthTime edge.
 	LengthTime *LengthTime
+	// Employee holds the value of the Employee edge.
+	Employee *Employee
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [4]bool
+}
+
+// RoomdetailOrErr returns the Roomdetail value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CleaningRoomEdges) RoomdetailOrErr() (*Roomdetail, error) {
+	if e.loadedTypes[0] {
+		if e.Roomdetail == nil {
+			// The edge roomdetail was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: roomdetail.Label}
+		}
+		return e.Roomdetail, nil
+	}
+	return nil, &NotLoadedError{edge: "roomdetail"}
 }
 
 // CleanerNameOrErr returns the CleanerName value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e CleaningRoomEdges) CleanerNameOrErr() (*CleanerName, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		if e.CleanerName == nil {
 			// The edge CleanerName was loaded in eager-loading,
 			// but was not found.
@@ -57,7 +79,7 @@ func (e CleaningRoomEdges) CleanerNameOrErr() (*CleanerName, error) {
 // LengthTimeOrErr returns the LengthTime value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e CleaningRoomEdges) LengthTimeOrErr() (*LengthTime, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		if e.LengthTime == nil {
 			// The edge LengthTime was loaded in eager-loading,
 			// but was not found.
@@ -66,6 +88,20 @@ func (e CleaningRoomEdges) LengthTimeOrErr() (*LengthTime, error) {
 		return e.LengthTime, nil
 	}
 	return nil, &NotLoadedError{edge: "LengthTime"}
+}
+
+// EmployeeOrErr returns the Employee value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CleaningRoomEdges) EmployeeOrErr() (*Employee, error) {
+	if e.loadedTypes[3] {
+		if e.Employee == nil {
+			// The edge Employee was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: employee.Label}
+		}
+		return e.Employee, nil
+	}
+	return nil, &NotLoadedError{edge: "Employee"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -81,7 +117,9 @@ func (*CleaningRoom) scanValues() []interface{} {
 func (*CleaningRoom) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // cleanerroom_id
+		&sql.NullInt64{}, // employee_id
 		&sql.NullInt64{}, // lengthtime_id
+		&sql.NullInt64{}, // roomdetail_id
 	}
 }
 
@@ -116,13 +154,30 @@ func (cr *CleaningRoom) assignValues(values ...interface{}) error {
 			*cr.cleanerroom_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
+		} else if value.Valid {
+			cr.employee_id = new(int)
+			*cr.employee_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field lengthtime_id", value)
 		} else if value.Valid {
 			cr.lengthtime_id = new(int)
 			*cr.lengthtime_id = int(value.Int64)
 		}
+		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field roomdetail_id", value)
+		} else if value.Valid {
+			cr.roomdetail_id = new(int)
+			*cr.roomdetail_id = int(value.Int64)
+		}
 	}
 	return nil
+}
+
+// QueryRoomdetail queries the roomdetail edge of the CleaningRoom.
+func (cr *CleaningRoom) QueryRoomdetail() *RoomdetailQuery {
+	return (&CleaningRoomClient{config: cr.config}).QueryRoomdetail(cr)
 }
 
 // QueryCleanerName queries the CleanerName edge of the CleaningRoom.
@@ -133,6 +188,11 @@ func (cr *CleaningRoom) QueryCleanerName() *CleanerNameQuery {
 // QueryLengthTime queries the LengthTime edge of the CleaningRoom.
 func (cr *CleaningRoom) QueryLengthTime() *LengthTimeQuery {
 	return (&CleaningRoomClient{config: cr.config}).QueryLengthTime(cr)
+}
+
+// QueryEmployee queries the Employee edge of the CleaningRoom.
+func (cr *CleaningRoom) QueryEmployee() *EmployeeQuery {
+	return (&CleaningRoomClient{config: cr.config}).QueryEmployee(cr)
 }
 
 // Update returns a builder for updating this CleaningRoom.
