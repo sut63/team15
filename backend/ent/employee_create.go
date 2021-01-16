@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
@@ -119,6 +120,21 @@ func (ec *EmployeeCreate) AddRepairinvoices(r ...*Repairinvoice) *EmployeeCreate
 		ids[i] = r[i].ID
 	}
 	return ec.AddRepairinvoiceIDs(ids...)
+}
+
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ec *EmployeeCreate) AddCleaningroomIDs(ids ...int) *EmployeeCreate {
+	ec.mutation.AddCleaningroomIDs(ids...)
+	return ec
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ec *EmployeeCreate) AddCleaningrooms(c ...*CleaningRoom) *EmployeeCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ec.AddCleaningroomIDs(ids...)
 }
 
 // Mutation returns the EmployeeMutation object of the builder.
@@ -323,6 +339,25 @@ func (ec *EmployeeCreate) createSpec() (*Employee, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   employee.CleaningroomsTable,
+			Columns: []string{employee.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}

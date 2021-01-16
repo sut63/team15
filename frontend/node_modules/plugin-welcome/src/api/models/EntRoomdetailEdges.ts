@@ -18,6 +18,10 @@ import {
     EntBedtypeFromJSON,
     EntBedtypeFromJSONTyped,
     EntBedtypeToJSON,
+    EntCleaningRoom,
+    EntCleaningRoomFromJSON,
+    EntCleaningRoomFromJSONTyped,
+    EntCleaningRoomToJSON,
     EntEmployee,
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
@@ -52,6 +56,12 @@ export interface EntRoomdetailEdges {
      * @memberof EntRoomdetailEdges
      */
     bedtype?: EntBedtype;
+    /**
+     * Cleaningrooms holds the value of the cleaningrooms edge.
+     * @type {Array<EntCleaningRoom>}
+     * @memberof EntRoomdetailEdges
+     */
+    cleaningrooms?: Array<EntCleaningRoom>;
     /**
      * 
      * @type {EntEmployee}
@@ -94,12 +104,13 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'bedtype': !exists(json, 'bedtype') ? undefined : EntBedtypeFromJSON(json['bedtype']),
-        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
-        'petrule': !exists(json, 'petrule') ? undefined : EntPetruleFromJSON(json['petrule']),
-        'pledge': !exists(json, 'pledge') ? undefined : EntPledgeFromJSON(json['pledge']),
-        'roomdetails': !exists(json, 'roomdetails') ? undefined : EntLeaseFromJSON(json['roomdetails']),
-        'staytype': !exists(json, 'staytype') ? undefined : EntStaytypeFromJSON(json['staytype']),
+        'bedtype': !exists(json, 'Bedtype') ? undefined : EntBedtypeFromJSON(json['Bedtype']),
+        'cleaningrooms': !exists(json, 'Cleaningrooms') ? undefined : ((json['Cleaningrooms'] as Array<any>).map(EntCleaningRoomFromJSON)),
+        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
+        'petrule': !exists(json, 'Petrule') ? undefined : EntPetruleFromJSON(json['Petrule']),
+        'pledge': !exists(json, 'Pledge') ? undefined : EntPledgeFromJSON(json['Pledge']),
+        'roomdetails': !exists(json, 'Roomdetails') ? undefined : EntLeaseFromJSON(json['Roomdetails']),
+        'staytype': !exists(json, 'Staytype') ? undefined : EntStaytypeFromJSON(json['Staytype']),
     };
 }
 
@@ -113,6 +124,7 @@ export function EntRoomdetailEdgesToJSON(value?: EntRoomdetailEdges | null): any
     return {
         
         'bedtype': EntBedtypeToJSON(value.bedtype),
+        'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningRoomToJSON)),
         'employee': EntEmployeeToJSON(value.employee),
         'petrule': EntPetruleToJSON(value.petrule),
         'pledge': EntPledgeToJSON(value.pledge),

@@ -13,6 +13,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/statusd"
 )
@@ -28,6 +29,7 @@ type DepositQuery struct {
 	// eager-loading edges.
 	withEmployee *EmployeeQuery
 	withStatusd  *StatusdQuery
+	withLease    *LeaseQuery
 	withFKs      bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -87,6 +89,24 @@ func (dq *DepositQuery) QueryStatusd() *StatusdQuery {
 			sqlgraph.From(deposit.Table, deposit.FieldID, dq.sqlQuery()),
 			sqlgraph.To(statusd.Table, statusd.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, deposit.StatusdTable, deposit.StatusdColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryLease chains the current query on the Lease edge.
+func (dq *DepositQuery) QueryLease() *LeaseQuery {
+	query := &LeaseQuery{config: dq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(deposit.Table, deposit.FieldID, dq.sqlQuery()),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, deposit.LeaseTable, deposit.LeaseColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,6 +315,17 @@ func (dq *DepositQuery) WithStatusd(opts ...func(*StatusdQuery)) *DepositQuery {
 	return dq
 }
 
+//  WithLease tells the query-builder to eager-loads the nodes that are connected to
+// the "Lease" edge. The optional arguments used to configure the query builder of the edge.
+func (dq *DepositQuery) WithLease(opts ...func(*LeaseQuery)) *DepositQuery {
+	query := &LeaseQuery{config: dq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withLease = query
+	return dq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -362,12 +393,13 @@ func (dq *DepositQuery) sqlAll(ctx context.Context) ([]*Deposit, error) {
 		nodes       = []*Deposit{}
 		withFKs     = dq.withFKs
 		_spec       = dq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			dq.withEmployee != nil,
 			dq.withStatusd != nil,
+			dq.withLease != nil,
 		}
 	)
-	if dq.withEmployee != nil || dq.withStatusd != nil {
+	if dq.withEmployee != nil || dq.withStatusd != nil || dq.withLease != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -443,6 +475,31 @@ func (dq *DepositQuery) sqlAll(ctx context.Context) ([]*Deposit, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Statusd = n
+			}
+		}
+	}
+
+	if query := dq.withLease; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Deposit)
+		for i := range nodes {
+			if fk := nodes[i].lease_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(lease.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "lease_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Lease = n
 			}
 		}
 	}

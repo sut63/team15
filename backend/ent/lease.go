@@ -39,9 +39,11 @@ type LeaseEdges struct {
 	Roomdetail *Roomdetail
 	// Employee holds the value of the employee edge.
 	Employee *Employee
+	// Leases holds the value of the leases edge.
+	Leases []*Deposit
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // WifiOrErr returns the Wifi value or an error if the edge
@@ -84,6 +86,15 @@ func (e LeaseEdges) EmployeeOrErr() (*Employee, error) {
 		return e.Employee, nil
 	}
 	return nil, &NotLoadedError{edge: "employee"}
+}
+
+// LeasesOrErr returns the Leases value or an error if the edge
+// was not loaded in eager-loading.
+func (e LeaseEdges) LeasesOrErr() ([]*Deposit, error) {
+	if e.loadedTypes[3] {
+		return e.Leases, nil
+	}
+	return nil, &NotLoadedError{edge: "leases"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -163,6 +174,11 @@ func (l *Lease) QueryRoomdetail() *RoomdetailQuery {
 // QueryEmployee queries the employee edge of the Lease.
 func (l *Lease) QueryEmployee() *EmployeeQuery {
 	return (&LeaseClient{config: l.config}).QueryEmployee(l)
+}
+
+// QueryLeases queries the leases edge of the Lease.
+func (l *Lease) QueryLeases() *DepositQuery {
+	return (&LeaseClient{config: l.config}).QueryLeases(l)
 }
 
 // Update returns a builder for updating this Lease.

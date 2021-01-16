@@ -42,6 +42,12 @@ export interface ControllersDeposit {
      * @type {number}
      * @memberof ControllersDeposit
      */
+    lease?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersDeposit
+     */
     statusd?: number;
 }
 
@@ -58,6 +64,7 @@ export function ControllersDepositFromJSONTyped(json: any, ignoreDiscriminator: 
         'added': !exists(json, 'added') ? undefined : json['added'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
         'info': !exists(json, 'info') ? undefined : json['info'],
+        'lease': !exists(json, 'lease') ? undefined : json['lease'],
         'statusd': !exists(json, 'statusd') ? undefined : json['statusd'],
     };
 }
@@ -74,6 +81,7 @@ export function ControllersDepositToJSON(value?: ControllersDeposit | null): any
         'added': value.added,
         'employee': value.employee,
         'info': value.info,
+        'lease': value.lease,
         'statusd': value.statusd,
     };
 }

@@ -55,9 +55,11 @@ type RoomdetailEdges struct {
 	Staytype *Staytype
 	// Roomdetails holds the value of the roomdetails edge.
 	Roomdetails *Lease
+	// Cleaningrooms holds the value of the cleaningrooms edge.
+	Cleaningrooms []*CleaningRoom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [7]bool
 }
 
 // PledgeOrErr returns the Pledge value or an error if the edge
@@ -142,6 +144,15 @@ func (e RoomdetailEdges) RoomdetailsOrErr() (*Lease, error) {
 		return e.Roomdetails, nil
 	}
 	return nil, &NotLoadedError{edge: "roomdetails"}
+}
+
+// CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoomdetailEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+	if e.loadedTypes[6] {
+		return e.Cleaningrooms, nil
+	}
+	return nil, &NotLoadedError{edge: "cleaningrooms"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -268,6 +279,11 @@ func (r *Roomdetail) QueryStaytype() *StaytypeQuery {
 // QueryRoomdetails queries the roomdetails edge of the Roomdetail.
 func (r *Roomdetail) QueryRoomdetails() *LeaseQuery {
 	return (&RoomdetailClient{config: r.config}).QueryRoomdetails(r)
+}
+
+// QueryCleaningrooms queries the cleaningrooms edge of the Roomdetail.
+func (r *Roomdetail) QueryCleaningrooms() *CleaningRoomQuery {
+	return (&RoomdetailClient{config: r.config}).QueryCleaningrooms(r)
 }
 
 // Update returns a builder for updating this Roomdetail.

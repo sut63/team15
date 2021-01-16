@@ -294,6 +294,34 @@ func NoteContainsFold(v string) predicate.CleaningRoom {
 	})
 }
 
+// HasRoomdetail applies the HasEdge predicate on the "roomdetail" edge.
+func HasRoomdetail() predicate.CleaningRoom {
+	return predicate.CleaningRoom(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RoomdetailTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, RoomdetailTable, RoomdetailColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRoomdetailWith applies the HasEdge predicate on the "roomdetail" edge with a given conditions (other predicates).
+func HasRoomdetailWith(preds ...predicate.Roomdetail) predicate.CleaningRoom {
+	return predicate.CleaningRoom(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(RoomdetailInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, RoomdetailTable, RoomdetailColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasCleanerName applies the HasEdge predicate on the "CleanerName" edge.
 func HasCleanerName() predicate.CleaningRoom {
 	return predicate.CleaningRoom(func(s *sql.Selector) {
@@ -341,6 +369,34 @@ func HasLengthTimeWith(preds ...predicate.LengthTime) predicate.CleaningRoom {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(LengthTimeInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, LengthTimeTable, LengthTimeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasEmployee applies the HasEdge predicate on the "Employee" edge.
+func HasEmployee() predicate.CleaningRoom {
+	return predicate.CleaningRoom(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTable, EmployeeColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasEmployeeWith applies the HasEdge predicate on the "Employee" edge with a given conditions (other predicates).
+func HasEmployeeWith(preds ...predicate.Employee) predicate.CleaningRoom {
+	return predicate.CleaningRoom(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(EmployeeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, EmployeeTable, EmployeeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

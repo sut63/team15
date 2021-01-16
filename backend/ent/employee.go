@@ -40,9 +40,11 @@ type EmployeeEdges struct {
 	Jobposition *Jobposition
 	// Repairinvoices holds the value of the repairinvoices edge.
 	Repairinvoices []*Repairinvoice
+	// Cleaningrooms holds the value of the cleaningrooms edge.
+	Cleaningrooms []*CleaningRoom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // EmployeesOrErr returns the Employees value or an error if the edge
@@ -93,6 +95,15 @@ func (e EmployeeEdges) RepairinvoicesOrErr() ([]*Repairinvoice, error) {
 		return e.Repairinvoices, nil
 	}
 	return nil, &NotLoadedError{edge: "repairinvoices"}
+}
+
+// CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
+// was not loaded in eager-loading.
+func (e EmployeeEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+	if e.loadedTypes[5] {
+		return e.Cleaningrooms, nil
+	}
+	return nil, &NotLoadedError{edge: "cleaningrooms"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -174,6 +185,11 @@ func (e *Employee) QueryJobposition() *JobpositionQuery {
 // QueryRepairinvoices queries the repairinvoices edge of the Employee.
 func (e *Employee) QueryRepairinvoices() *RepairinvoiceQuery {
 	return (&EmployeeClient{config: e.config}).QueryRepairinvoices(e)
+}
+
+// QueryCleaningrooms queries the cleaningrooms edge of the Employee.
+func (e *Employee) QueryCleaningrooms() *CleaningRoomQuery {
+	return (&EmployeeClient{config: e.config}).QueryCleaningrooms(e)
 }
 
 // Update returns a builder for updating this Employee.

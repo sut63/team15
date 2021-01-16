@@ -35,7 +35,6 @@ export default function ComponentsDepositTable() {
   useEffect(() => {
     const getDeposits = async () => {
       const res = await http.listDeposit({ offset: 0 });
-	  const edata = JSON.parse(Number(localStorage.getItem("employeedata")));
       setLoading(true);
       setDeposits(res);
       console.log(res);
@@ -65,7 +64,7 @@ export default function ComponentsDepositTable() {
          {deposits.map((item:any) => (
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
-             <TableCell align="center">{item.id}</TableCell>
+             <TableCell align="center">{item.edges?.lease?.tenant}</TableCell>
              <TableCell align="center">{item.info}</TableCell>
              <TableCell align="center">{item.edges?.employee?.name}</TableCell>
              <TableCell align="center">{item.edges?.statusd?.statusdname}</TableCell>
