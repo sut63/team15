@@ -52,15 +52,35 @@ func (ru *RoomdetailUpdate) SetRoomprice(s string) *RoomdetailUpdate {
 	return ru
 }
 
+// SetPhone sets the phone field.
+func (ru *RoomdetailUpdate) SetPhone(s string) *RoomdetailUpdate {
+	ru.mutation.SetPhone(s)
+	return ru
+}
+
 // SetSleep sets the sleep field.
-func (ru *RoomdetailUpdate) SetSleep(s string) *RoomdetailUpdate {
-	ru.mutation.SetSleep(s)
+func (ru *RoomdetailUpdate) SetSleep(i int) *RoomdetailUpdate {
+	ru.mutation.ResetSleep()
+	ru.mutation.SetSleep(i)
+	return ru
+}
+
+// AddSleep adds i to sleep.
+func (ru *RoomdetailUpdate) AddSleep(i int) *RoomdetailUpdate {
+	ru.mutation.AddSleep(i)
 	return ru
 }
 
 // SetBed sets the bed field.
-func (ru *RoomdetailUpdate) SetBed(s string) *RoomdetailUpdate {
-	ru.mutation.SetBed(s)
+func (ru *RoomdetailUpdate) SetBed(i int) *RoomdetailUpdate {
+	ru.mutation.ResetBed()
+	ru.mutation.SetBed(i)
+	return ru
+}
+
+// AddBed adds i to bed.
+func (ru *RoomdetailUpdate) AddBed(i int) *RoomdetailUpdate {
+	ru.mutation.AddBed(i)
 	return ru
 }
 
@@ -251,6 +271,36 @@ func (ru *RoomdetailUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailU
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomdetailUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Phone(); ok {
+		if err := roomdetail.PhoneValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Sleep(); ok {
+		if err := roomdetail.SleepValidator(v); err != nil {
+			return 0, &ValidationError{Name: "sleep", err: fmt.Errorf("ent: validator failed for field \"sleep\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Bed(); ok {
+		if err := roomdetail.BedValidator(v); err != nil {
+			return 0, &ValidationError{Name: "bed", err: fmt.Errorf("ent: validator failed for field \"bed\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -340,16 +390,37 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if value, ok := ru.mutation.Sleep(); ok {
+	if value, ok := ru.mutation.Phone(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldPhone,
+		})
+	}
+	if value, ok := ru.mutation.Sleep(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+	}
+	if value, ok := ru.mutation.AddedSleep(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldSleep,
 		})
 	}
 	if value, ok := ru.mutation.Bed(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+	}
+	if value, ok := ru.mutation.AddedBed(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldBed,
 		})
@@ -638,15 +709,35 @@ func (ruo *RoomdetailUpdateOne) SetRoomprice(s string) *RoomdetailUpdateOne {
 	return ruo
 }
 
+// SetPhone sets the phone field.
+func (ruo *RoomdetailUpdateOne) SetPhone(s string) *RoomdetailUpdateOne {
+	ruo.mutation.SetPhone(s)
+	return ruo
+}
+
 // SetSleep sets the sleep field.
-func (ruo *RoomdetailUpdateOne) SetSleep(s string) *RoomdetailUpdateOne {
-	ruo.mutation.SetSleep(s)
+func (ruo *RoomdetailUpdateOne) SetSleep(i int) *RoomdetailUpdateOne {
+	ruo.mutation.ResetSleep()
+	ruo.mutation.SetSleep(i)
+	return ruo
+}
+
+// AddSleep adds i to sleep.
+func (ruo *RoomdetailUpdateOne) AddSleep(i int) *RoomdetailUpdateOne {
+	ruo.mutation.AddSleep(i)
 	return ruo
 }
 
 // SetBed sets the bed field.
-func (ruo *RoomdetailUpdateOne) SetBed(s string) *RoomdetailUpdateOne {
-	ruo.mutation.SetBed(s)
+func (ruo *RoomdetailUpdateOne) SetBed(i int) *RoomdetailUpdateOne {
+	ruo.mutation.ResetBed()
+	ruo.mutation.SetBed(i)
+	return ruo
+}
+
+// AddBed adds i to bed.
+func (ruo *RoomdetailUpdateOne) AddBed(i int) *RoomdetailUpdateOne {
+	ruo.mutation.AddBed(i)
 	return ruo
 }
 
@@ -837,6 +928,36 @@ func (ruo *RoomdetailUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *Roomdet
 
 // Save executes the query and returns the updated entity.
 func (ruo *RoomdetailUpdateOne) Save(ctx context.Context) (*Roomdetail, error) {
+	if v, ok := ruo.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Phone(); ok {
+		if err := roomdetail.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Sleep(); ok {
+		if err := roomdetail.SleepValidator(v); err != nil {
+			return nil, &ValidationError{Name: "sleep", err: fmt.Errorf("ent: validator failed for field \"sleep\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Bed(); ok {
+		if err := roomdetail.BedValidator(v); err != nil {
+			return nil, &ValidationError{Name: "bed", err: fmt.Errorf("ent: validator failed for field \"bed\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -924,16 +1045,37 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if value, ok := ruo.mutation.Sleep(); ok {
+	if value, ok := ruo.mutation.Phone(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldPhone,
+		})
+	}
+	if value, ok := ruo.mutation.Sleep(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+	}
+	if value, ok := ruo.mutation.AddedSleep(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldSleep,
 		})
 	}
 	if value, ok := ruo.mutation.Bed(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+	}
+	if value, ok := ruo.mutation.AddedBed(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldBed,
 		})

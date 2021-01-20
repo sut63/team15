@@ -2580,7 +2580,7 @@
             "type": "object",
             "properties": {
                 "bed": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "bedtype": {
                     "type": "integer"
@@ -2590,6 +2590,9 @@
                 },
                 "petrule": {
                     "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
                 },
                 "pledge": {
                     "type": "integer"
@@ -2604,7 +2607,7 @@
                     "type": "string"
                 },
                 "sleep": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "staytype": {
                     "type": "integer"
@@ -3135,7 +3138,7 @@
             "properties": {
                 "bed": {
                     "description": "Bed holds the value of the \"bed\" field.",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RoomdetailQuery when eager-loading is set.",
@@ -3145,6 +3148,10 @@
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "phone": {
+                    "description": "Phone holds the value of the \"phone\" field.",
+                    "type": "string"
                 },
                 "roomnumber": {
                     "description": "Roomnumber holds the value of the \"roomnumber\" field.",
@@ -3160,7 +3167,7 @@
                 },
                 "sleep": {
                     "description": "Sleep holds the value of the \"sleep\" field.",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },

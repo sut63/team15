@@ -21,10 +21,10 @@ import { exists, mapValues } from '../runtime';
 export interface ControllersRoomdetail {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ControllersRoomdetail
      */
-    bed?: string;
+    bed?: number;
     /**
      * 
      * @type {number}
@@ -43,6 +43,12 @@ export interface ControllersRoomdetail {
      * @memberof ControllersRoomdetail
      */
     petrule?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersRoomdetail
+     */
+    phone?: string;
     /**
      * 
      * @type {number}
@@ -69,10 +75,10 @@ export interface ControllersRoomdetail {
     roomtypename?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ControllersRoomdetail
      */
-    sleep?: string;
+    sleep?: number;
     /**
      * 
      * @type {number}
@@ -95,6 +101,7 @@ export function ControllersRoomdetailFromJSONTyped(json: any, ignoreDiscriminato
         'bedtype': !exists(json, 'bedtype') ? undefined : json['bedtype'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
         'petrule': !exists(json, 'petrule') ? undefined : json['petrule'],
+        'phone': !exists(json, 'phone') ? undefined : json['phone'],
         'pledge': !exists(json, 'pledge') ? undefined : json['pledge'],
         'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
         'roomprice': !exists(json, 'roomprice') ? undefined : json['roomprice'],
@@ -117,6 +124,7 @@ export function ControllersRoomdetailToJSON(value?: ControllersRoomdetail | null
         'bedtype': value.bedtype,
         'employee': value.employee,
         'petrule': value.petrule,
+        'phone': value.phone,
         'pledge': value.pledge,
         'roomnumber': value.roomnumber,
         'roomprice': value.roomprice,

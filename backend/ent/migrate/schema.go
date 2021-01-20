@@ -314,8 +314,9 @@ var (
 		{Name: "roomnumber", Type: field.TypeString, Unique: true},
 		{Name: "roomtypename", Type: field.TypeString},
 		{Name: "roomprice", Type: field.TypeString},
-		{Name: "sleep", Type: field.TypeString},
-		{Name: "bed", Type: field.TypeString},
+		{Name: "phone", Type: field.TypeString, Size: 12},
+		{Name: "sleep", Type: field.TypeInt},
+		{Name: "bed", Type: field.TypeInt},
 		{Name: "bedtype_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "petrule_roomdetails", Type: field.TypeInt, Nullable: true},
@@ -330,35 +331,35 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "roomdetails_bedtypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[6]},
+				Columns: []*schema.Column{RoomdetailsColumns[7]},
 
 				RefColumns: []*schema.Column{BedtypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_employees_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[7]},
+				Columns: []*schema.Column{RoomdetailsColumns[8]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_petrules_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[8]},
+				Columns: []*schema.Column{RoomdetailsColumns[9]},
 
 				RefColumns: []*schema.Column{PetrulesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_pledges_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[9]},
+				Columns: []*schema.Column{RoomdetailsColumns[10]},
 
 				RefColumns: []*schema.Column{PledgesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_staytypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[10]},
+				Columns: []*schema.Column{RoomdetailsColumns[11]},
 
 				RefColumns: []*schema.Column{StaytypesColumns[0]},
 				OnDelete:   schema.SetNull,
