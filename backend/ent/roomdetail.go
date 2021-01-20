@@ -27,10 +27,12 @@ type Roomdetail struct {
 	Roomtypename string `json:"roomtypename,omitempty"`
 	// Roomprice holds the value of the "roomprice" field.
 	Roomprice string `json:"roomprice,omitempty"`
+	// Phone holds the value of the "phone" field.
+	Phone string `json:"phone,omitempty"`
 	// Sleep holds the value of the "sleep" field.
-	Sleep string `json:"sleep,omitempty"`
+	Sleep int `json:"sleep,omitempty"`
 	// Bed holds the value of the "bed" field.
-	Bed string `json:"bed,omitempty"`
+	Bed int `json:"bed,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoomdetailQuery when eager-loading is set.
 	Edges                RoomdetailEdges `json:"edges"`
@@ -162,8 +164,9 @@ func (*Roomdetail) scanValues() []interface{} {
 		&sql.NullString{}, // roomnumber
 		&sql.NullString{}, // roomtypename
 		&sql.NullString{}, // roomprice
-		&sql.NullString{}, // sleep
-		&sql.NullString{}, // bed
+		&sql.NullString{}, // phone
+		&sql.NullInt64{},  // sleep
+		&sql.NullInt64{},  // bed
 	}
 }
 
@@ -206,16 +209,21 @@ func (r *Roomdetail) assignValues(values ...interface{}) error {
 		r.Roomprice = value.String
 	}
 	if value, ok := values[3].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field sleep", values[3])
+		return fmt.Errorf("unexpected type %T for field phone", values[3])
 	} else if value.Valid {
-		r.Sleep = value.String
+		r.Phone = value.String
 	}
-	if value, ok := values[4].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field bed", values[4])
+	if value, ok := values[4].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field sleep", values[4])
 	} else if value.Valid {
-		r.Bed = value.String
+		r.Sleep = int(value.Int64)
 	}
-	values = values[5:]
+	if value, ok := values[5].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field bed", values[5])
+	} else if value.Valid {
+		r.Bed = int(value.Int64)
+	}
+	values = values[6:]
 	if len(values) == len(roomdetail.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field bedtype_roomdetails", value)
@@ -315,10 +323,12 @@ func (r *Roomdetail) String() string {
 	builder.WriteString(r.Roomtypename)
 	builder.WriteString(", roomprice=")
 	builder.WriteString(r.Roomprice)
+	builder.WriteString(", phone=")
+	builder.WriteString(r.Phone)
 	builder.WriteString(", sleep=")
-	builder.WriteString(r.Sleep)
+	builder.WriteString(fmt.Sprintf("%v", r.Sleep))
 	builder.WriteString(", bed=")
-	builder.WriteString(r.Bed)
+	builder.WriteString(fmt.Sprintf("%v", r.Bed))
 	builder.WriteByte(')')
 	return builder.String()
 }

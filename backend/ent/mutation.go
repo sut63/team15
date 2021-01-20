@@ -6474,8 +6474,11 @@ type RoomdetailMutation struct {
 	roomnumber           *string
 	roomtypename         *string
 	roomprice            *string
-	sleep                *string
-	bed                  *string
+	phone                *string
+	sleep                *int
+	addsleep             *int
+	bed                  *int
+	addbed               *int
 	clearedFields        map[string]struct{}
 	pledge               *int
 	clearedpledge        bool
@@ -6685,13 +6688,51 @@ func (m *RoomdetailMutation) ResetRoomprice() {
 	m.roomprice = nil
 }
 
+// SetPhone sets the phone field.
+func (m *RoomdetailMutation) SetPhone(s string) {
+	m.phone = &s
+}
+
+// Phone returns the phone value in the mutation.
+func (m *RoomdetailMutation) Phone() (r string, exists bool) {
+	v := m.phone
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhone returns the old phone value of the Roomdetail.
+// If the Roomdetail object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RoomdetailMutation) OldPhone(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPhone is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPhone requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhone: %w", err)
+	}
+	return oldValue.Phone, nil
+}
+
+// ResetPhone reset all changes of the "phone" field.
+func (m *RoomdetailMutation) ResetPhone() {
+	m.phone = nil
+}
+
 // SetSleep sets the sleep field.
-func (m *RoomdetailMutation) SetSleep(s string) {
-	m.sleep = &s
+func (m *RoomdetailMutation) SetSleep(i int) {
+	m.sleep = &i
+	m.addsleep = nil
 }
 
 // Sleep returns the sleep value in the mutation.
-func (m *RoomdetailMutation) Sleep() (r string, exists bool) {
+func (m *RoomdetailMutation) Sleep() (r int, exists bool) {
 	v := m.sleep
 	if v == nil {
 		return
@@ -6703,7 +6744,7 @@ func (m *RoomdetailMutation) Sleep() (r string, exists bool) {
 // If the Roomdetail object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoomdetailMutation) OldSleep(ctx context.Context) (v string, err error) {
+func (m *RoomdetailMutation) OldSleep(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldSleep is allowed only on UpdateOne operations")
 	}
@@ -6717,18 +6758,38 @@ func (m *RoomdetailMutation) OldSleep(ctx context.Context) (v string, err error)
 	return oldValue.Sleep, nil
 }
 
+// AddSleep adds i to sleep.
+func (m *RoomdetailMutation) AddSleep(i int) {
+	if m.addsleep != nil {
+		*m.addsleep += i
+	} else {
+		m.addsleep = &i
+	}
+}
+
+// AddedSleep returns the value that was added to the sleep field in this mutation.
+func (m *RoomdetailMutation) AddedSleep() (r int, exists bool) {
+	v := m.addsleep
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetSleep reset all changes of the "sleep" field.
 func (m *RoomdetailMutation) ResetSleep() {
 	m.sleep = nil
+	m.addsleep = nil
 }
 
 // SetBed sets the bed field.
-func (m *RoomdetailMutation) SetBed(s string) {
-	m.bed = &s
+func (m *RoomdetailMutation) SetBed(i int) {
+	m.bed = &i
+	m.addbed = nil
 }
 
 // Bed returns the bed value in the mutation.
-func (m *RoomdetailMutation) Bed() (r string, exists bool) {
+func (m *RoomdetailMutation) Bed() (r int, exists bool) {
 	v := m.bed
 	if v == nil {
 		return
@@ -6740,7 +6801,7 @@ func (m *RoomdetailMutation) Bed() (r string, exists bool) {
 // If the Roomdetail object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoomdetailMutation) OldBed(ctx context.Context) (v string, err error) {
+func (m *RoomdetailMutation) OldBed(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldBed is allowed only on UpdateOne operations")
 	}
@@ -6754,9 +6815,28 @@ func (m *RoomdetailMutation) OldBed(ctx context.Context) (v string, err error) {
 	return oldValue.Bed, nil
 }
 
+// AddBed adds i to bed.
+func (m *RoomdetailMutation) AddBed(i int) {
+	if m.addbed != nil {
+		*m.addbed += i
+	} else {
+		m.addbed = &i
+	}
+}
+
+// AddedBed returns the value that was added to the bed field in this mutation.
+func (m *RoomdetailMutation) AddedBed() (r int, exists bool) {
+	v := m.addbed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetBed reset all changes of the "bed" field.
 func (m *RoomdetailMutation) ResetBed() {
 	m.bed = nil
+	m.addbed = nil
 }
 
 // SetPledgeID sets the pledge edge to Pledge by id.
@@ -7049,7 +7129,7 @@ func (m *RoomdetailMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *RoomdetailMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.roomnumber != nil {
 		fields = append(fields, roomdetail.FieldRoomnumber)
 	}
@@ -7058,6 +7138,9 @@ func (m *RoomdetailMutation) Fields() []string {
 	}
 	if m.roomprice != nil {
 		fields = append(fields, roomdetail.FieldRoomprice)
+	}
+	if m.phone != nil {
+		fields = append(fields, roomdetail.FieldPhone)
 	}
 	if m.sleep != nil {
 		fields = append(fields, roomdetail.FieldSleep)
@@ -7079,6 +7162,8 @@ func (m *RoomdetailMutation) Field(name string) (ent.Value, bool) {
 		return m.Roomtypename()
 	case roomdetail.FieldRoomprice:
 		return m.Roomprice()
+	case roomdetail.FieldPhone:
+		return m.Phone()
 	case roomdetail.FieldSleep:
 		return m.Sleep()
 	case roomdetail.FieldBed:
@@ -7098,6 +7183,8 @@ func (m *RoomdetailMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldRoomtypename(ctx)
 	case roomdetail.FieldRoomprice:
 		return m.OldRoomprice(ctx)
+	case roomdetail.FieldPhone:
+		return m.OldPhone(ctx)
 	case roomdetail.FieldSleep:
 		return m.OldSleep(ctx)
 	case roomdetail.FieldBed:
@@ -7132,15 +7219,22 @@ func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRoomprice(v)
 		return nil
-	case roomdetail.FieldSleep:
+	case roomdetail.FieldPhone:
 		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhone(v)
+		return nil
+	case roomdetail.FieldSleep:
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSleep(v)
 		return nil
 	case roomdetail.FieldBed:
-		v, ok := value.(string)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -7153,13 +7247,26 @@ func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *RoomdetailMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addsleep != nil {
+		fields = append(fields, roomdetail.FieldSleep)
+	}
+	if m.addbed != nil {
+		fields = append(fields, roomdetail.FieldBed)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case roomdetail.FieldSleep:
+		return m.AddedSleep()
+	case roomdetail.FieldBed:
+		return m.AddedBed()
+	}
 	return nil, false
 }
 
@@ -7168,6 +7275,20 @@ func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *RoomdetailMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case roomdetail.FieldSleep:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSleep(v)
+		return nil
+	case roomdetail.FieldBed:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddBed(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Roomdetail numeric field %s", name)
 }
@@ -7204,6 +7325,9 @@ func (m *RoomdetailMutation) ResetField(name string) error {
 		return nil
 	case roomdetail.FieldRoomprice:
 		m.ResetRoomprice()
+		return nil
+	case roomdetail.FieldPhone:
+		m.ResetPhone()
 		return nil
 	case roomdetail.FieldSleep:
 		m.ResetSleep()

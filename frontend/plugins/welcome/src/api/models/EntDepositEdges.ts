@@ -64,9 +64,9 @@ export function EntDepositEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
-        'lease': !exists(json, 'Lease') ? undefined : EntLeaseFromJSON(json['Lease']),
-        'statusd': !exists(json, 'Statusd') ? undefined : EntStatusdFromJSON(json['Statusd']),
+        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
+        'lease': !exists(json, 'lease') ? undefined : EntLeaseFromJSON(json['lease']),
+        'statusd': !exists(json, 'statusd') ? undefined : EntStatusdFromJSON(json['statusd']),
     };
 }
 

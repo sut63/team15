@@ -51,13 +51,15 @@ definitions:
   controllers.Roomdetail:
     properties:
       bed:
-        type: string
+        type: integer
       bedtype:
         type: integer
       employee:
         type: integer
       petrule:
         type: integer
+      phone:
+        type: string
       pledge:
         type: integer
       roomnumber:
@@ -67,7 +69,7 @@ definitions:
       roomtypename:
         type: string
       sleep:
-        type: string
+        type: integer
       staytype:
         type: integer
     type: object
@@ -475,7 +477,7 @@ definitions:
     properties:
       bed:
         description: Bed holds the value of the "bed" field.
-        type: string
+        type: integer
       edges:
         $ref: '#/definitions/ent.RoomdetailEdges'
         description: |-
@@ -485,6 +487,9 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
+      phone:
+        description: Phone holds the value of the "phone" field.
+        type: string
       roomnumber:
         description: Roomnumber holds the value of the "roomnumber" field.
         type: string
@@ -496,7 +501,7 @@ definitions:
         type: string
       sleep:
         description: Sleep holds the value of the "sleep" field.
-        type: string
+        type: integer
     type: object
   ent.RoomdetailEdges:
     properties:

@@ -13,6 +13,8 @@ const (
 	FieldRoomtypename = "roomtypename"
 	// FieldRoomprice holds the string denoting the roomprice field in the database.
 	FieldRoomprice = "roomprice"
+	// FieldPhone holds the string denoting the phone field in the database.
+	FieldPhone = "phone"
 	// FieldSleep holds the string denoting the sleep field in the database.
 	FieldSleep = "sleep"
 	// FieldBed holds the string denoting the bed field in the database.
@@ -92,6 +94,7 @@ var Columns = []string{
 	FieldRoomnumber,
 	FieldRoomtypename,
 	FieldRoomprice,
+	FieldPhone,
 	FieldSleep,
 	FieldBed,
 }
@@ -104,3 +107,18 @@ var ForeignKeys = []string{
 	"pledge_roomdetails",
 	"staytype_roomdetails",
 }
+
+var (
+	// RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
+	RoomnumberValidator func(string) error
+	// RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
+	RoomtypenameValidator func(string) error
+	// RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
+	RoompriceValidator func(string) error
+	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	PhoneValidator func(string) error
+	// SleepValidator is a validator for the "sleep" field. It is called by the builders before save.
+	SleepValidator func(int) error
+	// BedValidator is a validator for the "bed" field. It is called by the builders before save.
+	BedValidator func(int) error
+)

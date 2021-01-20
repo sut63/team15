@@ -24,8 +24,9 @@ type Roomdetail struct {
 	Roomnumber   string
 	Roomtypename string
 	Roomprice    string
-	Sleep        string
-	Bed          string
+	Phone        string
+	Sleep        int
+	Bed          int
 	Staytype     int
 	Pledge       int
 	Petrule      int
@@ -118,6 +119,7 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 		SetRoomnumber(obj.Roomnumber).
 		SetRoomprice(obj.Roomprice).
 		SetRoomtypename(obj.Roomtypename).
+		SetPhone(obj.Phone).
 		SetSleep(obj.Sleep).
 		SetBed(obj.Bed).
 		SetBedtype(bt).
@@ -128,12 +130,16 @@ func (ctl *RoomdetailController) CreateRoomdetail(c *gin.Context) {
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, rd)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   rd,
+	})
 }
 
 // DeleteRoomdetail handles DELETE requests to delete a roomdetail entity

@@ -2595,7 +2595,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "bed": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "bedtype": {
                     "type": "integer"
@@ -2605,6 +2605,9 @@ var doc = `{
                 },
                 "petrule": {
                     "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
                 },
                 "pledge": {
                     "type": "integer"
@@ -2619,7 +2622,7 @@ var doc = `{
                     "type": "string"
                 },
                 "sleep": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "staytype": {
                     "type": "integer"
@@ -3150,7 +3153,7 @@ var doc = `{
             "properties": {
                 "bed": {
                     "description": "Bed holds the value of the \"bed\" field.",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the RoomdetailQuery when eager-loading is set.",
@@ -3160,6 +3163,10 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "phone": {
+                    "description": "Phone holds the value of the \"phone\" field.",
+                    "type": "string"
                 },
                 "roomnumber": {
                     "description": "Roomnumber holds the value of the \"roomnumber\" field.",
@@ -3175,7 +3182,7 @@ var doc = `{
                 },
                 "sleep": {
                     "description": "Sleep holds the value of the \"sleep\" field.",
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
