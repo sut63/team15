@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/petrule"
 	"github.com/team15/app/ent/pledge"
@@ -160,6 +161,25 @@ func (ru *RoomdetailUpdate) SetEmployee(e *Employee) *RoomdetailUpdate {
 	return ru.SetEmployeeID(e.ID)
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (ru *RoomdetailUpdate) SetJobpositionID(id int) *RoomdetailUpdate {
+	ru.mutation.SetJobpositionID(id)
+	return ru
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableJobpositionID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetJobpositionID(*id)
+	}
+	return ru
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (ru *RoomdetailUpdate) SetJobposition(j *Jobposition) *RoomdetailUpdate {
+	return ru.SetJobpositionID(j.ID)
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (ru *RoomdetailUpdate) SetStaytypeID(id int) *RoomdetailUpdate {
 	ru.mutation.SetStaytypeID(id)
@@ -239,6 +259,12 @@ func (ru *RoomdetailUpdate) ClearBedtype() *RoomdetailUpdate {
 // ClearEmployee clears the employee edge to Employee.
 func (ru *RoomdetailUpdate) ClearEmployee() *RoomdetailUpdate {
 	ru.mutation.ClearEmployee()
+	return ru
+}
+
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (ru *RoomdetailUpdate) ClearJobposition() *RoomdetailUpdate {
+	ru.mutation.ClearJobposition()
 	return ru
 }
 
@@ -565,6 +591,41 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.JobpositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if ru.mutation.StaytypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -817,6 +878,25 @@ func (ruo *RoomdetailUpdateOne) SetEmployee(e *Employee) *RoomdetailUpdateOne {
 	return ruo.SetEmployeeID(e.ID)
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (ruo *RoomdetailUpdateOne) SetJobpositionID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetJobpositionID(id)
+	return ruo
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableJobpositionID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetJobpositionID(*id)
+	}
+	return ruo
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (ruo *RoomdetailUpdateOne) SetJobposition(j *Jobposition) *RoomdetailUpdateOne {
+	return ruo.SetJobpositionID(j.ID)
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (ruo *RoomdetailUpdateOne) SetStaytypeID(id int) *RoomdetailUpdateOne {
 	ruo.mutation.SetStaytypeID(id)
@@ -896,6 +976,12 @@ func (ruo *RoomdetailUpdateOne) ClearBedtype() *RoomdetailUpdateOne {
 // ClearEmployee clears the employee edge to Employee.
 func (ruo *RoomdetailUpdateOne) ClearEmployee() *RoomdetailUpdateOne {
 	ruo.mutation.ClearEmployee()
+	return ruo
+}
+
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (ruo *RoomdetailUpdateOne) ClearJobposition() *RoomdetailUpdateOne {
+	ruo.mutation.ClearJobposition()
 	return ruo
 }
 
@@ -1212,6 +1298,41 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.JobpositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
 				},
 			},
 		}

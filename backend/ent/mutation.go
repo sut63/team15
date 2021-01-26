@@ -3239,15 +3239,17 @@ func (m *EmployeeMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type JobpositionMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int
-	positionname     *string
-	clearedFields    map[string]struct{}
-	employees        map[int]struct{}
-	removedemployees map[int]struct{}
-	done             bool
-	oldValue         func(context.Context) (*Jobposition, error)
+	op                 Op
+	typ                string
+	id                 *int
+	positionname       *string
+	clearedFields      map[string]struct{}
+	employees          map[int]struct{}
+	removedemployees   map[int]struct{}
+	roomdetails        map[int]struct{}
+	removedroomdetails map[int]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Jobposition, error)
 }
 
 var _ ent.Mutation = (*JobpositionMutation)(nil)
@@ -3408,6 +3410,48 @@ func (m *JobpositionMutation) ResetEmployees() {
 	m.removedemployees = nil
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (m *JobpositionMutation) AddRoomdetailIDs(ids ...int) {
+	if m.roomdetails == nil {
+		m.roomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.roomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (m *JobpositionMutation) RemoveRoomdetailIDs(ids ...int) {
+	if m.removedroomdetails == nil {
+		m.removedroomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedroomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoomdetails returns the removed ids of roomdetails.
+func (m *JobpositionMutation) RemovedRoomdetailsIDs() (ids []int) {
+	for id := range m.removedroomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RoomdetailsIDs returns the roomdetails ids in the mutation.
+func (m *JobpositionMutation) RoomdetailsIDs() (ids []int) {
+	for id := range m.roomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoomdetails reset all changes of the "roomdetails" edge.
+func (m *JobpositionMutation) ResetRoomdetails() {
+	m.roomdetails = nil
+	m.removedroomdetails = nil
+}
+
 // Op returns the operation name.
 func (m *JobpositionMutation) Op() Op {
 	return m.op
@@ -3523,9 +3567,12 @@ func (m *JobpositionMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *JobpositionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.employees != nil {
 		edges = append(edges, jobposition.EdgeEmployees)
+	}
+	if m.roomdetails != nil {
+		edges = append(edges, jobposition.EdgeRoomdetails)
 	}
 	return edges
 }
@@ -3540,6 +3587,12 @@ func (m *JobpositionMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case jobposition.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.roomdetails))
+		for id := range m.roomdetails {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -3547,9 +3600,12 @@ func (m *JobpositionMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *JobpositionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedemployees != nil {
 		edges = append(edges, jobposition.EdgeEmployees)
+	}
+	if m.removedroomdetails != nil {
+		edges = append(edges, jobposition.EdgeRoomdetails)
 	}
 	return edges
 }
@@ -3564,6 +3620,12 @@ func (m *JobpositionMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case jobposition.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.removedroomdetails))
+		for id := range m.removedroomdetails {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -3571,7 +3633,7 @@ func (m *JobpositionMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *JobpositionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -3598,6 +3660,9 @@ func (m *JobpositionMutation) ResetEdge(name string) error {
 	switch name {
 	case jobposition.EdgeEmployees:
 		m.ResetEmployees()
+		return nil
+	case jobposition.EdgeRoomdetails:
+		m.ResetRoomdetails()
 		return nil
 	}
 	return fmt.Errorf("unknown Jobposition edge %s", name)
@@ -6488,6 +6553,8 @@ type RoomdetailMutation struct {
 	clearedbedtype       bool
 	employee             *int
 	clearedemployee      bool
+	jobposition          *int
+	clearedjobposition   bool
 	staytype             *int
 	clearedstaytype      bool
 	roomdetails          *int
@@ -6995,6 +7062,45 @@ func (m *RoomdetailMutation) ResetEmployee() {
 	m.clearedemployee = false
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (m *RoomdetailMutation) SetJobpositionID(id int) {
+	m.jobposition = &id
+}
+
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (m *RoomdetailMutation) ClearJobposition() {
+	m.clearedjobposition = true
+}
+
+// JobpositionCleared returns if the edge jobposition was cleared.
+func (m *RoomdetailMutation) JobpositionCleared() bool {
+	return m.clearedjobposition
+}
+
+// JobpositionID returns the jobposition id in the mutation.
+func (m *RoomdetailMutation) JobpositionID() (id int, exists bool) {
+	if m.jobposition != nil {
+		return *m.jobposition, true
+	}
+	return
+}
+
+// JobpositionIDs returns the jobposition ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// JobpositionID instead. It exists only for internal usage by the builders.
+func (m *RoomdetailMutation) JobpositionIDs() (ids []int) {
+	if id := m.jobposition; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetJobposition reset all changes of the "jobposition" edge.
+func (m *RoomdetailMutation) ResetJobposition() {
+	m.jobposition = nil
+	m.clearedjobposition = false
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (m *RoomdetailMutation) SetStaytypeID(id int) {
 	m.staytype = &id
@@ -7342,7 +7448,7 @@ func (m *RoomdetailMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *RoomdetailMutation) AddedEdges() []string {
-	edges := make([]string, 0, 7)
+	edges := make([]string, 0, 8)
 	if m.pledge != nil {
 		edges = append(edges, roomdetail.EdgePledge)
 	}
@@ -7354,6 +7460,9 @@ func (m *RoomdetailMutation) AddedEdges() []string {
 	}
 	if m.employee != nil {
 		edges = append(edges, roomdetail.EdgeEmployee)
+	}
+	if m.jobposition != nil {
+		edges = append(edges, roomdetail.EdgeJobposition)
 	}
 	if m.staytype != nil {
 		edges = append(edges, roomdetail.EdgeStaytype)
@@ -7387,6 +7496,10 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 		if id := m.employee; id != nil {
 			return []ent.Value{*id}
 		}
+	case roomdetail.EdgeJobposition:
+		if id := m.jobposition; id != nil {
+			return []ent.Value{*id}
+		}
 	case roomdetail.EdgeStaytype:
 		if id := m.staytype; id != nil {
 			return []ent.Value{*id}
@@ -7408,7 +7521,7 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *RoomdetailMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 7)
+	edges := make([]string, 0, 8)
 	if m.removedcleaningrooms != nil {
 		edges = append(edges, roomdetail.EdgeCleaningrooms)
 	}
@@ -7432,7 +7545,7 @@ func (m *RoomdetailMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *RoomdetailMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 7)
+	edges := make([]string, 0, 8)
 	if m.clearedpledge {
 		edges = append(edges, roomdetail.EdgePledge)
 	}
@@ -7444,6 +7557,9 @@ func (m *RoomdetailMutation) ClearedEdges() []string {
 	}
 	if m.clearedemployee {
 		edges = append(edges, roomdetail.EdgeEmployee)
+	}
+	if m.clearedjobposition {
+		edges = append(edges, roomdetail.EdgeJobposition)
 	}
 	if m.clearedstaytype {
 		edges = append(edges, roomdetail.EdgeStaytype)
@@ -7466,6 +7582,8 @@ func (m *RoomdetailMutation) EdgeCleared(name string) bool {
 		return m.clearedbedtype
 	case roomdetail.EdgeEmployee:
 		return m.clearedemployee
+	case roomdetail.EdgeJobposition:
+		return m.clearedjobposition
 	case roomdetail.EdgeStaytype:
 		return m.clearedstaytype
 	case roomdetail.EdgeRoomdetails:
@@ -7489,6 +7607,9 @@ func (m *RoomdetailMutation) ClearEdge(name string) error {
 		return nil
 	case roomdetail.EdgeEmployee:
 		m.ClearEmployee()
+		return nil
+	case roomdetail.EdgeJobposition:
+		m.ClearJobposition()
 		return nil
 	case roomdetail.EdgeStaytype:
 		m.ClearStaytype()
@@ -7516,6 +7637,9 @@ func (m *RoomdetailMutation) ResetEdge(name string) error {
 		return nil
 	case roomdetail.EdgeEmployee:
 		m.ResetEmployee()
+		return nil
+	case roomdetail.EdgeJobposition:
+		m.ResetJobposition()
 		return nil
 	case roomdetail.EdgeStaytype:
 		m.ResetStaytype()

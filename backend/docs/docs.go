@@ -2913,6 +2913,13 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/ent.Employee"
                     }
+                },
+                "roomdetails": {
+                    "description": "Roomdetails holds the value of the roomdetails edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Roomdetail"
+                    }
                 }
             }
         },
@@ -3205,6 +3212,11 @@ var doc = `{
                     "description": "Employee holds the value of the employee edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Employee"
+                },
+                "jobposition": {
+                    "description": "Jobposition holds the value of the jobposition edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Jobposition"
                 },
                 "petrule": {
                     "description": "Petrule holds the value of the petrule edge.",

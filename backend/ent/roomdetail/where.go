@@ -841,6 +841,34 @@ func HasEmployeeWith(preds ...predicate.Employee) predicate.Roomdetail {
 	})
 }
 
+// HasJobposition applies the HasEdge predicate on the "jobposition" edge.
+func HasJobposition() predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(JobpositionTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, JobpositionTable, JobpositionColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasJobpositionWith applies the HasEdge predicate on the "jobposition" edge with a given conditions (other predicates).
+func HasJobpositionWith(preds ...predicate.Jobposition) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(JobpositionInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, JobpositionTable, JobpositionColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasStaytype applies the HasEdge predicate on the "staytype" edge.
 func HasStaytype() predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {

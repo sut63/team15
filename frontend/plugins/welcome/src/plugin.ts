@@ -8,6 +8,7 @@ import CreateRepairinvoice from './components/RecordRepairinvoice';
 import RepairinvoiceTablet from './components/RepairinvoiceTable';
 import CreateContract from './components/RecordLease';
 import ShowContract from './components/LeaseTable';
+import SearchRoom from './components/SearchRoom';
 
 
 export const plugin = createPlugin({
@@ -22,6 +23,7 @@ export const plugin = createPlugin({
     router.registerRoute('/RepairinvoiceTable', RepairinvoiceTablet );
     router.registerRoute('/RecordLease', CreateContract);
     router.registerRoute('/LeaseTable', ShowContract);
+    router.registerRoute('/SearchRoom', SearchRoom);
 
   },
 });

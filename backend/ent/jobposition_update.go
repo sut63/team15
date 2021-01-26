@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // JobpositionUpdate is the builder for updating Jobposition entities.
@@ -49,6 +50,21 @@ func (ju *JobpositionUpdate) AddEmployees(e ...*Employee) *JobpositionUpdate {
 	return ju.AddEmployeeIDs(ids...)
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (ju *JobpositionUpdate) AddRoomdetailIDs(ids ...int) *JobpositionUpdate {
+	ju.mutation.AddRoomdetailIDs(ids...)
+	return ju
+}
+
+// AddRoomdetails adds the roomdetails edges to Roomdetail.
+func (ju *JobpositionUpdate) AddRoomdetails(r ...*Roomdetail) *JobpositionUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ju.AddRoomdetailIDs(ids...)
+}
+
 // Mutation returns the JobpositionMutation object of the builder.
 func (ju *JobpositionUpdate) Mutation() *JobpositionMutation {
 	return ju.mutation
@@ -67,6 +83,21 @@ func (ju *JobpositionUpdate) RemoveEmployees(e ...*Employee) *JobpositionUpdate 
 		ids[i] = e[i].ID
 	}
 	return ju.RemoveEmployeeIDs(ids...)
+}
+
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (ju *JobpositionUpdate) RemoveRoomdetailIDs(ids ...int) *JobpositionUpdate {
+	ju.mutation.RemoveRoomdetailIDs(ids...)
+	return ju
+}
+
+// RemoveRoomdetails removes roomdetails edges to Roomdetail.
+func (ju *JobpositionUpdate) RemoveRoomdetails(r ...*Roomdetail) *JobpositionUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ju.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -184,6 +215,44 @@ func (ju *JobpositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := ju.mutation.RemovedRoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jobposition.RoomdetailsTable,
+			Columns: []string{jobposition.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ju.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jobposition.RoomdetailsTable,
+			Columns: []string{jobposition.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ju.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{jobposition.Label}
@@ -223,6 +292,21 @@ func (juo *JobpositionUpdateOne) AddEmployees(e ...*Employee) *JobpositionUpdate
 	return juo.AddEmployeeIDs(ids...)
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (juo *JobpositionUpdateOne) AddRoomdetailIDs(ids ...int) *JobpositionUpdateOne {
+	juo.mutation.AddRoomdetailIDs(ids...)
+	return juo
+}
+
+// AddRoomdetails adds the roomdetails edges to Roomdetail.
+func (juo *JobpositionUpdateOne) AddRoomdetails(r ...*Roomdetail) *JobpositionUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return juo.AddRoomdetailIDs(ids...)
+}
+
 // Mutation returns the JobpositionMutation object of the builder.
 func (juo *JobpositionUpdateOne) Mutation() *JobpositionMutation {
 	return juo.mutation
@@ -241,6 +325,21 @@ func (juo *JobpositionUpdateOne) RemoveEmployees(e ...*Employee) *JobpositionUpd
 		ids[i] = e[i].ID
 	}
 	return juo.RemoveEmployeeIDs(ids...)
+}
+
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (juo *JobpositionUpdateOne) RemoveRoomdetailIDs(ids ...int) *JobpositionUpdateOne {
+	juo.mutation.RemoveRoomdetailIDs(ids...)
+	return juo
+}
+
+// RemoveRoomdetails removes roomdetails edges to Roomdetail.
+func (juo *JobpositionUpdateOne) RemoveRoomdetails(r ...*Roomdetail) *JobpositionUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return juo.RemoveRoomdetailIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -348,6 +447,44 @@ func (juo *JobpositionUpdateOne) sqlSave(ctx context.Context) (j *Jobposition, e
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := juo.mutation.RemovedRoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jobposition.RoomdetailsTable,
+			Columns: []string{jobposition.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := juo.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jobposition.RoomdetailsTable,
+			Columns: []string{jobposition.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
 				},
 			},
 		}

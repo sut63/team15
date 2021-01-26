@@ -1107,6 +1107,22 @@ func (c *JobpositionClient) QueryEmployees(j *Jobposition) *EmployeeQuery {
 	return query
 }
 
+// QueryRoomdetails queries the roomdetails edge of a Jobposition.
+func (c *JobpositionClient) QueryRoomdetails(j *Jobposition) *RoomdetailQuery {
+	query := &RoomdetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := j.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(jobposition.Table, jobposition.FieldID, id),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, jobposition.RoomdetailsTable, jobposition.RoomdetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(j.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *JobpositionClient) Hooks() []Hook {
 	return c.hooks.Jobposition
@@ -2004,6 +2020,22 @@ func (c *RoomdetailClient) QueryEmployee(r *Roomdetail) *EmployeeQuery {
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EmployeeTable, roomdetail.EmployeeColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryJobposition queries the jobposition edge of a Roomdetail.
+func (c *RoomdetailClient) QueryJobposition(r *Roomdetail) *JobpositionQuery {
+	query := &JobpositionQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
+			sqlgraph.To(jobposition.Table, jobposition.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.JobpositionTable, roomdetail.JobpositionColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil

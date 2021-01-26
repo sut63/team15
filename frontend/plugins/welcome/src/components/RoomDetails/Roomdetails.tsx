@@ -37,6 +37,7 @@ import RoomDetails from '.';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import ComponanceRoomdetailsTable from '../RoomdetailsTable';
+import ComponanceSearchRoom from '../SearchRoom';
 
 // css style 
 const useStyles = makeStyles((theme: Theme) =>
@@ -609,6 +610,8 @@ export default function CreateRoomdetail() {
               >
                 บันทึกข้อมูลห้อง
              </Button>
+
+          
 
               { /*<Button
                    style={{ width: 150, backgroundColor: "#C1FF3C",marginLeft: 20}}
