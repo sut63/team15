@@ -26,9 +26,11 @@ type Jobposition struct {
 type JobpositionEdges struct {
 	// Employees holds the value of the employees edge.
 	Employees []*Employee
+	// Roomdetails holds the value of the roomdetails edge.
+	Roomdetails []*Roomdetail
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // EmployeesOrErr returns the Employees value or an error if the edge
@@ -38,6 +40,15 @@ func (e JobpositionEdges) EmployeesOrErr() ([]*Employee, error) {
 		return e.Employees, nil
 	}
 	return nil, &NotLoadedError{edge: "employees"}
+}
+
+// RoomdetailsOrErr returns the Roomdetails value or an error if the edge
+// was not loaded in eager-loading.
+func (e JobpositionEdges) RoomdetailsOrErr() ([]*Roomdetail, error) {
+	if e.loadedTypes[1] {
+		return e.Roomdetails, nil
+	}
+	return nil, &NotLoadedError{edge: "roomdetails"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -71,6 +82,11 @@ func (j *Jobposition) assignValues(values ...interface{}) error {
 // QueryEmployees queries the employees edge of the Jobposition.
 func (j *Jobposition) QueryEmployees() *EmployeeQuery {
 	return (&JobpositionClient{config: j.config}).QueryEmployees(j)
+}
+
+// QueryRoomdetails queries the roomdetails edge of the Jobposition.
+func (j *Jobposition) QueryRoomdetails() *RoomdetailQuery {
+	return (&JobpositionClient{config: j.config}).QueryRoomdetails(j)
 }
 
 // Update returns a builder for updating this Jobposition.

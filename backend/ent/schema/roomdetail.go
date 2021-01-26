@@ -45,6 +45,7 @@ func (Roomdetail) Edges() []ent.Edge {
 		edge.From("petrule", Petrule.Type).Ref("roomdetails").Unique(),
 		edge.From("bedtype", Bedtype.Type).Ref("roomdetails").Unique(),
 		edge.From("employee", Employee.Type).Ref("roomdetails").Unique(),
+		edge.From("jobposition", Jobposition.Type).Ref("roomdetails").Unique(),
 		edge.From("staytype", Staytype.Type).Ref("roomdetails").Unique(),
 		edge.To("roomdetails", Lease.Type).Unique().StorageKey(edge.Column("room_num")),
 		edge.To("cleaningrooms", CleaningRoom.Type).StorageKey(edge.Column("roomdetail_id")),

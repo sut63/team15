@@ -12,7 +12,7 @@ import {
   SidebarPinButton,
 } from '@backstage/core';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-
+import HotelIcon from '@material-ui/icons/Hotel';
 import { EntEmployee } from 'plugin-welcome/src/api/models/EntEmployee';
 import { DefaultApi } from 'plugin-welcome/src/api/apis';
 
@@ -53,8 +53,17 @@ export const AppSidebar = () => {
       {/* End global nav */}
      { /* <SidebarItem icon={HomeOutlinedIcon} to="#" text="Home" />*/} 
       <SidebarDivider />
-      
+
+          <SidebarItem icon={HotelIcon} to="/SearchRoom" text="ค้นหาข้อมูลห้องพัก"/>
+       
+      {/* End global nav */}
+     { /* <SidebarItem icon={HomeOutlinedIcon} to="#" text="Home" />*/} 
+      <SidebarDivider />
+
       <SidebarSpace />
+
+     
+
       <SidebarDivider />
       <SidebarThemeToggle />
       {(employeeid) ?
@@ -66,8 +75,10 @@ export const AppSidebar = () => {
             window.location.reload(false);
           }} />
         :
-        null
+       <SidebarItem icon={HomeOutlinedIcon} to="./" text="Home" />
       }
+
+     
       <SidebarPinButton />
     </Sidebar>
   )

@@ -15,6 +15,7 @@ import (
 	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/petrule"
 	"github.com/team15/app/ent/pledge"
@@ -36,6 +37,7 @@ type RoomdetailQuery struct {
 	withPetrule       *PetruleQuery
 	withBedtype       *BedtypeQuery
 	withEmployee      *EmployeeQuery
+	withJobposition   *JobpositionQuery
 	withStaytype      *StaytypeQuery
 	withRoomdetails   *LeaseQuery
 	withCleaningrooms *CleaningRoomQuery
@@ -134,6 +136,24 @@ func (rq *RoomdetailQuery) QueryEmployee() *EmployeeQuery {
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.EmployeeTable, roomdetail.EmployeeColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryJobposition chains the current query on the jobposition edge.
+func (rq *RoomdetailQuery) QueryJobposition() *JobpositionQuery {
+	query := &JobpositionQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, rq.sqlQuery()),
+			sqlgraph.To(jobposition.Table, jobposition.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.JobpositionTable, roomdetail.JobpositionColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -418,6 +438,17 @@ func (rq *RoomdetailQuery) WithEmployee(opts ...func(*EmployeeQuery)) *Roomdetai
 	return rq
 }
 
+//  WithJobposition tells the query-builder to eager-loads the nodes that are connected to
+// the "jobposition" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RoomdetailQuery) WithJobposition(opts ...func(*JobpositionQuery)) *RoomdetailQuery {
+	query := &JobpositionQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withJobposition = query
+	return rq
+}
+
 //  WithStaytype tells the query-builder to eager-loads the nodes that are connected to
 // the "staytype" edge. The optional arguments used to configure the query builder of the edge.
 func (rq *RoomdetailQuery) WithStaytype(opts ...func(*StaytypeQuery)) *RoomdetailQuery {
@@ -518,17 +549,18 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 		nodes       = []*Roomdetail{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [7]bool{
+		loadedTypes = [8]bool{
 			rq.withPledge != nil,
 			rq.withPetrule != nil,
 			rq.withBedtype != nil,
 			rq.withEmployee != nil,
+			rq.withJobposition != nil,
 			rq.withStaytype != nil,
 			rq.withRoomdetails != nil,
 			rq.withCleaningrooms != nil,
 		}
 	)
-	if rq.withPledge != nil || rq.withPetrule != nil || rq.withBedtype != nil || rq.withEmployee != nil || rq.withStaytype != nil {
+	if rq.withPledge != nil || rq.withPetrule != nil || rq.withBedtype != nil || rq.withEmployee != nil || rq.withJobposition != nil || rq.withStaytype != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -654,6 +686,31 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Employee = n
+			}
+		}
+	}
+
+	if query := rq.withJobposition; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Roomdetail)
+		for i := range nodes {
+			if fk := nodes[i].roomdetail_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(jobposition.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Jobposition = n
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import (
 	"github.com/team15/app/ent/bedtype"
 	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/petrule"
 	"github.com/team15/app/ent/pledge"
@@ -136,6 +137,25 @@ func (rc *RoomdetailCreate) SetNillableEmployeeID(id *int) *RoomdetailCreate {
 // SetEmployee sets the employee edge to Employee.
 func (rc *RoomdetailCreate) SetEmployee(e *Employee) *RoomdetailCreate {
 	return rc.SetEmployeeID(e.ID)
+}
+
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (rc *RoomdetailCreate) SetJobpositionID(id int) *RoomdetailCreate {
+	rc.mutation.SetJobpositionID(id)
+	return rc
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableJobpositionID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetJobpositionID(*id)
+	}
+	return rc
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (rc *RoomdetailCreate) SetJobposition(j *Jobposition) *RoomdetailCreate {
+	return rc.SetJobpositionID(j.ID)
 }
 
 // SetStaytypeID sets the staytype edge to Staytype by id.
@@ -422,6 +442,25 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
 				},
 			},
 		}

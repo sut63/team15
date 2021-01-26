@@ -293,6 +293,11 @@ definitions:
         items:
           $ref: '#/definitions/ent.Employee'
         type: array
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
     type: object
   ent.Lease:
     properties:
@@ -517,6 +522,10 @@ definitions:
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.
+        type: object
+      jobposition:
+        $ref: '#/definitions/ent.Jobposition'
+        description: Jobposition holds the value of the jobposition edge.
         type: object
       petrule:
         $ref: '#/definitions/ent.Petrule'

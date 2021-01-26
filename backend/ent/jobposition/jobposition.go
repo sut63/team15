@@ -12,6 +12,8 @@ const (
 
 	// EdgeEmployees holds the string denoting the employees edge name in mutations.
 	EdgeEmployees = "employees"
+	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
+	EdgeRoomdetails = "roomdetails"
 
 	// Table holds the table name of the jobposition in the database.
 	Table = "jobpositions"
@@ -22,6 +24,13 @@ const (
 	EmployeesInverseTable = "employees"
 	// EmployeesColumn is the table column denoting the employees relation/edge.
 	EmployeesColumn = "jobposition_employees"
+	// RoomdetailsTable is the table the holds the roomdetails relation/edge.
+	RoomdetailsTable = "roomdetails"
+	// RoomdetailsInverseTable is the table name for the Roomdetail entity.
+	// It exists in this package in order to avoid circular dependency with the "roomdetail" package.
+	RoomdetailsInverseTable = "roomdetails"
+	// RoomdetailsColumn is the table column denoting the roomdetails relation/edge.
+	RoomdetailsColumn = "roomdetail_id"
 )
 
 // Columns holds all SQL columns for jobposition fields.

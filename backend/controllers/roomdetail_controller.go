@@ -198,6 +198,7 @@ func (ctl *RoomdetailController) GetRoomdetail(c *gin.Context) {
 	rd, err := ctl.client.Roomdetail.
 		Query().
 		WithEmployee().
+		WithJobposition().
 		WithStaytype().
 		WithBedtype().
 		WithPetrule().
@@ -231,6 +232,7 @@ func (ctl *RoomdetailController) ListRoomdetail(c *gin.Context) {
 		WithPledge().
 		WithStaytype().
 		WithEmployee().
+		WithJobposition().
 		All(context.Background())
 
 	if err != nil {

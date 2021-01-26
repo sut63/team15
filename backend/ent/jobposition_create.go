@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // JobpositionCreate is the builder for creating a Jobposition entity.
@@ -39,6 +40,21 @@ func (jc *JobpositionCreate) AddEmployees(e ...*Employee) *JobpositionCreate {
 		ids[i] = e[i].ID
 	}
 	return jc.AddEmployeeIDs(ids...)
+}
+
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (jc *JobpositionCreate) AddRoomdetailIDs(ids ...int) *JobpositionCreate {
+	jc.mutation.AddRoomdetailIDs(ids...)
+	return jc
+}
+
+// AddRoomdetails adds the roomdetails edges to Roomdetail.
+func (jc *JobpositionCreate) AddRoomdetails(r ...*Roomdetail) *JobpositionCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return jc.AddRoomdetailIDs(ids...)
 }
 
 // Mutation returns the JobpositionMutation object of the builder.
@@ -130,6 +146,25 @@ func (jc *JobpositionCreate) createSpec() (*Jobposition, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := jc.mutation.RoomdetailsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   jobposition.RoomdetailsTable,
+			Columns: []string{jobposition.RoomdetailsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
 				},
 			},
 		}

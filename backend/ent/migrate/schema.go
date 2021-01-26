@@ -319,6 +319,7 @@ var (
 		{Name: "bed", Type: field.TypeInt},
 		{Name: "bedtype_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "roomdetail_id", Type: field.TypeInt, Nullable: true},
 		{Name: "petrule_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "pledge_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "staytype_roomdetails", Type: field.TypeInt, Nullable: true},
@@ -344,22 +345,29 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "roomdetails_petrules_roomdetails",
+				Symbol:  "roomdetails_jobpositions_roomdetails",
 				Columns: []*schema.Column{RoomdetailsColumns[9]},
+
+				RefColumns: []*schema.Column{JobpositionsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "roomdetails_petrules_roomdetails",
+				Columns: []*schema.Column{RoomdetailsColumns[10]},
 
 				RefColumns: []*schema.Column{PetrulesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_pledges_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[10]},
+				Columns: []*schema.Column{RoomdetailsColumns[11]},
 
 				RefColumns: []*schema.Column{PledgesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_staytypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[11]},
+				Columns: []*schema.Column{RoomdetailsColumns[12]},
 
 				RefColumns: []*schema.Column{StaytypesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -456,7 +464,8 @@ func init() {
 	RepairinvoicesTable.ForeignKeys[1].RefTable = RentalstatusesTable
 	RoomdetailsTable.ForeignKeys[0].RefTable = BedtypesTable
 	RoomdetailsTable.ForeignKeys[1].RefTable = EmployeesTable
-	RoomdetailsTable.ForeignKeys[2].RefTable = PetrulesTable
-	RoomdetailsTable.ForeignKeys[3].RefTable = PledgesTable
-	RoomdetailsTable.ForeignKeys[4].RefTable = StaytypesTable
+	RoomdetailsTable.ForeignKeys[2].RefTable = JobpositionsTable
+	RoomdetailsTable.ForeignKeys[3].RefTable = PetrulesTable
+	RoomdetailsTable.ForeignKeys[4].RefTable = PledgesTable
+	RoomdetailsTable.ForeignKeys[5].RefTable = StaytypesTable
 }
