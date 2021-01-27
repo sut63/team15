@@ -17,9 +17,19 @@ definitions:
     properties:
       added:
         type: string
+      depositor:
+        type: string
+      depositortell:
+        type: string
       employee:
         type: integer
       info:
+        type: string
+      lease:
+        type: integer
+      parcelcode:
+        type: string
+      recipienttell:
         type: string
       statusd:
         type: integer
@@ -49,13 +59,15 @@ definitions:
   controllers.Roomdetail:
     properties:
       bed:
-        type: string
+        type: integer
       bedtype:
         type: integer
       employee:
         type: integer
       petrule:
         type: integer
+      phone:
+        type: string
       pledge:
         type: integer
       roomnumber:
@@ -65,7 +77,7 @@ definitions:
       roomtypename:
         type: string
       sleep:
-        type: string
+        type: integer
       staytype:
         type: integer
     type: object
@@ -168,15 +180,29 @@ definitions:
         $ref: '#/definitions/ent.CleanerName'
         description: CleanerName holds the value of the CleanerName edge.
         type: object
+      employee:
+        $ref: '#/definitions/ent.Employee'
+        description: Employee holds the value of the Employee edge.
+        type: object
       lengthTime:
         $ref: '#/definitions/ent.LengthTime'
         description: LengthTime holds the value of the LengthTime edge.
+        type: object
+      roomdetail:
+        $ref: '#/definitions/ent.Roomdetail'
+        description: Roomdetail holds the value of the roomdetail edge.
         type: object
     type: object
   ent.Deposit:
     properties:
       addedtime:
         description: Addedtime holds the value of the "addedtime" field.
+        type: string
+      depositor:
+        description: Depositor holds the value of the "depositor" field.
+        type: string
+      depositortell:
+        description: Depositortell holds the value of the "depositortell" field.
         type: string
       edges:
         $ref: '#/definitions/ent.DepositEdges'
@@ -190,12 +216,22 @@ definitions:
       info:
         description: Info holds the value of the "info" field.
         type: string
+      parcelcode:
+        description: Parcelcode holds the value of the "parcelcode" field.
+        type: string
+      recipienttell:
+        description: Recipienttell holds the value of the "recipienttell" field.
+        type: string
     type: object
   ent.DepositEdges:
     properties:
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the Employee edge.
+        type: object
+      lease:
+        $ref: '#/definitions/ent.Lease'
+        description: Lease holds the value of the Lease edge.
         type: object
       statusd:
         $ref: '#/definitions/ent.Statusd'
@@ -225,6 +261,11 @@ definitions:
     type: object
   ent.EmployeeEdges:
     properties:
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
       employees:
         description: Employees holds the value of the employees edge.
         items:
@@ -272,6 +313,11 @@ definitions:
         items:
           $ref: '#/definitions/ent.Employee'
         type: array
+      roomdetails:
+        description: Roomdetails holds the value of the roomdetails edge.
+        items:
+          $ref: '#/definitions/ent.Roomdetail'
+        type: array
     type: object
   ent.Lease:
     properties:
@@ -297,6 +343,11 @@ definitions:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.
         type: object
+      leases:
+        description: Leases holds the value of the leases edge.
+        items:
+          $ref: '#/definitions/ent.Deposit'
+        type: array
       roomdetail:
         $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the Roomdetail edge.
@@ -451,7 +502,7 @@ definitions:
     properties:
       bed:
         description: Bed holds the value of the "bed" field.
-        type: string
+        type: integer
       edges:
         $ref: '#/definitions/ent.RoomdetailEdges'
         description: |-
@@ -461,6 +512,9 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
+      phone:
+        description: Phone holds the value of the "phone" field.
+        type: string
       roomnumber:
         description: Roomnumber holds the value of the "roomnumber" field.
         type: string
@@ -472,7 +526,7 @@ definitions:
         type: string
       sleep:
         description: Sleep holds the value of the "sleep" field.
-        type: string
+        type: integer
     type: object
   ent.RoomdetailEdges:
     properties:
@@ -480,9 +534,18 @@ definitions:
         $ref: '#/definitions/ent.Bedtype'
         description: Bedtype holds the value of the bedtype edge.
         type: object
+      cleaningrooms:
+        description: Cleaningrooms holds the value of the cleaningrooms edge.
+        items:
+          $ref: '#/definitions/ent.CleaningRoom'
+        type: array
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.
+        type: object
+      jobposition:
+        $ref: '#/definitions/ent.Jobposition'
+        description: Jobposition holds the value of the jobposition edge.
         type: object
       petrule:
         $ref: '#/definitions/ent.Petrule'

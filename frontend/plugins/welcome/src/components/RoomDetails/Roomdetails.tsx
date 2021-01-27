@@ -37,6 +37,7 @@ import RoomDetails from '.';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import ComponanceRoomdetailsTable from '../RoomdetailsTable';
+import ComponanceSearchRoom from '../SearchRoom';
 
 // css style 
 const useStyles = makeStyles((theme: Theme) =>
@@ -105,18 +106,27 @@ export default function CreateRoomdetail() {
   const [employees, setEmployees] = useState<EntEmployee[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [noroomerror, setRoomnumbererror] = React.useState('');
+  const [roomnameerror, setRoomnameerror] = React.useState('');
+  const [phoneerror, setPhoneerror] = React.useState('');
+  const [sleeperror, setSleeperror] = React.useState('');
+  const [bederror, setBederror] = React.useState('');
+  const [priceerror, setRoompriceerror] = React.useState('');
+  const [errormessege, setErrorMessege] = useState(String);
+  const [alerttype, setAlertType] = useState(String);
+
   const [price, setRoomprice] = useState(String);
   const [noroom, setRoomnumber] = useState(String);
   const [roomname, setRoomtypename] = useState(String);
-  const [sleep, setSleep] = useState(String);
-  const [bed, setBed] = useState(String);
+  const [phone, setPhone] = useState(String);
+  const [sleep, setSleep] = useState(Number);
+  const [bed, setBed] = useState(Number);
+
   const [staytype, setStaytype] = useState(Number);
   const [bedtype, setBedtype] = useState(Number);
   const [petrule, setPetrule] = useState(Number);
   const [pledge, setPledge] = useState(Number);
   const [employeeid, setEmployee] = useState(Number);
-
-  
 
   useEffect(() => {
     const getRoomdetais = async () => {
@@ -155,12 +165,12 @@ export default function CreateRoomdetail() {
       };
       getPledges();
 
-        const getEmployees = async () => {
-          const em = await api.listEmployee();
-            setLoading(false);
-            setEmployees(em);
-          };
-          getEmployees();
+     const getEmployees = async () => {
+       const em = await api.listEmployee();
+        setLoading(false);
+        setEmployees(em);
+       };
+        getEmployees();
         
         
          {const checkEmployeeLoginData = async () => {
@@ -182,26 +192,105 @@ export default function CreateRoomdetail() {
       console.log(employeeid)
       console.log("testing")
 
+      
+  const validateBed = (val: number) => {
+    return val <= 4 && val >=1 ? true:false
+  }
 
-  const handleRoompriceChange = (event: any) => {
+  const validateSleep = (val: number) => {
+    return val <= 10 && val >=1 ? true:false
+  }
+
+  const validateNoroom = (val: string) => {
+    return val.match("[ABD]\\d{3}");
+  }
+
+  const validateRoomname = (val: string) => {
+    return val.match("^[A-Z]{1}[0-9]{3}$");
+  }
+
+  const validatePhone = (val: string) => {
+    return val.match("^([0-9]{3})-([0-9]{3})-([0-9]{4})$");
+  }
+
+  const validatePrice = (val: string) => {
+    return val.match("^([0-9]{1})$|^([0-9]{2})$|^([0-9]{3})$|^(([0-9]{1}),([0-9]{3}))$|^(([0-9]{2}),([0-9]{3}))$|^(([0-9]{3}),([0-9]{3}))$");
+  }
+
+
+
+  const checkPattern  = (id: string, value:string) => {
+    console.log(value);
+    switch(id) {
+      case 'bed':
+        validateBed(Number(value)) ? setBederror('') : setBederror('จำนวนเตียงต่อห้องต้องไม่เกิน 1-4 เตียง');
+        return;
+      case 'sleep':
+        validateSleep(Number(value)) ? setSleeperror('') : setSleeperror('จำนวนผู้เข้าพักต่อห้องต้องไม่เกิน 1-10 คน');
+      return;
+      case 'roomnumber':
+        validateNoroom(value) ? setRoomnumbererror('') : setRoomnumbererror('เลขห้องต้องขึ้นต้นด้วยตัวอักษร A,B,D และตามด้วยเลขจำนวน 3 หลักเท่านั้น');
+      return;
+      case 'roomname':
+        validateRoomname(value) ? setRoomnameerror('') : setRoomnameerror ('');
+      return;
+      case 'phone':
+        validatePhone(value) ? setPhoneerror('') : setPhoneerror ('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
+      return;
+      case 'roomprice':
+        validatePrice(value) ? setRoompriceerror('') : setRoompriceerror ('ใส่รูปแบบราคาไม่ถูกต้อง');
+      return;
+        default:
+          return;
+    }
+  }
+
+
+  const handleRoompriceChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof price;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
     setRoomprice(event.target.value as string);
   };
 
-  const handleNoroomChange = (event: any) => {
+  const handleNoroomChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof noroom;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
     setRoomnumber(event.target.value as string);
   };
   
   
-  const handleRoomtypenameChange = (event: any) => {
+  const handleRoomtypenameChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof roomname;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
     setRoomtypename(event.target.value as string);
   };
 
-  const handleSleepChange = (event: any) => {
-    setSleep(event.target.value as string);
+  const handlePhoneChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof phone;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
+    setPhone(event.target.value as string);
+  };
+
+  const handleSleepChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('sleep', validateValue)
+    setSleep(event.target.value as number);
   };
   
-  const handleBedChange = (event: any) => {
-    setBed(event.target.value as string);
+  const handleBedChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('bed', validateValue)
+    setBed(event.target.value as number);
   };
   
   
@@ -226,61 +315,95 @@ export default function CreateRoomdetail() {
   };
 
   const listRoom = () => {
+    setStatus(false);
+    if(errormessege == "บันทึกข้อมูลสำเร็จ"){
     window.location.href ="http://localhost:3000/RoomDetails";
+    }
   };
-          const forCheck = () => {
-            var i = 0;
-            for (const rdt of roomdetail){
-            i++;
-            }
-            if(i === 0){
-              CreateRoomdetail();
-          }
-          else{
-            for (const rdt of roomdetail){
-              if(noroom === rdt.roomnumber){
-                setStatus(true);
-                setAlert(false);
-                setAlerts(false);
-                //window.location.reload(false);
-        }
-        else{
-          CreateRoomdetail();
-        }
+
+ 
+  const forCheck = () => {
+    var i = 0;
+    var check = 0;
+    for (const rdt of roomdetail){
+      console.log(rdt);
+     i++;
+    }
+    console.log(i);
+    if(i === 0){
+      CreateRoomdetail();
+   }
+   else{
+    for (const rdt of roomdetail){
+      if(noroom === rdt.roomnumber){
+        //console.log("ซ้ำ");
+        setAlertType("error");
+        setErrorMessege("มีข้อมูลห้องในระบบแล้ว")
+        setStatus(true);
+        check = 1;
+        break;
+        //window.location.reload(false);
      }
+ }
+ if(check != 1){
+  CreateRoomdetail();
+}
    }
   }
 
+  const checkCaseSaveError = (field: string) => {
+    if (field == "bed") { setErrorMessege("ข้อมูลfield จำนวนเตียงผิด"); }
+        else if (field == "sleep") { setErrorMessege("ข้อมูลfield จำนวนผู้เข้าพักผิด"); }
+        else if (field == "roomnumber") { setErrorMessege("ข้อมูลfield เลขห้องผิด"); }
+        else if (field == "roomtypename") { setErrorMessege("ข้อมูลfield ชื่อประเภทห้องพักผิด"); }
+        else if (field == "roomprice") { setErrorMessege("ข้อมูลfield ราคาห้องผิด"); }
+        else if (field == "phone") { setErrorMessege("ข้อมูลfield เบอร์โทรศัพท์ผิด"); }
+        else { setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ"); }
+  }
+
   const CreateRoomdetail = async () => {
-    if ((noroom != "") && (noroom != null) && (roomname != "") && (roomname != null) && (price != "") && (price != null)
-    && (sleep != null) && (sleep != null)  && (bed != null) && (bed != null) 
-    && (bedtype != null) && (petrule != null) && (pledge != null) && (staytype != null)){
-    
+    if ((bedtype != null) && (petrule != null) && (pledge != null) && (staytype != null)){
+      const apiUrl = 'http://localhost:8080/api/v1/roomdetails';
       const roomdetail = {
       roomnumber: noroom,
       roomprice: price,
       roomtypename: roomname,
-      sleep: sleep,
-      bed: bed,
+      phone: phone,
+      sleep: Number(sleep),
+      bed: Number(bed),
       bedtype: bedtype,
       petrule: petrule,
       pledge: pledge,
       staytype: staytype,
       employee: employeeid,
     };
-    console.log(roomdetail);
-    const res: any = await api.createRoomdetail({ roomdetail: roomdetail });
-    setStatus(true);
-    if (res.id != '') {
-      setAlert(true);
-      //window.location.reload(false);
-    }
+   
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(roomdetail),
+    };
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setStatus(true);
+        if (data.status === true) {
+          setErrorMessege("บันทึกข้อมูลสำเร็จ");
+          setAlertType("success");
+        }
+        else {
+          checkCaseSaveError(data.error.Name);
+          setAlertType("error");
+        }
+      });
   }
-     else {
-      setAlert(false);
-      setStatus(true);
-    }
-  };
+  else{
+    setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ");
+    setAlertType("error");
+    setStatus(true);
+  }
+       };
 
 
   return (
@@ -306,11 +429,13 @@ export default function CreateRoomdetail() {
               <TextField 
                 style={{ width: 70, marginBottom: 5}}
                 id="roomnumber"
+                error = {noroomerror ? true : false}
                 label=""
                 variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
+                helperText= {noroomerror}
                 value={noroom}
                 onChange={handleNoroomChange}
               /> 
@@ -321,11 +446,13 @@ export default function CreateRoomdetail() {
               <TextField 
                 style={{ width: 250}}
                 id="roomtypename"
+                error = {roomnameerror ? true : false}
                 label=""
                 variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
+                helperText= {roomnameerror}
                 value={roomname}
                 onChange={handleRoomtypenameChange}
               /> 
@@ -337,11 +464,13 @@ export default function CreateRoomdetail() {
               <TextField 
                 style={{ width: 100}}
                 id="roomprice"
+                error = {priceerror ? true : false}
                 label=""
                 variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
+                helperText= {priceerror}
                 value={price}
                 onChange={handleRoompriceChange}
               />
@@ -351,11 +480,13 @@ export default function CreateRoomdetail() {
               <TextField 
                 style={{ width: 50}}
                 id="sleep"
+                error = {sleeperror ? true : false}
                 label=""
                 variant="standard"
                 //color="secondary"
-                type="string"
+                type="number"
                 size="medium"
+                helperText= {sleeperror}
                 value={sleep}
                 onChange={handleSleepChange}
               />
@@ -366,13 +497,32 @@ export default function CreateRoomdetail() {
               <TextField 
                 style={{ width: 50}}
                 id="bed"
+                error = {bederror ? true : false}
+                label=""
+                variant="standard"
+                //color="secondary"
+                type="number"
+                size="medium"
+                helperText= {bederror}
+                value={bed}
+                onChange={handleBedChange}
+              />
+              </FormControl>
+
+              <strong className={classes.fieldLabel}>เบอร์โทรศัพท์ที่สามารถติดต่อได้(Phone)</strong>
+              <FormControl>
+              <TextField 
+                style={{ width: 110}}
+                id="phone"
+                error = {phoneerror ? true : false}
                 label=""
                 variant="standard"
                 //color="secondary"
                 type="string"
                 size="medium"
-                value={bed}
-                onChange={handleBedChange}
+                helperText= {phoneerror}
+                value={phone}
+                onChange={handlePhoneChange}
               />
               </FormControl>
               
@@ -461,6 +611,8 @@ export default function CreateRoomdetail() {
                 บันทึกข้อมูลห้อง
              </Button>
 
+          
+
               { /*<Button
                    style={{ width: 150, backgroundColor: "#C1FF3C",marginLeft: 20}}
                 component={RouterLink}
@@ -470,25 +622,15 @@ export default function CreateRoomdetail() {
                 ดูข้อมูลที่บันทึก
               </Button> */}
               <div>
-              {status ? (
+             {status ? (
                         <div>
-                    {(!alert2) ?
-                          <Alert severity="warning" style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => {window.location.reload(false)}}>
-                          มีข้อมูลนี้อยู่ในระบบแล้ว
-                          </Alert>
-                      :
-                      (alert) ? (
-                        <Alert severity="success" style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => {listRoom()}}>
-                            บันทึกสำเร็จ
-                        </Alert>
-                    ) : (
-                            <Alert severity="warning" style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => {setStatus(false)}}>
-                                บันทึกไม่สำเร็จ กรุณาใส่ข้อมูลให้ครบ
-                            </Alert>
-                        )
-                    }
+                            {alerttype != "" ? (
+                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => { listRoom() }}>
+                                    {errormessege}
+                                </Alert>
+                            ) : null}
                         </div>
-                      ) : null}</div>
+                    ) : null}</div>
       </InfoCard>
     </Grid>
   </Grid>

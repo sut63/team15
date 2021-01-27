@@ -634,6 +634,22 @@ func (c *CleaningRoomClient) GetX(ctx context.Context, id int) *CleaningRoom {
 	return cr
 }
 
+// QueryRoomdetail queries the roomdetail edge of a CleaningRoom.
+func (c *CleaningRoomClient) QueryRoomdetail(cr *CleaningRoom) *RoomdetailQuery {
+	query := &RoomdetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.RoomdetailTable, cleaningroom.RoomdetailColumn),
+		)
+		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryCleanerName queries the CleanerName edge of a CleaningRoom.
 func (c *CleaningRoomClient) QueryCleanerName(cr *CleaningRoom) *CleanerNameQuery {
 	query := &CleanerNameQuery{config: c.config}
@@ -659,6 +675,22 @@ func (c *CleaningRoomClient) QueryLengthTime(cr *CleaningRoom) *LengthTimeQuery 
 			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
 			sqlgraph.To(lengthtime.Table, lengthtime.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.LengthTimeTable, cleaningroom.LengthTimeColumn),
+		)
+		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryEmployee queries the Employee edge of a CleaningRoom.
+func (c *CleaningRoomClient) QueryEmployee(cr *CleaningRoom) *EmployeeQuery {
+	query := &EmployeeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.EmployeeTable, cleaningroom.EmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
 		return fromV, nil
@@ -774,6 +806,22 @@ func (c *DepositClient) QueryStatusd(d *Deposit) *StatusdQuery {
 			sqlgraph.From(deposit.Table, deposit.FieldID, id),
 			sqlgraph.To(statusd.Table, statusd.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, deposit.StatusdTable, deposit.StatusdColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLease queries the Lease edge of a Deposit.
+func (c *DepositClient) QueryLease(d *Deposit) *LeaseQuery {
+	query := &LeaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(deposit.Table, deposit.FieldID, id),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, deposit.LeaseTable, deposit.LeaseColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -944,6 +992,22 @@ func (c *EmployeeClient) QueryRepairinvoices(e *Employee) *RepairinvoiceQuery {
 	return query
 }
 
+// QueryCleaningrooms queries the cleaningrooms edge of a Employee.
+func (c *EmployeeClient) QueryCleaningrooms(e *Employee) *CleaningRoomQuery {
+	query := &CleaningRoomQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, id),
+			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.CleaningroomsTable, employee.CleaningroomsColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *EmployeeClient) Hooks() []Hook {
 	return c.hooks.Employee
@@ -1036,6 +1100,22 @@ func (c *JobpositionClient) QueryEmployees(j *Jobposition) *EmployeeQuery {
 			sqlgraph.From(jobposition.Table, jobposition.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, jobposition.EmployeesTable, jobposition.EmployeesColumn),
+		)
+		fromV = sqlgraph.Neighbors(j.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRoomdetails queries the roomdetails edge of a Jobposition.
+func (c *JobpositionClient) QueryRoomdetails(j *Jobposition) *RoomdetailQuery {
+	query := &RoomdetailQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := j.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(jobposition.Table, jobposition.FieldID, id),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, jobposition.RoomdetailsTable, jobposition.RoomdetailsColumn),
 		)
 		fromV = sqlgraph.Neighbors(j.driver.Dialect(), step)
 		return fromV, nil
@@ -1167,6 +1247,22 @@ func (c *LeaseClient) QueryEmployee(l *Lease) *EmployeeQuery {
 			sqlgraph.From(lease.Table, lease.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, lease.EmployeeTable, lease.EmployeeColumn),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLeases queries the leases edge of a Lease.
+func (c *LeaseClient) QueryLeases(l *Lease) *DepositQuery {
+	query := &DepositQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, id),
+			sqlgraph.To(deposit.Table, deposit.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, lease.LeasesTable, lease.LeasesColumn),
 		)
 		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
 		return fromV, nil
@@ -1931,6 +2027,22 @@ func (c *RoomdetailClient) QueryEmployee(r *Roomdetail) *EmployeeQuery {
 	return query
 }
 
+// QueryJobposition queries the jobposition edge of a Roomdetail.
+func (c *RoomdetailClient) QueryJobposition(r *Roomdetail) *JobpositionQuery {
+	query := &JobpositionQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
+			sqlgraph.To(jobposition.Table, jobposition.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, roomdetail.JobpositionTable, roomdetail.JobpositionColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryStaytype queries the staytype edge of a Roomdetail.
 func (c *RoomdetailClient) QueryStaytype(r *Roomdetail) *StaytypeQuery {
 	query := &StaytypeQuery{config: c.config}
@@ -1956,6 +2068,22 @@ func (c *RoomdetailClient) QueryRoomdetails(r *Roomdetail) *LeaseQuery {
 			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
 			sqlgraph.To(lease.Table, lease.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, roomdetail.RoomdetailsTable, roomdetail.RoomdetailsColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCleaningrooms queries the cleaningrooms edge of a Roomdetail.
+func (c *RoomdetailClient) QueryCleaningrooms(r *Roomdetail) *CleaningRoomQuery {
+	query := &CleaningRoomQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(roomdetail.Table, roomdetail.FieldID, id),
+			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, roomdetail.CleaningroomsTable, roomdetail.CleaningroomsColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil

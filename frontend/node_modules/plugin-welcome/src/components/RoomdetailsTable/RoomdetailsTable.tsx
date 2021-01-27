@@ -69,6 +69,7 @@ export default function ComponentsTable() {
            <TableCell align="center">ประเภทเตียงนอน/จำนวนเตียง</TableCell>
            <TableCell align="center">ประเภทการเข้าพัก</TableCell>
            <TableCell align="center">ข้อจำกัดการจ่ายมัดจำ</TableCell>
+           <TableCell align="center">เบอร์โทรศัพท์</TableCell>
            <TableCell align="center">ลบข้อมูล</TableCell>
          </TableRow>
        </TableHead>
@@ -82,6 +83,7 @@ export default function ComponentsTable() {
              <TableCell align="center">{item.edges?.bedtype?.bedtypename} / {item.bed} เตียง</TableCell>
              <TableCell align="center">{item.edges?.pledge?.provision}</TableCell>
              <TableCell align="center">{item.edges?.petrule?.petrule}</TableCell>
+             <TableCell align="center">{item.phone}</TableCell>
              <TableCell align="center">
                <Button 
                onClick={() => {

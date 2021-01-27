@@ -11,6 +11,7 @@ import React, { useState, useEffect, FC } from 'react';
 import SaveIcon from '@material-ui/icons/Save'; // icon save
 import { Link as RouterLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import SearchIcon from '@material-ui/icons/Search';
 
 import {
   Container,
@@ -31,6 +32,7 @@ import { DefaultApi } from '../../api/apis';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import { EntStatusd } from '../../api/models/EntStatusd'; // import interface Statusd
 import { EntDeposit } from '../../api/models/EntDeposit'; // import interface Deposit
+import { EntLease } from '../../api/models/EntLease'; // import interface Lease
 import ComponanceDepositTable from '../DepositTable';
 
 // css style 
@@ -77,21 +79,44 @@ export default function recordDeposit() {
 
  const [employees, setEmployees] = React.useState<EntEmployee[]>([]);
  const [statusds, setStatusds] = React.useState<EntStatusd[]>([]);
+ const [leases, setLeases] = React.useState<EntLease[]>([]);
 
  const [status, setStatus] = useState(false);
  const [status2, setStatus2] = useState(false);
  const [alert, setAlert] = useState(false);
+ const [alert2, setAlerts] = useState(true);
+ const [alerttype, setAlertType] = useState(String);
+ const [errormessege, setErrorMessege] = useState(String);
 
  const [loading, setLoading] = useState(true);
 
+ const [infoerror, setInfoerror] = React.useState('');
+ const [depositorerror, setDepositorerror] = React.useState('');
+ const [depositortellerror, setDepositortellerror] = React.useState('');
+ const [recipienttellerror, setRecipienttellerror] = React.useState('');
+ const [parcelcodeerror, setParcelcodeerror] = React.useState('');
+
  const [employee, setEmployee] = useState(Number);
  const [info, setInfo] = useState(String);
+ const [depositor, setDepositor] = useState(String);
+ const [depositortell, setDepositortell] = useState(String);
+ const [recipienttell, setRecipienttell] = useState(String);
+ const [parcelcode, setParcelcode] = useState(String);
  const [added, setAdded] = useState(String);
  const [statusd, setStatusd] = useState(Number);
+ const [lease, setLease] = useState(Number);
 
  useEffect(() => {
+  const getLeases = async () => {
+    const res = await http.listLease({ offset: 0 });
+    setLoading(false);
+    setLeases(res);
+    console.log(res);
+  };
+  getLeases();
+
   const getEmployees = async () => {
-    const res = await http.listEmployee({ offset: 0 });
+    const res = await http.listEmployee();
     setLoading(false);
     setEmployees(res);
     console.log(res);
@@ -116,6 +141,35 @@ export default function recordDeposit() {
 
 }, [loading]);
 
+  const validateParcelcode = (val: string) => {
+    return val.match("^([A-Z]{3})-([0-9]{4})$");
+  }
+
+  const validateDepositortell = (val: string) => {
+    return val.match("^([0-9]{3})-([0-9]{3})-([0-9]{4})$");
+  }
+
+  const validateRecipienttell = (val: string) => {
+    return val.match("^([0-9]{3})-([0-9]{3})-([0-9]{4})$");
+  }
+
+  const checkPattern  = (id: string, value:string) => {
+    console.log(value);
+    switch(id) {
+      case 'depositortell':
+        validateDepositortell(value) ? setDepositortellerror('') : setDepositortellerror ('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
+      return;
+      case 'recipienttell':
+        validateRecipienttell(value) ? setRecipienttellerror('') : setRecipienttellerror ('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
+      return;
+      case 'parcelcode':
+        validateParcelcode(value) ? setParcelcodeerror('') : setParcelcodeerror ('ใส่รูปแบบรหัสพัสดุถูกต้อง XXX-xxxx');
+      return;
+        default:
+          return;
+    }
+  }
+
 
 const getDeposit = async () => {
   const res = await http.listDeposit({ offset: 0 });
@@ -127,6 +181,35 @@ const getDeposit = async () => {
     setInfo(event.target.value as string);
   };
 
+  const DepositorhandleChange = (
+    event: React.ChangeEvent<{ name: string; value: string }>,) => {
+    setDepositor(event.target.value as string);
+  };
+
+  const DepositortellhandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof depositortell;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
+    setDepositortell(event.target.value as string);
+  };
+
+  const RecipienttellhandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof recipienttell;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
+    setRecipienttell(event.target.value as string);
+  };
+
+  const ParcelcodehandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as  typeof parcelcode;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
+    setParcelcode(event.target.value as string);
+  };
+
   const AddedhandleChange = (event: any) => {
     setAdded(event.target.value as string);
   };
@@ -134,65 +217,78 @@ const getDeposit = async () => {
   const EmployeehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setEmployee(event.target.value as number);
   };
+
   const StatusdhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setStatusd(event.target.value as number);
   };
 
-  const listDeposit = () => {
-    window.location.href ="http://localhost:3000/DepositTable";
+  const LeasehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setLease(event.target.value as number);
   };
 
-const checkEmployeeLoginData = async () => {
-            const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
-            setLoading(false);
-            if(jobdata != "��ѡ�ҹ�;ѡ"){
-              localStorage.setItem("employeedata", JSON.stringify(null));
-              localStorage.setItem("jobpositiondata", JSON.stringify(null));
-              history.pushState("", "", "./");
-              window.location.reload(false);
-            }
-            else{
-              listDeposit()
-            }
-          }
-const listRoom = () => {
-    window.location.href ="http://localhost:3000/RoomDetails";
-  };
-
-// create deposit
-const CreateDeposit = async () => {
-  const deposits = {
-    added: added + ":00+07:00",
-    info: info,
-    statusd: statusd,
-    employee: employee,
-  };
-  const timer2 = setTimeout(() => {
-     setStatus2(true);
-  }, 2000);
-  const timer3 = setTimeout(() => {
-     setStatus2(false);
-  }, 6000);
-  const res: any = await http.createDeposit({ deposit: deposits });
-  if (res.id != '') {
-    setAlert(true);
-	setStatus2(false);
+  const checkCaseSaveError = (field: string) => {
+    if (field == "depositortell") { setErrorMessege("ข้อมูล field เบอร์โทรศัพท์ของผู้ส่งผิด"); }
+        else if (field == "recipienttell") { setErrorMessege("ข้อมูล field เบอร์โทรศัพท์ของผู้รับผิด"); }
+        else if (field == "parcelcode") { setErrorMessege("ข้อมูลfield เลขรหัสสินค้าผิด"); }
+        else { setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ"); }
   }
-  setStatus(true);
-  const timer = setTimeout(() => {
-     setStatus(false);
-	 //window.location.reload(false);
-  }, 7000);
-  
-  console.log(deposits);
-};
+
+const CreateDeposit = async () => {
+    if ((lease != null) && (employee != null) && (statusd != null) && (info != null)){
+	  const apiUrl = 'http://localhost:8080/api/v1/deposits';
+      const deposit = {
+        added: added + ":00+07:00",
+		info: info,
+		depositor: depositor,
+		depositortell: depositortell,
+		recipienttell: recipienttell,
+		parcelcode: parcelcode,
+		statusd: statusd,
+		lease: lease,
+		employee: employee,
+    };
+    console.log(deposit);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(deposit),
+    };
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setStatus(true);
+        if (data.status === true) {
+          setErrorMessege("บันทึกข้อมูลสำเร็จ");
+          setAlertType("success");
+        }
+        else {
+          checkCaseSaveError(data.error.Name);
+          setAlertType("error");
+        }
+      });
+  }
+  else{
+    setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ");
+    setAlertType("error");
+    setStatus(true);
+  }
+       };
 
     return (
     <Page theme={pageTheme.tool}>
 
       <Content>
         <ContentHeader title="Deposit invoice"> 
-              <Button onClick={() => {CreateDeposit();}} variant="contained"  color="primary" startIcon={<SaveRoundedIcon/>}> Create new deposit invoice </Button>
+              <Button
+                style={{ width: 200, backgroundColor: "#5319e7",marginTop: 49,marginLeft: 20}}
+                component={RouterLink} to="/SearchDeposit"
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+              >
+                Search Deposit
+             </Button>
         </ContentHeader>  
         <div className={classes.root}>
           <form noValidate autoComplete="off">
@@ -213,6 +309,20 @@ const CreateDeposit = async () => {
                 />
                </FormControl>
               </div>
+
+              <div className={classes.paper}><strong>Name</strong></div>
+			  <Select
+                  name="Lease"
+				  id="lease"
+                  value={lease} 
+                  onChange={LeasehandleChange}
+                >
+                {leases.map(item => {
+                    return (
+                      <MenuItem key={item.id} value={item.id}>{item.tenant}</MenuItem>
+                    );
+                  })}
+              </Select>
 
               <div className={classes.paper}><strong>Status Deposit</strong></div>
 			  <Select
@@ -244,6 +354,84 @@ const CreateDeposit = async () => {
                 />
               </form>
 
+			  <div className={classes.paper}><strong>Depositor</strong></div>
+			  <form className={classes.root} noValidate>
+                <TextField
+                  
+                  name="depositor"
+				  id="depositor"
+				  style={{ margin: 8 }}
+                  type="text"
+				  fullWidth
+				  margin="normal"
+				  InputLabelProps={{
+					shrink: true,
+				  }}
+                  value={depositor} 
+                  onChange={DepositorhandleChange}
+                />
+              </form>
+
+			  <div className={classes.paper}><strong>Depositor Tell</strong></div>
+			  <form className={classes.root} noValidate>
+                <TextField
+                  
+                  name="depositortell"
+				  id="depositortell"
+				  error = {depositortellerror ? true : false}
+				  helperText= {depositortellerror}
+				  style={{ margin: 8 }}
+                  type="text"
+				  fullWidth
+				  margin="normal"
+				  InputLabelProps={{
+					shrink: true,
+				  }}
+                  value={depositortell} 
+                  onChange={DepositortellhandleChange}
+                />
+              </form>
+
+			  <div className={classes.paper}><strong>Recipient Tell</strong></div>
+			  <form className={classes.root} noValidate>
+                <TextField
+                  
+                  name="recipienttell"
+				  id="recipienttell"
+				  error = {recipienttellerror ? true : false}
+				  helperText= {recipienttellerror}
+				  style={{ margin: 8 }}
+                  type="text"
+				  fullWidth
+				  margin="normal"
+				  InputLabelProps={{
+					shrink: true,
+				  }}
+                  value={recipienttell} 
+                  onChange={RecipienttellhandleChange}
+                />
+              </form>
+
+			  <div className={classes.paper}><strong>Parcel Code</strong></div>
+			  <form className={classes.root} noValidate>
+                <TextField
+                  
+                  name="parcelcode"
+				  id="parcelcode"
+				  error = {parcelcodeerror ? true : false}
+				  helperText= {parcelcodeerror}
+				  style={{ margin: 8 }}
+                  type="text"
+				  fullWidth
+				  margin="normal"
+				  InputLabelProps={{
+					shrink: true,
+				  }}
+                  value={parcelcode} 
+                  onChange={ParcelcodehandleChange}
+                />
+              </form>
+
 			  <div className={classes.paper}><strong>Info</strong></div>
 			  <form className={classes.root} noValidate>
                 <TextField
@@ -262,19 +450,20 @@ const CreateDeposit = async () => {
                 />
               </form>
 
-			  {status ? ( 
-                      <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
-              {alert ? ( 
-			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} onClose={() => {listRoom()}}>Successfull Save</Alert>
-                      ) 
-              : null} </div>
-            ) : null}
-			{status2 ? ( 
-                      <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
-              {alert ? ( 
-                      null) 
-              : (<Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }}> Unsuccessfull Save!! </Alert>)} </div>
-            ) : null}
+			  <div>
+					<Button onClick={() => {CreateDeposit();}} variant="contained"  color="primary" startIcon={<SaveRoundedIcon/>}> Create new deposit invoice </Button>
+			  </div>
+
+			  <div>
+             {status ? (
+                        <div>
+                            {alerttype != "" ? (
+                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20, marginLeft:6 }} >
+                                    {errormessege}
+                                </Alert>
+                            ) : null}
+                        </div>
+                    ) : null}</div>
 		
             </FormControl>
 			<div>

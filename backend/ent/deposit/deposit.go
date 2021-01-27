@@ -11,11 +11,21 @@ const (
 	FieldAddedtime = "addedtime"
 	// FieldInfo holds the string denoting the info field in the database.
 	FieldInfo = "info"
+	// FieldDepositor holds the string denoting the depositor field in the database.
+	FieldDepositor = "depositor"
+	// FieldDepositortell holds the string denoting the depositortell field in the database.
+	FieldDepositortell = "depositortell"
+	// FieldRecipienttell holds the string denoting the recipienttell field in the database.
+	FieldRecipienttell = "recipienttell"
+	// FieldParcelcode holds the string denoting the parcelcode field in the database.
+	FieldParcelcode = "parcelcode"
 
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "Employee"
 	// EdgeStatusd holds the string denoting the statusd edge name in mutations.
 	EdgeStatusd = "Statusd"
+	// EdgeLease holds the string denoting the lease edge name in mutations.
+	EdgeLease = "Lease"
 
 	// Table holds the table name of the deposit in the database.
 	Table = "deposits"
@@ -33,6 +43,13 @@ const (
 	StatusdInverseTable = "statusds"
 	// StatusdColumn is the table column denoting the Statusd relation/edge.
 	StatusdColumn = "statusd_id"
+	// LeaseTable is the table the holds the Lease relation/edge.
+	LeaseTable = "deposits"
+	// LeaseInverseTable is the table name for the Lease entity.
+	// It exists in this package in order to avoid circular dependency with the "lease" package.
+	LeaseInverseTable = "leases"
+	// LeaseColumn is the table column denoting the Lease relation/edge.
+	LeaseColumn = "lease_id"
 )
 
 // Columns holds all SQL columns for deposit fields.
@@ -40,10 +57,28 @@ var Columns = []string{
 	FieldID,
 	FieldAddedtime,
 	FieldInfo,
+	FieldDepositor,
+	FieldDepositortell,
+	FieldRecipienttell,
+	FieldParcelcode,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Deposit type.
 var ForeignKeys = []string{
 	"employee_id",
+	"lease_id",
 	"statusd_id",
 }
+
+var (
+	// InfoValidator is a validator for the "info" field. It is called by the builders before save.
+	InfoValidator func(string) error
+	// DepositorValidator is a validator for the "depositor" field. It is called by the builders before save.
+	DepositorValidator func(string) error
+	// DepositortellValidator is a validator for the "depositortell" field. It is called by the builders before save.
+	DepositortellValidator func(string) error
+	// RecipienttellValidator is a validator for the "recipienttell" field. It is called by the builders before save.
+	RecipienttellValidator func(string) error
+	// ParcelcodeValidator is a validator for the "parcelcode" field. It is called by the builders before save.
+	ParcelcodeValidator func(string) error
+)

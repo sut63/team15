@@ -112,15 +112,22 @@ func Roomprice(v string) predicate.Roomdetail {
 	})
 }
 
+// Phone applies equality check predicate on the "phone" field. It's identical to PhoneEQ.
+func Phone(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPhone), v))
+	})
+}
+
 // Sleep applies equality check predicate on the "sleep" field. It's identical to SleepEQ.
-func Sleep(v string) predicate.Roomdetail {
+func Sleep(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldSleep), v))
 	})
 }
 
 // Bed applies equality check predicate on the "bed" field. It's identical to BedEQ.
-func Bed(v string) predicate.Roomdetail {
+func Bed(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldBed), v))
 	})
@@ -459,22 +466,133 @@ func RoompriceContainsFold(v string) predicate.Roomdetail {
 	})
 }
 
+// PhoneEQ applies the EQ predicate on the "phone" field.
+func PhoneEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneNEQ applies the NEQ predicate on the "phone" field.
+func PhoneNEQ(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneIn applies the In predicate on the "phone" field.
+func PhoneIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPhone), v...))
+	})
+}
+
+// PhoneNotIn applies the NotIn predicate on the "phone" field.
+func PhoneNotIn(vs ...string) predicate.Roomdetail {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPhone), v...))
+	})
+}
+
+// PhoneGT applies the GT predicate on the "phone" field.
+func PhoneGT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneGTE applies the GTE predicate on the "phone" field.
+func PhoneGTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneLT applies the LT predicate on the "phone" field.
+func PhoneLT(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneLTE applies the LTE predicate on the "phone" field.
+func PhoneLTE(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneContains applies the Contains predicate on the "phone" field.
+func PhoneContains(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneHasPrefix applies the HasPrefix predicate on the "phone" field.
+func PhoneHasPrefix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneHasSuffix applies the HasSuffix predicate on the "phone" field.
+func PhoneHasSuffix(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneEqualFold applies the EqualFold predicate on the "phone" field.
+func PhoneEqualFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPhone), v))
+	})
+}
+
+// PhoneContainsFold applies the ContainsFold predicate on the "phone" field.
+func PhoneContainsFold(v string) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPhone), v))
+	})
+}
+
 // SleepEQ applies the EQ predicate on the "sleep" field.
-func SleepEQ(v string) predicate.Roomdetail {
+func SleepEQ(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldSleep), v))
 	})
 }
 
 // SleepNEQ applies the NEQ predicate on the "sleep" field.
-func SleepNEQ(v string) predicate.Roomdetail {
+func SleepNEQ(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldSleep), v))
 	})
 }
 
 // SleepIn applies the In predicate on the "sleep" field.
-func SleepIn(vs ...string) predicate.Roomdetail {
+func SleepIn(vs ...int) predicate.Roomdetail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -491,7 +609,7 @@ func SleepIn(vs ...string) predicate.Roomdetail {
 }
 
 // SleepNotIn applies the NotIn predicate on the "sleep" field.
-func SleepNotIn(vs ...string) predicate.Roomdetail {
+func SleepNotIn(vs ...int) predicate.Roomdetail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -508,84 +626,49 @@ func SleepNotIn(vs ...string) predicate.Roomdetail {
 }
 
 // SleepGT applies the GT predicate on the "sleep" field.
-func SleepGT(v string) predicate.Roomdetail {
+func SleepGT(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldSleep), v))
 	})
 }
 
 // SleepGTE applies the GTE predicate on the "sleep" field.
-func SleepGTE(v string) predicate.Roomdetail {
+func SleepGTE(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldSleep), v))
 	})
 }
 
 // SleepLT applies the LT predicate on the "sleep" field.
-func SleepLT(v string) predicate.Roomdetail {
+func SleepLT(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldSleep), v))
 	})
 }
 
 // SleepLTE applies the LTE predicate on the "sleep" field.
-func SleepLTE(v string) predicate.Roomdetail {
+func SleepLTE(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldSleep), v))
 	})
 }
 
-// SleepContains applies the Contains predicate on the "sleep" field.
-func SleepContains(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldSleep), v))
-	})
-}
-
-// SleepHasPrefix applies the HasPrefix predicate on the "sleep" field.
-func SleepHasPrefix(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldSleep), v))
-	})
-}
-
-// SleepHasSuffix applies the HasSuffix predicate on the "sleep" field.
-func SleepHasSuffix(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldSleep), v))
-	})
-}
-
-// SleepEqualFold applies the EqualFold predicate on the "sleep" field.
-func SleepEqualFold(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldSleep), v))
-	})
-}
-
-// SleepContainsFold applies the ContainsFold predicate on the "sleep" field.
-func SleepContainsFold(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldSleep), v))
-	})
-}
-
 // BedEQ applies the EQ predicate on the "bed" field.
-func BedEQ(v string) predicate.Roomdetail {
+func BedEQ(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldBed), v))
 	})
 }
 
 // BedNEQ applies the NEQ predicate on the "bed" field.
-func BedNEQ(v string) predicate.Roomdetail {
+func BedNEQ(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldBed), v))
 	})
 }
 
 // BedIn applies the In predicate on the "bed" field.
-func BedIn(vs ...string) predicate.Roomdetail {
+func BedIn(vs ...int) predicate.Roomdetail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -602,7 +685,7 @@ func BedIn(vs ...string) predicate.Roomdetail {
 }
 
 // BedNotIn applies the NotIn predicate on the "bed" field.
-func BedNotIn(vs ...string) predicate.Roomdetail {
+func BedNotIn(vs ...int) predicate.Roomdetail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -619,65 +702,30 @@ func BedNotIn(vs ...string) predicate.Roomdetail {
 }
 
 // BedGT applies the GT predicate on the "bed" field.
-func BedGT(v string) predicate.Roomdetail {
+func BedGT(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldBed), v))
 	})
 }
 
 // BedGTE applies the GTE predicate on the "bed" field.
-func BedGTE(v string) predicate.Roomdetail {
+func BedGTE(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldBed), v))
 	})
 }
 
 // BedLT applies the LT predicate on the "bed" field.
-func BedLT(v string) predicate.Roomdetail {
+func BedLT(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldBed), v))
 	})
 }
 
 // BedLTE applies the LTE predicate on the "bed" field.
-func BedLTE(v string) predicate.Roomdetail {
+func BedLTE(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldBed), v))
-	})
-}
-
-// BedContains applies the Contains predicate on the "bed" field.
-func BedContains(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldBed), v))
-	})
-}
-
-// BedHasPrefix applies the HasPrefix predicate on the "bed" field.
-func BedHasPrefix(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldBed), v))
-	})
-}
-
-// BedHasSuffix applies the HasSuffix predicate on the "bed" field.
-func BedHasSuffix(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldBed), v))
-	})
-}
-
-// BedEqualFold applies the EqualFold predicate on the "bed" field.
-func BedEqualFold(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldBed), v))
-	})
-}
-
-// BedContainsFold applies the ContainsFold predicate on the "bed" field.
-func BedContainsFold(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldBed), v))
 	})
 }
 
@@ -793,6 +841,34 @@ func HasEmployeeWith(preds ...predicate.Employee) predicate.Roomdetail {
 	})
 }
 
+// HasJobposition applies the HasEdge predicate on the "jobposition" edge.
+func HasJobposition() predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(JobpositionTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, JobpositionTable, JobpositionColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasJobpositionWith applies the HasEdge predicate on the "jobposition" edge with a given conditions (other predicates).
+func HasJobpositionWith(preds ...predicate.Jobposition) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(JobpositionInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, JobpositionTable, JobpositionColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasStaytype applies the HasEdge predicate on the "staytype" edge.
 func HasStaytype() predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
@@ -840,6 +916,34 @@ func HasRoomdetailsWith(preds ...predicate.Lease) predicate.Roomdetail {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(RoomdetailsInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, RoomdetailsTable, RoomdetailsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasCleaningrooms applies the HasEdge predicate on the "cleaningrooms" edge.
+func HasCleaningrooms() predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CleaningroomsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CleaningroomsTable, CleaningroomsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
+func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.Roomdetail {
+	return predicate.Roomdetail(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CleaningroomsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CleaningroomsTable, CleaningroomsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -15,7 +15,7 @@ import ComponanceRecordDeposit from '../RecordDeposit';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import ComponanceRecordLease from '../RecordLease';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
-
+import ComCleaningroom from '../Cleaningroom';
 const HeaderCustom = {
   minHeight: '50px',
 };
@@ -83,7 +83,7 @@ const DormEmployee: FC<{}> = () => {
         </CardTab>
 
         <CardTab label="แจ้งทำความสะอาด">
-          <div style={cardContentStyle}>Some content 4</div>
+          <div><ComCleaningroom></ComCleaningroom></div>
         </CardTab>
 
         <CardTab label="รับฝากของ">

@@ -68,7 +68,9 @@ var (
 		{Name: "dateandstarttime", Type: field.TypeTime},
 		{Name: "note", Type: field.TypeString},
 		{Name: "cleanerroom_id", Type: field.TypeInt, Nullable: true},
+		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "lengthtime_id", Type: field.TypeInt, Nullable: true},
+		{Name: "roomdetail_id", Type: field.TypeInt, Nullable: true},
 	}
 	// CleaningRoomsTable holds the schema information for the "cleaning_rooms" table.
 	CleaningRoomsTable = &schema.Table{
@@ -84,10 +86,24 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "cleaning_rooms_length_times_cleaningrooms",
+				Symbol:  "cleaning_rooms_employees_cleaningrooms",
 				Columns: []*schema.Column{CleaningRoomsColumns[4]},
 
+				RefColumns: []*schema.Column{EmployeesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "cleaning_rooms_length_times_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[5]},
+
 				RefColumns: []*schema.Column{LengthTimesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "cleaning_rooms_roomdetails_cleaningrooms",
+				Columns: []*schema.Column{CleaningRoomsColumns[6]},
+
+				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -97,7 +113,12 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
 		{Name: "info", Type: field.TypeString},
+		{Name: "depositor", Type: field.TypeString},
+		{Name: "depositortell", Type: field.TypeString, Size: 12},
+		{Name: "recipienttell", Type: field.TypeString, Size: 12},
+		{Name: "parcelcode", Type: field.TypeString},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "lease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "statusd_id", Type: field.TypeInt, Nullable: true},
 	}
 	// DepositsTable holds the schema information for the "deposits" table.
@@ -108,14 +129,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "deposits_employees_employees",
-				Columns: []*schema.Column{DepositsColumns[3]},
+				Columns: []*schema.Column{DepositsColumns[7]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
+				Symbol:  "deposits_leases_leases",
+				Columns: []*schema.Column{DepositsColumns[8]},
+
+				RefColumns: []*schema.Column{LeasesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "deposits_statusds_statusds",
-				Columns: []*schema.Column{DepositsColumns[4]},
+				Columns: []*schema.Column{DepositsColumns[9]},
 
 				RefColumns: []*schema.Column{StatusdsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -290,10 +318,12 @@ var (
 		{Name: "roomnumber", Type: field.TypeString, Unique: true},
 		{Name: "roomtypename", Type: field.TypeString},
 		{Name: "roomprice", Type: field.TypeString},
-		{Name: "sleep", Type: field.TypeString},
-		{Name: "bed", Type: field.TypeString},
+		{Name: "phone", Type: field.TypeString, Size: 12},
+		{Name: "sleep", Type: field.TypeInt},
+		{Name: "bed", Type: field.TypeInt},
 		{Name: "bedtype_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "roomdetail_id", Type: field.TypeInt, Nullable: true},
 		{Name: "petrule_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "pledge_roomdetails", Type: field.TypeInt, Nullable: true},
 		{Name: "staytype_roomdetails", Type: field.TypeInt, Nullable: true},
@@ -306,35 +336,42 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "roomdetails_bedtypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[6]},
+				Columns: []*schema.Column{RoomdetailsColumns[7]},
 
 				RefColumns: []*schema.Column{BedtypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_employees_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[7]},
+				Columns: []*schema.Column{RoomdetailsColumns[8]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
+				Symbol:  "roomdetails_jobpositions_roomdetails",
+				Columns: []*schema.Column{RoomdetailsColumns[9]},
+
+				RefColumns: []*schema.Column{JobpositionsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "roomdetails_petrules_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[8]},
+				Columns: []*schema.Column{RoomdetailsColumns[10]},
 
 				RefColumns: []*schema.Column{PetrulesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_pledges_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[9]},
+				Columns: []*schema.Column{RoomdetailsColumns[11]},
 
 				RefColumns: []*schema.Column{PledgesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomdetails_staytypes_roomdetails",
-				Columns: []*schema.Column{RoomdetailsColumns[10]},
+				Columns: []*schema.Column{RoomdetailsColumns[12]},
 
 				RefColumns: []*schema.Column{StaytypesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -417,9 +454,12 @@ func init() {
 	BillsTable.ForeignKeys[0].RefTable = PaymentsTable
 	BillsTable.ForeignKeys[1].RefTable = SituationsTable
 	CleaningRoomsTable.ForeignKeys[0].RefTable = CleanerNamesTable
-	CleaningRoomsTable.ForeignKeys[1].RefTable = LengthTimesTable
+	CleaningRoomsTable.ForeignKeys[1].RefTable = EmployeesTable
+	CleaningRoomsTable.ForeignKeys[2].RefTable = LengthTimesTable
+	CleaningRoomsTable.ForeignKeys[3].RefTable = RoomdetailsTable
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
-	DepositsTable.ForeignKeys[1].RefTable = StatusdsTable
+	DepositsTable.ForeignKeys[1].RefTable = LeasesTable
+	DepositsTable.ForeignKeys[2].RefTable = StatusdsTable
 	EmployeesTable.ForeignKeys[0].RefTable = JobpositionsTable
 	LeasesTable.ForeignKeys[0].RefTable = EmployeesTable
 	LeasesTable.ForeignKeys[1].RefTable = RoomdetailsTable
@@ -428,7 +468,8 @@ func init() {
 	RepairinvoicesTable.ForeignKeys[1].RefTable = RentalstatusesTable
 	RoomdetailsTable.ForeignKeys[0].RefTable = BedtypesTable
 	RoomdetailsTable.ForeignKeys[1].RefTable = EmployeesTable
-	RoomdetailsTable.ForeignKeys[2].RefTable = PetrulesTable
-	RoomdetailsTable.ForeignKeys[3].RefTable = PledgesTable
-	RoomdetailsTable.ForeignKeys[4].RefTable = StaytypesTable
+	RoomdetailsTable.ForeignKeys[2].RefTable = JobpositionsTable
+	RoomdetailsTable.ForeignKeys[3].RefTable = PetrulesTable
+	RoomdetailsTable.ForeignKeys[4].RefTable = PledgesTable
+	RoomdetailsTable.ForeignKeys[5].RefTable = StaytypesTable
 }

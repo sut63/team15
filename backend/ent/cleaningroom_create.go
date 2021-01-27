@@ -12,7 +12,9 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // CleaningRoomCreate is the builder for creating a CleaningRoom entity.
@@ -32,6 +34,25 @@ func (crc *CleaningRoomCreate) SetDateandstarttime(t time.Time) *CleaningRoomCre
 func (crc *CleaningRoomCreate) SetNote(s string) *CleaningRoomCreate {
 	crc.mutation.SetNote(s)
 	return crc
+}
+
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (crc *CleaningRoomCreate) SetRoomdetailID(id int) *CleaningRoomCreate {
+	crc.mutation.SetRoomdetailID(id)
+	return crc
+}
+
+// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
+func (crc *CleaningRoomCreate) SetNillableRoomdetailID(id *int) *CleaningRoomCreate {
+	if id != nil {
+		crc = crc.SetRoomdetailID(*id)
+	}
+	return crc
+}
+
+// SetRoomdetail sets the roomdetail edge to Roomdetail.
+func (crc *CleaningRoomCreate) SetRoomdetail(r *Roomdetail) *CleaningRoomCreate {
+	return crc.SetRoomdetailID(r.ID)
 }
 
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
@@ -70,6 +91,25 @@ func (crc *CleaningRoomCreate) SetNillableLengthTimeID(id *int) *CleaningRoomCre
 // SetLengthTime sets the LengthTime edge to LengthTime.
 func (crc *CleaningRoomCreate) SetLengthTime(l *LengthTime) *CleaningRoomCreate {
 	return crc.SetLengthTimeID(l.ID)
+}
+
+// SetEmployeeID sets the Employee edge to Employee by id.
+func (crc *CleaningRoomCreate) SetEmployeeID(id int) *CleaningRoomCreate {
+	crc.mutation.SetEmployeeID(id)
+	return crc
+}
+
+// SetNillableEmployeeID sets the Employee edge to Employee by id if the given value is not nil.
+func (crc *CleaningRoomCreate) SetNillableEmployeeID(id *int) *CleaningRoomCreate {
+	if id != nil {
+		crc = crc.SetEmployeeID(*id)
+	}
+	return crc
+}
+
+// SetEmployee sets the Employee edge to Employee.
+func (crc *CleaningRoomCreate) SetEmployee(e *Employee) *CleaningRoomCreate {
+	return crc.SetEmployeeID(e.ID)
 }
 
 // Mutation returns the CleaningRoomMutation object of the builder.
@@ -161,6 +201,25 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 		})
 		cr.Note = value
 	}
+	if nodes := crc.mutation.RoomdetailIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.RoomdetailTable,
+			Columns: []string{cleaningroom.RoomdetailColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := crc.mutation.CleanerNameIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -191,6 +250,25 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: lengthtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := crc.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.EmployeeTable,
+			Columns: []string{cleaningroom.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}

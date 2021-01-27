@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/statusd"
 )
 
@@ -22,10 +23,19 @@ type Deposit struct {
 	Addedtime time.Time `json:"addedtime,omitempty"`
 	// Info holds the value of the "info" field.
 	Info string `json:"info,omitempty"`
+	// Depositor holds the value of the "depositor" field.
+	Depositor string `json:"depositor,omitempty"`
+	// Depositortell holds the value of the "depositortell" field.
+	Depositortell string `json:"depositortell,omitempty"`
+	// Recipienttell holds the value of the "recipienttell" field.
+	Recipienttell string `json:"recipienttell,omitempty"`
+	// Parcelcode holds the value of the "parcelcode" field.
+	Parcelcode string `json:"parcelcode,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DepositQuery when eager-loading is set.
 	Edges       DepositEdges `json:"edges"`
 	employee_id *int
+	lease_id    *int
 	statusd_id  *int
 }
 
@@ -35,9 +45,11 @@ type DepositEdges struct {
 	Employee *Employee
 	// Statusd holds the value of the Statusd edge.
 	Statusd *Statusd
+	// Lease holds the value of the Lease edge.
+	Lease *Lease
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // EmployeeOrErr returns the Employee value or an error if the edge
@@ -68,12 +80,30 @@ func (e DepositEdges) StatusdOrErr() (*Statusd, error) {
 	return nil, &NotLoadedError{edge: "Statusd"}
 }
 
+// LeaseOrErr returns the Lease value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DepositEdges) LeaseOrErr() (*Lease, error) {
+	if e.loadedTypes[2] {
+		if e.Lease == nil {
+			// The edge Lease was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: lease.Label}
+		}
+		return e.Lease, nil
+	}
+	return nil, &NotLoadedError{edge: "Lease"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Deposit) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullTime{},   // addedtime
 		&sql.NullString{}, // info
+		&sql.NullString{}, // depositor
+		&sql.NullString{}, // depositortell
+		&sql.NullString{}, // recipienttell
+		&sql.NullString{}, // parcelcode
 	}
 }
 
@@ -81,6 +111,7 @@ func (*Deposit) scanValues() []interface{} {
 func (*Deposit) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // employee_id
+		&sql.NullInt64{}, // lease_id
 		&sql.NullInt64{}, // statusd_id
 	}
 }
@@ -107,7 +138,27 @@ func (d *Deposit) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		d.Info = value.String
 	}
-	values = values[2:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field depositor", values[2])
+	} else if value.Valid {
+		d.Depositor = value.String
+	}
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field depositortell", values[3])
+	} else if value.Valid {
+		d.Depositortell = value.String
+	}
+	if value, ok := values[4].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field recipienttell", values[4])
+	} else if value.Valid {
+		d.Recipienttell = value.String
+	}
+	if value, ok := values[5].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field parcelcode", values[5])
+	} else if value.Valid {
+		d.Parcelcode = value.String
+	}
+	values = values[6:]
 	if len(values) == len(deposit.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
@@ -116,6 +167,12 @@ func (d *Deposit) assignValues(values ...interface{}) error {
 			*d.employee_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field lease_id", value)
+		} else if value.Valid {
+			d.lease_id = new(int)
+			*d.lease_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field statusd_id", value)
 		} else if value.Valid {
 			d.statusd_id = new(int)
@@ -133,6 +190,11 @@ func (d *Deposit) QueryEmployee() *EmployeeQuery {
 // QueryStatusd queries the Statusd edge of the Deposit.
 func (d *Deposit) QueryStatusd() *StatusdQuery {
 	return (&DepositClient{config: d.config}).QueryStatusd(d)
+}
+
+// QueryLease queries the Lease edge of the Deposit.
+func (d *Deposit) QueryLease() *LeaseQuery {
+	return (&DepositClient{config: d.config}).QueryLease(d)
 }
 
 // Update returns a builder for updating this Deposit.
@@ -162,6 +224,14 @@ func (d *Deposit) String() string {
 	builder.WriteString(d.Addedtime.Format(time.ANSIC))
 	builder.WriteString(", info=")
 	builder.WriteString(d.Info)
+	builder.WriteString(", depositor=")
+	builder.WriteString(d.Depositor)
+	builder.WriteString(", depositortell=")
+	builder.WriteString(d.Depositortell)
+	builder.WriteString(", recipienttell=")
+	builder.WriteString(d.Recipienttell)
+	builder.WriteString(", parcelcode=")
+	builder.WriteString(d.Parcelcode)
 	builder.WriteByte(')')
 	return builder.String()
 }

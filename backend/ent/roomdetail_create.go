@@ -10,7 +10,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/bedtype"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/petrule"
 	"github.com/team15/app/ent/pledge"
@@ -43,15 +45,21 @@ func (rc *RoomdetailCreate) SetRoomprice(s string) *RoomdetailCreate {
 	return rc
 }
 
+// SetPhone sets the phone field.
+func (rc *RoomdetailCreate) SetPhone(s string) *RoomdetailCreate {
+	rc.mutation.SetPhone(s)
+	return rc
+}
+
 // SetSleep sets the sleep field.
-func (rc *RoomdetailCreate) SetSleep(s string) *RoomdetailCreate {
-	rc.mutation.SetSleep(s)
+func (rc *RoomdetailCreate) SetSleep(i int) *RoomdetailCreate {
+	rc.mutation.SetSleep(i)
 	return rc
 }
 
 // SetBed sets the bed field.
-func (rc *RoomdetailCreate) SetBed(s string) *RoomdetailCreate {
-	rc.mutation.SetBed(s)
+func (rc *RoomdetailCreate) SetBed(i int) *RoomdetailCreate {
+	rc.mutation.SetBed(i)
 	return rc
 }
 
@@ -131,6 +139,25 @@ func (rc *RoomdetailCreate) SetEmployee(e *Employee) *RoomdetailCreate {
 	return rc.SetEmployeeID(e.ID)
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (rc *RoomdetailCreate) SetJobpositionID(id int) *RoomdetailCreate {
+	rc.mutation.SetJobpositionID(id)
+	return rc
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (rc *RoomdetailCreate) SetNillableJobpositionID(id *int) *RoomdetailCreate {
+	if id != nil {
+		rc = rc.SetJobpositionID(*id)
+	}
+	return rc
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (rc *RoomdetailCreate) SetJobposition(j *Jobposition) *RoomdetailCreate {
+	return rc.SetJobpositionID(j.ID)
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (rc *RoomdetailCreate) SetStaytypeID(id int) *RoomdetailCreate {
 	rc.mutation.SetStaytypeID(id)
@@ -169,6 +196,21 @@ func (rc *RoomdetailCreate) SetRoomdetails(l *Lease) *RoomdetailCreate {
 	return rc.SetRoomdetailsID(l.ID)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (rc *RoomdetailCreate) AddCleaningroomIDs(ids ...int) *RoomdetailCreate {
+	rc.mutation.AddCleaningroomIDs(ids...)
+	return rc
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (rc *RoomdetailCreate) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return rc.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (rc *RoomdetailCreate) Mutation() *RoomdetailMutation {
 	return rc.mutation
@@ -179,17 +221,50 @@ func (rc *RoomdetailCreate) Save(ctx context.Context) (*Roomdetail, error) {
 	if _, ok := rc.mutation.Roomnumber(); !ok {
 		return nil, &ValidationError{Name: "roomnumber", err: errors.New("ent: missing required field \"roomnumber\"")}
 	}
+	if v, ok := rc.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
 	if _, ok := rc.mutation.Roomtypename(); !ok {
 		return nil, &ValidationError{Name: "roomtypename", err: errors.New("ent: missing required field \"roomtypename\"")}
+	}
+	if v, ok := rc.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
 	}
 	if _, ok := rc.mutation.Roomprice(); !ok {
 		return nil, &ValidationError{Name: "roomprice", err: errors.New("ent: missing required field \"roomprice\"")}
 	}
+	if v, ok := rc.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Phone(); !ok {
+		return nil, &ValidationError{Name: "phone", err: errors.New("ent: missing required field \"phone\"")}
+	}
+	if v, ok := rc.mutation.Phone(); ok {
+		if err := roomdetail.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
 	if _, ok := rc.mutation.Sleep(); !ok {
 		return nil, &ValidationError{Name: "sleep", err: errors.New("ent: missing required field \"sleep\"")}
 	}
+	if v, ok := rc.mutation.Sleep(); ok {
+		if err := roomdetail.SleepValidator(v); err != nil {
+			return nil, &ValidationError{Name: "sleep", err: fmt.Errorf("ent: validator failed for field \"sleep\": %w", err)}
+		}
+	}
 	if _, ok := rc.mutation.Bed(); !ok {
 		return nil, &ValidationError{Name: "bed", err: errors.New("ent: missing required field \"bed\"")}
+	}
+	if v, ok := rc.mutation.Bed(); ok {
+		if err := roomdetail.BedValidator(v); err != nil {
+			return nil, &ValidationError{Name: "bed", err: fmt.Errorf("ent: validator failed for field \"bed\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -275,9 +350,17 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 		})
 		r.Roomprice = value
 	}
-	if value, ok := rc.mutation.Sleep(); ok {
+	if value, ok := rc.mutation.Phone(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldPhone,
+		})
+		r.Phone = value
+	}
+	if value, ok := rc.mutation.Sleep(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldSleep,
 		})
@@ -285,7 +368,7 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.Bed(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldBed,
 		})
@@ -367,6 +450,25 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := rc.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := rc.mutation.StaytypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -397,6 +499,25 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}

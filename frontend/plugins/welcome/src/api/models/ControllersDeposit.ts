@@ -27,6 +27,18 @@ export interface ControllersDeposit {
     added?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersDeposit
+     */
+    depositor?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersDeposit
+     */
+    depositortell?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersDeposit
      */
@@ -37,6 +49,24 @@ export interface ControllersDeposit {
      * @memberof ControllersDeposit
      */
     info?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersDeposit
+     */
+    lease?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersDeposit
+     */
+    parcelcode?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersDeposit
+     */
+    recipienttell?: string;
     /**
      * 
      * @type {number}
@@ -56,8 +86,13 @@ export function ControllersDepositFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'added': !exists(json, 'added') ? undefined : json['added'],
+        'depositor': !exists(json, 'depositor') ? undefined : json['depositor'],
+        'depositortell': !exists(json, 'depositortell') ? undefined : json['depositortell'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
         'info': !exists(json, 'info') ? undefined : json['info'],
+        'lease': !exists(json, 'lease') ? undefined : json['lease'],
+        'parcelcode': !exists(json, 'parcelcode') ? undefined : json['parcelcode'],
+        'recipienttell': !exists(json, 'recipienttell') ? undefined : json['recipienttell'],
         'statusd': !exists(json, 'statusd') ? undefined : json['statusd'],
     };
 }
@@ -72,8 +107,13 @@ export function ControllersDepositToJSON(value?: ControllersDeposit | null): any
     return {
         
         'added': value.added,
+        'depositor': value.depositor,
+        'depositortell': value.depositortell,
         'employee': value.employee,
         'info': value.info,
+        'lease': value.lease,
+        'parcelcode': value.parcelcode,
+        'recipienttell': value.recipienttell,
         'statusd': value.statusd,
     };
 }

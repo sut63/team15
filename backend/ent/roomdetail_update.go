@@ -10,7 +10,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/bedtype"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/petrule"
 	"github.com/team15/app/ent/pledge"
@@ -51,15 +53,35 @@ func (ru *RoomdetailUpdate) SetRoomprice(s string) *RoomdetailUpdate {
 	return ru
 }
 
+// SetPhone sets the phone field.
+func (ru *RoomdetailUpdate) SetPhone(s string) *RoomdetailUpdate {
+	ru.mutation.SetPhone(s)
+	return ru
+}
+
 // SetSleep sets the sleep field.
-func (ru *RoomdetailUpdate) SetSleep(s string) *RoomdetailUpdate {
-	ru.mutation.SetSleep(s)
+func (ru *RoomdetailUpdate) SetSleep(i int) *RoomdetailUpdate {
+	ru.mutation.ResetSleep()
+	ru.mutation.SetSleep(i)
+	return ru
+}
+
+// AddSleep adds i to sleep.
+func (ru *RoomdetailUpdate) AddSleep(i int) *RoomdetailUpdate {
+	ru.mutation.AddSleep(i)
 	return ru
 }
 
 // SetBed sets the bed field.
-func (ru *RoomdetailUpdate) SetBed(s string) *RoomdetailUpdate {
-	ru.mutation.SetBed(s)
+func (ru *RoomdetailUpdate) SetBed(i int) *RoomdetailUpdate {
+	ru.mutation.ResetBed()
+	ru.mutation.SetBed(i)
+	return ru
+}
+
+// AddBed adds i to bed.
+func (ru *RoomdetailUpdate) AddBed(i int) *RoomdetailUpdate {
+	ru.mutation.AddBed(i)
 	return ru
 }
 
@@ -139,6 +161,25 @@ func (ru *RoomdetailUpdate) SetEmployee(e *Employee) *RoomdetailUpdate {
 	return ru.SetEmployeeID(e.ID)
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (ru *RoomdetailUpdate) SetJobpositionID(id int) *RoomdetailUpdate {
+	ru.mutation.SetJobpositionID(id)
+	return ru
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (ru *RoomdetailUpdate) SetNillableJobpositionID(id *int) *RoomdetailUpdate {
+	if id != nil {
+		ru = ru.SetJobpositionID(*id)
+	}
+	return ru
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (ru *RoomdetailUpdate) SetJobposition(j *Jobposition) *RoomdetailUpdate {
+	return ru.SetJobpositionID(j.ID)
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (ru *RoomdetailUpdate) SetStaytypeID(id int) *RoomdetailUpdate {
 	ru.mutation.SetStaytypeID(id)
@@ -177,6 +218,21 @@ func (ru *RoomdetailUpdate) SetRoomdetails(l *Lease) *RoomdetailUpdate {
 	return ru.SetRoomdetailsID(l.ID)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ru *RoomdetailUpdate) AddCleaningroomIDs(ids ...int) *RoomdetailUpdate {
+	ru.mutation.AddCleaningroomIDs(ids...)
+	return ru
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ru *RoomdetailUpdate) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (ru *RoomdetailUpdate) Mutation() *RoomdetailMutation {
 	return ru.mutation
@@ -206,6 +262,12 @@ func (ru *RoomdetailUpdate) ClearEmployee() *RoomdetailUpdate {
 	return ru
 }
 
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (ru *RoomdetailUpdate) ClearJobposition() *RoomdetailUpdate {
+	ru.mutation.ClearJobposition()
+	return ru
+}
+
 // ClearStaytype clears the staytype edge to Staytype.
 func (ru *RoomdetailUpdate) ClearStaytype() *RoomdetailUpdate {
 	ru.mutation.ClearStaytype()
@@ -218,8 +280,53 @@ func (ru *RoomdetailUpdate) ClearRoomdetails() *RoomdetailUpdate {
 	return ru
 }
 
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (ru *RoomdetailUpdate) RemoveCleaningroomIDs(ids ...int) *RoomdetailUpdate {
+	ru.mutation.RemoveCleaningroomIDs(ids...)
+	return ru
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (ru *RoomdetailUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ru.RemoveCleaningroomIDs(ids...)
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomdetailUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return 0, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Phone(); ok {
+		if err := roomdetail.PhoneValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Sleep(); ok {
+		if err := roomdetail.SleepValidator(v); err != nil {
+			return 0, &ValidationError{Name: "sleep", err: fmt.Errorf("ent: validator failed for field \"sleep\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Bed(); ok {
+		if err := roomdetail.BedValidator(v); err != nil {
+			return 0, &ValidationError{Name: "bed", err: fmt.Errorf("ent: validator failed for field \"bed\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -309,16 +416,37 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if value, ok := ru.mutation.Sleep(); ok {
+	if value, ok := ru.mutation.Phone(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldPhone,
+		})
+	}
+	if value, ok := ru.mutation.Sleep(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+	}
+	if value, ok := ru.mutation.AddedSleep(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldSleep,
 		})
 	}
 	if value, ok := ru.mutation.Bed(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+	}
+	if value, ok := ru.mutation.AddedBed(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldBed,
 		})
@@ -463,6 +591,41 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.JobpositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if ru.mutation.StaytypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -533,6 +696,44 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := ru.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{roomdetail.Label}
@@ -569,15 +770,35 @@ func (ruo *RoomdetailUpdateOne) SetRoomprice(s string) *RoomdetailUpdateOne {
 	return ruo
 }
 
+// SetPhone sets the phone field.
+func (ruo *RoomdetailUpdateOne) SetPhone(s string) *RoomdetailUpdateOne {
+	ruo.mutation.SetPhone(s)
+	return ruo
+}
+
 // SetSleep sets the sleep field.
-func (ruo *RoomdetailUpdateOne) SetSleep(s string) *RoomdetailUpdateOne {
-	ruo.mutation.SetSleep(s)
+func (ruo *RoomdetailUpdateOne) SetSleep(i int) *RoomdetailUpdateOne {
+	ruo.mutation.ResetSleep()
+	ruo.mutation.SetSleep(i)
+	return ruo
+}
+
+// AddSleep adds i to sleep.
+func (ruo *RoomdetailUpdateOne) AddSleep(i int) *RoomdetailUpdateOne {
+	ruo.mutation.AddSleep(i)
 	return ruo
 }
 
 // SetBed sets the bed field.
-func (ruo *RoomdetailUpdateOne) SetBed(s string) *RoomdetailUpdateOne {
-	ruo.mutation.SetBed(s)
+func (ruo *RoomdetailUpdateOne) SetBed(i int) *RoomdetailUpdateOne {
+	ruo.mutation.ResetBed()
+	ruo.mutation.SetBed(i)
+	return ruo
+}
+
+// AddBed adds i to bed.
+func (ruo *RoomdetailUpdateOne) AddBed(i int) *RoomdetailUpdateOne {
+	ruo.mutation.AddBed(i)
 	return ruo
 }
 
@@ -657,6 +878,25 @@ func (ruo *RoomdetailUpdateOne) SetEmployee(e *Employee) *RoomdetailUpdateOne {
 	return ruo.SetEmployeeID(e.ID)
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (ruo *RoomdetailUpdateOne) SetJobpositionID(id int) *RoomdetailUpdateOne {
+	ruo.mutation.SetJobpositionID(id)
+	return ruo
+}
+
+// SetNillableJobpositionID sets the jobposition edge to Jobposition by id if the given value is not nil.
+func (ruo *RoomdetailUpdateOne) SetNillableJobpositionID(id *int) *RoomdetailUpdateOne {
+	if id != nil {
+		ruo = ruo.SetJobpositionID(*id)
+	}
+	return ruo
+}
+
+// SetJobposition sets the jobposition edge to Jobposition.
+func (ruo *RoomdetailUpdateOne) SetJobposition(j *Jobposition) *RoomdetailUpdateOne {
+	return ruo.SetJobpositionID(j.ID)
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (ruo *RoomdetailUpdateOne) SetStaytypeID(id int) *RoomdetailUpdateOne {
 	ruo.mutation.SetStaytypeID(id)
@@ -695,6 +935,21 @@ func (ruo *RoomdetailUpdateOne) SetRoomdetails(l *Lease) *RoomdetailUpdateOne {
 	return ruo.SetRoomdetailsID(l.ID)
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (ruo *RoomdetailUpdateOne) AddCleaningroomIDs(ids ...int) *RoomdetailUpdateOne {
+	ruo.mutation.AddCleaningroomIDs(ids...)
+	return ruo
+}
+
+// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
+func (ruo *RoomdetailUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.AddCleaningroomIDs(ids...)
+}
+
 // Mutation returns the RoomdetailMutation object of the builder.
 func (ruo *RoomdetailUpdateOne) Mutation() *RoomdetailMutation {
 	return ruo.mutation
@@ -724,6 +979,12 @@ func (ruo *RoomdetailUpdateOne) ClearEmployee() *RoomdetailUpdateOne {
 	return ruo
 }
 
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (ruo *RoomdetailUpdateOne) ClearJobposition() *RoomdetailUpdateOne {
+	ruo.mutation.ClearJobposition()
+	return ruo
+}
+
 // ClearStaytype clears the staytype edge to Staytype.
 func (ruo *RoomdetailUpdateOne) ClearStaytype() *RoomdetailUpdateOne {
 	ruo.mutation.ClearStaytype()
@@ -736,8 +997,53 @@ func (ruo *RoomdetailUpdateOne) ClearRoomdetails() *RoomdetailUpdateOne {
 	return ruo
 }
 
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (ruo *RoomdetailUpdateOne) RemoveCleaningroomIDs(ids ...int) *RoomdetailUpdateOne {
+	ruo.mutation.RemoveCleaningroomIDs(ids...)
+	return ruo
+}
+
+// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
+func (ruo *RoomdetailUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return ruo.RemoveCleaningroomIDs(ids...)
+}
+
 // Save executes the query and returns the updated entity.
 func (ruo *RoomdetailUpdateOne) Save(ctx context.Context) (*Roomdetail, error) {
+	if v, ok := ruo.mutation.Roomnumber(); ok {
+		if err := roomdetail.RoomnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomnumber", err: fmt.Errorf("ent: validator failed for field \"roomnumber\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Roomtypename(); ok {
+		if err := roomdetail.RoomtypenameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomtypename", err: fmt.Errorf("ent: validator failed for field \"roomtypename\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Roomprice(); ok {
+		if err := roomdetail.RoompriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "roomprice", err: fmt.Errorf("ent: validator failed for field \"roomprice\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Phone(); ok {
+		if err := roomdetail.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Sleep(); ok {
+		if err := roomdetail.SleepValidator(v); err != nil {
+			return nil, &ValidationError{Name: "sleep", err: fmt.Errorf("ent: validator failed for field \"sleep\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Bed(); ok {
+		if err := roomdetail.BedValidator(v); err != nil {
+			return nil, &ValidationError{Name: "bed", err: fmt.Errorf("ent: validator failed for field \"bed\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -825,16 +1131,37 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 			Column: roomdetail.FieldRoomprice,
 		})
 	}
-	if value, ok := ruo.mutation.Sleep(); ok {
+	if value, ok := ruo.mutation.Phone(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
+			Value:  value,
+			Column: roomdetail.FieldPhone,
+		})
+	}
+	if value, ok := ruo.mutation.Sleep(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldSleep,
+		})
+	}
+	if value, ok := ruo.mutation.AddedSleep(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldSleep,
 		})
 	}
 	if value, ok := ruo.mutation.Bed(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldBed,
+		})
+	}
+	if value, ok := ruo.mutation.AddedBed(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldBed,
 		})
@@ -979,6 +1306,41 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ruo.mutation.JobpositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.JobpositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   roomdetail.JobpositionTable,
+			Columns: []string{roomdetail.JobpositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: jobposition.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if ruo.mutation.StaytypeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -1041,6 +1403,44 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := ruo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   roomdetail.CleaningroomsTable,
+			Columns: []string{roomdetail.CleaningroomsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: cleaningroom.FieldID,
 				},
 			},
 		}

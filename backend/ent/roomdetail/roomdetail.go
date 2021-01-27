@@ -13,6 +13,8 @@ const (
 	FieldRoomtypename = "roomtypename"
 	// FieldRoomprice holds the string denoting the roomprice field in the database.
 	FieldRoomprice = "roomprice"
+	// FieldPhone holds the string denoting the phone field in the database.
+	FieldPhone = "phone"
 	// FieldSleep holds the string denoting the sleep field in the database.
 	FieldSleep = "sleep"
 	// FieldBed holds the string denoting the bed field in the database.
@@ -26,10 +28,14 @@ const (
 	EdgeBedtype = "bedtype"
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "employee"
+	// EdgeJobposition holds the string denoting the jobposition edge name in mutations.
+	EdgeJobposition = "jobposition"
 	// EdgeStaytype holds the string denoting the staytype edge name in mutations.
 	EdgeStaytype = "staytype"
 	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
 	EdgeRoomdetails = "roomdetails"
+	// EdgeCleaningrooms holds the string denoting the cleaningrooms edge name in mutations.
+	EdgeCleaningrooms = "cleaningrooms"
 
 	// Table holds the table name of the roomdetail in the database.
 	Table = "roomdetails"
@@ -61,6 +67,13 @@ const (
 	EmployeeInverseTable = "employees"
 	// EmployeeColumn is the table column denoting the employee relation/edge.
 	EmployeeColumn = "employee_id"
+	// JobpositionTable is the table the holds the jobposition relation/edge.
+	JobpositionTable = "roomdetails"
+	// JobpositionInverseTable is the table name for the Jobposition entity.
+	// It exists in this package in order to avoid circular dependency with the "jobposition" package.
+	JobpositionInverseTable = "jobpositions"
+	// JobpositionColumn is the table column denoting the jobposition relation/edge.
+	JobpositionColumn = "roomdetail_id"
 	// StaytypeTable is the table the holds the staytype relation/edge.
 	StaytypeTable = "roomdetails"
 	// StaytypeInverseTable is the table name for the Staytype entity.
@@ -75,6 +88,13 @@ const (
 	RoomdetailsInverseTable = "leases"
 	// RoomdetailsColumn is the table column denoting the roomdetails relation/edge.
 	RoomdetailsColumn = "room_num"
+	// CleaningroomsTable is the table the holds the cleaningrooms relation/edge.
+	CleaningroomsTable = "cleaning_rooms"
+	// CleaningroomsInverseTable is the table name for the CleaningRoom entity.
+	// It exists in this package in order to avoid circular dependency with the "cleaningroom" package.
+	CleaningroomsInverseTable = "cleaning_rooms"
+	// CleaningroomsColumn is the table column denoting the cleaningrooms relation/edge.
+	CleaningroomsColumn = "roomdetail_id"
 )
 
 // Columns holds all SQL columns for roomdetail fields.
@@ -83,6 +103,7 @@ var Columns = []string{
 	FieldRoomnumber,
 	FieldRoomtypename,
 	FieldRoomprice,
+	FieldPhone,
 	FieldSleep,
 	FieldBed,
 }
@@ -91,7 +112,23 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"bedtype_roomdetails",
 	"employee_id",
+	"roomdetail_id",
 	"petrule_roomdetails",
 	"pledge_roomdetails",
 	"staytype_roomdetails",
 }
+
+var (
+	// RoomnumberValidator is a validator for the "roomnumber" field. It is called by the builders before save.
+	RoomnumberValidator func(string) error
+	// RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
+	RoomtypenameValidator func(string) error
+	// RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
+	RoompriceValidator func(string) error
+	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	PhoneValidator func(string) error
+	// SleepValidator is a validator for the "sleep" field. It is called by the builders before save.
+	SleepValidator func(int) error
+	// BedValidator is a validator for the "bed" field. It is called by the builders before save.
+	BedValidator func(int) error
+)

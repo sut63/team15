@@ -18,6 +18,10 @@ import {
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
     EntEmployeeToJSON,
+    EntLease,
+    EntLeaseFromJSON,
+    EntLeaseFromJSONTyped,
+    EntLeaseToJSON,
     EntStatusd,
     EntStatusdFromJSON,
     EntStatusdFromJSONTyped,
@@ -38,6 +42,12 @@ export interface EntDepositEdges {
     employee?: EntEmployee;
     /**
      * 
+     * @type {EntLease}
+     * @memberof EntDepositEdges
+     */
+    lease?: EntLease;
+    /**
+     * 
      * @type {EntStatusd}
      * @memberof EntDepositEdges
      */
@@ -54,7 +64,8 @@ export function EntDepositEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'employee': !exists(json, 'EmployEe') ? undefined : EntEmployeeFromJSON(json['Employee']),
+        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
+        'lease': !exists(json, 'Lease') ? undefined : EntLeaseFromJSON(json['Lease']),
         'statusd': !exists(json, 'Statusd') ? undefined : EntStatusdFromJSON(json['Statusd']),
     };
 }
@@ -69,6 +80,7 @@ export function EntDepositEdgesToJSON(value?: EntDepositEdges | null): any {
     return {
         
         'employee': EntEmployeeToJSON(value.employee),
+        'lease': EntLeaseToJSON(value.lease),
         'statusd': EntStatusdToJSON(value.statusd),
     };
 }

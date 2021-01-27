@@ -13,8 +13,10 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // CleaningRoomQuery is the builder for querying CleaningRoom entities.
@@ -26,8 +28,10 @@ type CleaningRoomQuery struct {
 	unique     []string
 	predicates []predicate.CleaningRoom
 	// eager-loading edges.
+	withRoomdetail  *RoomdetailQuery
 	withCleanerName *CleanerNameQuery
 	withLengthTime  *LengthTimeQuery
+	withEmployee    *EmployeeQuery
 	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -56,6 +60,24 @@ func (crq *CleaningRoomQuery) Offset(offset int) *CleaningRoomQuery {
 func (crq *CleaningRoomQuery) Order(o ...OrderFunc) *CleaningRoomQuery {
 	crq.order = append(crq.order, o...)
 	return crq
+}
+
+// QueryRoomdetail chains the current query on the roomdetail edge.
+func (crq *CleaningRoomQuery) QueryRoomdetail() *RoomdetailQuery {
+	query := &RoomdetailQuery{config: crq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := crq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, crq.sqlQuery()),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.RoomdetailTable, cleaningroom.RoomdetailColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(crq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryCleanerName chains the current query on the CleanerName edge.
@@ -87,6 +109,24 @@ func (crq *CleaningRoomQuery) QueryLengthTime() *LengthTimeQuery {
 			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, crq.sqlQuery()),
 			sqlgraph.To(lengthtime.Table, lengthtime.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.LengthTimeTable, cleaningroom.LengthTimeColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(crq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryEmployee chains the current query on the Employee edge.
+func (crq *CleaningRoomQuery) QueryEmployee() *EmployeeQuery {
+	query := &EmployeeQuery{config: crq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := crq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, crq.sqlQuery()),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.EmployeeTable, cleaningroom.EmployeeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(crq.driver.Dialect(), step)
 		return fromU, nil
@@ -273,6 +313,17 @@ func (crq *CleaningRoomQuery) Clone() *CleaningRoomQuery {
 	}
 }
 
+//  WithRoomdetail tells the query-builder to eager-loads the nodes that are connected to
+// the "roomdetail" edge. The optional arguments used to configure the query builder of the edge.
+func (crq *CleaningRoomQuery) WithRoomdetail(opts ...func(*RoomdetailQuery)) *CleaningRoomQuery {
+	query := &RoomdetailQuery{config: crq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	crq.withRoomdetail = query
+	return crq
+}
+
 //  WithCleanerName tells the query-builder to eager-loads the nodes that are connected to
 // the "CleanerName" edge. The optional arguments used to configure the query builder of the edge.
 func (crq *CleaningRoomQuery) WithCleanerName(opts ...func(*CleanerNameQuery)) *CleaningRoomQuery {
@@ -292,6 +343,17 @@ func (crq *CleaningRoomQuery) WithLengthTime(opts ...func(*LengthTimeQuery)) *Cl
 		opt(query)
 	}
 	crq.withLengthTime = query
+	return crq
+}
+
+//  WithEmployee tells the query-builder to eager-loads the nodes that are connected to
+// the "Employee" edge. The optional arguments used to configure the query builder of the edge.
+func (crq *CleaningRoomQuery) WithEmployee(opts ...func(*EmployeeQuery)) *CleaningRoomQuery {
+	query := &EmployeeQuery{config: crq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	crq.withEmployee = query
 	return crq
 }
 
@@ -362,12 +424,14 @@ func (crq *CleaningRoomQuery) sqlAll(ctx context.Context) ([]*CleaningRoom, erro
 		nodes       = []*CleaningRoom{}
 		withFKs     = crq.withFKs
 		_spec       = crq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [4]bool{
+			crq.withRoomdetail != nil,
 			crq.withCleanerName != nil,
 			crq.withLengthTime != nil,
+			crq.withEmployee != nil,
 		}
 	)
-	if crq.withCleanerName != nil || crq.withLengthTime != nil {
+	if crq.withRoomdetail != nil || crq.withCleanerName != nil || crq.withLengthTime != nil || crq.withEmployee != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -395,6 +459,31 @@ func (crq *CleaningRoomQuery) sqlAll(ctx context.Context) ([]*CleaningRoom, erro
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := crq.withRoomdetail; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*CleaningRoom)
+		for i := range nodes {
+			if fk := nodes[i].roomdetail_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(roomdetail.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Roomdetail = n
+			}
+		}
 	}
 
 	if query := crq.withCleanerName; query != nil {
@@ -443,6 +532,31 @@ func (crq *CleaningRoomQuery) sqlAll(ctx context.Context) ([]*CleaningRoom, erro
 			}
 			for i := range nodes {
 				nodes[i].Edges.LengthTime = n
+			}
+		}
+	}
+
+	if query := crq.withEmployee; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*CleaningRoom)
+		for i := range nodes {
+			if fk := nodes[i].employee_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(employee.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Employee = n
 			}
 		}
 	}

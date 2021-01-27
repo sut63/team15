@@ -18,10 +18,18 @@ import {
     EntBedtypeFromJSON,
     EntBedtypeFromJSONTyped,
     EntBedtypeToJSON,
+    EntCleaningRoom,
+    EntCleaningRoomFromJSON,
+    EntCleaningRoomFromJSONTyped,
+    EntCleaningRoomToJSON,
     EntEmployee,
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
     EntEmployeeToJSON,
+    EntJobposition,
+    EntJobpositionFromJSON,
+    EntJobpositionFromJSONTyped,
+    EntJobpositionToJSON,
     EntLease,
     EntLeaseFromJSON,
     EntLeaseFromJSONTyped,
@@ -53,11 +61,23 @@ export interface EntRoomdetailEdges {
      */
     bedtype?: EntBedtype;
     /**
+     * Cleaningrooms holds the value of the cleaningrooms edge.
+     * @type {Array<EntCleaningRoom>}
+     * @memberof EntRoomdetailEdges
+     */
+    cleaningrooms?: Array<EntCleaningRoom>;
+    /**
      * 
      * @type {EntEmployee}
      * @memberof EntRoomdetailEdges
      */
     employee?: EntEmployee;
+    /**
+     * 
+     * @type {EntJobposition}
+     * @memberof EntRoomdetailEdges
+     */
+    jobposition?: EntJobposition;
     /**
      * 
      * @type {EntPetrule}
@@ -95,7 +115,9 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'bedtype': !exists(json, 'bedtype') ? undefined : EntBedtypeFromJSON(json['bedtype']),
+        'cleaningrooms': !exists(json, 'cleaningrooms') ? undefined : ((json['cleaningrooms'] as Array<any>).map(EntCleaningRoomFromJSON)),
         'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
+        'jobposition': !exists(json, 'jobposition') ? undefined : EntJobpositionFromJSON(json['jobposition']),
         'petrule': !exists(json, 'petrule') ? undefined : EntPetruleFromJSON(json['petrule']),
         'pledge': !exists(json, 'pledge') ? undefined : EntPledgeFromJSON(json['pledge']),
         'roomdetails': !exists(json, 'roomdetails') ? undefined : EntLeaseFromJSON(json['roomdetails']),
@@ -113,7 +135,9 @@ export function EntRoomdetailEdgesToJSON(value?: EntRoomdetailEdges | null): any
     return {
         
         'bedtype': EntBedtypeToJSON(value.bedtype),
+        'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningRoomToJSON)),
         'employee': EntEmployeeToJSON(value.employee),
+        'jobposition': EntJobpositionToJSON(value.jobposition),
         'petrule': EntPetruleToJSON(value.petrule),
         'pledge': EntPledgeToJSON(value.pledge),
         'roomdetails': EntLeaseToJSON(value.roomdetails),

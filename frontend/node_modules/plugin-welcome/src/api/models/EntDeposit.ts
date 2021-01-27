@@ -33,6 +33,18 @@ export interface EntDeposit {
      */
     addedtime?: string;
     /**
+     * Depositor holds the value of the "depositor" field.
+     * @type {string}
+     * @memberof EntDeposit
+     */
+    depositor?: string;
+    /**
+     * Depositortell holds the value of the "depositortell" field.
+     * @type {string}
+     * @memberof EntDeposit
+     */
+    depositortell?: string;
+    /**
      * 
      * @type {EntDepositEdges}
      * @memberof EntDeposit
@@ -50,6 +62,18 @@ export interface EntDeposit {
      * @memberof EntDeposit
      */
     info?: string;
+    /**
+     * Parcelcode holds the value of the "parcelcode" field.
+     * @type {string}
+     * @memberof EntDeposit
+     */
+    parcelcode?: string;
+    /**
+     * Recipienttell holds the value of the "recipienttell" field.
+     * @type {string}
+     * @memberof EntDeposit
+     */
+    recipienttell?: string;
 }
 
 export function EntDepositFromJSON(json: any): EntDeposit {
@@ -63,9 +87,13 @@ export function EntDepositFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     return {
         
         'addedtime': !exists(json, 'addedtime') ? undefined : json['addedtime'],
+        'depositor': !exists(json, 'depositor') ? undefined : json['depositor'],
+        'depositortell': !exists(json, 'depositortell') ? undefined : json['depositortell'],
         'edges': !exists(json, 'edges') ? undefined : EntDepositEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'info': !exists(json, 'info') ? undefined : json['info'],
+        'parcelcode': !exists(json, 'parcelcode') ? undefined : json['parcelcode'],
+        'recipienttell': !exists(json, 'recipienttell') ? undefined : json['recipienttell'],
     };
 }
 
@@ -79,9 +107,13 @@ export function EntDepositToJSON(value?: EntDeposit | null): any {
     return {
         
         'addedtime': value.addedtime,
+        'depositor': value.depositor,
+        'depositortell': value.depositortell,
         'edges': EntDepositEdgesToJSON(value.edges),
         'id': value.id,
         'info': value.info,
+        'parcelcode': value.parcelcode,
+        'recipienttell': value.recipienttell,
     };
 }
 

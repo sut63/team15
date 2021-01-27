@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
@@ -35,6 +36,7 @@ type EmployeeQuery struct {
 	withRoomdetails    *RoomdetailQuery
 	withJobposition    *JobpositionQuery
 	withRepairinvoices *RepairinvoiceQuery
+	withCleaningrooms  *CleaningRoomQuery
 	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -148,6 +150,24 @@ func (eq *EmployeeQuery) QueryRepairinvoices() *RepairinvoiceQuery {
 			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
 			sqlgraph.To(repairinvoice.Table, repairinvoice.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, employee.RepairinvoicesTable, employee.RepairinvoicesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCleaningrooms chains the current query on the cleaningrooms edge.
+func (eq *EmployeeQuery) QueryCleaningrooms() *CleaningRoomQuery {
+	query := &CleaningRoomQuery{config: eq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
+			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.CleaningroomsTable, employee.CleaningroomsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -389,6 +409,17 @@ func (eq *EmployeeQuery) WithRepairinvoices(opts ...func(*RepairinvoiceQuery)) *
 	return eq
 }
 
+//  WithCleaningrooms tells the query-builder to eager-loads the nodes that are connected to
+// the "cleaningrooms" edge. The optional arguments used to configure the query builder of the edge.
+func (eq *EmployeeQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) *EmployeeQuery {
+	query := &CleaningRoomQuery{config: eq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withCleaningrooms = query
+	return eq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -456,12 +487,13 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		nodes       = []*Employee{}
 		withFKs     = eq.withFKs
 		_spec       = eq.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [6]bool{
 			eq.withEmployees != nil,
 			eq.withLeases != nil,
 			eq.withRoomdetails != nil,
 			eq.withJobposition != nil,
 			eq.withRepairinvoices != nil,
+			eq.withCleaningrooms != nil,
 		}
 	)
 	if eq.withJobposition != nil {
@@ -628,6 +660,34 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Repairinvoices = append(node.Edges.Repairinvoices, n)
+		}
+	}
+
+	if query := eq.withCleaningrooms; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Employee)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.CleaningRoom(func(s *sql.Selector) {
+			s.Where(sql.InValues(employee.CleaningroomsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.employee_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "employee_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Cleaningrooms = append(node.Edges.Cleaningrooms, n)
 		}
 	}
 

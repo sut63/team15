@@ -28,10 +28,10 @@ import {
 export interface EntRoomdetail {
     /**
      * Bed holds the value of the "bed" field.
-     * @type {string}
+     * @type {number}
      * @memberof EntRoomdetail
      */
-    bed?: string;
+    bed?: number;
     /**
      * 
      * @type {EntRoomdetailEdges}
@@ -44,6 +44,12 @@ export interface EntRoomdetail {
      * @memberof EntRoomdetail
      */
     id?: number;
+    /**
+     * Phone holds the value of the "phone" field.
+     * @type {string}
+     * @memberof EntRoomdetail
+     */
+    phone?: string;
     /**
      * Roomnumber holds the value of the "roomnumber" field.
      * @type {string}
@@ -64,10 +70,10 @@ export interface EntRoomdetail {
     roomtypename?: string;
     /**
      * Sleep holds the value of the "sleep" field.
-     * @type {string}
+     * @type {number}
      * @memberof EntRoomdetail
      */
-    sleep?: string;
+    sleep?: number;
 }
 
 export function EntRoomdetailFromJSON(json: any): EntRoomdetail {
@@ -83,6 +89,7 @@ export function EntRoomdetailFromJSONTyped(json: any, ignoreDiscriminator: boole
         'bed': !exists(json, 'bed') ? undefined : json['bed'],
         'edges': !exists(json, 'edges') ? undefined : EntRoomdetailEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'phone': !exists(json, 'phone') ? undefined : json['phone'],
         'roomnumber': !exists(json, 'roomnumber') ? undefined : json['roomnumber'],
         'roomprice': !exists(json, 'roomprice') ? undefined : json['roomprice'],
         'roomtypename': !exists(json, 'roomtypename') ? undefined : json['roomtypename'],
@@ -102,6 +109,7 @@ export function EntRoomdetailToJSON(value?: EntRoomdetail | null): any {
         'bed': value.bed,
         'edges': EntRoomdetailEdgesToJSON(value.edges),
         'id': value.id,
+        'phone': value.phone,
         'roomnumber': value.roomnumber,
         'roomprice': value.roomprice,
         'roomtypename': value.roomtypename,

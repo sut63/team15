@@ -12,8 +12,10 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/cleaningroom"
+	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // CleaningRoomUpdate is the builder for updating CleaningRoom entities.
@@ -40,6 +42,25 @@ func (cru *CleaningRoomUpdate) SetDateandstarttime(t time.Time) *CleaningRoomUpd
 func (cru *CleaningRoomUpdate) SetNote(s string) *CleaningRoomUpdate {
 	cru.mutation.SetNote(s)
 	return cru
+}
+
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (cru *CleaningRoomUpdate) SetRoomdetailID(id int) *CleaningRoomUpdate {
+	cru.mutation.SetRoomdetailID(id)
+	return cru
+}
+
+// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
+func (cru *CleaningRoomUpdate) SetNillableRoomdetailID(id *int) *CleaningRoomUpdate {
+	if id != nil {
+		cru = cru.SetRoomdetailID(*id)
+	}
+	return cru
+}
+
+// SetRoomdetail sets the roomdetail edge to Roomdetail.
+func (cru *CleaningRoomUpdate) SetRoomdetail(r *Roomdetail) *CleaningRoomUpdate {
+	return cru.SetRoomdetailID(r.ID)
 }
 
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
@@ -80,9 +101,34 @@ func (cru *CleaningRoomUpdate) SetLengthTime(l *LengthTime) *CleaningRoomUpdate 
 	return cru.SetLengthTimeID(l.ID)
 }
 
+// SetEmployeeID sets the Employee edge to Employee by id.
+func (cru *CleaningRoomUpdate) SetEmployeeID(id int) *CleaningRoomUpdate {
+	cru.mutation.SetEmployeeID(id)
+	return cru
+}
+
+// SetNillableEmployeeID sets the Employee edge to Employee by id if the given value is not nil.
+func (cru *CleaningRoomUpdate) SetNillableEmployeeID(id *int) *CleaningRoomUpdate {
+	if id != nil {
+		cru = cru.SetEmployeeID(*id)
+	}
+	return cru
+}
+
+// SetEmployee sets the Employee edge to Employee.
+func (cru *CleaningRoomUpdate) SetEmployee(e *Employee) *CleaningRoomUpdate {
+	return cru.SetEmployeeID(e.ID)
+}
+
 // Mutation returns the CleaningRoomMutation object of the builder.
 func (cru *CleaningRoomUpdate) Mutation() *CleaningRoomMutation {
 	return cru.mutation
+}
+
+// ClearRoomdetail clears the roomdetail edge to Roomdetail.
+func (cru *CleaningRoomUpdate) ClearRoomdetail() *CleaningRoomUpdate {
+	cru.mutation.ClearRoomdetail()
+	return cru
 }
 
 // ClearCleanerName clears the CleanerName edge to CleanerName.
@@ -94,6 +140,12 @@ func (cru *CleaningRoomUpdate) ClearCleanerName() *CleaningRoomUpdate {
 // ClearLengthTime clears the LengthTime edge to LengthTime.
 func (cru *CleaningRoomUpdate) ClearLengthTime() *CleaningRoomUpdate {
 	cru.mutation.ClearLengthTime()
+	return cru
+}
+
+// ClearEmployee clears the Employee edge to Employee.
+func (cru *CleaningRoomUpdate) ClearEmployee() *CleaningRoomUpdate {
+	cru.mutation.ClearEmployee()
 	return cru
 }
 
@@ -181,6 +233,41 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: cleaningroom.FieldNote,
 		})
 	}
+	if cru.mutation.RoomdetailCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.RoomdetailTable,
+			Columns: []string{cleaningroom.RoomdetailColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cru.mutation.RoomdetailIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.RoomdetailTable,
+			Columns: []string{cleaningroom.RoomdetailColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if cru.mutation.CleanerNameCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -251,6 +338,41 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if cru.mutation.EmployeeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.EmployeeTable,
+			Columns: []string{cleaningroom.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cru.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.EmployeeTable,
+			Columns: []string{cleaningroom.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{cleaningroom.Label}
@@ -279,6 +401,25 @@ func (cruo *CleaningRoomUpdateOne) SetDateandstarttime(t time.Time) *CleaningRoo
 func (cruo *CleaningRoomUpdateOne) SetNote(s string) *CleaningRoomUpdateOne {
 	cruo.mutation.SetNote(s)
 	return cruo
+}
+
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (cruo *CleaningRoomUpdateOne) SetRoomdetailID(id int) *CleaningRoomUpdateOne {
+	cruo.mutation.SetRoomdetailID(id)
+	return cruo
+}
+
+// SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
+func (cruo *CleaningRoomUpdateOne) SetNillableRoomdetailID(id *int) *CleaningRoomUpdateOne {
+	if id != nil {
+		cruo = cruo.SetRoomdetailID(*id)
+	}
+	return cruo
+}
+
+// SetRoomdetail sets the roomdetail edge to Roomdetail.
+func (cruo *CleaningRoomUpdateOne) SetRoomdetail(r *Roomdetail) *CleaningRoomUpdateOne {
+	return cruo.SetRoomdetailID(r.ID)
 }
 
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
@@ -319,9 +460,34 @@ func (cruo *CleaningRoomUpdateOne) SetLengthTime(l *LengthTime) *CleaningRoomUpd
 	return cruo.SetLengthTimeID(l.ID)
 }
 
+// SetEmployeeID sets the Employee edge to Employee by id.
+func (cruo *CleaningRoomUpdateOne) SetEmployeeID(id int) *CleaningRoomUpdateOne {
+	cruo.mutation.SetEmployeeID(id)
+	return cruo
+}
+
+// SetNillableEmployeeID sets the Employee edge to Employee by id if the given value is not nil.
+func (cruo *CleaningRoomUpdateOne) SetNillableEmployeeID(id *int) *CleaningRoomUpdateOne {
+	if id != nil {
+		cruo = cruo.SetEmployeeID(*id)
+	}
+	return cruo
+}
+
+// SetEmployee sets the Employee edge to Employee.
+func (cruo *CleaningRoomUpdateOne) SetEmployee(e *Employee) *CleaningRoomUpdateOne {
+	return cruo.SetEmployeeID(e.ID)
+}
+
 // Mutation returns the CleaningRoomMutation object of the builder.
 func (cruo *CleaningRoomUpdateOne) Mutation() *CleaningRoomMutation {
 	return cruo.mutation
+}
+
+// ClearRoomdetail clears the roomdetail edge to Roomdetail.
+func (cruo *CleaningRoomUpdateOne) ClearRoomdetail() *CleaningRoomUpdateOne {
+	cruo.mutation.ClearRoomdetail()
+	return cruo
 }
 
 // ClearCleanerName clears the CleanerName edge to CleanerName.
@@ -333,6 +499,12 @@ func (cruo *CleaningRoomUpdateOne) ClearCleanerName() *CleaningRoomUpdateOne {
 // ClearLengthTime clears the LengthTime edge to LengthTime.
 func (cruo *CleaningRoomUpdateOne) ClearLengthTime() *CleaningRoomUpdateOne {
 	cruo.mutation.ClearLengthTime()
+	return cruo
+}
+
+// ClearEmployee clears the Employee edge to Employee.
+func (cruo *CleaningRoomUpdateOne) ClearEmployee() *CleaningRoomUpdateOne {
+	cruo.mutation.ClearEmployee()
 	return cruo
 }
 
@@ -418,6 +590,41 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 			Column: cleaningroom.FieldNote,
 		})
 	}
+	if cruo.mutation.RoomdetailCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.RoomdetailTable,
+			Columns: []string{cleaningroom.RoomdetailColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cruo.mutation.RoomdetailIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.RoomdetailTable,
+			Columns: []string{cleaningroom.RoomdetailColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: roomdetail.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if cruo.mutation.CleanerNameCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -480,6 +687,41 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: lengthtime.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cruo.mutation.EmployeeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.EmployeeTable,
+			Columns: []string{cleaningroom.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cruo.mutation.EmployeeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   cleaningroom.EmployeeTable,
+			Columns: []string{cleaningroom.EmployeeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: employee.FieldID,
 				},
 			},
 		}

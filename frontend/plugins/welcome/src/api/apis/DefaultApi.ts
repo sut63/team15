@@ -1748,14 +1748,6 @@ export class DefaultApi extends runtime.BaseAPI {
     async listDepositRaw(requestParameters: ListDepositRequest): Promise<runtime.ApiResponse<Array<EntDeposit>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({

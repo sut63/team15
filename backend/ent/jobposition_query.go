@@ -15,6 +15,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/jobposition"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/roomdetail"
 )
 
 // JobpositionQuery is the builder for querying Jobposition entities.
@@ -26,7 +27,8 @@ type JobpositionQuery struct {
 	unique     []string
 	predicates []predicate.Jobposition
 	// eager-loading edges.
-	withEmployees *EmployeeQuery
+	withEmployees   *EmployeeQuery
+	withRoomdetails *RoomdetailQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,6 +69,24 @@ func (jq *JobpositionQuery) QueryEmployees() *EmployeeQuery {
 			sqlgraph.From(jobposition.Table, jobposition.FieldID, jq.sqlQuery()),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, jobposition.EmployeesTable, jobposition.EmployeesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(jq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRoomdetails chains the current query on the roomdetails edge.
+func (jq *JobpositionQuery) QueryRoomdetails() *RoomdetailQuery {
+	query := &RoomdetailQuery{config: jq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := jq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(jobposition.Table, jobposition.FieldID, jq.sqlQuery()),
+			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, jobposition.RoomdetailsTable, jobposition.RoomdetailsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(jq.driver.Dialect(), step)
 		return fromU, nil
@@ -264,6 +284,17 @@ func (jq *JobpositionQuery) WithEmployees(opts ...func(*EmployeeQuery)) *Jobposi
 	return jq
 }
 
+//  WithRoomdetails tells the query-builder to eager-loads the nodes that are connected to
+// the "roomdetails" edge. The optional arguments used to configure the query builder of the edge.
+func (jq *JobpositionQuery) WithRoomdetails(opts ...func(*RoomdetailQuery)) *JobpositionQuery {
+	query := &RoomdetailQuery{config: jq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	jq.withRoomdetails = query
+	return jq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -330,8 +361,9 @@ func (jq *JobpositionQuery) sqlAll(ctx context.Context) ([]*Jobposition, error) 
 	var (
 		nodes       = []*Jobposition{}
 		_spec       = jq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			jq.withEmployees != nil,
+			jq.withRoomdetails != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -380,6 +412,34 @@ func (jq *JobpositionQuery) sqlAll(ctx context.Context) ([]*Jobposition, error) 
 				return nil, fmt.Errorf(`unexpected foreign-key "jobposition_employees" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Employees = append(node.Edges.Employees, n)
+		}
+	}
+
+	if query := jq.withRoomdetails; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Jobposition)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Roomdetail(func(s *sql.Selector) {
+			s.Where(sql.InValues(jobposition.RoomdetailsColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.roomdetail_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "roomdetail_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "roomdetail_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Roomdetails = append(node.Edges.Roomdetails, n)
 		}
 	}
 

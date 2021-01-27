@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/statusd"
 )
@@ -39,6 +40,30 @@ func (du *DepositUpdate) SetAddedtime(t time.Time) *DepositUpdate {
 // SetInfo sets the info field.
 func (du *DepositUpdate) SetInfo(s string) *DepositUpdate {
 	du.mutation.SetInfo(s)
+	return du
+}
+
+// SetDepositor sets the depositor field.
+func (du *DepositUpdate) SetDepositor(s string) *DepositUpdate {
+	du.mutation.SetDepositor(s)
+	return du
+}
+
+// SetDepositortell sets the depositortell field.
+func (du *DepositUpdate) SetDepositortell(s string) *DepositUpdate {
+	du.mutation.SetDepositortell(s)
+	return du
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (du *DepositUpdate) SetRecipienttell(s string) *DepositUpdate {
+	du.mutation.SetRecipienttell(s)
+	return du
+}
+
+// SetParcelcode sets the parcelcode field.
+func (du *DepositUpdate) SetParcelcode(s string) *DepositUpdate {
+	du.mutation.SetParcelcode(s)
 	return du
 }
 
@@ -80,6 +105,25 @@ func (du *DepositUpdate) SetStatusd(s *Statusd) *DepositUpdate {
 	return du.SetStatusdID(s.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (du *DepositUpdate) SetLeaseID(id int) *DepositUpdate {
+	du.mutation.SetLeaseID(id)
+	return du
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (du *DepositUpdate) SetNillableLeaseID(id *int) *DepositUpdate {
+	if id != nil {
+		du = du.SetLeaseID(*id)
+	}
+	return du
+}
+
+// SetLease sets the Lease edge to Lease.
+func (du *DepositUpdate) SetLease(l *Lease) *DepositUpdate {
+	return du.SetLeaseID(l.ID)
+}
+
 // Mutation returns the DepositMutation object of the builder.
 func (du *DepositUpdate) Mutation() *DepositMutation {
 	return du.mutation
@@ -97,8 +141,39 @@ func (du *DepositUpdate) ClearStatusd() *DepositUpdate {
 	return du
 }
 
+// ClearLease clears the Lease edge to Lease.
+func (du *DepositUpdate) ClearLease() *DepositUpdate {
+	du.mutation.ClearLease()
+	return du
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (du *DepositUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := du.mutation.Info(); ok {
+		if err := deposit.InfoValidator(v); err != nil {
+			return 0, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Depositor(); ok {
+		if err := deposit.DepositorValidator(v); err != nil {
+			return 0, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Depositortell(); ok {
+		if err := deposit.DepositortellValidator(v); err != nil {
+			return 0, &ValidationError{Name: "depositortell", err: fmt.Errorf("ent: validator failed for field \"depositortell\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Recipienttell(); ok {
+		if err := deposit.RecipienttellValidator(v); err != nil {
+			return 0, &ValidationError{Name: "recipienttell", err: fmt.Errorf("ent: validator failed for field \"recipienttell\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Parcelcode(); ok {
+		if err := deposit.ParcelcodeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "parcelcode", err: fmt.Errorf("ent: validator failed for field \"parcelcode\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -181,6 +256,34 @@ func (du *DepositUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: deposit.FieldInfo,
 		})
 	}
+	if value, ok := du.mutation.Depositor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositor,
+		})
+	}
+	if value, ok := du.mutation.Depositortell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositortell,
+		})
+	}
+	if value, ok := du.mutation.Recipienttell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldRecipienttell,
+		})
+	}
+	if value, ok := du.mutation.Parcelcode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldParcelcode,
+		})
+	}
 	if du.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -251,6 +354,41 @@ func (du *DepositUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if du.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{deposit.Label}
@@ -278,6 +416,30 @@ func (duo *DepositUpdateOne) SetAddedtime(t time.Time) *DepositUpdateOne {
 // SetInfo sets the info field.
 func (duo *DepositUpdateOne) SetInfo(s string) *DepositUpdateOne {
 	duo.mutation.SetInfo(s)
+	return duo
+}
+
+// SetDepositor sets the depositor field.
+func (duo *DepositUpdateOne) SetDepositor(s string) *DepositUpdateOne {
+	duo.mutation.SetDepositor(s)
+	return duo
+}
+
+// SetDepositortell sets the depositortell field.
+func (duo *DepositUpdateOne) SetDepositortell(s string) *DepositUpdateOne {
+	duo.mutation.SetDepositortell(s)
+	return duo
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (duo *DepositUpdateOne) SetRecipienttell(s string) *DepositUpdateOne {
+	duo.mutation.SetRecipienttell(s)
+	return duo
+}
+
+// SetParcelcode sets the parcelcode field.
+func (duo *DepositUpdateOne) SetParcelcode(s string) *DepositUpdateOne {
+	duo.mutation.SetParcelcode(s)
 	return duo
 }
 
@@ -319,6 +481,25 @@ func (duo *DepositUpdateOne) SetStatusd(s *Statusd) *DepositUpdateOne {
 	return duo.SetStatusdID(s.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (duo *DepositUpdateOne) SetLeaseID(id int) *DepositUpdateOne {
+	duo.mutation.SetLeaseID(id)
+	return duo
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (duo *DepositUpdateOne) SetNillableLeaseID(id *int) *DepositUpdateOne {
+	if id != nil {
+		duo = duo.SetLeaseID(*id)
+	}
+	return duo
+}
+
+// SetLease sets the Lease edge to Lease.
+func (duo *DepositUpdateOne) SetLease(l *Lease) *DepositUpdateOne {
+	return duo.SetLeaseID(l.ID)
+}
+
 // Mutation returns the DepositMutation object of the builder.
 func (duo *DepositUpdateOne) Mutation() *DepositMutation {
 	return duo.mutation
@@ -336,8 +517,39 @@ func (duo *DepositUpdateOne) ClearStatusd() *DepositUpdateOne {
 	return duo
 }
 
+// ClearLease clears the Lease edge to Lease.
+func (duo *DepositUpdateOne) ClearLease() *DepositUpdateOne {
+	duo.mutation.ClearLease()
+	return duo
+}
+
 // Save executes the query and returns the updated entity.
 func (duo *DepositUpdateOne) Save(ctx context.Context) (*Deposit, error) {
+	if v, ok := duo.mutation.Info(); ok {
+		if err := deposit.InfoValidator(v); err != nil {
+			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Depositor(); ok {
+		if err := deposit.DepositorValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Depositortell(); ok {
+		if err := deposit.DepositortellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositortell", err: fmt.Errorf("ent: validator failed for field \"depositortell\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Recipienttell(); ok {
+		if err := deposit.RecipienttellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "recipienttell", err: fmt.Errorf("ent: validator failed for field \"recipienttell\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Parcelcode(); ok {
+		if err := deposit.ParcelcodeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "parcelcode", err: fmt.Errorf("ent: validator failed for field \"parcelcode\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -418,6 +630,34 @@ func (duo *DepositUpdateOne) sqlSave(ctx context.Context) (d *Deposit, err error
 			Column: deposit.FieldInfo,
 		})
 	}
+	if value, ok := duo.mutation.Depositor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositor,
+		})
+	}
+	if value, ok := duo.mutation.Depositortell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositortell,
+		})
+	}
+	if value, ok := duo.mutation.Recipienttell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldRecipienttell,
+		})
+	}
+	if value, ok := duo.mutation.Parcelcode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldParcelcode,
+		})
+	}
 	if duo.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -480,6 +720,41 @@ func (duo *DepositUpdateOne) sqlSave(ctx context.Context) (d *Deposit, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: statusd.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/statusd"
 )
 
@@ -31,6 +32,30 @@ func (dc *DepositCreate) SetAddedtime(t time.Time) *DepositCreate {
 // SetInfo sets the info field.
 func (dc *DepositCreate) SetInfo(s string) *DepositCreate {
 	dc.mutation.SetInfo(s)
+	return dc
+}
+
+// SetDepositor sets the depositor field.
+func (dc *DepositCreate) SetDepositor(s string) *DepositCreate {
+	dc.mutation.SetDepositor(s)
+	return dc
+}
+
+// SetDepositortell sets the depositortell field.
+func (dc *DepositCreate) SetDepositortell(s string) *DepositCreate {
+	dc.mutation.SetDepositortell(s)
+	return dc
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (dc *DepositCreate) SetRecipienttell(s string) *DepositCreate {
+	dc.mutation.SetRecipienttell(s)
+	return dc
+}
+
+// SetParcelcode sets the parcelcode field.
+func (dc *DepositCreate) SetParcelcode(s string) *DepositCreate {
+	dc.mutation.SetParcelcode(s)
 	return dc
 }
 
@@ -72,6 +97,25 @@ func (dc *DepositCreate) SetStatusd(s *Statusd) *DepositCreate {
 	return dc.SetStatusdID(s.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (dc *DepositCreate) SetLeaseID(id int) *DepositCreate {
+	dc.mutation.SetLeaseID(id)
+	return dc
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (dc *DepositCreate) SetNillableLeaseID(id *int) *DepositCreate {
+	if id != nil {
+		dc = dc.SetLeaseID(*id)
+	}
+	return dc
+}
+
+// SetLease sets the Lease edge to Lease.
+func (dc *DepositCreate) SetLease(l *Lease) *DepositCreate {
+	return dc.SetLeaseID(l.ID)
+}
+
 // Mutation returns the DepositMutation object of the builder.
 func (dc *DepositCreate) Mutation() *DepositMutation {
 	return dc.mutation
@@ -84,6 +128,43 @@ func (dc *DepositCreate) Save(ctx context.Context) (*Deposit, error) {
 	}
 	if _, ok := dc.mutation.Info(); !ok {
 		return nil, &ValidationError{Name: "info", err: errors.New("ent: missing required field \"info\"")}
+	}
+	if v, ok := dc.mutation.Info(); ok {
+		if err := deposit.InfoValidator(v); err != nil {
+			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Depositor(); !ok {
+		return nil, &ValidationError{Name: "depositor", err: errors.New("ent: missing required field \"depositor\"")}
+	}
+	if v, ok := dc.mutation.Depositor(); ok {
+		if err := deposit.DepositorValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Depositortell(); !ok {
+		return nil, &ValidationError{Name: "depositortell", err: errors.New("ent: missing required field \"depositortell\"")}
+	}
+	if v, ok := dc.mutation.Depositortell(); ok {
+		if err := deposit.DepositortellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositortell", err: fmt.Errorf("ent: validator failed for field \"depositortell\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Recipienttell(); !ok {
+		return nil, &ValidationError{Name: "recipienttell", err: errors.New("ent: missing required field \"recipienttell\"")}
+	}
+	if v, ok := dc.mutation.Recipienttell(); ok {
+		if err := deposit.RecipienttellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "recipienttell", err: fmt.Errorf("ent: validator failed for field \"recipienttell\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Parcelcode(); !ok {
+		return nil, &ValidationError{Name: "parcelcode", err: errors.New("ent: missing required field \"parcelcode\"")}
+	}
+	if v, ok := dc.mutation.Parcelcode(); ok {
+		if err := deposit.ParcelcodeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "parcelcode", err: fmt.Errorf("ent: validator failed for field \"parcelcode\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -161,6 +242,38 @@ func (dc *DepositCreate) createSpec() (*Deposit, *sqlgraph.CreateSpec) {
 		})
 		d.Info = value
 	}
+	if value, ok := dc.mutation.Depositor(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositor,
+		})
+		d.Depositor = value
+	}
+	if value, ok := dc.mutation.Depositortell(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositortell,
+		})
+		d.Depositortell = value
+	}
+	if value, ok := dc.mutation.Recipienttell(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldRecipienttell,
+		})
+		d.Recipienttell = value
+	}
+	if value, ok := dc.mutation.Parcelcode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldParcelcode,
+		})
+		d.Parcelcode = value
+	}
 	if nodes := dc.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -191,6 +304,25 @@ func (dc *DepositCreate) createSpec() (*Deposit, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: statusd.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   deposit.LeaseTable,
+			Columns: []string{deposit.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

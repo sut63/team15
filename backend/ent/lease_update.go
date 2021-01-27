@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
@@ -93,6 +94,21 @@ func (lu *LeaseUpdate) SetEmployee(e *Employee) *LeaseUpdate {
 	return lu.SetEmployeeID(e.ID)
 }
 
+// AddLeaseIDs adds the leases edge to Deposit by ids.
+func (lu *LeaseUpdate) AddLeaseIDs(ids ...int) *LeaseUpdate {
+	lu.mutation.AddLeaseIDs(ids...)
+	return lu
+}
+
+// AddLeases adds the leases edges to Deposit.
+func (lu *LeaseUpdate) AddLeases(d ...*Deposit) *LeaseUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return lu.AddLeaseIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (lu *LeaseUpdate) Mutation() *LeaseMutation {
 	return lu.mutation
@@ -114,6 +130,21 @@ func (lu *LeaseUpdate) ClearRoomdetail() *LeaseUpdate {
 func (lu *LeaseUpdate) ClearEmployee() *LeaseUpdate {
 	lu.mutation.ClearEmployee()
 	return lu
+}
+
+// RemoveLeaseIDs removes the leases edge to Deposit by ids.
+func (lu *LeaseUpdate) RemoveLeaseIDs(ids ...int) *LeaseUpdate {
+	lu.mutation.RemoveLeaseIDs(ids...)
+	return lu
+}
+
+// RemoveLeases removes leases edges to Deposit.
+func (lu *LeaseUpdate) RemoveLeases(d ...*Deposit) *LeaseUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return lu.RemoveLeaseIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -309,6 +340,44 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := lu.mutation.RemovedLeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.LeasesTable,
+			Columns: []string{lease.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := lu.mutation.LeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.LeasesTable,
+			Columns: []string{lease.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, lu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{lease.Label}
@@ -388,6 +457,21 @@ func (luo *LeaseUpdateOne) SetEmployee(e *Employee) *LeaseUpdateOne {
 	return luo.SetEmployeeID(e.ID)
 }
 
+// AddLeaseIDs adds the leases edge to Deposit by ids.
+func (luo *LeaseUpdateOne) AddLeaseIDs(ids ...int) *LeaseUpdateOne {
+	luo.mutation.AddLeaseIDs(ids...)
+	return luo
+}
+
+// AddLeases adds the leases edges to Deposit.
+func (luo *LeaseUpdateOne) AddLeases(d ...*Deposit) *LeaseUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return luo.AddLeaseIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (luo *LeaseUpdateOne) Mutation() *LeaseMutation {
 	return luo.mutation
@@ -409,6 +493,21 @@ func (luo *LeaseUpdateOne) ClearRoomdetail() *LeaseUpdateOne {
 func (luo *LeaseUpdateOne) ClearEmployee() *LeaseUpdateOne {
 	luo.mutation.ClearEmployee()
 	return luo
+}
+
+// RemoveLeaseIDs removes the leases edge to Deposit by ids.
+func (luo *LeaseUpdateOne) RemoveLeaseIDs(ids ...int) *LeaseUpdateOne {
+	luo.mutation.RemoveLeaseIDs(ids...)
+	return luo
+}
+
+// RemoveLeases removes leases edges to Deposit.
+func (luo *LeaseUpdateOne) RemoveLeases(d ...*Deposit) *LeaseUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return luo.RemoveLeaseIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -594,6 +693,44 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: employee.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := luo.mutation.RemovedLeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.LeasesTable,
+			Columns: []string{lease.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := luo.mutation.LeasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.LeasesTable,
+			Columns: []string{lease.LeasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: deposit.FieldID,
 				},
 			},
 		}

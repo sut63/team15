@@ -1319,10 +1319,14 @@ type CleaningRoomMutation struct {
 	dateandstarttime    *time.Time
 	note                *string
 	clearedFields       map[string]struct{}
+	roomdetail          *int
+	clearedroomdetail   bool
 	_CleanerName        *int
 	cleared_CleanerName bool
 	_LengthTime         *int
 	cleared_LengthTime  bool
+	_Employee           *int
+	cleared_Employee    bool
 	done                bool
 	oldValue            func(context.Context) (*CleaningRoom, error)
 }
@@ -1480,6 +1484,45 @@ func (m *CleaningRoomMutation) ResetNote() {
 	m.note = nil
 }
 
+// SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
+func (m *CleaningRoomMutation) SetRoomdetailID(id int) {
+	m.roomdetail = &id
+}
+
+// ClearRoomdetail clears the roomdetail edge to Roomdetail.
+func (m *CleaningRoomMutation) ClearRoomdetail() {
+	m.clearedroomdetail = true
+}
+
+// RoomdetailCleared returns if the edge roomdetail was cleared.
+func (m *CleaningRoomMutation) RoomdetailCleared() bool {
+	return m.clearedroomdetail
+}
+
+// RoomdetailID returns the roomdetail id in the mutation.
+func (m *CleaningRoomMutation) RoomdetailID() (id int, exists bool) {
+	if m.roomdetail != nil {
+		return *m.roomdetail, true
+	}
+	return
+}
+
+// RoomdetailIDs returns the roomdetail ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// RoomdetailID instead. It exists only for internal usage by the builders.
+func (m *CleaningRoomMutation) RoomdetailIDs() (ids []int) {
+	if id := m.roomdetail; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRoomdetail reset all changes of the "roomdetail" edge.
+func (m *CleaningRoomMutation) ResetRoomdetail() {
+	m.roomdetail = nil
+	m.clearedroomdetail = false
+}
+
 // SetCleanerNameID sets the CleanerName edge to CleanerName by id.
 func (m *CleaningRoomMutation) SetCleanerNameID(id int) {
 	m._CleanerName = &id
@@ -1556,6 +1599,45 @@ func (m *CleaningRoomMutation) LengthTimeIDs() (ids []int) {
 func (m *CleaningRoomMutation) ResetLengthTime() {
 	m._LengthTime = nil
 	m.cleared_LengthTime = false
+}
+
+// SetEmployeeID sets the Employee edge to Employee by id.
+func (m *CleaningRoomMutation) SetEmployeeID(id int) {
+	m._Employee = &id
+}
+
+// ClearEmployee clears the Employee edge to Employee.
+func (m *CleaningRoomMutation) ClearEmployee() {
+	m.cleared_Employee = true
+}
+
+// EmployeeCleared returns if the edge Employee was cleared.
+func (m *CleaningRoomMutation) EmployeeCleared() bool {
+	return m.cleared_Employee
+}
+
+// EmployeeID returns the Employee id in the mutation.
+func (m *CleaningRoomMutation) EmployeeID() (id int, exists bool) {
+	if m._Employee != nil {
+		return *m._Employee, true
+	}
+	return
+}
+
+// EmployeeIDs returns the Employee ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// EmployeeID instead. It exists only for internal usage by the builders.
+func (m *CleaningRoomMutation) EmployeeIDs() (ids []int) {
+	if id := m._Employee; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetEmployee reset all changes of the "Employee" edge.
+func (m *CleaningRoomMutation) ResetEmployee() {
+	m._Employee = nil
+	m.cleared_Employee = false
 }
 
 // Op returns the operation name.
@@ -1690,12 +1772,18 @@ func (m *CleaningRoomMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *CleaningRoomMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 4)
+	if m.roomdetail != nil {
+		edges = append(edges, cleaningroom.EdgeRoomdetail)
+	}
 	if m._CleanerName != nil {
 		edges = append(edges, cleaningroom.EdgeCleanerName)
 	}
 	if m._LengthTime != nil {
 		edges = append(edges, cleaningroom.EdgeLengthTime)
+	}
+	if m._Employee != nil {
+		edges = append(edges, cleaningroom.EdgeEmployee)
 	}
 	return edges
 }
@@ -1704,12 +1792,20 @@ func (m *CleaningRoomMutation) AddedEdges() []string {
 // the given edge name.
 func (m *CleaningRoomMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case cleaningroom.EdgeRoomdetail:
+		if id := m.roomdetail; id != nil {
+			return []ent.Value{*id}
+		}
 	case cleaningroom.EdgeCleanerName:
 		if id := m._CleanerName; id != nil {
 			return []ent.Value{*id}
 		}
 	case cleaningroom.EdgeLengthTime:
 		if id := m._LengthTime; id != nil {
+			return []ent.Value{*id}
+		}
+	case cleaningroom.EdgeEmployee:
+		if id := m._Employee; id != nil {
 			return []ent.Value{*id}
 		}
 	}
@@ -1719,7 +1815,7 @@ func (m *CleaningRoomMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *CleaningRoomMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 4)
 	return edges
 }
 
@@ -1734,12 +1830,18 @@ func (m *CleaningRoomMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *CleaningRoomMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 4)
+	if m.clearedroomdetail {
+		edges = append(edges, cleaningroom.EdgeRoomdetail)
+	}
 	if m.cleared_CleanerName {
 		edges = append(edges, cleaningroom.EdgeCleanerName)
 	}
 	if m.cleared_LengthTime {
 		edges = append(edges, cleaningroom.EdgeLengthTime)
+	}
+	if m.cleared_Employee {
+		edges = append(edges, cleaningroom.EdgeEmployee)
 	}
 	return edges
 }
@@ -1748,10 +1850,14 @@ func (m *CleaningRoomMutation) ClearedEdges() []string {
 // cleared in this mutation.
 func (m *CleaningRoomMutation) EdgeCleared(name string) bool {
 	switch name {
+	case cleaningroom.EdgeRoomdetail:
+		return m.clearedroomdetail
 	case cleaningroom.EdgeCleanerName:
 		return m.cleared_CleanerName
 	case cleaningroom.EdgeLengthTime:
 		return m.cleared_LengthTime
+	case cleaningroom.EdgeEmployee:
+		return m.cleared_Employee
 	}
 	return false
 }
@@ -1760,11 +1866,17 @@ func (m *CleaningRoomMutation) EdgeCleared(name string) bool {
 // error if the edge name is not defined in the schema.
 func (m *CleaningRoomMutation) ClearEdge(name string) error {
 	switch name {
+	case cleaningroom.EdgeRoomdetail:
+		m.ClearRoomdetail()
+		return nil
 	case cleaningroom.EdgeCleanerName:
 		m.ClearCleanerName()
 		return nil
 	case cleaningroom.EdgeLengthTime:
 		m.ClearLengthTime()
+		return nil
+	case cleaningroom.EdgeEmployee:
+		m.ClearEmployee()
 		return nil
 	}
 	return fmt.Errorf("unknown CleaningRoom unique edge %s", name)
@@ -1775,11 +1887,17 @@ func (m *CleaningRoomMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *CleaningRoomMutation) ResetEdge(name string) error {
 	switch name {
+	case cleaningroom.EdgeRoomdetail:
+		m.ResetRoomdetail()
+		return nil
 	case cleaningroom.EdgeCleanerName:
 		m.ResetCleanerName()
 		return nil
 	case cleaningroom.EdgeLengthTime:
 		m.ResetLengthTime()
+		return nil
+	case cleaningroom.EdgeEmployee:
+		m.ResetEmployee()
 		return nil
 	}
 	return fmt.Errorf("unknown CleaningRoom edge %s", name)
@@ -1794,11 +1912,17 @@ type DepositMutation struct {
 	id               *int
 	addedtime        *time.Time
 	info             *string
+	depositor        *string
+	depositortell    *string
+	recipienttell    *string
+	parcelcode       *string
 	clearedFields    map[string]struct{}
 	_Employee        *int
 	cleared_Employee bool
 	_Statusd         *int
 	cleared_Statusd  bool
+	_Lease           *int
+	cleared_Lease    bool
 	done             bool
 	oldValue         func(context.Context) (*Deposit, error)
 }
@@ -1956,6 +2080,154 @@ func (m *DepositMutation) ResetInfo() {
 	m.info = nil
 }
 
+// SetDepositor sets the depositor field.
+func (m *DepositMutation) SetDepositor(s string) {
+	m.depositor = &s
+}
+
+// Depositor returns the depositor value in the mutation.
+func (m *DepositMutation) Depositor() (r string, exists bool) {
+	v := m.depositor
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDepositor returns the old depositor value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldDepositor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDepositor is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDepositor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDepositor: %w", err)
+	}
+	return oldValue.Depositor, nil
+}
+
+// ResetDepositor reset all changes of the "depositor" field.
+func (m *DepositMutation) ResetDepositor() {
+	m.depositor = nil
+}
+
+// SetDepositortell sets the depositortell field.
+func (m *DepositMutation) SetDepositortell(s string) {
+	m.depositortell = &s
+}
+
+// Depositortell returns the depositortell value in the mutation.
+func (m *DepositMutation) Depositortell() (r string, exists bool) {
+	v := m.depositortell
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDepositortell returns the old depositortell value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldDepositortell(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDepositortell is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDepositortell requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDepositortell: %w", err)
+	}
+	return oldValue.Depositortell, nil
+}
+
+// ResetDepositortell reset all changes of the "depositortell" field.
+func (m *DepositMutation) ResetDepositortell() {
+	m.depositortell = nil
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (m *DepositMutation) SetRecipienttell(s string) {
+	m.recipienttell = &s
+}
+
+// Recipienttell returns the recipienttell value in the mutation.
+func (m *DepositMutation) Recipienttell() (r string, exists bool) {
+	v := m.recipienttell
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRecipienttell returns the old recipienttell value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldRecipienttell(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRecipienttell is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRecipienttell requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRecipienttell: %w", err)
+	}
+	return oldValue.Recipienttell, nil
+}
+
+// ResetRecipienttell reset all changes of the "recipienttell" field.
+func (m *DepositMutation) ResetRecipienttell() {
+	m.recipienttell = nil
+}
+
+// SetParcelcode sets the parcelcode field.
+func (m *DepositMutation) SetParcelcode(s string) {
+	m.parcelcode = &s
+}
+
+// Parcelcode returns the parcelcode value in the mutation.
+func (m *DepositMutation) Parcelcode() (r string, exists bool) {
+	v := m.parcelcode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldParcelcode returns the old parcelcode value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldParcelcode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldParcelcode is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldParcelcode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldParcelcode: %w", err)
+	}
+	return oldValue.Parcelcode, nil
+}
+
+// ResetParcelcode reset all changes of the "parcelcode" field.
+func (m *DepositMutation) ResetParcelcode() {
+	m.parcelcode = nil
+}
+
 // SetEmployeeID sets the Employee edge to Employee by id.
 func (m *DepositMutation) SetEmployeeID(id int) {
 	m._Employee = &id
@@ -2034,6 +2306,45 @@ func (m *DepositMutation) ResetStatusd() {
 	m.cleared_Statusd = false
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (m *DepositMutation) SetLeaseID(id int) {
+	m._Lease = &id
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (m *DepositMutation) ClearLease() {
+	m.cleared_Lease = true
+}
+
+// LeaseCleared returns if the edge Lease was cleared.
+func (m *DepositMutation) LeaseCleared() bool {
+	return m.cleared_Lease
+}
+
+// LeaseID returns the Lease id in the mutation.
+func (m *DepositMutation) LeaseID() (id int, exists bool) {
+	if m._Lease != nil {
+		return *m._Lease, true
+	}
+	return
+}
+
+// LeaseIDs returns the Lease ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// LeaseID instead. It exists only for internal usage by the builders.
+func (m *DepositMutation) LeaseIDs() (ids []int) {
+	if id := m._Lease; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetLease reset all changes of the "Lease" edge.
+func (m *DepositMutation) ResetLease() {
+	m._Lease = nil
+	m.cleared_Lease = false
+}
+
 // Op returns the operation name.
 func (m *DepositMutation) Op() Op {
 	return m.op
@@ -2048,12 +2359,24 @@ func (m *DepositMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *DepositMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 6)
 	if m.addedtime != nil {
 		fields = append(fields, deposit.FieldAddedtime)
 	}
 	if m.info != nil {
 		fields = append(fields, deposit.FieldInfo)
+	}
+	if m.depositor != nil {
+		fields = append(fields, deposit.FieldDepositor)
+	}
+	if m.depositortell != nil {
+		fields = append(fields, deposit.FieldDepositortell)
+	}
+	if m.recipienttell != nil {
+		fields = append(fields, deposit.FieldRecipienttell)
+	}
+	if m.parcelcode != nil {
+		fields = append(fields, deposit.FieldParcelcode)
 	}
 	return fields
 }
@@ -2067,6 +2390,14 @@ func (m *DepositMutation) Field(name string) (ent.Value, bool) {
 		return m.Addedtime()
 	case deposit.FieldInfo:
 		return m.Info()
+	case deposit.FieldDepositor:
+		return m.Depositor()
+	case deposit.FieldDepositortell:
+		return m.Depositortell()
+	case deposit.FieldRecipienttell:
+		return m.Recipienttell()
+	case deposit.FieldParcelcode:
+		return m.Parcelcode()
 	}
 	return nil, false
 }
@@ -2080,6 +2411,14 @@ func (m *DepositMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldAddedtime(ctx)
 	case deposit.FieldInfo:
 		return m.OldInfo(ctx)
+	case deposit.FieldDepositor:
+		return m.OldDepositor(ctx)
+	case deposit.FieldDepositortell:
+		return m.OldDepositortell(ctx)
+	case deposit.FieldRecipienttell:
+		return m.OldRecipienttell(ctx)
+	case deposit.FieldParcelcode:
+		return m.OldParcelcode(ctx)
 	}
 	return nil, fmt.Errorf("unknown Deposit field %s", name)
 }
@@ -2102,6 +2441,34 @@ func (m *DepositMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetInfo(v)
+		return nil
+	case deposit.FieldDepositor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDepositor(v)
+		return nil
+	case deposit.FieldDepositortell:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDepositortell(v)
+		return nil
+	case deposit.FieldRecipienttell:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRecipienttell(v)
+		return nil
+	case deposit.FieldParcelcode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetParcelcode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Deposit field %s", name)
@@ -2159,6 +2526,18 @@ func (m *DepositMutation) ResetField(name string) error {
 	case deposit.FieldInfo:
 		m.ResetInfo()
 		return nil
+	case deposit.FieldDepositor:
+		m.ResetDepositor()
+		return nil
+	case deposit.FieldDepositortell:
+		m.ResetDepositortell()
+		return nil
+	case deposit.FieldRecipienttell:
+		m.ResetRecipienttell()
+		return nil
+	case deposit.FieldParcelcode:
+		m.ResetParcelcode()
+		return nil
 	}
 	return fmt.Errorf("unknown Deposit field %s", name)
 }
@@ -2166,12 +2545,15 @@ func (m *DepositMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *DepositMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m._Employee != nil {
 		edges = append(edges, deposit.EdgeEmployee)
 	}
 	if m._Statusd != nil {
 		edges = append(edges, deposit.EdgeStatusd)
+	}
+	if m._Lease != nil {
+		edges = append(edges, deposit.EdgeLease)
 	}
 	return edges
 }
@@ -2188,6 +2570,10 @@ func (m *DepositMutation) AddedIDs(name string) []ent.Value {
 		if id := m._Statusd; id != nil {
 			return []ent.Value{*id}
 		}
+	case deposit.EdgeLease:
+		if id := m._Lease; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -2195,7 +2581,7 @@ func (m *DepositMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *DepositMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
@@ -2210,12 +2596,15 @@ func (m *DepositMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *DepositMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.cleared_Employee {
 		edges = append(edges, deposit.EdgeEmployee)
 	}
 	if m.cleared_Statusd {
 		edges = append(edges, deposit.EdgeStatusd)
+	}
+	if m.cleared_Lease {
+		edges = append(edges, deposit.EdgeLease)
 	}
 	return edges
 }
@@ -2228,6 +2617,8 @@ func (m *DepositMutation) EdgeCleared(name string) bool {
 		return m.cleared_Employee
 	case deposit.EdgeStatusd:
 		return m.cleared_Statusd
+	case deposit.EdgeLease:
+		return m.cleared_Lease
 	}
 	return false
 }
@@ -2241,6 +2632,9 @@ func (m *DepositMutation) ClearEdge(name string) error {
 		return nil
 	case deposit.EdgeStatusd:
 		m.ClearStatusd()
+		return nil
+	case deposit.EdgeLease:
+		m.ClearLease()
 		return nil
 	}
 	return fmt.Errorf("unknown Deposit unique edge %s", name)
@@ -2256,6 +2650,9 @@ func (m *DepositMutation) ResetEdge(name string) error {
 		return nil
 	case deposit.EdgeStatusd:
 		m.ResetStatusd()
+		return nil
+	case deposit.EdgeLease:
+		m.ResetLease()
 		return nil
 	}
 	return fmt.Errorf("unknown Deposit edge %s", name)
@@ -2282,6 +2679,8 @@ type EmployeeMutation struct {
 	clearedjobposition    bool
 	repairinvoices        map[int]struct{}
 	removedrepairinvoices map[int]struct{}
+	cleaningrooms         map[int]struct{}
+	removedcleaningrooms  map[int]struct{}
 	done                  bool
 	oldValue              func(context.Context) (*Employee, error)
 }
@@ -2683,6 +3082,48 @@ func (m *EmployeeMutation) ResetRepairinvoices() {
 	m.removedrepairinvoices = nil
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (m *EmployeeMutation) AddCleaningroomIDs(ids ...int) {
+	if m.cleaningrooms == nil {
+		m.cleaningrooms = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.cleaningrooms[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (m *EmployeeMutation) RemoveCleaningroomIDs(ids ...int) {
+	if m.removedcleaningrooms == nil {
+		m.removedcleaningrooms = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedcleaningrooms[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCleaningrooms returns the removed ids of cleaningrooms.
+func (m *EmployeeMutation) RemovedCleaningroomsIDs() (ids []int) {
+	for id := range m.removedcleaningrooms {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CleaningroomsIDs returns the cleaningrooms ids in the mutation.
+func (m *EmployeeMutation) CleaningroomsIDs() (ids []int) {
+	for id := range m.cleaningrooms {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCleaningrooms reset all changes of the "cleaningrooms" edge.
+func (m *EmployeeMutation) ResetCleaningrooms() {
+	m.cleaningrooms = nil
+	m.removedcleaningrooms = nil
+}
+
 // Op returns the operation name.
 func (m *EmployeeMutation) Op() Op {
 	return m.op
@@ -2832,7 +3273,7 @@ func (m *EmployeeMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *EmployeeMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.employees != nil {
 		edges = append(edges, employee.EdgeEmployees)
 	}
@@ -2847,6 +3288,9 @@ func (m *EmployeeMutation) AddedEdges() []string {
 	}
 	if m.repairinvoices != nil {
 		edges = append(edges, employee.EdgeRepairinvoices)
+	}
+	if m.cleaningrooms != nil {
+		edges = append(edges, employee.EdgeCleaningrooms)
 	}
 	return edges
 }
@@ -2883,6 +3327,12 @@ func (m *EmployeeMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case employee.EdgeCleaningrooms:
+		ids := make([]ent.Value, 0, len(m.cleaningrooms))
+		for id := range m.cleaningrooms {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2890,7 +3340,7 @@ func (m *EmployeeMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *EmployeeMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.removedemployees != nil {
 		edges = append(edges, employee.EdgeEmployees)
 	}
@@ -2902,6 +3352,9 @@ func (m *EmployeeMutation) RemovedEdges() []string {
 	}
 	if m.removedrepairinvoices != nil {
 		edges = append(edges, employee.EdgeRepairinvoices)
+	}
+	if m.removedcleaningrooms != nil {
+		edges = append(edges, employee.EdgeCleaningrooms)
 	}
 	return edges
 }
@@ -2934,6 +3387,12 @@ func (m *EmployeeMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case employee.EdgeCleaningrooms:
+		ids := make([]ent.Value, 0, len(m.removedcleaningrooms))
+		for id := range m.removedcleaningrooms {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2941,7 +3400,7 @@ func (m *EmployeeMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *EmployeeMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.clearedjobposition {
 		edges = append(edges, employee.EdgeJobposition)
 	}
@@ -2989,6 +3448,9 @@ func (m *EmployeeMutation) ResetEdge(name string) error {
 	case employee.EdgeRepairinvoices:
 		m.ResetRepairinvoices()
 		return nil
+	case employee.EdgeCleaningrooms:
+		m.ResetCleaningrooms()
+		return nil
 	}
 	return fmt.Errorf("unknown Employee edge %s", name)
 }
@@ -2997,15 +3459,17 @@ func (m *EmployeeMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type JobpositionMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int
-	positionname     *string
-	clearedFields    map[string]struct{}
-	employees        map[int]struct{}
-	removedemployees map[int]struct{}
-	done             bool
-	oldValue         func(context.Context) (*Jobposition, error)
+	op                 Op
+	typ                string
+	id                 *int
+	positionname       *string
+	clearedFields      map[string]struct{}
+	employees          map[int]struct{}
+	removedemployees   map[int]struct{}
+	roomdetails        map[int]struct{}
+	removedroomdetails map[int]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Jobposition, error)
 }
 
 var _ ent.Mutation = (*JobpositionMutation)(nil)
@@ -3166,6 +3630,48 @@ func (m *JobpositionMutation) ResetEmployees() {
 	m.removedemployees = nil
 }
 
+// AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
+func (m *JobpositionMutation) AddRoomdetailIDs(ids ...int) {
+	if m.roomdetails == nil {
+		m.roomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.roomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveRoomdetailIDs removes the roomdetails edge to Roomdetail by ids.
+func (m *JobpositionMutation) RemoveRoomdetailIDs(ids ...int) {
+	if m.removedroomdetails == nil {
+		m.removedroomdetails = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedroomdetails[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoomdetails returns the removed ids of roomdetails.
+func (m *JobpositionMutation) RemovedRoomdetailsIDs() (ids []int) {
+	for id := range m.removedroomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RoomdetailsIDs returns the roomdetails ids in the mutation.
+func (m *JobpositionMutation) RoomdetailsIDs() (ids []int) {
+	for id := range m.roomdetails {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoomdetails reset all changes of the "roomdetails" edge.
+func (m *JobpositionMutation) ResetRoomdetails() {
+	m.roomdetails = nil
+	m.removedroomdetails = nil
+}
+
 // Op returns the operation name.
 func (m *JobpositionMutation) Op() Op {
 	return m.op
@@ -3281,9 +3787,12 @@ func (m *JobpositionMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *JobpositionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.employees != nil {
 		edges = append(edges, jobposition.EdgeEmployees)
+	}
+	if m.roomdetails != nil {
+		edges = append(edges, jobposition.EdgeRoomdetails)
 	}
 	return edges
 }
@@ -3298,6 +3807,12 @@ func (m *JobpositionMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case jobposition.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.roomdetails))
+		for id := range m.roomdetails {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -3305,9 +3820,12 @@ func (m *JobpositionMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *JobpositionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedemployees != nil {
 		edges = append(edges, jobposition.EdgeEmployees)
+	}
+	if m.removedroomdetails != nil {
+		edges = append(edges, jobposition.EdgeRoomdetails)
 	}
 	return edges
 }
@@ -3322,6 +3840,12 @@ func (m *JobpositionMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case jobposition.EdgeRoomdetails:
+		ids := make([]ent.Value, 0, len(m.removedroomdetails))
+		for id := range m.removedroomdetails {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -3329,7 +3853,7 @@ func (m *JobpositionMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *JobpositionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -3357,6 +3881,9 @@ func (m *JobpositionMutation) ResetEdge(name string) error {
 	case jobposition.EdgeEmployees:
 		m.ResetEmployees()
 		return nil
+	case jobposition.EdgeRoomdetails:
+		m.ResetRoomdetails()
+		return nil
 	}
 	return fmt.Errorf("unknown Jobposition edge %s", name)
 }
@@ -3377,6 +3904,8 @@ type LeaseMutation struct {
 	cleared_Roomdetail bool
 	employee           *int
 	clearedemployee    bool
+	leases             map[int]struct{}
+	removedleases      map[int]struct{}
 	done               bool
 	oldValue           func(context.Context) (*Lease, error)
 }
@@ -3651,6 +4180,48 @@ func (m *LeaseMutation) ResetEmployee() {
 	m.clearedemployee = false
 }
 
+// AddLeaseIDs adds the leases edge to Deposit by ids.
+func (m *LeaseMutation) AddLeaseIDs(ids ...int) {
+	if m.leases == nil {
+		m.leases = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.leases[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveLeaseIDs removes the leases edge to Deposit by ids.
+func (m *LeaseMutation) RemoveLeaseIDs(ids ...int) {
+	if m.removedleases == nil {
+		m.removedleases = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedleases[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedLeases returns the removed ids of leases.
+func (m *LeaseMutation) RemovedLeasesIDs() (ids []int) {
+	for id := range m.removedleases {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// LeasesIDs returns the leases ids in the mutation.
+func (m *LeaseMutation) LeasesIDs() (ids []int) {
+	for id := range m.leases {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetLeases reset all changes of the "leases" edge.
+func (m *LeaseMutation) ResetLeases() {
+	m.leases = nil
+	m.removedleases = nil
+}
+
 // Op returns the operation name.
 func (m *LeaseMutation) Op() Op {
 	return m.op
@@ -3783,7 +4354,7 @@ func (m *LeaseMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *LeaseMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m._Wifi != nil {
 		edges = append(edges, lease.EdgeWifi)
 	}
@@ -3792,6 +4363,9 @@ func (m *LeaseMutation) AddedEdges() []string {
 	}
 	if m.employee != nil {
 		edges = append(edges, lease.EdgeEmployee)
+	}
+	if m.leases != nil {
+		edges = append(edges, lease.EdgeLeases)
 	}
 	return edges
 }
@@ -3812,6 +4386,12 @@ func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
 		if id := m.employee; id != nil {
 			return []ent.Value{*id}
 		}
+	case lease.EdgeLeases:
+		ids := make([]ent.Value, 0, len(m.leases))
+		for id := range m.leases {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -3819,7 +4399,10 @@ func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *LeaseMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
+	if m.removedleases != nil {
+		edges = append(edges, lease.EdgeLeases)
+	}
 	return edges
 }
 
@@ -3827,6 +4410,12 @@ func (m *LeaseMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case lease.EdgeLeases:
+		ids := make([]ent.Value, 0, len(m.removedleases))
+		for id := range m.removedleases {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -3834,7 +4423,7 @@ func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *LeaseMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.cleared_Wifi {
 		edges = append(edges, lease.EdgeWifi)
 	}
@@ -3891,6 +4480,9 @@ func (m *LeaseMutation) ResetEdge(name string) error {
 		return nil
 	case lease.EdgeEmployee:
 		m.ResetEmployee()
+		return nil
+	case lease.EdgeLeases:
+		m.ResetLeases()
 		return nil
 	}
 	return fmt.Errorf("unknown Lease edge %s", name)
@@ -6161,29 +6753,36 @@ func (m *RepairinvoiceMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type RoomdetailMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	roomnumber         *string
-	roomtypename       *string
-	roomprice          *string
-	sleep              *string
-	bed                *string
-	clearedFields      map[string]struct{}
-	pledge             *int
-	clearedpledge      bool
-	petrule            *int
-	clearedpetrule     bool
-	bedtype            *int
-	clearedbedtype     bool
-	employee           *int
-	clearedemployee    bool
-	staytype           *int
-	clearedstaytype    bool
-	roomdetails        *int
-	clearedroomdetails bool
-	done               bool
-	oldValue           func(context.Context) (*Roomdetail, error)
+	op                   Op
+	typ                  string
+	id                   *int
+	roomnumber           *string
+	roomtypename         *string
+	roomprice            *string
+	phone                *string
+	sleep                *int
+	addsleep             *int
+	bed                  *int
+	addbed               *int
+	clearedFields        map[string]struct{}
+	pledge               *int
+	clearedpledge        bool
+	petrule              *int
+	clearedpetrule       bool
+	bedtype              *int
+	clearedbedtype       bool
+	employee             *int
+	clearedemployee      bool
+	jobposition          *int
+	clearedjobposition   bool
+	staytype             *int
+	clearedstaytype      bool
+	roomdetails          *int
+	clearedroomdetails   bool
+	cleaningrooms        map[int]struct{}
+	removedcleaningrooms map[int]struct{}
+	done                 bool
+	oldValue             func(context.Context) (*Roomdetail, error)
 }
 
 var _ ent.Mutation = (*RoomdetailMutation)(nil)
@@ -6376,13 +6975,51 @@ func (m *RoomdetailMutation) ResetRoomprice() {
 	m.roomprice = nil
 }
 
+// SetPhone sets the phone field.
+func (m *RoomdetailMutation) SetPhone(s string) {
+	m.phone = &s
+}
+
+// Phone returns the phone value in the mutation.
+func (m *RoomdetailMutation) Phone() (r string, exists bool) {
+	v := m.phone
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhone returns the old phone value of the Roomdetail.
+// If the Roomdetail object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RoomdetailMutation) OldPhone(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPhone is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPhone requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhone: %w", err)
+	}
+	return oldValue.Phone, nil
+}
+
+// ResetPhone reset all changes of the "phone" field.
+func (m *RoomdetailMutation) ResetPhone() {
+	m.phone = nil
+}
+
 // SetSleep sets the sleep field.
-func (m *RoomdetailMutation) SetSleep(s string) {
-	m.sleep = &s
+func (m *RoomdetailMutation) SetSleep(i int) {
+	m.sleep = &i
+	m.addsleep = nil
 }
 
 // Sleep returns the sleep value in the mutation.
-func (m *RoomdetailMutation) Sleep() (r string, exists bool) {
+func (m *RoomdetailMutation) Sleep() (r int, exists bool) {
 	v := m.sleep
 	if v == nil {
 		return
@@ -6394,7 +7031,7 @@ func (m *RoomdetailMutation) Sleep() (r string, exists bool) {
 // If the Roomdetail object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoomdetailMutation) OldSleep(ctx context.Context) (v string, err error) {
+func (m *RoomdetailMutation) OldSleep(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldSleep is allowed only on UpdateOne operations")
 	}
@@ -6408,18 +7045,38 @@ func (m *RoomdetailMutation) OldSleep(ctx context.Context) (v string, err error)
 	return oldValue.Sleep, nil
 }
 
+// AddSleep adds i to sleep.
+func (m *RoomdetailMutation) AddSleep(i int) {
+	if m.addsleep != nil {
+		*m.addsleep += i
+	} else {
+		m.addsleep = &i
+	}
+}
+
+// AddedSleep returns the value that was added to the sleep field in this mutation.
+func (m *RoomdetailMutation) AddedSleep() (r int, exists bool) {
+	v := m.addsleep
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetSleep reset all changes of the "sleep" field.
 func (m *RoomdetailMutation) ResetSleep() {
 	m.sleep = nil
+	m.addsleep = nil
 }
 
 // SetBed sets the bed field.
-func (m *RoomdetailMutation) SetBed(s string) {
-	m.bed = &s
+func (m *RoomdetailMutation) SetBed(i int) {
+	m.bed = &i
+	m.addbed = nil
 }
 
 // Bed returns the bed value in the mutation.
-func (m *RoomdetailMutation) Bed() (r string, exists bool) {
+func (m *RoomdetailMutation) Bed() (r int, exists bool) {
 	v := m.bed
 	if v == nil {
 		return
@@ -6431,7 +7088,7 @@ func (m *RoomdetailMutation) Bed() (r string, exists bool) {
 // If the Roomdetail object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoomdetailMutation) OldBed(ctx context.Context) (v string, err error) {
+func (m *RoomdetailMutation) OldBed(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldBed is allowed only on UpdateOne operations")
 	}
@@ -6445,9 +7102,28 @@ func (m *RoomdetailMutation) OldBed(ctx context.Context) (v string, err error) {
 	return oldValue.Bed, nil
 }
 
+// AddBed adds i to bed.
+func (m *RoomdetailMutation) AddBed(i int) {
+	if m.addbed != nil {
+		*m.addbed += i
+	} else {
+		m.addbed = &i
+	}
+}
+
+// AddedBed returns the value that was added to the bed field in this mutation.
+func (m *RoomdetailMutation) AddedBed() (r int, exists bool) {
+	v := m.addbed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetBed reset all changes of the "bed" field.
 func (m *RoomdetailMutation) ResetBed() {
 	m.bed = nil
+	m.addbed = nil
 }
 
 // SetPledgeID sets the pledge edge to Pledge by id.
@@ -6606,6 +7282,45 @@ func (m *RoomdetailMutation) ResetEmployee() {
 	m.clearedemployee = false
 }
 
+// SetJobpositionID sets the jobposition edge to Jobposition by id.
+func (m *RoomdetailMutation) SetJobpositionID(id int) {
+	m.jobposition = &id
+}
+
+// ClearJobposition clears the jobposition edge to Jobposition.
+func (m *RoomdetailMutation) ClearJobposition() {
+	m.clearedjobposition = true
+}
+
+// JobpositionCleared returns if the edge jobposition was cleared.
+func (m *RoomdetailMutation) JobpositionCleared() bool {
+	return m.clearedjobposition
+}
+
+// JobpositionID returns the jobposition id in the mutation.
+func (m *RoomdetailMutation) JobpositionID() (id int, exists bool) {
+	if m.jobposition != nil {
+		return *m.jobposition, true
+	}
+	return
+}
+
+// JobpositionIDs returns the jobposition ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// JobpositionID instead. It exists only for internal usage by the builders.
+func (m *RoomdetailMutation) JobpositionIDs() (ids []int) {
+	if id := m.jobposition; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetJobposition reset all changes of the "jobposition" edge.
+func (m *RoomdetailMutation) ResetJobposition() {
+	m.jobposition = nil
+	m.clearedjobposition = false
+}
+
 // SetStaytypeID sets the staytype edge to Staytype by id.
 func (m *RoomdetailMutation) SetStaytypeID(id int) {
 	m.staytype = &id
@@ -6684,6 +7399,48 @@ func (m *RoomdetailMutation) ResetRoomdetails() {
 	m.clearedroomdetails = false
 }
 
+// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+func (m *RoomdetailMutation) AddCleaningroomIDs(ids ...int) {
+	if m.cleaningrooms == nil {
+		m.cleaningrooms = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.cleaningrooms[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+func (m *RoomdetailMutation) RemoveCleaningroomIDs(ids ...int) {
+	if m.removedcleaningrooms == nil {
+		m.removedcleaningrooms = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedcleaningrooms[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCleaningrooms returns the removed ids of cleaningrooms.
+func (m *RoomdetailMutation) RemovedCleaningroomsIDs() (ids []int) {
+	for id := range m.removedcleaningrooms {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CleaningroomsIDs returns the cleaningrooms ids in the mutation.
+func (m *RoomdetailMutation) CleaningroomsIDs() (ids []int) {
+	for id := range m.cleaningrooms {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCleaningrooms reset all changes of the "cleaningrooms" edge.
+func (m *RoomdetailMutation) ResetCleaningrooms() {
+	m.cleaningrooms = nil
+	m.removedcleaningrooms = nil
+}
+
 // Op returns the operation name.
 func (m *RoomdetailMutation) Op() Op {
 	return m.op
@@ -6698,7 +7455,7 @@ func (m *RoomdetailMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *RoomdetailMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.roomnumber != nil {
 		fields = append(fields, roomdetail.FieldRoomnumber)
 	}
@@ -6707,6 +7464,9 @@ func (m *RoomdetailMutation) Fields() []string {
 	}
 	if m.roomprice != nil {
 		fields = append(fields, roomdetail.FieldRoomprice)
+	}
+	if m.phone != nil {
+		fields = append(fields, roomdetail.FieldPhone)
 	}
 	if m.sleep != nil {
 		fields = append(fields, roomdetail.FieldSleep)
@@ -6728,6 +7488,8 @@ func (m *RoomdetailMutation) Field(name string) (ent.Value, bool) {
 		return m.Roomtypename()
 	case roomdetail.FieldRoomprice:
 		return m.Roomprice()
+	case roomdetail.FieldPhone:
+		return m.Phone()
 	case roomdetail.FieldSleep:
 		return m.Sleep()
 	case roomdetail.FieldBed:
@@ -6747,6 +7509,8 @@ func (m *RoomdetailMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldRoomtypename(ctx)
 	case roomdetail.FieldRoomprice:
 		return m.OldRoomprice(ctx)
+	case roomdetail.FieldPhone:
+		return m.OldPhone(ctx)
 	case roomdetail.FieldSleep:
 		return m.OldSleep(ctx)
 	case roomdetail.FieldBed:
@@ -6781,15 +7545,22 @@ func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRoomprice(v)
 		return nil
-	case roomdetail.FieldSleep:
+	case roomdetail.FieldPhone:
 		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhone(v)
+		return nil
+	case roomdetail.FieldSleep:
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSleep(v)
 		return nil
 	case roomdetail.FieldBed:
-		v, ok := value.(string)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6802,13 +7573,26 @@ func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *RoomdetailMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addsleep != nil {
+		fields = append(fields, roomdetail.FieldSleep)
+	}
+	if m.addbed != nil {
+		fields = append(fields, roomdetail.FieldBed)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case roomdetail.FieldSleep:
+		return m.AddedSleep()
+	case roomdetail.FieldBed:
+		return m.AddedBed()
+	}
 	return nil, false
 }
 
@@ -6817,6 +7601,20 @@ func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *RoomdetailMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case roomdetail.FieldSleep:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSleep(v)
+		return nil
+	case roomdetail.FieldBed:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddBed(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Roomdetail numeric field %s", name)
 }
@@ -6854,6 +7652,9 @@ func (m *RoomdetailMutation) ResetField(name string) error {
 	case roomdetail.FieldRoomprice:
 		m.ResetRoomprice()
 		return nil
+	case roomdetail.FieldPhone:
+		m.ResetPhone()
+		return nil
 	case roomdetail.FieldSleep:
 		m.ResetSleep()
 		return nil
@@ -6867,7 +7668,7 @@ func (m *RoomdetailMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *RoomdetailMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 8)
 	if m.pledge != nil {
 		edges = append(edges, roomdetail.EdgePledge)
 	}
@@ -6880,11 +7681,17 @@ func (m *RoomdetailMutation) AddedEdges() []string {
 	if m.employee != nil {
 		edges = append(edges, roomdetail.EdgeEmployee)
 	}
+	if m.jobposition != nil {
+		edges = append(edges, roomdetail.EdgeJobposition)
+	}
 	if m.staytype != nil {
 		edges = append(edges, roomdetail.EdgeStaytype)
 	}
 	if m.roomdetails != nil {
 		edges = append(edges, roomdetail.EdgeRoomdetails)
+	}
+	if m.cleaningrooms != nil {
+		edges = append(edges, roomdetail.EdgeCleaningrooms)
 	}
 	return edges
 }
@@ -6909,6 +7716,10 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 		if id := m.employee; id != nil {
 			return []ent.Value{*id}
 		}
+	case roomdetail.EdgeJobposition:
+		if id := m.jobposition; id != nil {
+			return []ent.Value{*id}
+		}
 	case roomdetail.EdgeStaytype:
 		if id := m.staytype; id != nil {
 			return []ent.Value{*id}
@@ -6917,6 +7728,12 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 		if id := m.roomdetails; id != nil {
 			return []ent.Value{*id}
 		}
+	case roomdetail.EdgeCleaningrooms:
+		ids := make([]ent.Value, 0, len(m.cleaningrooms))
+		for id := range m.cleaningrooms {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -6924,7 +7741,10 @@ func (m *RoomdetailMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *RoomdetailMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 8)
+	if m.removedcleaningrooms != nil {
+		edges = append(edges, roomdetail.EdgeCleaningrooms)
+	}
 	return edges
 }
 
@@ -6932,6 +7752,12 @@ func (m *RoomdetailMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *RoomdetailMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case roomdetail.EdgeCleaningrooms:
+		ids := make([]ent.Value, 0, len(m.removedcleaningrooms))
+		for id := range m.removedcleaningrooms {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -6939,7 +7765,7 @@ func (m *RoomdetailMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *RoomdetailMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 8)
 	if m.clearedpledge {
 		edges = append(edges, roomdetail.EdgePledge)
 	}
@@ -6951,6 +7777,9 @@ func (m *RoomdetailMutation) ClearedEdges() []string {
 	}
 	if m.clearedemployee {
 		edges = append(edges, roomdetail.EdgeEmployee)
+	}
+	if m.clearedjobposition {
+		edges = append(edges, roomdetail.EdgeJobposition)
 	}
 	if m.clearedstaytype {
 		edges = append(edges, roomdetail.EdgeStaytype)
@@ -6973,6 +7802,8 @@ func (m *RoomdetailMutation) EdgeCleared(name string) bool {
 		return m.clearedbedtype
 	case roomdetail.EdgeEmployee:
 		return m.clearedemployee
+	case roomdetail.EdgeJobposition:
+		return m.clearedjobposition
 	case roomdetail.EdgeStaytype:
 		return m.clearedstaytype
 	case roomdetail.EdgeRoomdetails:
@@ -6996,6 +7827,9 @@ func (m *RoomdetailMutation) ClearEdge(name string) error {
 		return nil
 	case roomdetail.EdgeEmployee:
 		m.ClearEmployee()
+		return nil
+	case roomdetail.EdgeJobposition:
+		m.ClearJobposition()
 		return nil
 	case roomdetail.EdgeStaytype:
 		m.ClearStaytype()
@@ -7024,11 +7858,17 @@ func (m *RoomdetailMutation) ResetEdge(name string) error {
 	case roomdetail.EdgeEmployee:
 		m.ResetEmployee()
 		return nil
+	case roomdetail.EdgeJobposition:
+		m.ResetJobposition()
+		return nil
 	case roomdetail.EdgeStaytype:
 		m.ResetStaytype()
 		return nil
 	case roomdetail.EdgeRoomdetails:
 		m.ResetRoomdetails()
+		return nil
+	case roomdetail.EdgeCleaningrooms:
+		m.ResetCleaningrooms()
 		return nil
 	}
 	return fmt.Errorf("unknown Roomdetail edge %s", name)
