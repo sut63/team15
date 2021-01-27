@@ -43,6 +43,30 @@ func (du *DepositUpdate) SetInfo(s string) *DepositUpdate {
 	return du
 }
 
+// SetDepositor sets the depositor field.
+func (du *DepositUpdate) SetDepositor(s string) *DepositUpdate {
+	du.mutation.SetDepositor(s)
+	return du
+}
+
+// SetDepositortell sets the depositortell field.
+func (du *DepositUpdate) SetDepositortell(s string) *DepositUpdate {
+	du.mutation.SetDepositortell(s)
+	return du
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (du *DepositUpdate) SetRecipienttell(s string) *DepositUpdate {
+	du.mutation.SetRecipienttell(s)
+	return du
+}
+
+// SetParcelcode sets the parcelcode field.
+func (du *DepositUpdate) SetParcelcode(s string) *DepositUpdate {
+	du.mutation.SetParcelcode(s)
+	return du
+}
+
 // SetEmployeeID sets the Employee edge to Employee by id.
 func (du *DepositUpdate) SetEmployeeID(id int) *DepositUpdate {
 	du.mutation.SetEmployeeID(id)
@@ -125,6 +149,31 @@ func (du *DepositUpdate) ClearLease() *DepositUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (du *DepositUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := du.mutation.Info(); ok {
+		if err := deposit.InfoValidator(v); err != nil {
+			return 0, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Depositor(); ok {
+		if err := deposit.DepositorValidator(v); err != nil {
+			return 0, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Depositortell(); ok {
+		if err := deposit.DepositortellValidator(v); err != nil {
+			return 0, &ValidationError{Name: "depositortell", err: fmt.Errorf("ent: validator failed for field \"depositortell\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Recipienttell(); ok {
+		if err := deposit.RecipienttellValidator(v); err != nil {
+			return 0, &ValidationError{Name: "recipienttell", err: fmt.Errorf("ent: validator failed for field \"recipienttell\": %w", err)}
+		}
+	}
+	if v, ok := du.mutation.Parcelcode(); ok {
+		if err := deposit.ParcelcodeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "parcelcode", err: fmt.Errorf("ent: validator failed for field \"parcelcode\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -205,6 +254,34 @@ func (du *DepositUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: deposit.FieldInfo,
+		})
+	}
+	if value, ok := du.mutation.Depositor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositor,
+		})
+	}
+	if value, ok := du.mutation.Depositortell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositortell,
+		})
+	}
+	if value, ok := du.mutation.Recipienttell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldRecipienttell,
+		})
+	}
+	if value, ok := du.mutation.Parcelcode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldParcelcode,
 		})
 	}
 	if du.mutation.EmployeeCleared() {
@@ -342,6 +419,30 @@ func (duo *DepositUpdateOne) SetInfo(s string) *DepositUpdateOne {
 	return duo
 }
 
+// SetDepositor sets the depositor field.
+func (duo *DepositUpdateOne) SetDepositor(s string) *DepositUpdateOne {
+	duo.mutation.SetDepositor(s)
+	return duo
+}
+
+// SetDepositortell sets the depositortell field.
+func (duo *DepositUpdateOne) SetDepositortell(s string) *DepositUpdateOne {
+	duo.mutation.SetDepositortell(s)
+	return duo
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (duo *DepositUpdateOne) SetRecipienttell(s string) *DepositUpdateOne {
+	duo.mutation.SetRecipienttell(s)
+	return duo
+}
+
+// SetParcelcode sets the parcelcode field.
+func (duo *DepositUpdateOne) SetParcelcode(s string) *DepositUpdateOne {
+	duo.mutation.SetParcelcode(s)
+	return duo
+}
+
 // SetEmployeeID sets the Employee edge to Employee by id.
 func (duo *DepositUpdateOne) SetEmployeeID(id int) *DepositUpdateOne {
 	duo.mutation.SetEmployeeID(id)
@@ -424,6 +525,31 @@ func (duo *DepositUpdateOne) ClearLease() *DepositUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (duo *DepositUpdateOne) Save(ctx context.Context) (*Deposit, error) {
+	if v, ok := duo.mutation.Info(); ok {
+		if err := deposit.InfoValidator(v); err != nil {
+			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Depositor(); ok {
+		if err := deposit.DepositorValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Depositortell(); ok {
+		if err := deposit.DepositortellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositortell", err: fmt.Errorf("ent: validator failed for field \"depositortell\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Recipienttell(); ok {
+		if err := deposit.RecipienttellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "recipienttell", err: fmt.Errorf("ent: validator failed for field \"recipienttell\": %w", err)}
+		}
+	}
+	if v, ok := duo.mutation.Parcelcode(); ok {
+		if err := deposit.ParcelcodeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "parcelcode", err: fmt.Errorf("ent: validator failed for field \"parcelcode\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -502,6 +628,34 @@ func (duo *DepositUpdateOne) sqlSave(ctx context.Context) (d *Deposit, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: deposit.FieldInfo,
+		})
+	}
+	if value, ok := duo.mutation.Depositor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositor,
+		})
+	}
+	if value, ok := duo.mutation.Depositortell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositortell,
+		})
+	}
+	if value, ok := duo.mutation.Recipienttell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldRecipienttell,
+		})
+	}
+	if value, ok := duo.mutation.Parcelcode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldParcelcode,
 		})
 	}
 	if duo.mutation.EmployeeCleared() {

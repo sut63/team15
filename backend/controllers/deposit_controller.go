@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -21,9 +22,13 @@ type DepositController struct {
 type Deposit struct {
 	Added    string
 	Info     string
+	Depositor     string
 	Employee int
 	Statusd  int
 	Lease  int
+	Depositortell     string
+	Recipienttell     string
+	Parcelcode     string
 }
 
 // CreateDeposit handles POST requests for adding deposit entities
@@ -87,18 +92,27 @@ func (ctl *DepositController) CreateDeposit(c *gin.Context) {
 		Create().
 		SetAddedtime(time).
 		SetInfo(obj.Info).
+		SetDepositor(obj.Depositor).
+		SetDepositortell(obj.Depositortell).
+		SetRecipienttell(obj.Recipienttell).
+		SetParcelcode(obj.Parcelcode).
 		SetEmployee(em).
 		SetStatusd(st).
 		SetLease(le).
 		Save(context.Background())
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, ret)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   ret,
+	})
 }
 
 // ListDeposit handles request to get a list of deposit entities

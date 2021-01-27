@@ -35,6 +35,30 @@ func (dc *DepositCreate) SetInfo(s string) *DepositCreate {
 	return dc
 }
 
+// SetDepositor sets the depositor field.
+func (dc *DepositCreate) SetDepositor(s string) *DepositCreate {
+	dc.mutation.SetDepositor(s)
+	return dc
+}
+
+// SetDepositortell sets the depositortell field.
+func (dc *DepositCreate) SetDepositortell(s string) *DepositCreate {
+	dc.mutation.SetDepositortell(s)
+	return dc
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (dc *DepositCreate) SetRecipienttell(s string) *DepositCreate {
+	dc.mutation.SetRecipienttell(s)
+	return dc
+}
+
+// SetParcelcode sets the parcelcode field.
+func (dc *DepositCreate) SetParcelcode(s string) *DepositCreate {
+	dc.mutation.SetParcelcode(s)
+	return dc
+}
+
 // SetEmployeeID sets the Employee edge to Employee by id.
 func (dc *DepositCreate) SetEmployeeID(id int) *DepositCreate {
 	dc.mutation.SetEmployeeID(id)
@@ -104,6 +128,43 @@ func (dc *DepositCreate) Save(ctx context.Context) (*Deposit, error) {
 	}
 	if _, ok := dc.mutation.Info(); !ok {
 		return nil, &ValidationError{Name: "info", err: errors.New("ent: missing required field \"info\"")}
+	}
+	if v, ok := dc.mutation.Info(); ok {
+		if err := deposit.InfoValidator(v); err != nil {
+			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Depositor(); !ok {
+		return nil, &ValidationError{Name: "depositor", err: errors.New("ent: missing required field \"depositor\"")}
+	}
+	if v, ok := dc.mutation.Depositor(); ok {
+		if err := deposit.DepositorValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Depositortell(); !ok {
+		return nil, &ValidationError{Name: "depositortell", err: errors.New("ent: missing required field \"depositortell\"")}
+	}
+	if v, ok := dc.mutation.Depositortell(); ok {
+		if err := deposit.DepositortellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositortell", err: fmt.Errorf("ent: validator failed for field \"depositortell\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Recipienttell(); !ok {
+		return nil, &ValidationError{Name: "recipienttell", err: errors.New("ent: missing required field \"recipienttell\"")}
+	}
+	if v, ok := dc.mutation.Recipienttell(); ok {
+		if err := deposit.RecipienttellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "recipienttell", err: fmt.Errorf("ent: validator failed for field \"recipienttell\": %w", err)}
+		}
+	}
+	if _, ok := dc.mutation.Parcelcode(); !ok {
+		return nil, &ValidationError{Name: "parcelcode", err: errors.New("ent: missing required field \"parcelcode\"")}
+	}
+	if v, ok := dc.mutation.Parcelcode(); ok {
+		if err := deposit.ParcelcodeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "parcelcode", err: fmt.Errorf("ent: validator failed for field \"parcelcode\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -180,6 +241,38 @@ func (dc *DepositCreate) createSpec() (*Deposit, *sqlgraph.CreateSpec) {
 			Column: deposit.FieldInfo,
 		})
 		d.Info = value
+	}
+	if value, ok := dc.mutation.Depositor(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositor,
+		})
+		d.Depositor = value
+	}
+	if value, ok := dc.mutation.Depositortell(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldDepositortell,
+		})
+		d.Depositortell = value
+	}
+	if value, ok := dc.mutation.Recipienttell(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldRecipienttell,
+		})
+		d.Recipienttell = value
+	}
+	if value, ok := dc.mutation.Parcelcode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: deposit.FieldParcelcode,
+		})
+		d.Parcelcode = value
 	}
 	if nodes := dc.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

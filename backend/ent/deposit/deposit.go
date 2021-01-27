@@ -11,6 +11,14 @@ const (
 	FieldAddedtime = "addedtime"
 	// FieldInfo holds the string denoting the info field in the database.
 	FieldInfo = "info"
+	// FieldDepositor holds the string denoting the depositor field in the database.
+	FieldDepositor = "depositor"
+	// FieldDepositortell holds the string denoting the depositortell field in the database.
+	FieldDepositortell = "depositortell"
+	// FieldRecipienttell holds the string denoting the recipienttell field in the database.
+	FieldRecipienttell = "recipienttell"
+	// FieldParcelcode holds the string denoting the parcelcode field in the database.
+	FieldParcelcode = "parcelcode"
 
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "Employee"
@@ -49,6 +57,10 @@ var Columns = []string{
 	FieldID,
 	FieldAddedtime,
 	FieldInfo,
+	FieldDepositor,
+	FieldDepositortell,
+	FieldRecipienttell,
+	FieldParcelcode,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Deposit type.
@@ -57,3 +69,16 @@ var ForeignKeys = []string{
 	"lease_id",
 	"statusd_id",
 }
+
+var (
+	// InfoValidator is a validator for the "info" field. It is called by the builders before save.
+	InfoValidator func(string) error
+	// DepositorValidator is a validator for the "depositor" field. It is called by the builders before save.
+	DepositorValidator func(string) error
+	// DepositortellValidator is a validator for the "depositortell" field. It is called by the builders before save.
+	DepositortellValidator func(string) error
+	// RecipienttellValidator is a validator for the "recipienttell" field. It is called by the builders before save.
+	RecipienttellValidator func(string) error
+	// ParcelcodeValidator is a validator for the "parcelcode" field. It is called by the builders before save.
+	ParcelcodeValidator func(string) error
+)

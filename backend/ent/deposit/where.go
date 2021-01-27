@@ -107,6 +107,34 @@ func Info(v string) predicate.Deposit {
 	})
 }
 
+// Depositor applies equality check predicate on the "depositor" field. It's identical to DepositorEQ.
+func Depositor(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDepositor), v))
+	})
+}
+
+// Depositortell applies equality check predicate on the "depositortell" field. It's identical to DepositortellEQ.
+func Depositortell(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDepositortell), v))
+	})
+}
+
+// Recipienttell applies equality check predicate on the "recipienttell" field. It's identical to RecipienttellEQ.
+func Recipienttell(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRecipienttell), v))
+	})
+}
+
+// Parcelcode applies equality check predicate on the "parcelcode" field. It's identical to ParcelcodeEQ.
+func Parcelcode(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldParcelcode), v))
+	})
+}
+
 // AddedtimeEQ applies the EQ predicate on the "addedtime" field.
 func AddedtimeEQ(v time.Time) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
@@ -291,6 +319,450 @@ func InfoEqualFold(v string) predicate.Deposit {
 func InfoContainsFold(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldInfo), v))
+	})
+}
+
+// DepositorEQ applies the EQ predicate on the "depositor" field.
+func DepositorEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorNEQ applies the NEQ predicate on the "depositor" field.
+func DepositorNEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorIn applies the In predicate on the "depositor" field.
+func DepositorIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDepositor), v...))
+	})
+}
+
+// DepositorNotIn applies the NotIn predicate on the "depositor" field.
+func DepositorNotIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDepositor), v...))
+	})
+}
+
+// DepositorGT applies the GT predicate on the "depositor" field.
+func DepositorGT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorGTE applies the GTE predicate on the "depositor" field.
+func DepositorGTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorLT applies the LT predicate on the "depositor" field.
+func DepositorLT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorLTE applies the LTE predicate on the "depositor" field.
+func DepositorLTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorContains applies the Contains predicate on the "depositor" field.
+func DepositorContains(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorHasPrefix applies the HasPrefix predicate on the "depositor" field.
+func DepositorHasPrefix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorHasSuffix applies the HasSuffix predicate on the "depositor" field.
+func DepositorHasSuffix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorEqualFold applies the EqualFold predicate on the "depositor" field.
+func DepositorEqualFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositorContainsFold applies the ContainsFold predicate on the "depositor" field.
+func DepositorContainsFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDepositor), v))
+	})
+}
+
+// DepositortellEQ applies the EQ predicate on the "depositortell" field.
+func DepositortellEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellNEQ applies the NEQ predicate on the "depositortell" field.
+func DepositortellNEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellIn applies the In predicate on the "depositortell" field.
+func DepositortellIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDepositortell), v...))
+	})
+}
+
+// DepositortellNotIn applies the NotIn predicate on the "depositortell" field.
+func DepositortellNotIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDepositortell), v...))
+	})
+}
+
+// DepositortellGT applies the GT predicate on the "depositortell" field.
+func DepositortellGT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellGTE applies the GTE predicate on the "depositortell" field.
+func DepositortellGTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellLT applies the LT predicate on the "depositortell" field.
+func DepositortellLT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellLTE applies the LTE predicate on the "depositortell" field.
+func DepositortellLTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellContains applies the Contains predicate on the "depositortell" field.
+func DepositortellContains(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellHasPrefix applies the HasPrefix predicate on the "depositortell" field.
+func DepositortellHasPrefix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellHasSuffix applies the HasSuffix predicate on the "depositortell" field.
+func DepositortellHasSuffix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellEqualFold applies the EqualFold predicate on the "depositortell" field.
+func DepositortellEqualFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDepositortell), v))
+	})
+}
+
+// DepositortellContainsFold applies the ContainsFold predicate on the "depositortell" field.
+func DepositortellContainsFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDepositortell), v))
+	})
+}
+
+// RecipienttellEQ applies the EQ predicate on the "recipienttell" field.
+func RecipienttellEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellNEQ applies the NEQ predicate on the "recipienttell" field.
+func RecipienttellNEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellIn applies the In predicate on the "recipienttell" field.
+func RecipienttellIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRecipienttell), v...))
+	})
+}
+
+// RecipienttellNotIn applies the NotIn predicate on the "recipienttell" field.
+func RecipienttellNotIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRecipienttell), v...))
+	})
+}
+
+// RecipienttellGT applies the GT predicate on the "recipienttell" field.
+func RecipienttellGT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellGTE applies the GTE predicate on the "recipienttell" field.
+func RecipienttellGTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellLT applies the LT predicate on the "recipienttell" field.
+func RecipienttellLT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellLTE applies the LTE predicate on the "recipienttell" field.
+func RecipienttellLTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellContains applies the Contains predicate on the "recipienttell" field.
+func RecipienttellContains(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellHasPrefix applies the HasPrefix predicate on the "recipienttell" field.
+func RecipienttellHasPrefix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellHasSuffix applies the HasSuffix predicate on the "recipienttell" field.
+func RecipienttellHasSuffix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellEqualFold applies the EqualFold predicate on the "recipienttell" field.
+func RecipienttellEqualFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldRecipienttell), v))
+	})
+}
+
+// RecipienttellContainsFold applies the ContainsFold predicate on the "recipienttell" field.
+func RecipienttellContainsFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldRecipienttell), v))
+	})
+}
+
+// ParcelcodeEQ applies the EQ predicate on the "parcelcode" field.
+func ParcelcodeEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeNEQ applies the NEQ predicate on the "parcelcode" field.
+func ParcelcodeNEQ(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeIn applies the In predicate on the "parcelcode" field.
+func ParcelcodeIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldParcelcode), v...))
+	})
+}
+
+// ParcelcodeNotIn applies the NotIn predicate on the "parcelcode" field.
+func ParcelcodeNotIn(vs ...string) predicate.Deposit {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Deposit(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldParcelcode), v...))
+	})
+}
+
+// ParcelcodeGT applies the GT predicate on the "parcelcode" field.
+func ParcelcodeGT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeGTE applies the GTE predicate on the "parcelcode" field.
+func ParcelcodeGTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeLT applies the LT predicate on the "parcelcode" field.
+func ParcelcodeLT(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeLTE applies the LTE predicate on the "parcelcode" field.
+func ParcelcodeLTE(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeContains applies the Contains predicate on the "parcelcode" field.
+func ParcelcodeContains(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeHasPrefix applies the HasPrefix predicate on the "parcelcode" field.
+func ParcelcodeHasPrefix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeHasSuffix applies the HasSuffix predicate on the "parcelcode" field.
+func ParcelcodeHasSuffix(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeEqualFold applies the EqualFold predicate on the "parcelcode" field.
+func ParcelcodeEqualFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldParcelcode), v))
+	})
+}
+
+// ParcelcodeContainsFold applies the ContainsFold predicate on the "parcelcode" field.
+func ParcelcodeContainsFold(v string) predicate.Deposit {
+	return predicate.Deposit(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldParcelcode), v))
 	})
 }
 

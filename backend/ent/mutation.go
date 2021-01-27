@@ -1912,6 +1912,10 @@ type DepositMutation struct {
 	id               *int
 	addedtime        *time.Time
 	info             *string
+	depositor        *string
+	depositortell    *string
+	recipienttell    *string
+	parcelcode       *string
 	clearedFields    map[string]struct{}
 	_Employee        *int
 	cleared_Employee bool
@@ -2076,6 +2080,154 @@ func (m *DepositMutation) ResetInfo() {
 	m.info = nil
 }
 
+// SetDepositor sets the depositor field.
+func (m *DepositMutation) SetDepositor(s string) {
+	m.depositor = &s
+}
+
+// Depositor returns the depositor value in the mutation.
+func (m *DepositMutation) Depositor() (r string, exists bool) {
+	v := m.depositor
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDepositor returns the old depositor value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldDepositor(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDepositor is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDepositor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDepositor: %w", err)
+	}
+	return oldValue.Depositor, nil
+}
+
+// ResetDepositor reset all changes of the "depositor" field.
+func (m *DepositMutation) ResetDepositor() {
+	m.depositor = nil
+}
+
+// SetDepositortell sets the depositortell field.
+func (m *DepositMutation) SetDepositortell(s string) {
+	m.depositortell = &s
+}
+
+// Depositortell returns the depositortell value in the mutation.
+func (m *DepositMutation) Depositortell() (r string, exists bool) {
+	v := m.depositortell
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDepositortell returns the old depositortell value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldDepositortell(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDepositortell is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDepositortell requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDepositortell: %w", err)
+	}
+	return oldValue.Depositortell, nil
+}
+
+// ResetDepositortell reset all changes of the "depositortell" field.
+func (m *DepositMutation) ResetDepositortell() {
+	m.depositortell = nil
+}
+
+// SetRecipienttell sets the recipienttell field.
+func (m *DepositMutation) SetRecipienttell(s string) {
+	m.recipienttell = &s
+}
+
+// Recipienttell returns the recipienttell value in the mutation.
+func (m *DepositMutation) Recipienttell() (r string, exists bool) {
+	v := m.recipienttell
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRecipienttell returns the old recipienttell value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldRecipienttell(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRecipienttell is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRecipienttell requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRecipienttell: %w", err)
+	}
+	return oldValue.Recipienttell, nil
+}
+
+// ResetRecipienttell reset all changes of the "recipienttell" field.
+func (m *DepositMutation) ResetRecipienttell() {
+	m.recipienttell = nil
+}
+
+// SetParcelcode sets the parcelcode field.
+func (m *DepositMutation) SetParcelcode(s string) {
+	m.parcelcode = &s
+}
+
+// Parcelcode returns the parcelcode value in the mutation.
+func (m *DepositMutation) Parcelcode() (r string, exists bool) {
+	v := m.parcelcode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldParcelcode returns the old parcelcode value of the Deposit.
+// If the Deposit object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepositMutation) OldParcelcode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldParcelcode is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldParcelcode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldParcelcode: %w", err)
+	}
+	return oldValue.Parcelcode, nil
+}
+
+// ResetParcelcode reset all changes of the "parcelcode" field.
+func (m *DepositMutation) ResetParcelcode() {
+	m.parcelcode = nil
+}
+
 // SetEmployeeID sets the Employee edge to Employee by id.
 func (m *DepositMutation) SetEmployeeID(id int) {
 	m._Employee = &id
@@ -2207,12 +2359,24 @@ func (m *DepositMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *DepositMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 6)
 	if m.addedtime != nil {
 		fields = append(fields, deposit.FieldAddedtime)
 	}
 	if m.info != nil {
 		fields = append(fields, deposit.FieldInfo)
+	}
+	if m.depositor != nil {
+		fields = append(fields, deposit.FieldDepositor)
+	}
+	if m.depositortell != nil {
+		fields = append(fields, deposit.FieldDepositortell)
+	}
+	if m.recipienttell != nil {
+		fields = append(fields, deposit.FieldRecipienttell)
+	}
+	if m.parcelcode != nil {
+		fields = append(fields, deposit.FieldParcelcode)
 	}
 	return fields
 }
@@ -2226,6 +2390,14 @@ func (m *DepositMutation) Field(name string) (ent.Value, bool) {
 		return m.Addedtime()
 	case deposit.FieldInfo:
 		return m.Info()
+	case deposit.FieldDepositor:
+		return m.Depositor()
+	case deposit.FieldDepositortell:
+		return m.Depositortell()
+	case deposit.FieldRecipienttell:
+		return m.Recipienttell()
+	case deposit.FieldParcelcode:
+		return m.Parcelcode()
 	}
 	return nil, false
 }
@@ -2239,6 +2411,14 @@ func (m *DepositMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldAddedtime(ctx)
 	case deposit.FieldInfo:
 		return m.OldInfo(ctx)
+	case deposit.FieldDepositor:
+		return m.OldDepositor(ctx)
+	case deposit.FieldDepositortell:
+		return m.OldDepositortell(ctx)
+	case deposit.FieldRecipienttell:
+		return m.OldRecipienttell(ctx)
+	case deposit.FieldParcelcode:
+		return m.OldParcelcode(ctx)
 	}
 	return nil, fmt.Errorf("unknown Deposit field %s", name)
 }
@@ -2261,6 +2441,34 @@ func (m *DepositMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetInfo(v)
+		return nil
+	case deposit.FieldDepositor:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDepositor(v)
+		return nil
+	case deposit.FieldDepositortell:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDepositortell(v)
+		return nil
+	case deposit.FieldRecipienttell:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRecipienttell(v)
+		return nil
+	case deposit.FieldParcelcode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetParcelcode(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Deposit field %s", name)
@@ -2317,6 +2525,18 @@ func (m *DepositMutation) ResetField(name string) error {
 		return nil
 	case deposit.FieldInfo:
 		m.ResetInfo()
+		return nil
+	case deposit.FieldDepositor:
+		m.ResetDepositor()
+		return nil
+	case deposit.FieldDepositortell:
+		m.ResetDepositortell()
+		return nil
+	case deposit.FieldRecipienttell:
+		m.ResetRecipienttell()
+		return nil
+	case deposit.FieldParcelcode:
+		m.ResetParcelcode()
 		return nil
 	}
 	return fmt.Errorf("unknown Deposit field %s", name)

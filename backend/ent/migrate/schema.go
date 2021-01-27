@@ -113,6 +113,10 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
 		{Name: "info", Type: field.TypeString},
+		{Name: "depositor", Type: field.TypeString},
+		{Name: "depositortell", Type: field.TypeString, Size: 12},
+		{Name: "recipienttell", Type: field.TypeString, Size: 12},
+		{Name: "parcelcode", Type: field.TypeString},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "lease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "statusd_id", Type: field.TypeInt, Nullable: true},
@@ -125,21 +129,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "deposits_employees_employees",
-				Columns: []*schema.Column{DepositsColumns[3]},
+				Columns: []*schema.Column{DepositsColumns[7]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "deposits_leases_leases",
-				Columns: []*schema.Column{DepositsColumns[4]},
+				Columns: []*schema.Column{DepositsColumns[8]},
 
 				RefColumns: []*schema.Column{LeasesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "deposits_statusds_statusds",
-				Columns: []*schema.Column{DepositsColumns[5]},
+				Columns: []*schema.Column{DepositsColumns[9]},
 
 				RefColumns: []*schema.Column{StatusdsColumns[0]},
 				OnDelete:   schema.SetNull,

@@ -17,12 +17,20 @@ definitions:
     properties:
       added:
         type: string
+      depositor:
+        type: string
+      depositortell:
+        type: string
       employee:
         type: integer
       info:
         type: string
       lease:
         type: integer
+      parcelcode:
+        type: string
+      recipienttell:
+        type: string
       statusd:
         type: integer
     type: object
@@ -190,6 +198,12 @@ definitions:
       addedtime:
         description: Addedtime holds the value of the "addedtime" field.
         type: string
+      depositor:
+        description: Depositor holds the value of the "depositor" field.
+        type: string
+      depositortell:
+        description: Depositortell holds the value of the "depositortell" field.
+        type: string
       edges:
         $ref: '#/definitions/ent.DepositEdges'
         description: |-
@@ -201,6 +215,12 @@ definitions:
         type: integer
       info:
         description: Info holds the value of the "info" field.
+        type: string
+      parcelcode:
+        description: Parcelcode holds the value of the "parcelcode" field.
+        type: string
+      recipienttell:
+        description: Recipienttell holds the value of the "recipienttell" field.
         type: string
     type: object
   ent.DepositEdges:
