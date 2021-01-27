@@ -28,6 +28,8 @@ import { DefaultApi } from '../../api/apis';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntStaytype } from '../../api/models/EntStaytype';
 import SearchIcon from '@material-ui/icons/Search';
+import { EntBedtype } from '../../api/models/EntBedtype';
+import { EntPetrule } from '../../api/models/EntPetrule';
 
 
 // css style 
@@ -85,7 +87,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const searchcheck = {
     namesearchcheck: true,
     pricesearchcheck: true,
-    staytypesearchcheck: true
+    staytypesearchcheck: true,
+    bedtypesearchcheck: true,
+    petrulesearchcheck: true
 }
 
 export default function SearchRoom() {
@@ -98,11 +102,15 @@ export default function SearchRoom() {
 
     const [roomdetail, setRoomdetail] = useState<EntRoomdetail[]>([]);
     const [staytypes, setStaytypes] = useState<EntStaytype[]>([]);
+    const [bedtypes, setBedtypes] = useState<EntBedtype[]>([]);
+    const [petrules, setPetrules] = useState<EntPetrule[]>([]);
     
 
     const [namesearch, setRoomtypenameSearch] = useState(String);
     const [pricesearch, setRoompriceSearch] = useState(String);
     const [staytypesearch, setStaytypeSearch] = useState(Number);
+    const [bedtypesearch, setBedtypeSearch] = useState(Number);
+    const [petrulesearch, setPetruleSearch] = useState(Number);
 
   useEffect(() => {
     const getStaytypes = async () => {
@@ -111,6 +119,22 @@ export default function SearchRoom() {
       setStaytypes(res);
     };
     getStaytypes();
+
+    const getBedtypes = async () => {
+        const res = await api.listBedtype();
+          setLoading(false);
+          setBedtypes(res);
+        };
+        getBedtypes();
+
+        const getPetrules = async () => {
+            const res = await api.listPetrule();
+              setLoading(false);
+              setPetrules(res);
+            };
+            getPetrules();
+
+        
 
     {/*const checkEmployeeLoginData = async () => {
         const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
@@ -133,7 +157,9 @@ export default function SearchRoom() {
         const res = await api.listRoomdetail();
         const pricesearch = PriceSearch(res);
         const namesearch = RoomNameSearch(pricesearch);
-        const staytypesearch = StayTypeSearch(namesearch);
+        const bedtypesearch = BedTypeSearch(namesearch);
+        const petrulesearch = PetRuleSearch(bedtypesearch);
+        const staytypesearch = StayTypeSearch(petrulesearch);
         
         setErrorMessege("ไม่พบข้อมูลที่ค้นหา");
         setAlertType("error");
@@ -156,6 +182,8 @@ export default function SearchRoom() {
         searchcheck.namesearchcheck = true;
         searchcheck.pricesearchcheck = true;
         searchcheck.staytypesearchcheck = true;
+        searchcheck.bedtypesearchcheck = true;
+        searchcheck.petrulesearchcheck = true;
     }
     const PriceSearch = (res: any) => {
         const data = res.filter((filter: EntRoomdetail) => filter.roomprice?.includes(pricesearch))
@@ -208,8 +236,50 @@ export default function SearchRoom() {
         }
     }
 
+    const BedTypeSearch = (res: any) => {
+        const data = res.filter((filter: EntRoomdetail) => filter.edges?.bedtype?.id == bedtypesearch)
+        //console.log(data.length)
+        if (data.length != 0) {
+            return data;
+        }
+        else {
+            searchcheck.bedtypesearchcheck = false;
+            if(bedtypesearch == 0){
+                return res;
+            }
+            else{
+                return data;
+            }
+        }
+    }
+
+    const PetRuleSearch = (res: any) => {
+        const data = res.filter((filter: EntRoomdetail) => filter.edges?.petrule?.id == petrulesearch)
+        //console.log(data.length)
+        if (data.length != 0) {
+            return data;
+        }
+        else {
+            searchcheck.petrulesearchcheck = false;
+            if(petrulesearch == 0){
+                return res;
+            }
+            else{
+                return data;
+            }
+        }
+    }
+
     const StaytypehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setStaytypeSearch(event.target.value as number);
+    };
+
+    const BedtypehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setBedtypeSearch(event.target.value as number);
+    };
+
+    const PetrulehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setPetruleSearch(event.target.value as number);
     };
 
     const PriceSearchhandleChange = (event: any) => {
@@ -277,6 +347,44 @@ export default function SearchRoom() {
                     </Select>
                 </FormControl>
 
+                <FormControl
+                    className={classes.margin}
+                    variant="standard"
+                >
+                     <div className={classes.paper}><strong>ประเภทเตียงนอน(Bed type)</strong></div>
+                    <Select
+                       // labelId="label"
+                        id="bedtype"
+                        value={bedtypesearch}
+                        onChange={BedtypehandleChange}
+                        style={{ width: 200, marginLeft: 8 }}
+
+                    >   <MenuItem value={0}>-</MenuItem>
+                         {bedtypes.map((item: EntBedtype) => (
+                                <MenuItem value={item.id}>{item.bedtypename}</MenuItem>
+                            ))}
+                    </Select>
+                </FormControl>
+
+                <FormControl
+                    className={classes.margin}
+                    variant="standard"
+                >
+                     <div className={classes.paper}><strong>ข้อจำกัดในการเลี้ยงสัตว์</strong></div>
+                    <Select
+                       // labelId="label"
+                        id="petrule"
+                        value={petrulesearch}
+                        onChange={PetrulehandleChange}
+                        style={{ width: 200, marginLeft: 8 }}
+
+                    >   <MenuItem value={0}>-</MenuItem>
+                         {petrules.map((item: EntPetrule) => (
+                                <MenuItem value={item.id}>{item.petrule}</MenuItem>
+                            ))}
+                    </Select>
+                </FormControl>
+
                     <Button
                 style={{ width: 100, backgroundColor: "#5319e7",marginTop: 49,marginLeft: 20}}
                 onClick={() => {
@@ -300,8 +408,8 @@ export default function SearchRoom() {
                                 <TableCell align="center">ราคาห้อง/ประเภทการเข้าพัก</TableCell>
                                 <TableCell align="center">จำนวนผู้เข้าพักสูงสุด</TableCell>
                                 <TableCell align="center">ประเภทเตียงนอน/จำนวนเตียง</TableCell>
-                                <TableCell align="center">ประเภทการเข้าพัก</TableCell>
                                 <TableCell align="center">ข้อจำกัดการจ่ายมัดจำ</TableCell>
+                                <TableCell align="center">ข้อจำกัดในการเลี้ยงสัตว์</TableCell>
                                 <TableCell align="center">เบอร์โทรศัพท์</TableCell>
                                 </TableRow>
                             </TableHead>
