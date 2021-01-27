@@ -1,6 +1,9 @@
 package schema
 
 import (
+   "errors"
+   "regexp"
+
    "github.com/facebookincubator/ent"
    "github.com/facebookincubator/ent/schema/field"
    "github.com/facebookincubator/ent/schema/edge"
@@ -15,7 +18,17 @@ type Deposit struct {
 func (Deposit) Fields() []ent.Field {
 	return []ent.Field{
 	   field.Time("addedtime"),
-	   field.String("info"),
+	   field.String("info").NotEmpty(),
+	   field.String("depositor").NotEmpty(),
+	   field.String("depositortell").MaxLen(12).MinLen(12),
+	   field.String("recipienttell").MaxLen(12).MinLen(12),
+	   field.String("parcelcode").Validate(func(s string) error {
+			match, _ := regexp.MatchString("^([A-Z]{3})-([0-9]{4})$", s)
+			if !match {
+				return errors.New("The package code format is not valid.")
+			}
+			return nil
+		}),
    }
 }
 

@@ -2543,6 +2543,12 @@ var doc = `{
                 "added": {
                     "type": "string"
                 },
+                "depositor": {
+                    "type": "string"
+                },
+                "depositortell": {
+                    "type": "string"
+                },
                 "employee": {
                     "type": "integer"
                 },
@@ -2551,6 +2557,12 @@ var doc = `{
                 },
                 "lease": {
                     "type": "integer"
+                },
+                "parcelcode": {
+                    "type": "string"
+                },
+                "recipienttell": {
+                    "type": "string"
                 },
                 "statusd": {
                     "type": "integer"
@@ -2780,6 +2792,14 @@ var doc = `{
                     "description": "Addedtime holds the value of the \"addedtime\" field.",
                     "type": "string"
                 },
+                "depositor": {
+                    "description": "Depositor holds the value of the \"depositor\" field.",
+                    "type": "string"
+                },
+                "depositortell": {
+                    "description": "Depositortell holds the value of the \"depositortell\" field.",
+                    "type": "string"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the DepositQuery when eager-loading is set.",
                     "type": "object",
@@ -2791,6 +2811,14 @@ var doc = `{
                 },
                 "info": {
                     "description": "Info holds the value of the \"info\" field.",
+                    "type": "string"
+                },
+                "parcelcode": {
+                    "description": "Parcelcode holds the value of the \"parcelcode\" field.",
+                    "type": "string"
+                },
+                "recipienttell": {
+                    "description": "Recipienttell holds the value of the \"recipienttell\" field.",
                     "type": "string"
                 }
             }

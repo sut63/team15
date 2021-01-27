@@ -4,6 +4,7 @@ package ent
 
 import (
 	"github.com/team15/app/ent/cleanername"
+	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/payment"
@@ -24,6 +25,56 @@ func init() {
 	cleanernameDescCleanername := cleanernameFields[0].Descriptor()
 	// cleanername.CleanernameValidator is a validator for the "cleanername" field. It is called by the builders before save.
 	cleanername.CleanernameValidator = cleanernameDescCleanername.Validators[0].(func(string) error)
+	depositFields := schema.Deposit{}.Fields()
+	_ = depositFields
+	// depositDescInfo is the schema descriptor for info field.
+	depositDescInfo := depositFields[1].Descriptor()
+	// deposit.InfoValidator is a validator for the "info" field. It is called by the builders before save.
+	deposit.InfoValidator = depositDescInfo.Validators[0].(func(string) error)
+	// depositDescDepositor is the schema descriptor for depositor field.
+	depositDescDepositor := depositFields[2].Descriptor()
+	// deposit.DepositorValidator is a validator for the "depositor" field. It is called by the builders before save.
+	deposit.DepositorValidator = depositDescDepositor.Validators[0].(func(string) error)
+	// depositDescDepositortell is the schema descriptor for depositortell field.
+	depositDescDepositortell := depositFields[3].Descriptor()
+	// deposit.DepositortellValidator is a validator for the "depositortell" field. It is called by the builders before save.
+	deposit.DepositortellValidator = func() func(string) error {
+		validators := depositDescDepositortell.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(depositortell string) error {
+			for _, fn := range fns {
+				if err := fn(depositortell); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// depositDescRecipienttell is the schema descriptor for recipienttell field.
+	depositDescRecipienttell := depositFields[4].Descriptor()
+	// deposit.RecipienttellValidator is a validator for the "recipienttell" field. It is called by the builders before save.
+	deposit.RecipienttellValidator = func() func(string) error {
+		validators := depositDescRecipienttell.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(recipienttell string) error {
+			for _, fn := range fns {
+				if err := fn(recipienttell); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// depositDescParcelcode is the schema descriptor for parcelcode field.
+	depositDescParcelcode := depositFields[5].Descriptor()
+	// deposit.ParcelcodeValidator is a validator for the "parcelcode" field. It is called by the builders before save.
+	deposit.ParcelcodeValidator = depositDescParcelcode.Validators[0].(func(string) error)
 	employeeFields := schema.Employee{}.Fields()
 	_ = employeeFields
 	// employeeDescName is the schema descriptor for name field.
