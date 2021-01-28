@@ -21,6 +21,8 @@ type LeaseController struct {
 type Lease struct {
 	Added      string
 	Tenant     string
+	Pettenant  string
+	Numbtenant string
 	Employee   int
 	Roomdetail int
 	Wifi       int
@@ -87,6 +89,8 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 		Create().
 		SetAddedtime(time).
 		SetTenant(obj.Tenant).
+		SetPettenant(obj.Pettenant).
+		SetNumbtenant(obj.Numbtenant).
 		SetRoomdetail(rdc).
 		SetWifi(wf).
 		SetEmployee(em).

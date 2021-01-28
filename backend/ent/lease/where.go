@@ -107,6 +107,20 @@ func Tenant(v string) predicate.Lease {
 	})
 }
 
+// Numbtenant applies equality check predicate on the "numbtenant" field. It's identical to NumbtenantEQ.
+func Numbtenant(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumbtenant), v))
+	})
+}
+
+// Pettenant applies equality check predicate on the "pettenant" field. It's identical to PettenantEQ.
+func Pettenant(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPettenant), v))
+	})
+}
+
 // AddedtimeEQ applies the EQ predicate on the "addedtime" field.
 func AddedtimeEQ(v time.Time) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
@@ -291,6 +305,228 @@ func TenantEqualFold(v string) predicate.Lease {
 func TenantContainsFold(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldTenant), v))
+	})
+}
+
+// NumbtenantEQ applies the EQ predicate on the "numbtenant" field.
+func NumbtenantEQ(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantNEQ applies the NEQ predicate on the "numbtenant" field.
+func NumbtenantNEQ(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantIn applies the In predicate on the "numbtenant" field.
+func NumbtenantIn(vs ...string) predicate.Lease {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Lease(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumbtenant), v...))
+	})
+}
+
+// NumbtenantNotIn applies the NotIn predicate on the "numbtenant" field.
+func NumbtenantNotIn(vs ...string) predicate.Lease {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Lease(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumbtenant), v...))
+	})
+}
+
+// NumbtenantGT applies the GT predicate on the "numbtenant" field.
+func NumbtenantGT(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantGTE applies the GTE predicate on the "numbtenant" field.
+func NumbtenantGTE(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantLT applies the LT predicate on the "numbtenant" field.
+func NumbtenantLT(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantLTE applies the LTE predicate on the "numbtenant" field.
+func NumbtenantLTE(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantContains applies the Contains predicate on the "numbtenant" field.
+func NumbtenantContains(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantHasPrefix applies the HasPrefix predicate on the "numbtenant" field.
+func NumbtenantHasPrefix(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantHasSuffix applies the HasSuffix predicate on the "numbtenant" field.
+func NumbtenantHasSuffix(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantEqualFold applies the EqualFold predicate on the "numbtenant" field.
+func NumbtenantEqualFold(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldNumbtenant), v))
+	})
+}
+
+// NumbtenantContainsFold applies the ContainsFold predicate on the "numbtenant" field.
+func NumbtenantContainsFold(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldNumbtenant), v))
+	})
+}
+
+// PettenantEQ applies the EQ predicate on the "pettenant" field.
+func PettenantEQ(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantNEQ applies the NEQ predicate on the "pettenant" field.
+func PettenantNEQ(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantIn applies the In predicate on the "pettenant" field.
+func PettenantIn(vs ...string) predicate.Lease {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Lease(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPettenant), v...))
+	})
+}
+
+// PettenantNotIn applies the NotIn predicate on the "pettenant" field.
+func PettenantNotIn(vs ...string) predicate.Lease {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Lease(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPettenant), v...))
+	})
+}
+
+// PettenantGT applies the GT predicate on the "pettenant" field.
+func PettenantGT(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantGTE applies the GTE predicate on the "pettenant" field.
+func PettenantGTE(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantLT applies the LT predicate on the "pettenant" field.
+func PettenantLT(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantLTE applies the LTE predicate on the "pettenant" field.
+func PettenantLTE(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantContains applies the Contains predicate on the "pettenant" field.
+func PettenantContains(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantHasPrefix applies the HasPrefix predicate on the "pettenant" field.
+func PettenantHasPrefix(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantHasSuffix applies the HasSuffix predicate on the "pettenant" field.
+func PettenantHasSuffix(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantEqualFold applies the EqualFold predicate on the "pettenant" field.
+func PettenantEqualFold(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPettenant), v))
+	})
+}
+
+// PettenantContainsFold applies the ContainsFold predicate on the "pettenant" field.
+func PettenantContainsFold(v string) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPettenant), v))
 	})
 }
 

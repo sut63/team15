@@ -37,6 +37,18 @@ func (lc *LeaseCreate) SetTenant(s string) *LeaseCreate {
 	return lc
 }
 
+// SetNumbtenant sets the numbtenant field.
+func (lc *LeaseCreate) SetNumbtenant(s string) *LeaseCreate {
+	lc.mutation.SetNumbtenant(s)
+	return lc
+}
+
+// SetPettenant sets the pettenant field.
+func (lc *LeaseCreate) SetPettenant(s string) *LeaseCreate {
+	lc.mutation.SetPettenant(s)
+	return lc
+}
+
 // SetWifiID sets the Wifi edge to Wifi by id.
 func (lc *LeaseCreate) SetWifiID(id int) *LeaseCreate {
 	lc.mutation.SetWifiID(id)
@@ -129,6 +141,27 @@ func (lc *LeaseCreate) Save(ctx context.Context) (*Lease, error) {
 	if _, ok := lc.mutation.Tenant(); !ok {
 		return nil, &ValidationError{Name: "tenant", err: errors.New("ent: missing required field \"tenant\"")}
 	}
+	if v, ok := lc.mutation.Tenant(); ok {
+		if err := lease.TenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tenant", err: fmt.Errorf("ent: validator failed for field \"tenant\": %w", err)}
+		}
+	}
+	if _, ok := lc.mutation.Numbtenant(); !ok {
+		return nil, &ValidationError{Name: "numbtenant", err: errors.New("ent: missing required field \"numbtenant\"")}
+	}
+	if v, ok := lc.mutation.Numbtenant(); ok {
+		if err := lease.NumbtenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
+		}
+	}
+	if _, ok := lc.mutation.Pettenant(); !ok {
+		return nil, &ValidationError{Name: "pettenant", err: errors.New("ent: missing required field \"pettenant\"")}
+	}
+	if v, ok := lc.mutation.Pettenant(); ok {
+		if err := lease.PettenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+		}
+	}
 	if _, ok := lc.mutation.RoomdetailID(); !ok {
 		return nil, &ValidationError{Name: "Roomdetail", err: errors.New("ent: missing required edge \"Roomdetail\"")}
 	}
@@ -207,6 +240,22 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 			Column: lease.FieldTenant,
 		})
 		l.Tenant = value
+	}
+	if value, ok := lc.mutation.Numbtenant(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldNumbtenant,
+		})
+		l.Numbtenant = value
+	}
+	if value, ok := lc.mutation.Pettenant(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldPettenant,
+		})
+		l.Pettenant = value
 	}
 	if nodes := lc.mutation.WifiIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -46,6 +46,18 @@ func (lu *LeaseUpdate) SetTenant(s string) *LeaseUpdate {
 	return lu
 }
 
+// SetNumbtenant sets the numbtenant field.
+func (lu *LeaseUpdate) SetNumbtenant(s string) *LeaseUpdate {
+	lu.mutation.SetNumbtenant(s)
+	return lu
+}
+
+// SetPettenant sets the pettenant field.
+func (lu *LeaseUpdate) SetPettenant(s string) *LeaseUpdate {
+	lu.mutation.SetPettenant(s)
+	return lu
+}
+
 // SetWifiID sets the Wifi edge to Wifi by id.
 func (lu *LeaseUpdate) SetWifiID(id int) *LeaseUpdate {
 	lu.mutation.SetWifiID(id)
@@ -180,6 +192,21 @@ func (lu *LeaseUpdate) RemoveBill(b ...*Bill) *LeaseUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (lu *LeaseUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := lu.mutation.Tenant(); ok {
+		if err := lease.TenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "tenant", err: fmt.Errorf("ent: validator failed for field \"tenant\": %w", err)}
+		}
+	}
+	if v, ok := lu.mutation.Numbtenant(); ok {
+		if err := lease.NumbtenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
+		}
+	}
+	if v, ok := lu.mutation.Pettenant(); ok {
+		if err := lease.PettenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+		}
+	}
 
 	if _, ok := lu.mutation.RoomdetailID(); lu.mutation.RoomdetailCleared() && !ok {
 		return 0, errors.New("ent: clearing a unique edge \"Roomdetail\"")
@@ -264,6 +291,20 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lease.FieldTenant,
+		})
+	}
+	if value, ok := lu.mutation.Numbtenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldNumbtenant,
+		})
+	}
+	if value, ok := lu.mutation.Pettenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldPettenant,
 		})
 	}
 	if lu.mutation.WifiCleared() {
@@ -477,6 +518,18 @@ func (luo *LeaseUpdateOne) SetTenant(s string) *LeaseUpdateOne {
 	return luo
 }
 
+// SetNumbtenant sets the numbtenant field.
+func (luo *LeaseUpdateOne) SetNumbtenant(s string) *LeaseUpdateOne {
+	luo.mutation.SetNumbtenant(s)
+	return luo
+}
+
+// SetPettenant sets the pettenant field.
+func (luo *LeaseUpdateOne) SetPettenant(s string) *LeaseUpdateOne {
+	luo.mutation.SetPettenant(s)
+	return luo
+}
+
 // SetWifiID sets the Wifi edge to Wifi by id.
 func (luo *LeaseUpdateOne) SetWifiID(id int) *LeaseUpdateOne {
 	luo.mutation.SetWifiID(id)
@@ -611,6 +664,21 @@ func (luo *LeaseUpdateOne) RemoveBill(b ...*Bill) *LeaseUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (luo *LeaseUpdateOne) Save(ctx context.Context) (*Lease, error) {
+	if v, ok := luo.mutation.Tenant(); ok {
+		if err := lease.TenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tenant", err: fmt.Errorf("ent: validator failed for field \"tenant\": %w", err)}
+		}
+	}
+	if v, ok := luo.mutation.Numbtenant(); ok {
+		if err := lease.NumbtenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
+		}
+	}
+	if v, ok := luo.mutation.Pettenant(); ok {
+		if err := lease.PettenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+		}
+	}
 
 	if _, ok := luo.mutation.RoomdetailID(); luo.mutation.RoomdetailCleared() && !ok {
 		return nil, errors.New("ent: clearing a unique edge \"Roomdetail\"")
@@ -693,6 +761,20 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lease.FieldTenant,
+		})
+	}
+	if value, ok := luo.mutation.Numbtenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldNumbtenant,
+		})
+	}
+	if value, ok := luo.mutation.Pettenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldPettenant,
 		})
 	}
 	if luo.mutation.WifiCleared() {

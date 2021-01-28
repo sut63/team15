@@ -23,6 +23,10 @@ type Lease struct {
 	Addedtime time.Time `json:"addedtime,omitempty"`
 	// Tenant holds the value of the "tenant" field.
 	Tenant string `json:"tenant,omitempty"`
+	// Numbtenant holds the value of the "numbtenant" field.
+	Numbtenant string `json:"numbtenant,omitempty"`
+	// Pettenant holds the value of the "pettenant" field.
+	Pettenant string `json:"pettenant,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LeaseQuery when eager-loading is set.
 	Edges       LeaseEdges `json:"edges"`
@@ -114,6 +118,8 @@ func (*Lease) scanValues() []interface{} {
 		&sql.NullInt64{},  // id
 		&sql.NullTime{},   // addedtime
 		&sql.NullString{}, // tenant
+		&sql.NullString{}, // numbtenant
+		&sql.NullString{}, // pettenant
 	}
 }
 
@@ -148,7 +154,17 @@ func (l *Lease) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		l.Tenant = value.String
 	}
-	values = values[2:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field numbtenant", values[2])
+	} else if value.Valid {
+		l.Numbtenant = value.String
+	}
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field pettenant", values[3])
+	} else if value.Valid {
+		l.Pettenant = value.String
+	}
+	values = values[4:]
 	if len(values) == len(lease.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
@@ -224,6 +240,10 @@ func (l *Lease) String() string {
 	builder.WriteString(l.Addedtime.Format(time.ANSIC))
 	builder.WriteString(", tenant=")
 	builder.WriteString(l.Tenant)
+	builder.WriteString(", numbtenant=")
+	builder.WriteString(l.Numbtenant)
+	builder.WriteString(", pettenant=")
+	builder.WriteString(l.Pettenant)
 	builder.WriteByte(')')
 	return builder.String()
 }

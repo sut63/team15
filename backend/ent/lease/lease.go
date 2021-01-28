@@ -11,6 +11,10 @@ const (
 	FieldAddedtime = "addedtime"
 	// FieldTenant holds the string denoting the tenant field in the database.
 	FieldTenant = "tenant"
+	// FieldNumbtenant holds the string denoting the numbtenant field in the database.
+	FieldNumbtenant = "numbtenant"
+	// FieldPettenant holds the string denoting the pettenant field in the database.
+	FieldPettenant = "pettenant"
 
 	// EdgeWifi holds the string denoting the wifi edge name in mutations.
 	EdgeWifi = "Wifi"
@@ -67,6 +71,8 @@ var Columns = []string{
 	FieldID,
 	FieldAddedtime,
 	FieldTenant,
+	FieldNumbtenant,
+	FieldPettenant,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Lease type.
@@ -75,3 +81,12 @@ var ForeignKeys = []string{
 	"room_num",
 	"wifi_id",
 }
+
+var (
+	// TenantValidator is a validator for the "tenant" field. It is called by the builders before save.
+	TenantValidator func(string) error
+	// NumbtenantValidator is a validator for the "numbtenant" field. It is called by the builders before save.
+	NumbtenantValidator func(string) error
+	// PettenantValidator is a validator for the "pettenant" field. It is called by the builders before save.
+	PettenantValidator func(string) error
+)
