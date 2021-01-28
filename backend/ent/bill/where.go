@@ -100,8 +100,22 @@ func Addedtime(v time.Time) predicate.Bill {
 	})
 }
 
+// Tell applies equality check predicate on the "tell" field. It's identical to TellEQ.
+func Tell(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTell), v))
+	})
+}
+
+// Taxpayer applies equality check predicate on the "taxpayer" field. It's identical to TaxpayerEQ.
+func Taxpayer(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTaxpayer), v))
+	})
+}
+
 // Total applies equality check predicate on the "total" field. It's identical to TotalEQ.
-func Total(v int) predicate.Bill {
+func Total(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldTotal), v))
 	})
@@ -183,22 +197,244 @@ func AddedtimeLTE(v time.Time) predicate.Bill {
 	})
 }
 
+// TellEQ applies the EQ predicate on the "tell" field.
+func TellEQ(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTell), v))
+	})
+}
+
+// TellNEQ applies the NEQ predicate on the "tell" field.
+func TellNEQ(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTell), v))
+	})
+}
+
+// TellIn applies the In predicate on the "tell" field.
+func TellIn(vs ...string) predicate.Bill {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Bill(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldTell), v...))
+	})
+}
+
+// TellNotIn applies the NotIn predicate on the "tell" field.
+func TellNotIn(vs ...string) predicate.Bill {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Bill(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldTell), v...))
+	})
+}
+
+// TellGT applies the GT predicate on the "tell" field.
+func TellGT(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTell), v))
+	})
+}
+
+// TellGTE applies the GTE predicate on the "tell" field.
+func TellGTE(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTell), v))
+	})
+}
+
+// TellLT applies the LT predicate on the "tell" field.
+func TellLT(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTell), v))
+	})
+}
+
+// TellLTE applies the LTE predicate on the "tell" field.
+func TellLTE(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTell), v))
+	})
+}
+
+// TellContains applies the Contains predicate on the "tell" field.
+func TellContains(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTell), v))
+	})
+}
+
+// TellHasPrefix applies the HasPrefix predicate on the "tell" field.
+func TellHasPrefix(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTell), v))
+	})
+}
+
+// TellHasSuffix applies the HasSuffix predicate on the "tell" field.
+func TellHasSuffix(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTell), v))
+	})
+}
+
+// TellEqualFold applies the EqualFold predicate on the "tell" field.
+func TellEqualFold(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTell), v))
+	})
+}
+
+// TellContainsFold applies the ContainsFold predicate on the "tell" field.
+func TellContainsFold(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTell), v))
+	})
+}
+
+// TaxpayerEQ applies the EQ predicate on the "taxpayer" field.
+func TaxpayerEQ(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerNEQ applies the NEQ predicate on the "taxpayer" field.
+func TaxpayerNEQ(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerIn applies the In predicate on the "taxpayer" field.
+func TaxpayerIn(vs ...string) predicate.Bill {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Bill(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldTaxpayer), v...))
+	})
+}
+
+// TaxpayerNotIn applies the NotIn predicate on the "taxpayer" field.
+func TaxpayerNotIn(vs ...string) predicate.Bill {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Bill(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldTaxpayer), v...))
+	})
+}
+
+// TaxpayerGT applies the GT predicate on the "taxpayer" field.
+func TaxpayerGT(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerGTE applies the GTE predicate on the "taxpayer" field.
+func TaxpayerGTE(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerLT applies the LT predicate on the "taxpayer" field.
+func TaxpayerLT(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerLTE applies the LTE predicate on the "taxpayer" field.
+func TaxpayerLTE(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerContains applies the Contains predicate on the "taxpayer" field.
+func TaxpayerContains(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerHasPrefix applies the HasPrefix predicate on the "taxpayer" field.
+func TaxpayerHasPrefix(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerHasSuffix applies the HasSuffix predicate on the "taxpayer" field.
+func TaxpayerHasSuffix(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerEqualFold applies the EqualFold predicate on the "taxpayer" field.
+func TaxpayerEqualFold(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTaxpayer), v))
+	})
+}
+
+// TaxpayerContainsFold applies the ContainsFold predicate on the "taxpayer" field.
+func TaxpayerContainsFold(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTaxpayer), v))
+	})
+}
+
 // TotalEQ applies the EQ predicate on the "total" field.
-func TotalEQ(v int) predicate.Bill {
+func TotalEQ(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldTotal), v))
 	})
 }
 
 // TotalNEQ applies the NEQ predicate on the "total" field.
-func TotalNEQ(v int) predicate.Bill {
+func TotalNEQ(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldTotal), v))
 	})
 }
 
 // TotalIn applies the In predicate on the "total" field.
-func TotalIn(vs ...int) predicate.Bill {
+func TotalIn(vs ...string) predicate.Bill {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -215,7 +451,7 @@ func TotalIn(vs ...int) predicate.Bill {
 }
 
 // TotalNotIn applies the NotIn predicate on the "total" field.
-func TotalNotIn(vs ...int) predicate.Bill {
+func TotalNotIn(vs ...string) predicate.Bill {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -232,30 +468,65 @@ func TotalNotIn(vs ...int) predicate.Bill {
 }
 
 // TotalGT applies the GT predicate on the "total" field.
-func TotalGT(v int) predicate.Bill {
+func TotalGT(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldTotal), v))
 	})
 }
 
 // TotalGTE applies the GTE predicate on the "total" field.
-func TotalGTE(v int) predicate.Bill {
+func TotalGTE(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldTotal), v))
 	})
 }
 
 // TotalLT applies the LT predicate on the "total" field.
-func TotalLT(v int) predicate.Bill {
+func TotalLT(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldTotal), v))
 	})
 }
 
 // TotalLTE applies the LTE predicate on the "total" field.
-func TotalLTE(v int) predicate.Bill {
+func TotalLTE(v string) predicate.Bill {
 	return predicate.Bill(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldTotal), v))
+	})
+}
+
+// TotalContains applies the Contains predicate on the "total" field.
+func TotalContains(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTotal), v))
+	})
+}
+
+// TotalHasPrefix applies the HasPrefix predicate on the "total" field.
+func TotalHasPrefix(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTotal), v))
+	})
+}
+
+// TotalHasSuffix applies the HasSuffix predicate on the "total" field.
+func TotalHasSuffix(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTotal), v))
+	})
+}
+
+// TotalEqualFold applies the EqualFold predicate on the "total" field.
+func TotalEqualFold(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTotal), v))
+	})
+}
+
+// TotalContainsFold applies the ContainsFold predicate on the "total" field.
+func TotalContainsFold(v string) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTotal), v))
 	})
 }
 
@@ -306,6 +577,34 @@ func HasPaymentWith(preds ...predicate.Payment) predicate.Bill {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(PaymentInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, PaymentTable, PaymentColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasLease applies the HasEdge predicate on the "Lease" edge.
+func HasLease() predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LeaseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, LeaseTable, LeaseColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasLeaseWith applies the HasEdge predicate on the "Lease" edge with a given conditions (other predicates).
+func HasLeaseWith(preds ...predicate.Lease) predicate.Bill {
+	return predicate.Bill(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LeaseInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, LeaseTable, LeaseColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

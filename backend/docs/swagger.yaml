@@ -4,14 +4,20 @@ definitions:
     properties:
       added:
         type: string
+      lease:
+        type: integer
       payment:
         type: integer
       room:
         type: integer
       situation:
         type: integer
+      taxpayer:
+        type: string
+      tell:
+        type: string
       total:
-        type: integer
+        type: string
     type: object
   controllers.Deposit:
     properties:
@@ -118,12 +124,22 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
+      taxpayer:
+        description: Taxpayer holds the value of the "taxpayer" field.
+        type: string
+      tell:
+        description: Tell holds the value of the "tell" field.
+        type: string
       total:
         description: Total holds the value of the "total" field.
-        type: integer
+        type: string
     type: object
   ent.BillEdges:
     properties:
+      lease:
+        $ref: '#/definitions/ent.Lease'
+        description: Lease holds the value of the Lease edge.
+        type: object
       payment:
         $ref: '#/definitions/ent.Payment'
         description: Payment holds the value of the Payment edge.
@@ -339,6 +355,11 @@ definitions:
     type: object
   ent.LeaseEdges:
     properties:
+      bill:
+        description: Bill holds the value of the bill edge.
+        items:
+          $ref: '#/definitions/ent.Bill'
+        type: array
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.

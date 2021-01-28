@@ -10,6 +10,7 @@ import CreateContract from './components/RecordLease';
 import ShowContract from './components/LeaseTable';
 import SearchRoom from './components/SearchRoom';
 import SearchDeposit from './components/SearchDeposit';
+import SearchBill from './components/SearchBill';
 
 
 export const plugin = createPlugin({
@@ -25,6 +26,7 @@ export const plugin = createPlugin({
     router.registerRoute('/RecordLease', CreateContract);
     router.registerRoute('/LeaseTable', ShowContract);
     router.registerRoute('/SearchRoom', SearchRoom);
-	router.registerRoute('/SearchDeposit', SearchDeposit);
+    router.registerRoute('/SearchDeposit', SearchDeposit);
+    router.registerRoute('/SearchBill', SearchBill);
   },
 });

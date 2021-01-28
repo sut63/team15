@@ -2523,6 +2523,9 @@ var doc = `{
                 "added": {
                     "type": "string"
                 },
+                "lease": {
+                    "type": "integer"
+                },
                 "payment": {
                     "type": "integer"
                 },
@@ -2532,8 +2535,14 @@ var doc = `{
                 "situation": {
                     "type": "integer"
                 },
+                "taxpayer": {
+                    "type": "string"
+                },
+                "tell": {
+                    "type": "string"
+                },
                 "total": {
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
@@ -2687,15 +2696,28 @@ var doc = `{
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
+                "taxpayer": {
+                    "description": "Taxpayer holds the value of the \"taxpayer\" field.",
+                    "type": "string"
+                },
+                "tell": {
+                    "description": "Tell holds the value of the \"tell\" field.",
+                    "type": "string"
+                },
                 "total": {
                     "description": "Total holds the value of the \"total\" field.",
-                    "type": "integer"
+                    "type": "string"
                 }
             }
         },
         "ent.BillEdges": {
             "type": "object",
             "properties": {
+                "lease": {
+                    "description": "Lease holds the value of the Lease edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Lease"
+                },
                 "payment": {
                     "description": "Payment holds the value of the Payment edge.",
                     "type": "object",
@@ -2976,6 +2998,13 @@ var doc = `{
         "ent.LeaseEdges": {
             "type": "object",
             "properties": {
+                "bill": {
+                    "description": "Bill holds the value of the bill edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Bill"
+                    }
+                },
                 "employee": {
                     "description": "Employee holds the value of the employee edge.",
                     "type": "object",

@@ -10,6 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
@@ -98,6 +99,21 @@ func (lc *LeaseCreate) AddLeases(d ...*Deposit) *LeaseCreate {
 		ids[i] = d[i].ID
 	}
 	return lc.AddLeaseIDs(ids...)
+}
+
+// AddBillIDs adds the bill edge to Bill by ids.
+func (lc *LeaseCreate) AddBillIDs(ids ...int) *LeaseCreate {
+	lc.mutation.AddBillIDs(ids...)
+	return lc
+}
+
+// AddBill adds the bill edges to Bill.
+func (lc *LeaseCreate) AddBill(b ...*Bill) *LeaseCreate {
+	ids := make([]int, len(b))
+	for i := range b {
+		ids[i] = b[i].ID
+	}
+	return lc.AddBillIDs(ids...)
 }
 
 // Mutation returns the LeaseMutation object of the builder.
@@ -260,6 +276,25 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := lc.mutation.BillIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.BillTable,
+			Columns: []string{lease.BillColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: bill.FieldID,
 				},
 			},
 		}
