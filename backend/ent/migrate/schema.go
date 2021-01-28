@@ -24,8 +24,8 @@ var (
 	BillsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
-		{Name: "tell", Type: field.TypeString},
-		{Name: "taxpayer", Type: field.TypeString},
+		{Name: "tell", Type: field.TypeString, Size: 12},
+		{Name: "taxpayer", Type: field.TypeString, Size: 17},
 		{Name: "total", Type: field.TypeString},
 		{Name: "lease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "payment_id", Type: field.TypeInt, Nullable: true},

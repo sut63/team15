@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/cleanername"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
@@ -19,6 +20,48 @@ import (
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	billFields := schema.Bill{}.Fields()
+	_ = billFields
+	// billDescTell is the schema descriptor for tell field.
+	billDescTell := billFields[1].Descriptor()
+	// bill.TellValidator is a validator for the "tell" field. It is called by the builders before save.
+	bill.TellValidator = func() func(string) error {
+		validators := billDescTell.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(tell string) error {
+			for _, fn := range fns {
+				if err := fn(tell); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// billDescTaxpayer is the schema descriptor for taxpayer field.
+	billDescTaxpayer := billFields[2].Descriptor()
+	// bill.TaxpayerValidator is a validator for the "taxpayer" field. It is called by the builders before save.
+	bill.TaxpayerValidator = func() func(string) error {
+		validators := billDescTaxpayer.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(taxpayer string) error {
+			for _, fn := range fns {
+				if err := fn(taxpayer); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// billDescTotal is the schema descriptor for total field.
+	billDescTotal := billFields[3].Descriptor()
+	// bill.TotalValidator is a validator for the "total" field. It is called by the builders before save.
+	bill.TotalValidator = billDescTotal.Validators[0].(func(string) error)
 	cleanernameFields := schema.CleanerName{}.Fields()
 	_ = cleanernameFields
 	// cleanernameDescCleanername is the schema descriptor for cleanername field.

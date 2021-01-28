@@ -63,3 +63,12 @@ var ForeignKeys = []string{
 	"payment_id",
 	"situation_id",
 }
+
+var (
+	// TellValidator is a validator for the "tell" field. It is called by the builders before save.
+	TellValidator func(string) error
+	// TaxpayerValidator is a validator for the "taxpayer" field. It is called by the builders before save.
+	TaxpayerValidator func(string) error
+	// TotalValidator is a validator for the "total" field. It is called by the builders before save.
+	TotalValidator func(string) error
+)
