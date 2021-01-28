@@ -12,6 +12,7 @@ import SearchRoom from './components/SearchRoom';
 import SearchDeposit from './components/SearchDeposit';
 import SearchBill from './components/SearchBill';
 import SearchLease from './components/SearchLease';
+import Search from './components/Search';
 
 
 export const plugin = createPlugin({
@@ -30,5 +31,6 @@ export const plugin = createPlugin({
     router.registerRoute('/SearchDeposit', SearchDeposit);
     router.registerRoute('/SearchBill', SearchBill);
     router.registerRoute('/SearchLease', SearchLease);
+    router.registerRoute('/Search', Search);
   },
 });

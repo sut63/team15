@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     table: {
         minWidth: 650,
-    }
+    },
   }),
 );
 
@@ -292,9 +292,9 @@ export default function SearchRoom() {
     
 
     return (
-        <Page theme={pageTheme.service}>
+        <Page>
             <Content>
-            <InfoCard title="ค้นหาข้อมูลห้องพัก">
+            <InfoCard title={'ค้นหาข้อมูลห้องพัก'}>
 
             <FormControl
                     className={classes.margin}
@@ -324,7 +324,7 @@ export default function SearchRoom() {
                         size="medium"
                         value={pricesearch}
                         onChange={PriceSearchhandleChange}
-                        style={{ width: 110,marginLeft: 8}}
+                        style={{ width: 115,marginLeft: 8}}
                     />
                 </FormControl>
 
@@ -338,7 +338,7 @@ export default function SearchRoom() {
                         id="staytype"
                         value={staytypesearch}
                         onChange={StaytypehandleChange}
-                        style={{ width: 200, marginLeft: 8 }}
+                        style={{ width: 175, marginLeft: 8 }}
 
                     >   <MenuItem value={0}>-</MenuItem>
                          {staytypes.map((item: EntStaytype) => (
@@ -357,7 +357,7 @@ export default function SearchRoom() {
                         id="bedtype"
                         value={bedtypesearch}
                         onChange={BedtypehandleChange}
-                        style={{ width: 200, marginLeft: 8 }}
+                        style={{ width: 170, marginLeft: 8 }}
 
                     >   <MenuItem value={0}>-</MenuItem>
                          {bedtypes.map((item: EntBedtype) => (
@@ -376,7 +376,7 @@ export default function SearchRoom() {
                         id="petrule"
                         value={petrulesearch}
                         onChange={PetrulehandleChange}
-                        style={{ width: 200, marginLeft: 8 }}
+                        style={{ width: 140, marginLeft: 8 }}
 
                     >   <MenuItem value={0}>-</MenuItem>
                          {petrules.map((item: EntPetrule) => (

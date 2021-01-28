@@ -94,12 +94,12 @@ export function EntEmployeeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'cleaningrooms': !exists(json, 'Cleaningrooms') ? undefined : ((json['Cleaningrooms'] as Array<any>).map(EntCleaningRoomFromJSON)),
+        'cleaningrooms': !exists(json, 'cleaningrooms') ? undefined : ((json['cleaningrooms'] as Array<any>).map(EntCleaningRoomFromJSON)),
         'employees': !exists(json, 'Employees') ? undefined : ((json['Employees'] as Array<any>).map(EntDepositFromJSON)),
         'jobposition': !exists(json, 'Jobposition') ? undefined : EntJobpositionFromJSON(json['Jobposition']),
-        'leases': !exists(json, 'Leases') ? undefined : ((json['Leases'] as Array<any>).map(EntLeaseFromJSON)),
-        'repairinvoices': !exists(json, 'Repairinvoices') ? undefined : ((json['Repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
-        'roomdetails': !exists(json, 'Roomdetails') ? undefined : ((json['Roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
+        'leases': !exists(json, 'leases') ? undefined : ((json['leases'] as Array<any>).map(EntLeaseFromJSON)),
+        'repairinvoices': !exists(json, 'repairinvoices') ? undefined : ((json['repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
+        'roomdetails': !exists(json, 'roomdetails') ? undefined : ((json['roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 
