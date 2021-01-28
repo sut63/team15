@@ -94,8 +94,6 @@ export default function CreateRoomdetail() {
   const classes = useStyles();
   const api = new DefaultApi();
   const [status, setStatus] = useState(false);
-  const [alert, setAlert] = useState(true);
-  const [alert2, setAlerts] = useState(true);
 
   //เก็บข้อมูลที่จะดึงมา
   const [roomdetail, setRoomdetail] = useState<EntRoomdetail[]>([]);
