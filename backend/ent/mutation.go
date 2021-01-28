@@ -437,13 +437,16 @@ type BillMutation struct {
 	typ               string
 	id                *int
 	addedtime         *time.Time
-	total             *int
-	addtotal          *int
+	tell              *string
+	taxpayer          *string
+	total             *string
 	clearedFields     map[string]struct{}
 	_Situation        *int
 	cleared_Situation bool
 	_Payment          *int
 	cleared_Payment   bool
+	_Lease            *int
+	cleared_Lease     bool
 	done              bool
 	oldValue          func(context.Context) (*Bill, error)
 }
@@ -564,14 +567,87 @@ func (m *BillMutation) ResetAddedtime() {
 	m.addedtime = nil
 }
 
+// SetTell sets the tell field.
+func (m *BillMutation) SetTell(s string) {
+	m.tell = &s
+}
+
+// Tell returns the tell value in the mutation.
+func (m *BillMutation) Tell() (r string, exists bool) {
+	v := m.tell
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTell returns the old tell value of the Bill.
+// If the Bill object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *BillMutation) OldTell(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldTell is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldTell requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTell: %w", err)
+	}
+	return oldValue.Tell, nil
+}
+
+// ResetTell reset all changes of the "tell" field.
+func (m *BillMutation) ResetTell() {
+	m.tell = nil
+}
+
+// SetTaxpayer sets the taxpayer field.
+func (m *BillMutation) SetTaxpayer(s string) {
+	m.taxpayer = &s
+}
+
+// Taxpayer returns the taxpayer value in the mutation.
+func (m *BillMutation) Taxpayer() (r string, exists bool) {
+	v := m.taxpayer
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTaxpayer returns the old taxpayer value of the Bill.
+// If the Bill object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *BillMutation) OldTaxpayer(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldTaxpayer is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldTaxpayer requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTaxpayer: %w", err)
+	}
+	return oldValue.Taxpayer, nil
+}
+
+// ResetTaxpayer reset all changes of the "taxpayer" field.
+func (m *BillMutation) ResetTaxpayer() {
+	m.taxpayer = nil
+}
+
 // SetTotal sets the total field.
-func (m *BillMutation) SetTotal(i int) {
-	m.total = &i
-	m.addtotal = nil
+func (m *BillMutation) SetTotal(s string) {
+	m.total = &s
 }
 
 // Total returns the total value in the mutation.
-func (m *BillMutation) Total() (r int, exists bool) {
+func (m *BillMutation) Total() (r string, exists bool) {
 	v := m.total
 	if v == nil {
 		return
@@ -583,7 +659,7 @@ func (m *BillMutation) Total() (r int, exists bool) {
 // If the Bill object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *BillMutation) OldTotal(ctx context.Context) (v int, err error) {
+func (m *BillMutation) OldTotal(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldTotal is allowed only on UpdateOne operations")
 	}
@@ -597,28 +673,9 @@ func (m *BillMutation) OldTotal(ctx context.Context) (v int, err error) {
 	return oldValue.Total, nil
 }
 
-// AddTotal adds i to total.
-func (m *BillMutation) AddTotal(i int) {
-	if m.addtotal != nil {
-		*m.addtotal += i
-	} else {
-		m.addtotal = &i
-	}
-}
-
-// AddedTotal returns the value that was added to the total field in this mutation.
-func (m *BillMutation) AddedTotal() (r int, exists bool) {
-	v := m.addtotal
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ResetTotal reset all changes of the "total" field.
 func (m *BillMutation) ResetTotal() {
 	m.total = nil
-	m.addtotal = nil
 }
 
 // SetSituationID sets the Situation edge to Situation by id.
@@ -699,6 +756,45 @@ func (m *BillMutation) ResetPayment() {
 	m.cleared_Payment = false
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (m *BillMutation) SetLeaseID(id int) {
+	m._Lease = &id
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (m *BillMutation) ClearLease() {
+	m.cleared_Lease = true
+}
+
+// LeaseCleared returns if the edge Lease was cleared.
+func (m *BillMutation) LeaseCleared() bool {
+	return m.cleared_Lease
+}
+
+// LeaseID returns the Lease id in the mutation.
+func (m *BillMutation) LeaseID() (id int, exists bool) {
+	if m._Lease != nil {
+		return *m._Lease, true
+	}
+	return
+}
+
+// LeaseIDs returns the Lease ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// LeaseID instead. It exists only for internal usage by the builders.
+func (m *BillMutation) LeaseIDs() (ids []int) {
+	if id := m._Lease; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetLease reset all changes of the "Lease" edge.
+func (m *BillMutation) ResetLease() {
+	m._Lease = nil
+	m.cleared_Lease = false
+}
+
 // Op returns the operation name.
 func (m *BillMutation) Op() Op {
 	return m.op
@@ -713,9 +809,15 @@ func (m *BillMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *BillMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 4)
 	if m.addedtime != nil {
 		fields = append(fields, bill.FieldAddedtime)
+	}
+	if m.tell != nil {
+		fields = append(fields, bill.FieldTell)
+	}
+	if m.taxpayer != nil {
+		fields = append(fields, bill.FieldTaxpayer)
 	}
 	if m.total != nil {
 		fields = append(fields, bill.FieldTotal)
@@ -730,6 +832,10 @@ func (m *BillMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case bill.FieldAddedtime:
 		return m.Addedtime()
+	case bill.FieldTell:
+		return m.Tell()
+	case bill.FieldTaxpayer:
+		return m.Taxpayer()
 	case bill.FieldTotal:
 		return m.Total()
 	}
@@ -743,6 +849,10 @@ func (m *BillMutation) OldField(ctx context.Context, name string) (ent.Value, er
 	switch name {
 	case bill.FieldAddedtime:
 		return m.OldAddedtime(ctx)
+	case bill.FieldTell:
+		return m.OldTell(ctx)
+	case bill.FieldTaxpayer:
+		return m.OldTaxpayer(ctx)
 	case bill.FieldTotal:
 		return m.OldTotal(ctx)
 	}
@@ -761,8 +871,22 @@ func (m *BillMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAddedtime(v)
 		return nil
+	case bill.FieldTell:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTell(v)
+		return nil
+	case bill.FieldTaxpayer:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTaxpayer(v)
+		return nil
 	case bill.FieldTotal:
-		v, ok := value.(int)
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -775,21 +899,13 @@ func (m *BillMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *BillMutation) AddedFields() []string {
-	var fields []string
-	if m.addtotal != nil {
-		fields = append(fields, bill.FieldTotal)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *BillMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case bill.FieldTotal:
-		return m.AddedTotal()
-	}
 	return nil, false
 }
 
@@ -798,13 +914,6 @@ func (m *BillMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *BillMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case bill.FieldTotal:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddTotal(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Bill numeric field %s", name)
 }
@@ -836,6 +945,12 @@ func (m *BillMutation) ResetField(name string) error {
 	case bill.FieldAddedtime:
 		m.ResetAddedtime()
 		return nil
+	case bill.FieldTell:
+		m.ResetTell()
+		return nil
+	case bill.FieldTaxpayer:
+		m.ResetTaxpayer()
+		return nil
 	case bill.FieldTotal:
 		m.ResetTotal()
 		return nil
@@ -846,12 +961,15 @@ func (m *BillMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *BillMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m._Situation != nil {
 		edges = append(edges, bill.EdgeSituation)
 	}
 	if m._Payment != nil {
 		edges = append(edges, bill.EdgePayment)
+	}
+	if m._Lease != nil {
+		edges = append(edges, bill.EdgeLease)
 	}
 	return edges
 }
@@ -868,6 +986,10 @@ func (m *BillMutation) AddedIDs(name string) []ent.Value {
 		if id := m._Payment; id != nil {
 			return []ent.Value{*id}
 		}
+	case bill.EdgeLease:
+		if id := m._Lease; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -875,7 +997,7 @@ func (m *BillMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *BillMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
@@ -890,12 +1012,15 @@ func (m *BillMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *BillMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.cleared_Situation {
 		edges = append(edges, bill.EdgeSituation)
 	}
 	if m.cleared_Payment {
 		edges = append(edges, bill.EdgePayment)
+	}
+	if m.cleared_Lease {
+		edges = append(edges, bill.EdgeLease)
 	}
 	return edges
 }
@@ -908,6 +1033,8 @@ func (m *BillMutation) EdgeCleared(name string) bool {
 		return m.cleared_Situation
 	case bill.EdgePayment:
 		return m.cleared_Payment
+	case bill.EdgeLease:
+		return m.cleared_Lease
 	}
 	return false
 }
@@ -921,6 +1048,9 @@ func (m *BillMutation) ClearEdge(name string) error {
 		return nil
 	case bill.EdgePayment:
 		m.ClearPayment()
+		return nil
+	case bill.EdgeLease:
+		m.ClearLease()
 		return nil
 	}
 	return fmt.Errorf("unknown Bill unique edge %s", name)
@@ -936,6 +1066,9 @@ func (m *BillMutation) ResetEdge(name string) error {
 		return nil
 	case bill.EdgePayment:
 		m.ResetPayment()
+		return nil
+	case bill.EdgeLease:
+		m.ResetLease()
 		return nil
 	}
 	return fmt.Errorf("unknown Bill edge %s", name)
@@ -3906,6 +4039,8 @@ type LeaseMutation struct {
 	clearedemployee    bool
 	leases             map[int]struct{}
 	removedleases      map[int]struct{}
+	bill               map[int]struct{}
+	removedbill        map[int]struct{}
 	done               bool
 	oldValue           func(context.Context) (*Lease, error)
 }
@@ -4222,6 +4357,48 @@ func (m *LeaseMutation) ResetLeases() {
 	m.removedleases = nil
 }
 
+// AddBillIDs adds the bill edge to Bill by ids.
+func (m *LeaseMutation) AddBillIDs(ids ...int) {
+	if m.bill == nil {
+		m.bill = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.bill[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveBillIDs removes the bill edge to Bill by ids.
+func (m *LeaseMutation) RemoveBillIDs(ids ...int) {
+	if m.removedbill == nil {
+		m.removedbill = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedbill[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedBill returns the removed ids of bill.
+func (m *LeaseMutation) RemovedBillIDs() (ids []int) {
+	for id := range m.removedbill {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// BillIDs returns the bill ids in the mutation.
+func (m *LeaseMutation) BillIDs() (ids []int) {
+	for id := range m.bill {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetBill reset all changes of the "bill" edge.
+func (m *LeaseMutation) ResetBill() {
+	m.bill = nil
+	m.removedbill = nil
+}
+
 // Op returns the operation name.
 func (m *LeaseMutation) Op() Op {
 	return m.op
@@ -4354,7 +4531,7 @@ func (m *LeaseMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *LeaseMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m._Wifi != nil {
 		edges = append(edges, lease.EdgeWifi)
 	}
@@ -4366,6 +4543,9 @@ func (m *LeaseMutation) AddedEdges() []string {
 	}
 	if m.leases != nil {
 		edges = append(edges, lease.EdgeLeases)
+	}
+	if m.bill != nil {
+		edges = append(edges, lease.EdgeBill)
 	}
 	return edges
 }
@@ -4392,6 +4572,12 @@ func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case lease.EdgeBill:
+		ids := make([]ent.Value, 0, len(m.bill))
+		for id := range m.bill {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -4399,9 +4585,12 @@ func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *LeaseMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedleases != nil {
 		edges = append(edges, lease.EdgeLeases)
+	}
+	if m.removedbill != nil {
+		edges = append(edges, lease.EdgeBill)
 	}
 	return edges
 }
@@ -4416,6 +4605,12 @@ func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case lease.EdgeBill:
+		ids := make([]ent.Value, 0, len(m.removedbill))
+		for id := range m.removedbill {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -4423,7 +4618,7 @@ func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *LeaseMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.cleared_Wifi {
 		edges = append(edges, lease.EdgeWifi)
 	}
@@ -4483,6 +4678,9 @@ func (m *LeaseMutation) ResetEdge(name string) error {
 		return nil
 	case lease.EdgeLeases:
 		m.ResetLeases()
+		return nil
+	case lease.EdgeBill:
+		m.ResetBill()
 		return nil
 	}
 	return fmt.Errorf("unknown Lease edge %s", name)

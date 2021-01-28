@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/bill"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/situation"
 )
@@ -20,11 +21,16 @@ type Bill struct {
 	ID int `json:"id,omitempty"`
 	// Addedtime holds the value of the "addedtime" field.
 	Addedtime time.Time `json:"addedtime,omitempty"`
+	// Tell holds the value of the "tell" field.
+	Tell string `json:"tell,omitempty"`
+	// Taxpayer holds the value of the "taxpayer" field.
+	Taxpayer string `json:"taxpayer,omitempty"`
 	// Total holds the value of the "total" field.
-	Total int `json:"total,omitempty"`
+	Total string `json:"total,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the BillQuery when eager-loading is set.
 	Edges        BillEdges `json:"edges"`
+	lease_id     *int
 	payment_id   *int
 	situation_id *int
 }
@@ -35,9 +41,11 @@ type BillEdges struct {
 	Situation *Situation
 	// Payment holds the value of the Payment edge.
 	Payment *Payment
+	// Lease holds the value of the Lease edge.
+	Lease *Lease
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // SituationOrErr returns the Situation value or an error if the edge
@@ -68,18 +76,35 @@ func (e BillEdges) PaymentOrErr() (*Payment, error) {
 	return nil, &NotLoadedError{edge: "Payment"}
 }
 
+// LeaseOrErr returns the Lease value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e BillEdges) LeaseOrErr() (*Lease, error) {
+	if e.loadedTypes[2] {
+		if e.Lease == nil {
+			// The edge Lease was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: lease.Label}
+		}
+		return e.Lease, nil
+	}
+	return nil, &NotLoadedError{edge: "Lease"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Bill) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
-		&sql.NullTime{},  // addedtime
-		&sql.NullInt64{}, // total
+		&sql.NullInt64{},  // id
+		&sql.NullTime{},   // addedtime
+		&sql.NullString{}, // tell
+		&sql.NullString{}, // taxpayer
+		&sql.NullString{}, // total
 	}
 }
 
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Bill) fkValues() []interface{} {
 	return []interface{}{
+		&sql.NullInt64{}, // lease_id
 		&sql.NullInt64{}, // payment_id
 		&sql.NullInt64{}, // situation_id
 	}
@@ -102,20 +127,36 @@ func (b *Bill) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		b.Addedtime = value.Time
 	}
-	if value, ok := values[1].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field total", values[1])
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field tell", values[1])
 	} else if value.Valid {
-		b.Total = int(value.Int64)
+		b.Tell = value.String
 	}
-	values = values[2:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field taxpayer", values[2])
+	} else if value.Valid {
+		b.Taxpayer = value.String
+	}
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field total", values[3])
+	} else if value.Valid {
+		b.Total = value.String
+	}
+	values = values[4:]
 	if len(values) == len(bill.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field lease_id", value)
+		} else if value.Valid {
+			b.lease_id = new(int)
+			*b.lease_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field payment_id", value)
 		} else if value.Valid {
 			b.payment_id = new(int)
 			*b.payment_id = int(value.Int64)
 		}
-		if value, ok := values[1].(*sql.NullInt64); !ok {
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field situation_id", value)
 		} else if value.Valid {
 			b.situation_id = new(int)
@@ -133,6 +174,11 @@ func (b *Bill) QuerySituation() *SituationQuery {
 // QueryPayment queries the Payment edge of the Bill.
 func (b *Bill) QueryPayment() *PaymentQuery {
 	return (&BillClient{config: b.config}).QueryPayment(b)
+}
+
+// QueryLease queries the Lease edge of the Bill.
+func (b *Bill) QueryLease() *LeaseQuery {
+	return (&BillClient{config: b.config}).QueryLease(b)
 }
 
 // Update returns a builder for updating this Bill.
@@ -160,8 +206,12 @@ func (b *Bill) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", b.ID))
 	builder.WriteString(", addedtime=")
 	builder.WriteString(b.Addedtime.Format(time.ANSIC))
+	builder.WriteString(", tell=")
+	builder.WriteString(b.Tell)
+	builder.WriteString(", taxpayer=")
+	builder.WriteString(b.Taxpayer)
 	builder.WriteString(", total=")
-	builder.WriteString(fmt.Sprintf("%v", b.Total))
+	builder.WriteString(b.Total)
 	builder.WriteByte(')')
 	return builder.String()
 }

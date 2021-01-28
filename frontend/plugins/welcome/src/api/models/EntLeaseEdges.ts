@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    EntBill,
+    EntBillFromJSON,
+    EntBillFromJSONTyped,
+    EntBillToJSON,
     EntDeposit,
     EntDepositFromJSON,
     EntDepositFromJSONTyped,
@@ -38,6 +42,12 @@ import {
  * @interface EntLeaseEdges
  */
 export interface EntLeaseEdges {
+    /**
+     * Bill holds the value of the bill edge.
+     * @type {Array<EntBill>}
+     * @memberof EntLeaseEdges
+     */
+    bill?: Array<EntBill>;
     /**
      * 
      * @type {EntEmployee}
@@ -74,6 +84,7 @@ export function EntLeaseEdgesFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
+        'bill': !exists(json, 'bill') ? undefined : ((json['bill'] as Array<any>).map(EntBillFromJSON)),
         'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
         'leases': !exists(json, 'leases') ? undefined : ((json['leases'] as Array<any>).map(EntDepositFromJSON)),
         'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
@@ -90,6 +101,7 @@ export function EntLeaseEdgesToJSON(value?: EntLeaseEdges | null): any {
     }
     return {
         
+        'bill': value.bill === undefined ? undefined : ((value.bill as Array<any>).map(EntBillToJSON)),
         'employee': EntEmployeeToJSON(value.employee),
         'leases': value.leases === undefined ? undefined : ((value.leases as Array<any>).map(EntDepositToJSON)),
         'roomdetail': EntRoomdetailToJSON(value.roomdetail),

@@ -45,11 +45,23 @@ export interface EntBill {
      */
     id?: number;
     /**
-     * Total holds the value of the "total" field.
-     * @type {number}
+     * Taxpayer holds the value of the "taxpayer" field.
+     * @type {string}
      * @memberof EntBill
      */
-    total?: number;
+    taxpayer?: string;
+    /**
+     * Tell holds the value of the "tell" field.
+     * @type {string}
+     * @memberof EntBill
+     */
+    tell?: string;
+    /**
+     * Total holds the value of the "total" field.
+     * @type {string}
+     * @memberof EntBill
+     */
+    total?: string;
 }
 
 export function EntBillFromJSON(json: any): EntBill {
@@ -65,6 +77,8 @@ export function EntBillFromJSONTyped(json: any, ignoreDiscriminator: boolean): E
         'addedtime': !exists(json, 'addedtime') ? undefined : json['addedtime'],
         'edges': !exists(json, 'edges') ? undefined : EntBillEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'taxpayer': !exists(json, 'taxpayer') ? undefined : json['taxpayer'],
+        'tell': !exists(json, 'tell') ? undefined : json['tell'],
         'total': !exists(json, 'total') ? undefined : json['total'],
     };
 }
@@ -81,6 +95,8 @@ export function EntBillToJSON(value?: EntBill | null): any {
         'addedtime': value.addedtime,
         'edges': EntBillEdgesToJSON(value.edges),
         'id': value.id,
+        'taxpayer': value.taxpayer,
+        'tell': value.tell,
         'total': value.total,
     };
 }

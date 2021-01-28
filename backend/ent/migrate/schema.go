@@ -24,7 +24,10 @@ var (
 	BillsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
-		{Name: "total", Type: field.TypeInt},
+		{Name: "tell", Type: field.TypeString},
+		{Name: "taxpayer", Type: field.TypeString},
+		{Name: "total", Type: field.TypeString},
+		{Name: "lease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "payment_id", Type: field.TypeInt, Nullable: true},
 		{Name: "situation_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -35,15 +38,22 @@ var (
 		PrimaryKey: []*schema.Column{BillsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
+				Symbol:  "bills_leases_bill",
+				Columns: []*schema.Column{BillsColumns[5]},
+
+				RefColumns: []*schema.Column{LeasesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "bills_payments_payments",
-				Columns: []*schema.Column{BillsColumns[3]},
+				Columns: []*schema.Column{BillsColumns[6]},
 
 				RefColumns: []*schema.Column{PaymentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "bills_situations_situations",
-				Columns: []*schema.Column{BillsColumns[4]},
+				Columns: []*schema.Column{BillsColumns[7]},
 
 				RefColumns: []*schema.Column{SituationsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -451,8 +461,9 @@ var (
 )
 
 func init() {
-	BillsTable.ForeignKeys[0].RefTable = PaymentsTable
-	BillsTable.ForeignKeys[1].RefTable = SituationsTable
+	BillsTable.ForeignKeys[0].RefTable = LeasesTable
+	BillsTable.ForeignKeys[1].RefTable = PaymentsTable
+	BillsTable.ForeignKeys[2].RefTable = SituationsTable
 	CleaningRoomsTable.ForeignKeys[0].RefTable = CleanerNamesTable
 	CleaningRoomsTable.ForeignKeys[1].RefTable = EmployeesTable
 	CleaningRoomsTable.ForeignKeys[2].RefTable = LengthTimesTable

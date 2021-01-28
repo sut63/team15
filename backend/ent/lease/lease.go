@@ -20,6 +20,8 @@ const (
 	EdgeEmployee = "employee"
 	// EdgeLeases holds the string denoting the leases edge name in mutations.
 	EdgeLeases = "leases"
+	// EdgeBill holds the string denoting the bill edge name in mutations.
+	EdgeBill = "bill"
 
 	// Table holds the table name of the lease in the database.
 	Table = "leases"
@@ -51,6 +53,13 @@ const (
 	LeasesInverseTable = "deposits"
 	// LeasesColumn is the table column denoting the leases relation/edge.
 	LeasesColumn = "lease_id"
+	// BillTable is the table the holds the bill relation/edge.
+	BillTable = "bills"
+	// BillInverseTable is the table name for the Bill entity.
+	// It exists in this package in order to avoid circular dependency with the "bill" package.
+	BillInverseTable = "bills"
+	// BillColumn is the table column denoting the bill relation/edge.
+	BillColumn = "lease_id"
 )
 
 // Columns holds all SQL columns for lease fields.

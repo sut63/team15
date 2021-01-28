@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/bill"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/situation"
@@ -36,16 +37,21 @@ func (bu *BillUpdate) SetAddedtime(t time.Time) *BillUpdate {
 	return bu
 }
 
-// SetTotal sets the total field.
-func (bu *BillUpdate) SetTotal(i int) *BillUpdate {
-	bu.mutation.ResetTotal()
-	bu.mutation.SetTotal(i)
+// SetTell sets the tell field.
+func (bu *BillUpdate) SetTell(s string) *BillUpdate {
+	bu.mutation.SetTell(s)
 	return bu
 }
 
-// AddTotal adds i to total.
-func (bu *BillUpdate) AddTotal(i int) *BillUpdate {
-	bu.mutation.AddTotal(i)
+// SetTaxpayer sets the taxpayer field.
+func (bu *BillUpdate) SetTaxpayer(s string) *BillUpdate {
+	bu.mutation.SetTaxpayer(s)
+	return bu
+}
+
+// SetTotal sets the total field.
+func (bu *BillUpdate) SetTotal(s string) *BillUpdate {
+	bu.mutation.SetTotal(s)
 	return bu
 }
 
@@ -87,6 +93,25 @@ func (bu *BillUpdate) SetPayment(p *Payment) *BillUpdate {
 	return bu.SetPaymentID(p.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (bu *BillUpdate) SetLeaseID(id int) *BillUpdate {
+	bu.mutation.SetLeaseID(id)
+	return bu
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (bu *BillUpdate) SetNillableLeaseID(id *int) *BillUpdate {
+	if id != nil {
+		bu = bu.SetLeaseID(*id)
+	}
+	return bu
+}
+
+// SetLease sets the Lease edge to Lease.
+func (bu *BillUpdate) SetLease(l *Lease) *BillUpdate {
+	return bu.SetLeaseID(l.ID)
+}
+
 // Mutation returns the BillMutation object of the builder.
 func (bu *BillUpdate) Mutation() *BillMutation {
 	return bu.mutation
@@ -101,6 +126,12 @@ func (bu *BillUpdate) ClearSituation() *BillUpdate {
 // ClearPayment clears the Payment edge to Payment.
 func (bu *BillUpdate) ClearPayment() *BillUpdate {
 	bu.mutation.ClearPayment()
+	return bu
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (bu *BillUpdate) ClearLease() *BillUpdate {
+	bu.mutation.ClearLease()
 	return bu
 }
 
@@ -181,16 +212,23 @@ func (bu *BillUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: bill.FieldAddedtime,
 		})
 	}
-	if value, ok := bu.mutation.Total(); ok {
+	if value, ok := bu.mutation.Tell(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: bill.FieldTotal,
+			Column: bill.FieldTell,
 		})
 	}
-	if value, ok := bu.mutation.AddedTotal(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+	if value, ok := bu.mutation.Taxpayer(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: bill.FieldTaxpayer,
+		})
+	}
+	if value, ok := bu.mutation.Total(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Value:  value,
 			Column: bill.FieldTotal,
 		})
@@ -265,6 +303,41 @@ func (bu *BillUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if bu.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   bill.LeaseTable,
+			Columns: []string{bill.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   bill.LeaseTable,
+			Columns: []string{bill.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{bill.Label}
@@ -289,16 +362,21 @@ func (buo *BillUpdateOne) SetAddedtime(t time.Time) *BillUpdateOne {
 	return buo
 }
 
-// SetTotal sets the total field.
-func (buo *BillUpdateOne) SetTotal(i int) *BillUpdateOne {
-	buo.mutation.ResetTotal()
-	buo.mutation.SetTotal(i)
+// SetTell sets the tell field.
+func (buo *BillUpdateOne) SetTell(s string) *BillUpdateOne {
+	buo.mutation.SetTell(s)
 	return buo
 }
 
-// AddTotal adds i to total.
-func (buo *BillUpdateOne) AddTotal(i int) *BillUpdateOne {
-	buo.mutation.AddTotal(i)
+// SetTaxpayer sets the taxpayer field.
+func (buo *BillUpdateOne) SetTaxpayer(s string) *BillUpdateOne {
+	buo.mutation.SetTaxpayer(s)
+	return buo
+}
+
+// SetTotal sets the total field.
+func (buo *BillUpdateOne) SetTotal(s string) *BillUpdateOne {
+	buo.mutation.SetTotal(s)
 	return buo
 }
 
@@ -340,6 +418,25 @@ func (buo *BillUpdateOne) SetPayment(p *Payment) *BillUpdateOne {
 	return buo.SetPaymentID(p.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (buo *BillUpdateOne) SetLeaseID(id int) *BillUpdateOne {
+	buo.mutation.SetLeaseID(id)
+	return buo
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (buo *BillUpdateOne) SetNillableLeaseID(id *int) *BillUpdateOne {
+	if id != nil {
+		buo = buo.SetLeaseID(*id)
+	}
+	return buo
+}
+
+// SetLease sets the Lease edge to Lease.
+func (buo *BillUpdateOne) SetLease(l *Lease) *BillUpdateOne {
+	return buo.SetLeaseID(l.ID)
+}
+
 // Mutation returns the BillMutation object of the builder.
 func (buo *BillUpdateOne) Mutation() *BillMutation {
 	return buo.mutation
@@ -354,6 +451,12 @@ func (buo *BillUpdateOne) ClearSituation() *BillUpdateOne {
 // ClearPayment clears the Payment edge to Payment.
 func (buo *BillUpdateOne) ClearPayment() *BillUpdateOne {
 	buo.mutation.ClearPayment()
+	return buo
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (buo *BillUpdateOne) ClearLease() *BillUpdateOne {
+	buo.mutation.ClearLease()
 	return buo
 }
 
@@ -432,16 +535,23 @@ func (buo *BillUpdateOne) sqlSave(ctx context.Context) (b *Bill, err error) {
 			Column: bill.FieldAddedtime,
 		})
 	}
-	if value, ok := buo.mutation.Total(); ok {
+	if value, ok := buo.mutation.Tell(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
-			Column: bill.FieldTotal,
+			Column: bill.FieldTell,
 		})
 	}
-	if value, ok := buo.mutation.AddedTotal(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+	if value, ok := buo.mutation.Taxpayer(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: bill.FieldTaxpayer,
+		})
+	}
+	if value, ok := buo.mutation.Total(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Value:  value,
 			Column: bill.FieldTotal,
 		})
@@ -508,6 +618,41 @@ func (buo *BillUpdateOne) sqlSave(ctx context.Context) (b *Bill, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if buo.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   bill.LeaseTable,
+			Columns: []string{bill.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   bill.LeaseTable,
+			Columns: []string{bill.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ComponanceRoomDetails from '../RoomDetails';
 import ComponanceRepairinvoice from '../RecordRepairinvoice';
 import ComponanceRecordDeposit from '../RecordDeposit';
+import ComponanceRecordBill from '../RecordBill';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import ComponanceRecordLease from '../RecordLease';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
@@ -75,7 +76,7 @@ const DormEmployee: FC<{}> = () => {
         </CardTab>
 
         <CardTab label="ออกใบเสร็จ">
-          <div style={cardContentStyle}>Some content 4</div>
+        <div><ComponanceRecordBill></ComponanceRecordBill></div>
         </CardTab>
 
         <CardTab label="แจ้งซ่อมอุปกรณ์ที่ชำรุด">

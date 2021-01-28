@@ -5,6 +5,7 @@ import (
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
 )
+
 // Bill holds the schema definition for the Bill entity.
 type Bill struct {
 	ent.Schema
@@ -14,7 +15,9 @@ type Bill struct {
 func (Bill) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("addedtime"),
-		field.Int("total"),
+		field.String("tell"),
+		field.String("taxpayer"),
+		field.String("total"),
 	}
 }
 
@@ -29,6 +32,8 @@ func (Bill) Edges() []ent.Edge {
 			Ref("payments").
 			Unique(),
 
-
+		edge.From("Lease", Lease.Type).
+			Ref("bill").
+			Unique(),
 	}
 }
