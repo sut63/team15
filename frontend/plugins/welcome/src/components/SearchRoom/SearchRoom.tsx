@@ -132,9 +132,7 @@ export default function SearchRoom() {
               setLoading(false);
               setPetrules(res);
             };
-            getPetrules();
-
-        
+            getPetrules();    
 
     {/*const checkEmployeeLoginData = async () => {
         const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
@@ -152,6 +150,14 @@ export default function SearchRoom() {
     checkEmployeeLoginData();*/} 
 
     }, [loading]);
+
+    const ListRoomdetais = async () => {
+        const res = await api.listRoomdetail();
+          setLoading(false);
+          setRoomdetail(res);
+
+        };
+        //ListRoomdetais();
 
     const SearchRoomdetail = async () => {
         const res = await api.listRoomdetail();
@@ -385,17 +391,34 @@ export default function SearchRoom() {
                     </Select>
                 </FormControl>
 
-                    <Button
-                style={{ width: 100, backgroundColor: "#5319e7",marginTop: 49,marginLeft: 20}}
+                <FormControl
+                    className={classes.margin}
+                >
+                     <Button
+                style={{ width: 146, backgroundColor: "#5319e7",marginTop: 5,marginLeft: 20}}
                 onClick={() => {
                   SearchRoomdetail();
                 }}
                 variant="contained"
                 color="primary"
-                startIcon={<SearchIcon />}
+                startIcon={<SearchIcon style={{fontSize: 'small'}}/>}
               >
-                ค้นหา
+                ค้นหาข้อมูลห้อง
              </Button>
+
+             <Button
+                style={{ width: 146, backgroundColor: "#adf279",marginTop: 5,marginLeft:20}}
+                onClick={() => {
+                    ListRoomdetais();
+                }}
+                variant="contained"
+                color="primary"
+              >
+                แสดงข้อมูลทั้งหมด
+             </Button>
+                </FormControl>
+
+                    
              
         
              <div><br></br></div>
@@ -431,20 +454,20 @@ export default function SearchRoom() {
                             </Table>
                         </TableContainer>
 
+                        
+
+                </InfoCard>
+
                         <div>
              {status ? (
                         <div>
                             {alerttype != "" ? (
-                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => { setStatus(false) }}>
+                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20}} onClose={() => { setStatus(false) }}>
                                     {errormessege}
                                 </Alert>
                             ) : null}
                         </div>
                     ) : null}</div>
-
-                </InfoCard>
-
-                        
 
             </Content>
      </Page>
