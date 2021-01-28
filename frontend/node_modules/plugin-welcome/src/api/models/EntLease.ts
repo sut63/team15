@@ -45,6 +45,18 @@ export interface EntLease {
      */
     id?: number;
     /**
+     * Numbtenant holds the value of the "numbtenant" field.
+     * @type {string}
+     * @memberof EntLease
+     */
+    numbtenant?: string;
+    /**
+     * Pettenant holds the value of the "pettenant" field.
+     * @type {string}
+     * @memberof EntLease
+     */
+    pettenant?: string;
+    /**
      * Tenant holds the value of the "tenant" field.
      * @type {string}
      * @memberof EntLease
@@ -65,6 +77,8 @@ export function EntLeaseFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'addedtime': !exists(json, 'addedtime') ? undefined : json['addedtime'],
         'edges': !exists(json, 'edges') ? undefined : EntLeaseEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'numbtenant': !exists(json, 'numbtenant') ? undefined : json['numbtenant'],
+        'pettenant': !exists(json, 'pettenant') ? undefined : json['pettenant'],
         'tenant': !exists(json, 'tenant') ? undefined : json['tenant'],
     };
 }
@@ -81,6 +95,8 @@ export function EntLeaseToJSON(value?: EntLease | null): any {
         'addedtime': value.addedtime,
         'edges': EntLeaseEdgesToJSON(value.edges),
         'id': value.id,
+        'numbtenant': value.numbtenant,
+        'pettenant': value.pettenant,
         'tenant': value.tenant,
     };
 }

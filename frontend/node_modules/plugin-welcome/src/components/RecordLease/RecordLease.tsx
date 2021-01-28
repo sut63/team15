@@ -74,18 +74,20 @@ export default function RecordLease() {
  const http = new DefaultApi();
  
  const [lease, setLease] = React.useState<EntLease[]>([]);
- const [employees, setEmployees] = React.useState<EntEmployee[]>([]); //for roomnumber
+ const [employees, setEmployees] = React.useState<EntEmployee[]>([]); 
  const [wifis, setWifis] = React.useState<EntWifi[]>([]);
  const [roomdetails, setRoomdetails] = React.useState<EntRoomdetail[]>([]);
 
  const [status, setStatus] = useState(false);
  const [status2, setStatus2] = useState(false);
  const [alert, setAlert] = useState(false);
-
+ const [errormessege, setErrorMessege] = useState(String);
  const [loading, setLoading] = useState(true);
 
  const [employee, setEmployee] = useState(Number);
  const [tenant, setTenant] = useState(String);
+ const [numbtenant, setNumbtenant] = useState(String);
+ const [pettenant, setPettenant] = useState(String);
  const [added, setAdded] = useState(String);
  const [wifi, setWifi] = useState(Number);
  const [roomdetail, setRoomdetail] = useState(Number);
@@ -139,6 +141,16 @@ const getLease = async () => {
     setTenant(event.target.value as string);
   };
 
+  const PettenanthandleChange = (
+    event: React.ChangeEvent<{ name: string; value: string }>) => {
+    setPettenant(event.target.value as string);
+  };
+
+  const NumbtenanthandleChange = (
+    event: React.ChangeEvent<{ name: string; value: string }>) => {
+    setNumbtenant(event.target.value as string);
+  };
+
   const EmployeehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setEmployee(event.target.value as number);
   };
@@ -155,17 +167,53 @@ const getLease = async () => {
     setRoomdetail(event.target.value as number);
   };
 
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+      case 'tenant':
+        setErrorMessege("โปรดกรอกชื่อผู้ทำสัญญาเช่า");
+        return;
+      case 'numbtenant':
+        setErrorMessege("โปรดกรอกชื่อผู้ร่วมพักอาศัย");
+        return;
+      case 'pettenant':
+        setErrorMessege("โปรดกรอกชนิดของสัตว์เลี้ยง");
+        return;
+      default:
+        setErrorMessege("บันทึกข้อมูลไม่สำเร็จ");
+        return;
+    }
+  };
+  
+
 
 // create lease
 const CreateLease = async () => {
   const leases = {
     added: added + ":00+07:00",
     tenant: tenant,
+    numbtenant: numbtenant,
+    pettenant: pettenant,
     wifi: wifi,
     roomdetail: roomdetail,
     employee: employee,
   };
   console.log(leases);
+
+  if (tenant == ""){
+    checkCaseSaveError("tenant");
+  }
+  else {
+    if(numbtenant == ""){
+      checkCaseSaveError("numbtenant");
+    }
+  else {
+    if(pettenant == ""){
+        checkCaseSaveError("pettenant");
+    }
+    else {setErrorMessege("บันทึกข้อมูลไม่สำเร็จ");}
+  }
+}
+
   const timer2 = setTimeout(() => {
      setStatus2(true);
   }, 2000);
@@ -246,7 +294,7 @@ const CreateLease = async () => {
                 <TextField
                   
                   name="added"
-				  id="added"
+				          id="added"
                   type="datetime-local"
                   value={added} 
                   className={classes.textField}
@@ -257,28 +305,59 @@ const CreateLease = async () => {
                 />
               </form>
 
-			  <div className={classes.paper}><strong>name</strong></div>
+			  <div className={classes.paper}><strong>Name</strong></div>
 			  <form className={classes.root} noValidate>
                 <TextField
-                  
                   name="tenant"
-				  id="tenant"
-				  style={{ margin: 8 }}
+				          id="tenant"
+				          style={{ margin: 8 }}
                   type="text"
-				  fullWidth
-				  margin="normal"
-				  InputLabelProps={{
-					shrink: true,
-				  }}
+				          fullWidth
+				          margin="normal"
+				          InputLabelProps={{
+					        shrink: true,
+				         }}
                   value={tenant} 
                   onChange={LeasehandleChange}
                 />
-              </form>
+        </form>
+        <div className={classes.paper}><strong>Parter's Name</strong></div>
+        <form className={classes.root} noValidate>
+                <TextField
+                  name="numbtenant"
+				          id="numbtenant"
+				          style={{ margin: 8 }}
+                  type="text"
+				          fullWidth
+				          margin="normal"
+				          InputLabelProps={{
+					        shrink: true,
+				         }}
+                  value={numbtenant} 
+                  onChange={NumbtenanthandleChange}
+                />
+          </form>
+          <div className={classes.paper}><strong>Pet Type</strong></div>
+          <form className={classes.root} noValidate>
+                <TextField
+                  name="pettenant"
+				          id="pettenant"
+				          style={{ margin: 8 }}
+                  type="text"
+				          fullWidth
+				          margin="normal"
+				          InputLabelProps={{
+					        shrink: true,
+				         }}
+                  value={pettenant} 
+                  onChange={PettenanthandleChange}
+                />
+          </form>
 
               {status ? ( 
                       <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
               {alert ? ( 
-			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} >Successfull Save</Alert>
+			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} >Successful Save</Alert>
                       ) 
               : null} </div>
             ) : null}
@@ -286,7 +365,7 @@ const CreateLease = async () => {
                       <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
               {alert ? ( 
                       null) 
-              : (<Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }}> Unsuccessfull Save!! </Alert>)} </div>
+              : (<Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }}> {errormessege} </Alert>)} </div>
             ) : null}
 		
             </FormControl>

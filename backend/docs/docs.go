@@ -2587,6 +2587,12 @@ var doc = `{
                 "employee": {
                     "type": "integer"
                 },
+                "numbtenant": {
+                    "type": "string"
+                },
+                "pettenant": {
+                    "type": "string"
+                },
                 "roomdetail": {
                     "type": "integer"
                 },
@@ -2988,6 +2994,14 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "numbtenant": {
+                    "description": "Numbtenant holds the value of the \"numbtenant\" field.",
+                    "type": "string"
+                },
+                "pettenant": {
+                    "description": "Pettenant holds the value of the \"pettenant\" field.",
+                    "type": "string"
                 },
                 "tenant": {
                     "description": "Tenant holds the value of the \"tenant\" field.",
