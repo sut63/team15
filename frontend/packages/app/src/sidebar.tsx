@@ -12,13 +12,15 @@ import {
   SidebarPinButton,
 } from '@backstage/core';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import HotelIcon from '@material-ui/icons/Hotel';
+import SearchIcon from '@material-ui/icons/Search';
 import { EntEmployee } from 'plugin-welcome/src/api/models/EntEmployee';
 import { DefaultApi } from 'plugin-welcome/src/api/apis';
 
 export const AppSidebar = () => {
 
   const api = new DefaultApi();
+
+  const [status, setStatus] = useState(false);
   const [employeeid, setEmployee] = useState(Number);
   const [employees, setEmployees] = useState<EntEmployee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,32 +40,40 @@ export const AppSidebar = () => {
     
   }, [loading]);
 
+  const Search = () => {
+    setStatus(false);
+    window.location.href ="http://localhost:3000/Search";
+    
+  };
+
   return (
 
     <Sidebar>
-      <SidebarDivider />
       {/* Global nav, not org-specific */}
       {(employeeid) ?
         employees.filter((filter:EntEmployee) => filter.id == employeeid).map((item:EntEmployee) => 
-          <SidebarItem icon={PermIdentityIcon} text={item.edges?.jobposition?.positionname} />
+          <SidebarItem to="/DormEmployee" icon={PermIdentityIcon} text={item.edges?.jobposition?.positionname} />
         )
         :
-        null
+        
+        <SidebarItem icon={SearchIcon} text="ค้นหาข้อมูล"
+          onClick={() => {
+            Search();
+          }}
+          
+          />
       }
       {/* End global nav */}
      { /* <SidebarItem icon={HomeOutlinedIcon} to="#" text="Home" />*/} 
-      <SidebarDivider />
+      
 
-          <SidebarItem icon={HotelIcon} to="/SearchRoom" text="ค้นหาข้อมูลห้องพัก"/>
+         
        
       {/* End global nav */}
      { /* <SidebarItem icon={HomeOutlinedIcon} to="#" text="Home" />*/} 
-      <SidebarDivider />
+      
 
       <SidebarSpace />
-
-     
-
       <SidebarDivider />
       <SidebarThemeToggle />
       {(employeeid) ?

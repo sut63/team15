@@ -18,8 +18,11 @@ import {
 } from '@backstage/core';
 import PersonAddRoundedIcon from '@material-ui/icons/PersonAddRounded';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import { ControllersBill, EntBill, EntLease, EntRoomdetail } from '../../api';
- 
+import { ControllersBill } from '../../api';
+import { EntBill } from '../../api/models/EntBill';
+import { EntLease } from '../../api/models/EntLease';
+import { EntRoomdetail } from '../../api/models/EntRoomdetail';
+
 const useStyles = makeStyles({
  table: {
    minWidth: 650,
@@ -43,6 +46,24 @@ export default function ComponentsBillTable() {
       console.log(res);
     };
     getBills();
+
+    const getRoomdetails = async () => {
+      const res = await http.listRoomdetail();
+
+      setLoading(true);
+      setRoomdetails(res);
+      console.log(res);
+    };
+    getRoomdetails(); 
+
+    const getLeases = async () => {
+      const res = await http.listLease();
+
+      setLoading(true);
+      setLeases(res);
+      console.log(res);
+    };
+    getLeases(); 
   }, [loading]);
  
   
@@ -55,6 +76,7 @@ export default function ComponentsBillTable() {
        <TableHead>
          <TableRow>
            <TableCell align="center">No</TableCell>
+           <TableCell align="center">Name</TableCell>
            <TableCell align="center">Room</TableCell>
            <TableCell align="center">Total</TableCell>
            <TableCell align="center">Situation</TableCell>
@@ -66,7 +88,7 @@ export default function ComponentsBillTable() {
          {Bills.map((item:any) => (
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell> 
-             <TableCell align="center">{item.edges?.lease?.tenant}</TableCell> 
+             <TableCell align="center">{item.edges?.lease?.tenant}</TableCell>  
              {leases.filter((setfilterid:any) => setfilterid.id === item.edges?.lease?.id).map((item2:any) => (
                   <TableCell align="center">{item2.edges?.roomdetail?.roomnumber}</TableCell>
               ))}
