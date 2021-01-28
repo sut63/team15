@@ -137,6 +137,21 @@ func (bu *BillUpdate) ClearLease() *BillUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (bu *BillUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := bu.mutation.Tell(); ok {
+		if err := bill.TellValidator(v); err != nil {
+			return 0, &ValidationError{Name: "tell", err: fmt.Errorf("ent: validator failed for field \"tell\": %w", err)}
+		}
+	}
+	if v, ok := bu.mutation.Taxpayer(); ok {
+		if err := bill.TaxpayerValidator(v); err != nil {
+			return 0, &ValidationError{Name: "taxpayer", err: fmt.Errorf("ent: validator failed for field \"taxpayer\": %w", err)}
+		}
+	}
+	if v, ok := bu.mutation.Total(); ok {
+		if err := bill.TotalValidator(v); err != nil {
+			return 0, &ValidationError{Name: "total", err: fmt.Errorf("ent: validator failed for field \"total\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -462,6 +477,21 @@ func (buo *BillUpdateOne) ClearLease() *BillUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (buo *BillUpdateOne) Save(ctx context.Context) (*Bill, error) {
+	if v, ok := buo.mutation.Tell(); ok {
+		if err := bill.TellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tell", err: fmt.Errorf("ent: validator failed for field \"tell\": %w", err)}
+		}
+	}
+	if v, ok := buo.mutation.Taxpayer(); ok {
+		if err := bill.TaxpayerValidator(v); err != nil {
+			return nil, &ValidationError{Name: "taxpayer", err: fmt.Errorf("ent: validator failed for field \"taxpayer\": %w", err)}
+		}
+	}
+	if v, ok := buo.mutation.Total(); ok {
+		if err := bill.TotalValidator(v); err != nil {
+			return nil, &ValidationError{Name: "total", err: fmt.Errorf("ent: validator failed for field \"total\": %w", err)}
+		}
+	}
 
 	var (
 		err  error

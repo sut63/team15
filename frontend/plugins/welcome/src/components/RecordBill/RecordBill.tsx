@@ -11,6 +11,7 @@ import React, { useState, useEffect, FC } from 'react';
 import SaveIcon from '@material-ui/icons/Save'; // icon save
 import { Link as RouterLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import SearchIcon from '@material-ui/icons/Search';
 
 import {
   Container,
@@ -83,13 +84,19 @@ export default function recordBill() {
  const [status, setStatus] = useState(false);
  const [status2, setStatus2] = useState(false);
  const [alert, setAlert] = useState(false);
+ const [alert2, setAlerts] = useState(true);
+ const [alerttype, setAlertType] = useState(String);
+ const [errormessege, setErrorMessege] = useState(String);
 
  const [loading, setLoading] = useState(true);
+
+ const [tellerror, setTellerror] = React.useState('');
+ const [taxpayererror, setTaxpayererror] = React.useState('');
+ const [totalerror, setTotalerror] = React.useState('');
 
  const [situation, setSituation] = useState(Number);
  const [payment, setPayment] = useState(Number);
  const [lease, setLease] = useState(Number);
-
  const [total, setTotal] = useState(String);
  const [tell, setTell] = useState(String);
  const [taxpayer, setTaxpayer] = useState(String);
@@ -123,25 +130,62 @@ export default function recordBill() {
 
 }, [loading]);
 
+const validateTotal = (val: string) => {
+  return val.match("^(([0-9]{1}).([0-9]{2}))$|^(([0-9]{2}).([0-9]{2}))$|^(([0-9]{3}).([0-9]{2}))$|^(([0-9]{4}).([0-9]{2}))$");
+}
+
+const validateTell = (val: string) => {
+  return val.match("^([0-9]{3})-([0-9]{3})-([0-9]{4})$");
+}
+
+const validateTaxpayer = (val: string) => {
+  return val.match("^([0-9]{1})-([0-9]{4})-([0-9]{3})-([0-9]{4})-([0-9]{1})$");
+}
+
+const checkPattern  = (id: string, value:string) => {
+  console.log(value);
+  switch(id) {
+    case 'tell':
+      validateTell(value) ? setTellerror('') : setTellerror ('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
+    return;
+    case 'taxpayer':
+      validateTaxpayer(value) ? setTaxpayererror('') : setTaxpayererror ('รูปแบบของหมายเลขภาษีต้องเป็น x-xxxx-xxx-xxxx-x');
+    return;
+    case 'total':
+      validateTotal(value) ? setTotalerror('') : setTotalerror ('ใส่รูปแบบจำนวนเงิน xxxx.xx');
+    return;
+      default:
+        return;
+  }
+}
 
 const getBill = async () => {
   const res = await http.listBill({ offset: 0 });
   setBill(res);
 };
 
-const TotalhandleChange = (
-  event: React.ChangeEvent<{ name: string; value: string }>,) => {
-  setTotal(event.target.value as string);
-};
-
-const TellhandleChange = (
-  event: React.ChangeEvent<{ name: string; value: string }>,) => {
+const TellhandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+  const id = event.target.id as  typeof tell;
+  const { value } = event.target;
+  const validateValue = value.toString()
+  checkPattern(id, validateValue)
   setTell(event.target.value as string);
 };
 
-const TaxpayerhandleChange = (
-  event: React.ChangeEvent<{ name: string; value: string }>,) => {
+const TaxpayerhandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+  const id = event.target.id as  typeof taxpayer;
+  const { value } = event.target;
+  const validateValue = value.toString()
+  checkPattern(id, validateValue)
   setTaxpayer(event.target.value as string);
+};
+
+const TotalhandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+  const id = event.target.id as  typeof total;
+  const { value } = event.target;
+  const validateValue = value.toString()
+  checkPattern(id, validateValue)
+  setTotal(event.target.value as string);
 };
 
 const AddedhandleChange = (event: any) => {
@@ -160,47 +204,69 @@ const AddedhandleChange = (event: any) => {
     setPayment(event.target.value as number);
   };
  
-
- 
-// create bill
-const CreateBill = async () => {
-  const bills = {
-    added: added + ":00+07:00",
-    situation: situation,
-    payment: payment,
-    total: total,
-    tell: tell,
-    taxpayer: taxpayer,
-    lease: lease,
-  };
-  console.log(bills);
-  const timer2 = setTimeout(() => {
-     setStatus2(true);
-  }, 2000);
-  const timer3 = setTimeout(() => {
-     setStatus2(false);
-  }, 6000);
-
-  const res: any = await http.createBill({ bill: bills });
-  if (res.id != '') {
-    setAlert(true);
-	setStatus2(false);
+  const checkCaseSaveError = (field: string) => {
+    if (field == "tell") { setErrorMessege("ข้อมูล field เบอร์โทรศัพท์ผิด"); }
+        else if (field == "taxpayer") { setErrorMessege("ข้อมูล field เลขภาษีผิด"); }
+        else if (field == "total") { setErrorMessege("ข้อมูลfield จำนวนเงินผิด"); }
+        else { setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ"); }
   }
-  setStatus(true);
-  const timer = setTimeout(() => {
-     setStatus(false);
-	 //window.location.reload(false);
-  }, 7000);
-  
-  console.log(bills);
-};
+
+  const CreateBill = async () => {
+    if ((lease != null) && (payment != null) && (situation != null)){
+	  const apiUrl = 'http://localhost:8080/api/v1/bills';
+    const bill = {
+      added: added + ":00+07:00",
+      situation: situation,
+      payment: payment,
+      total: total,
+      tell: tell,
+      taxpayer: taxpayer,
+      lease: lease,
+    };
+    console.log(bill);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bill),
+    };
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setStatus(true);
+        if (data.status === true) {
+          setErrorMessege("บันทึกข้อมูลสำเร็จ");
+          setAlertType("success");
+        }
+        else {
+          checkCaseSaveError(data.error.Name);
+          setAlertType("error");
+        }
+      });
+  }
+  else{
+    setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ");
+    setAlertType("error");
+    setStatus(true);
+  }
+       };
+
+
 
     return (
     <Page theme={pageTheme.tool}>
 
       <Content>
         <ContentHeader title="Bill invoice"> 
-              <Button onClick={() => {CreateBill();}} variant="contained"  color="primary" startIcon={<SaveRoundedIcon/>}> Create new bill invoice </Button>
+        <Button
+                style={{ width: 200, backgroundColor: "#5319e7",marginTop: 49,marginLeft: 20}}
+                component={RouterLink} to="/SearchBill"
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+              >
+                Search Bill
+             </Button>
         </ContentHeader>  
         <div className={classes.root}>
           <form noValidate autoComplete="off">
@@ -269,7 +335,9 @@ const CreateBill = async () => {
                 <TextField
                   
                   name="total"
-				  id="total"
+          id="total"
+          error = {totalerror ? true : false}
+				  helperText= {totalerror}
 				  style={{ margin: 8 }}
                   type="text"
 				  fullWidth
@@ -287,7 +355,9 @@ const CreateBill = async () => {
                 <TextField
                   
                   name="tell"
-				  id="tell"
+          id="tell"
+          error = {tellerror ? true : false}
+				  helperText= {tellerror}
 				  style={{ margin: 8 }}
                   type="text"
 				  fullWidth
@@ -305,7 +375,9 @@ const CreateBill = async () => {
                 <TextField
                   
                   name="taxpayer"
-				  id="taxpayer"
+          id="taxpayer"
+          error = {taxpayererror ? true : false}
+				  helperText= {taxpayererror}
 				  style={{ margin: 8 }}
                   type="text"
 				  fullWidth
@@ -318,19 +390,20 @@ const CreateBill = async () => {
                 />
               </form>
 
-			  {status ? ( 
-                      <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
-              {alert ? ( 
-			  <Alert severity="success" style={{ marginTop: 20, marginLeft:5 }} >Successfull Save</Alert>
-                      ) 
-              : null} </div>
-            ) : null}
-			{status2 ? ( 
-                      <div className={classes.margin} style={{ width: 500 ,marginLeft:30,marginRight:-7,marginTop:16}}>
-              {alert ? ( 
-                      null) 
-              : (<Alert severity="warning" style={{ marginTop: 20, marginLeft:5 }}> Unsuccessfull Save!! </Alert>)} </div>
-            ) : null}
+              <div>
+					<Button onClick={() => {CreateBill();}} variant="contained"  color="primary" startIcon={<SaveRoundedIcon/>}> Create new bill </Button>
+			  </div>
+
+			  <div>
+             {status ? (
+                        <div>
+                            {alerttype != "" ? (
+                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20, marginLeft:6 }} >
+                                    {errormessege}
+                                </Alert>
+                            ) : null}
+                        </div>
+                    ) : null}</div>
 		
             </FormControl>
 			<div>

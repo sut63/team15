@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -96,13 +97,18 @@ func (ctl *BillController) CreateBill(c *gin.Context) {
 		SetLease(le).
 		Save(context.Background())
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, ret)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   ret,
+	})
 }
 
 // ListBill handles request to get a list of bill entities

@@ -117,11 +117,26 @@ func (bc *BillCreate) Save(ctx context.Context) (*Bill, error) {
 	if _, ok := bc.mutation.Tell(); !ok {
 		return nil, &ValidationError{Name: "tell", err: errors.New("ent: missing required field \"tell\"")}
 	}
+	if v, ok := bc.mutation.Tell(); ok {
+		if err := bill.TellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tell", err: fmt.Errorf("ent: validator failed for field \"tell\": %w", err)}
+		}
+	}
 	if _, ok := bc.mutation.Taxpayer(); !ok {
 		return nil, &ValidationError{Name: "taxpayer", err: errors.New("ent: missing required field \"taxpayer\"")}
 	}
+	if v, ok := bc.mutation.Taxpayer(); ok {
+		if err := bill.TaxpayerValidator(v); err != nil {
+			return nil, &ValidationError{Name: "taxpayer", err: fmt.Errorf("ent: validator failed for field \"taxpayer\": %w", err)}
+		}
+	}
 	if _, ok := bc.mutation.Total(); !ok {
 		return nil, &ValidationError{Name: "total", err: errors.New("ent: missing required field \"total\"")}
+	}
+	if v, ok := bc.mutation.Total(); ok {
+		if err := bill.TotalValidator(v); err != nil {
+			return nil, &ValidationError{Name: "total", err: fmt.Errorf("ent: validator failed for field \"total\": %w", err)}
+		}
 	}
 	var (
 		err  error
