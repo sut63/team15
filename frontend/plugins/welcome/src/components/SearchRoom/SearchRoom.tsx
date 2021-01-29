@@ -155,9 +155,8 @@ export default function SearchRoom() {
         const res = await api.listRoomdetail();
           setLoading(false);
           setRoomdetail(res);
-
         };
-        //ListRoomdetais();
+        //getRoomdetais();
 
     const SearchRoomdetail = async () => {
         const res = await api.listRoomdetail();
@@ -394,32 +393,30 @@ export default function SearchRoom() {
                 <FormControl
                     className={classes.margin}
                 >
-                     <Button
-                style={{ width: 146, backgroundColor: "#5319e7",marginTop: 5,marginLeft: 20}}
+                    <Button
+                style={{ width: 165, backgroundColor: "#5319e7"}}
                 onClick={() => {
                   SearchRoomdetail();
                 }}
                 variant="contained"
                 color="primary"
-                startIcon={<SearchIcon style={{fontSize: 'small'}}/>}
+                startIcon={<SearchIcon style={{fontSize: 'medium'}} />}
               >
-                ค้นหาข้อมูลห้อง
+                ค้นหาข้อมูลห้องพัก
              </Button>
 
              <Button
-                style={{ width: 146, backgroundColor: "#adf279",marginTop: 5,marginLeft:20}}
+                style={{ width: 165, backgroundColor: "#adf279",marginTop: 5}}
                 onClick={() => {
                     ListRoomdetais();
                 }}
                 variant="contained"
                 color="primary"
               >
-                แสดงข้อมูลทั้งหมด
+                แสดงข้อมูลห้องทั้งหมด
              </Button>
+           
                 </FormControl>
-
-                    
-             
         
              <div><br></br></div>
              <TableContainer component={Paper}>
