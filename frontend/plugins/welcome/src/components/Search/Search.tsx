@@ -14,6 +14,7 @@ import ComponanceSearchRoom from '../SearchRoom';
 import ComponanceSearchDeposit from '../SearchDeposit';
 import ComponanceSearchBill from '../SearchBill';
 import ComponanceSearchLease from '../SearchLease';
+import ComponanceSearchCleaningroom from '../SearchCleaningroom';
 import Button from '@material-ui/core/Button';
 
 const HeaderCustom = {
@@ -63,8 +64,8 @@ const Search: FC<{}> = () => {
           <div></div>
         </CardTab>
 
-		<CardTab label="ค้นหา5">
-          <div></div>
+		<CardTab label="ค้นหาแจ้งทำความสะอาด">
+          <div><ComponanceSearchCleaningroom></ComponanceSearchCleaningroom></div>
         </CardTab>
 
         <CardTab label="ค้นหารับฝากของ">
