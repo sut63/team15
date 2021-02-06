@@ -48,7 +48,7 @@ const Search: FC<{}> = () => {
       <Content>
         <TabbedCard title="">
 
-        <CardTab label="เพิ่มข้อมูลห้องพัก">
+        <CardTab label="ค้นหาข้อมูลห้องพัก">
           <div><ComponanceSearchRoom></ComponanceSearchRoom></div>
         </CardTab>
 
