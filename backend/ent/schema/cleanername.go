@@ -6,21 +6,21 @@ import (
 	"github.com/facebookincubator/ent/schema/edge"
  )
 
-// CleanerName holds the schema definition for the CleanerName entity.
-type CleanerName struct {
+// Cleanername holds the schema definition for the Cleanername entity.
+type Cleanername struct {
 	ent.Schema
 }
 
-// Fields of the CleanerName.
-func (CleanerName) Fields() []ent.Field {
+// Fields of the Cleanername.
+func (Cleanername) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("cleanername").Unique().NotEmpty(),
 	}
 }
 
-// Edges of the CleanerName.
-func (CleanerName) Edges() []ent.Edge {
+// Edges of the Cleanername.
+func (Cleanername) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("cleaningrooms", CleaningRoom.Type). StorageKey(edge.Column("cleanerroom_id")),
+		edge.To("cleaningrooms", Cleaningroom.Type). StorageKey(edge.Column("cleanerroom_id")),
 	}
 }
