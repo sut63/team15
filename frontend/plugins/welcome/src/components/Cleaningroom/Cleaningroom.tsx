@@ -307,19 +307,7 @@ export default function CreateCleaningroom() {
   return (
     <Page theme={pageTheme.service}>
       <Content>
-
-        <ContentHeader title="แจ้งทำความสะอาด">
-          <Button
-            style={{ width: 250, backgroundColor: "#5319e7", marginTop: 49, marginLeft: 20 }}
-            component={RouterLink} to="/SearchCleaningroom"
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-          >
-            Search Cleaningroom
-             </Button>
-        </ContentHeader>
-        <InfoCard>
+        <InfoCard title="Add Cleaning Request">
           <div className={classes.root}>
             <form noValidate autoComplete="off">
               <Grid container>
