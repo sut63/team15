@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Search CleaningRoom Test Case</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ค้นหาเจอ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[2]/div/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[2]/div/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>jaidee@gmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[3]/div/div/div/input</option><option>//div[3]/div/div/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[3]/div/div/div/input</option><option>//div[3]/div/div/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
+</tr>
+<tr><td>click</td><td>//button[@type='button']<datalist><option>//button[@type='button']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[4]/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/div/button[5]/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/div/button[5]/span</option><option>//button[5]/span</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>B225</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td[3]<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td[3]</option><option>//td[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td[3]<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td[3]</option><option>//td[3]</option></datalist></td><td>sompong</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ค้นหาไม่เจอ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[2]/div/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[2]/div/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>jaidee@gmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[3]/div/div/div/input</option><option>//div[3]/div/div/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[3]/div/div/div/input</option><option>//div[3]/div/div/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/form/div[4]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/form/div[4]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/div/button[5]/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/div/button[5]/span</option><option>//button[5]/span</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>name=search<datalist><option>name=search</option><option>//input[@name='search']</option><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=input[name="search"]</option></datalist></td><td>B111</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td</option><option>//td</option><option>css=td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td/p<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/div/article/div[2]/table/tbody/tr/td/p</option><option>//p</option><option>css=p</option></datalist></td><td>ไม่มีข้อมูลในระบบ</td>
+</tr>
+</tbody></table>
+</body>
+</html>
