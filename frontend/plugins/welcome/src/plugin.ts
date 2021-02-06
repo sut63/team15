@@ -13,6 +13,10 @@ import SearchDeposit from './components/SearchDeposit';
 import SearchBill from './components/SearchBill';
 import SearchLease from './components/SearchLease';
 import Search from './components/Search';
+import CreateCleaningroom from './components/Cleaningroom';
+import ShowCleaningroom from './components/CleaningroomTable';
+import SearchCleaningroom from './components/SearchCleaningroom';
+
 
 
 export const plugin = createPlugin({
@@ -31,6 +35,9 @@ export const plugin = createPlugin({
     router.registerRoute('/SearchDeposit', SearchDeposit);
     router.registerRoute('/SearchBill', SearchBill);
     router.registerRoute('/SearchLease', SearchLease);
+    router.registerRoute('/Cleaningroom', CreateCleaningroom);
+    router.registerRoute('/CleaningroomTable', ShowCleaningroom);
+    router.registerRoute('/SearchCleaningroom', SearchCleaningroom);
     router.registerRoute('/Search', Search);
   },
 });
