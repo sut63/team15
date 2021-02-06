@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
@@ -42,6 +43,18 @@ func (lu *LeaseUpdate) SetAddedtime(t time.Time) *LeaseUpdate {
 // SetTenant sets the tenant field.
 func (lu *LeaseUpdate) SetTenant(s string) *LeaseUpdate {
 	lu.mutation.SetTenant(s)
+	return lu
+}
+
+// SetNumbtenant sets the numbtenant field.
+func (lu *LeaseUpdate) SetNumbtenant(s string) *LeaseUpdate {
+	lu.mutation.SetNumbtenant(s)
+	return lu
+}
+
+// SetPettenant sets the pettenant field.
+func (lu *LeaseUpdate) SetPettenant(s string) *LeaseUpdate {
+	lu.mutation.SetPettenant(s)
 	return lu
 }
 
@@ -109,6 +122,21 @@ func (lu *LeaseUpdate) AddLeases(d ...*Deposit) *LeaseUpdate {
 	return lu.AddLeaseIDs(ids...)
 }
 
+// AddBillIDs adds the bill edge to Bill by ids.
+func (lu *LeaseUpdate) AddBillIDs(ids ...int) *LeaseUpdate {
+	lu.mutation.AddBillIDs(ids...)
+	return lu
+}
+
+// AddBill adds the bill edges to Bill.
+func (lu *LeaseUpdate) AddBill(b ...*Bill) *LeaseUpdate {
+	ids := make([]int, len(b))
+	for i := range b {
+		ids[i] = b[i].ID
+	}
+	return lu.AddBillIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (lu *LeaseUpdate) Mutation() *LeaseMutation {
 	return lu.mutation
@@ -147,8 +175,38 @@ func (lu *LeaseUpdate) RemoveLeases(d ...*Deposit) *LeaseUpdate {
 	return lu.RemoveLeaseIDs(ids...)
 }
 
+// RemoveBillIDs removes the bill edge to Bill by ids.
+func (lu *LeaseUpdate) RemoveBillIDs(ids ...int) *LeaseUpdate {
+	lu.mutation.RemoveBillIDs(ids...)
+	return lu
+}
+
+// RemoveBill removes bill edges to Bill.
+func (lu *LeaseUpdate) RemoveBill(b ...*Bill) *LeaseUpdate {
+	ids := make([]int, len(b))
+	for i := range b {
+		ids[i] = b[i].ID
+	}
+	return lu.RemoveBillIDs(ids...)
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (lu *LeaseUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := lu.mutation.Tenant(); ok {
+		if err := lease.TenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "tenant", err: fmt.Errorf("ent: validator failed for field \"tenant\": %w", err)}
+		}
+	}
+	if v, ok := lu.mutation.Numbtenant(); ok {
+		if err := lease.NumbtenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
+		}
+	}
+	if v, ok := lu.mutation.Pettenant(); ok {
+		if err := lease.PettenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+		}
+	}
 
 	if _, ok := lu.mutation.RoomdetailID(); lu.mutation.RoomdetailCleared() && !ok {
 		return 0, errors.New("ent: clearing a unique edge \"Roomdetail\"")
@@ -233,6 +291,20 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lease.FieldTenant,
+		})
+	}
+	if value, ok := lu.mutation.Numbtenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldNumbtenant,
+		})
+	}
+	if value, ok := lu.mutation.Pettenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldPettenant,
 		})
 	}
 	if lu.mutation.WifiCleared() {
@@ -378,6 +450,44 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := lu.mutation.RemovedBillIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.BillTable,
+			Columns: []string{lease.BillColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: bill.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := lu.mutation.BillIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.BillTable,
+			Columns: []string{lease.BillColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: bill.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, lu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{lease.Label}
@@ -405,6 +515,18 @@ func (luo *LeaseUpdateOne) SetAddedtime(t time.Time) *LeaseUpdateOne {
 // SetTenant sets the tenant field.
 func (luo *LeaseUpdateOne) SetTenant(s string) *LeaseUpdateOne {
 	luo.mutation.SetTenant(s)
+	return luo
+}
+
+// SetNumbtenant sets the numbtenant field.
+func (luo *LeaseUpdateOne) SetNumbtenant(s string) *LeaseUpdateOne {
+	luo.mutation.SetNumbtenant(s)
+	return luo
+}
+
+// SetPettenant sets the pettenant field.
+func (luo *LeaseUpdateOne) SetPettenant(s string) *LeaseUpdateOne {
+	luo.mutation.SetPettenant(s)
 	return luo
 }
 
@@ -472,6 +594,21 @@ func (luo *LeaseUpdateOne) AddLeases(d ...*Deposit) *LeaseUpdateOne {
 	return luo.AddLeaseIDs(ids...)
 }
 
+// AddBillIDs adds the bill edge to Bill by ids.
+func (luo *LeaseUpdateOne) AddBillIDs(ids ...int) *LeaseUpdateOne {
+	luo.mutation.AddBillIDs(ids...)
+	return luo
+}
+
+// AddBill adds the bill edges to Bill.
+func (luo *LeaseUpdateOne) AddBill(b ...*Bill) *LeaseUpdateOne {
+	ids := make([]int, len(b))
+	for i := range b {
+		ids[i] = b[i].ID
+	}
+	return luo.AddBillIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (luo *LeaseUpdateOne) Mutation() *LeaseMutation {
 	return luo.mutation
@@ -510,8 +647,38 @@ func (luo *LeaseUpdateOne) RemoveLeases(d ...*Deposit) *LeaseUpdateOne {
 	return luo.RemoveLeaseIDs(ids...)
 }
 
+// RemoveBillIDs removes the bill edge to Bill by ids.
+func (luo *LeaseUpdateOne) RemoveBillIDs(ids ...int) *LeaseUpdateOne {
+	luo.mutation.RemoveBillIDs(ids...)
+	return luo
+}
+
+// RemoveBill removes bill edges to Bill.
+func (luo *LeaseUpdateOne) RemoveBill(b ...*Bill) *LeaseUpdateOne {
+	ids := make([]int, len(b))
+	for i := range b {
+		ids[i] = b[i].ID
+	}
+	return luo.RemoveBillIDs(ids...)
+}
+
 // Save executes the query and returns the updated entity.
 func (luo *LeaseUpdateOne) Save(ctx context.Context) (*Lease, error) {
+	if v, ok := luo.mutation.Tenant(); ok {
+		if err := lease.TenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tenant", err: fmt.Errorf("ent: validator failed for field \"tenant\": %w", err)}
+		}
+	}
+	if v, ok := luo.mutation.Numbtenant(); ok {
+		if err := lease.NumbtenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
+		}
+	}
+	if v, ok := luo.mutation.Pettenant(); ok {
+		if err := lease.PettenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+		}
+	}
 
 	if _, ok := luo.mutation.RoomdetailID(); luo.mutation.RoomdetailCleared() && !ok {
 		return nil, errors.New("ent: clearing a unique edge \"Roomdetail\"")
@@ -594,6 +761,20 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lease.FieldTenant,
+		})
+	}
+	if value, ok := luo.mutation.Numbtenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldNumbtenant,
+		})
+	}
+	if value, ok := luo.mutation.Pettenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldPettenant,
 		})
 	}
 	if luo.mutation.WifiCleared() {
@@ -731,6 +912,44 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := luo.mutation.RemovedBillIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.BillTable,
+			Columns: []string{lease.BillColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: bill.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := luo.mutation.BillIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.BillTable,
+			Columns: []string{lease.BillColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: bill.FieldID,
 				},
 			},
 		}

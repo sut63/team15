@@ -452,6 +452,22 @@ func (c *BillClient) QueryPayment(b *Bill) *PaymentQuery {
 	return query
 }
 
+// QueryLease queries the Lease edge of a Bill.
+func (c *BillClient) QueryLease(b *Bill) *LeaseQuery {
+	query := &LeaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(bill.Table, bill.FieldID, id),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, bill.LeaseTable, bill.LeaseColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *BillClient) Hooks() []Hook {
 	return c.hooks.Bill
@@ -1263,6 +1279,22 @@ func (c *LeaseClient) QueryLeases(l *Lease) *DepositQuery {
 			sqlgraph.From(lease.Table, lease.FieldID, id),
 			sqlgraph.To(deposit.Table, deposit.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, lease.LeasesTable, lease.LeasesColumn),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryBill queries the bill edge of a Lease.
+func (c *LeaseClient) QueryBill(l *Lease) *BillQuery {
+	query := &BillQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, id),
+			sqlgraph.To(bill.Table, bill.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, lease.BillTable, lease.BillColumn),
 		)
 		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
 		return fromV, nil

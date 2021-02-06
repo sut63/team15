@@ -67,8 +67,8 @@ export default function ComponentsTable() {
            <TableCell align="center">ราคาห้อง/ประเภทการเข้าพัก</TableCell>
            <TableCell align="center">จำนวนผู้เข้าพักสูงสุด</TableCell>
            <TableCell align="center">ประเภทเตียงนอน/จำนวนเตียง</TableCell>
-           <TableCell align="center">ประเภทการเข้าพัก</TableCell>
            <TableCell align="center">ข้อจำกัดการจ่ายมัดจำ</TableCell>
+           <TableCell align="center">ข้อจำกัดการเลี้ยงสัตว์</TableCell>
            <TableCell align="center">เบอร์โทรศัพท์</TableCell>
            <TableCell align="center">ลบข้อมูล</TableCell>
          </TableRow>

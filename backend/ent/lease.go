@@ -23,6 +23,10 @@ type Lease struct {
 	Addedtime time.Time `json:"addedtime,omitempty"`
 	// Tenant holds the value of the "tenant" field.
 	Tenant string `json:"tenant,omitempty"`
+	// Numbtenant holds the value of the "numbtenant" field.
+	Numbtenant string `json:"numbtenant,omitempty"`
+	// Pettenant holds the value of the "pettenant" field.
+	Pettenant string `json:"pettenant,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LeaseQuery when eager-loading is set.
 	Edges       LeaseEdges `json:"edges"`
@@ -41,9 +45,11 @@ type LeaseEdges struct {
 	Employee *Employee
 	// Leases holds the value of the leases edge.
 	Leases []*Deposit
+	// Bill holds the value of the bill edge.
+	Bill []*Bill
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // WifiOrErr returns the Wifi value or an error if the edge
@@ -97,12 +103,23 @@ func (e LeaseEdges) LeasesOrErr() ([]*Deposit, error) {
 	return nil, &NotLoadedError{edge: "leases"}
 }
 
+// BillOrErr returns the Bill value or an error if the edge
+// was not loaded in eager-loading.
+func (e LeaseEdges) BillOrErr() ([]*Bill, error) {
+	if e.loadedTypes[4] {
+		return e.Bill, nil
+	}
+	return nil, &NotLoadedError{edge: "bill"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Lease) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullTime{},   // addedtime
 		&sql.NullString{}, // tenant
+		&sql.NullString{}, // numbtenant
+		&sql.NullString{}, // pettenant
 	}
 }
 
@@ -137,7 +154,17 @@ func (l *Lease) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		l.Tenant = value.String
 	}
-	values = values[2:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field numbtenant", values[2])
+	} else if value.Valid {
+		l.Numbtenant = value.String
+	}
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field pettenant", values[3])
+	} else if value.Valid {
+		l.Pettenant = value.String
+	}
+	values = values[4:]
 	if len(values) == len(lease.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
@@ -181,6 +208,11 @@ func (l *Lease) QueryLeases() *DepositQuery {
 	return (&LeaseClient{config: l.config}).QueryLeases(l)
 }
 
+// QueryBill queries the bill edge of the Lease.
+func (l *Lease) QueryBill() *BillQuery {
+	return (&LeaseClient{config: l.config}).QueryBill(l)
+}
+
 // Update returns a builder for updating this Lease.
 // Note that, you need to call Lease.Unwrap() before calling this method, if this Lease
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -208,6 +240,10 @@ func (l *Lease) String() string {
 	builder.WriteString(l.Addedtime.Format(time.ANSIC))
 	builder.WriteString(", tenant=")
 	builder.WriteString(l.Tenant)
+	builder.WriteString(", numbtenant=")
+	builder.WriteString(l.Numbtenant)
+	builder.WriteString(", pettenant=")
+	builder.WriteString(l.Pettenant)
 	builder.WriteByte(')')
 	return builder.String()
 }

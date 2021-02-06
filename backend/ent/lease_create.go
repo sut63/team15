@@ -10,6 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
@@ -33,6 +34,18 @@ func (lc *LeaseCreate) SetAddedtime(t time.Time) *LeaseCreate {
 // SetTenant sets the tenant field.
 func (lc *LeaseCreate) SetTenant(s string) *LeaseCreate {
 	lc.mutation.SetTenant(s)
+	return lc
+}
+
+// SetNumbtenant sets the numbtenant field.
+func (lc *LeaseCreate) SetNumbtenant(s string) *LeaseCreate {
+	lc.mutation.SetNumbtenant(s)
+	return lc
+}
+
+// SetPettenant sets the pettenant field.
+func (lc *LeaseCreate) SetPettenant(s string) *LeaseCreate {
+	lc.mutation.SetPettenant(s)
 	return lc
 }
 
@@ -100,6 +113,21 @@ func (lc *LeaseCreate) AddLeases(d ...*Deposit) *LeaseCreate {
 	return lc.AddLeaseIDs(ids...)
 }
 
+// AddBillIDs adds the bill edge to Bill by ids.
+func (lc *LeaseCreate) AddBillIDs(ids ...int) *LeaseCreate {
+	lc.mutation.AddBillIDs(ids...)
+	return lc
+}
+
+// AddBill adds the bill edges to Bill.
+func (lc *LeaseCreate) AddBill(b ...*Bill) *LeaseCreate {
+	ids := make([]int, len(b))
+	for i := range b {
+		ids[i] = b[i].ID
+	}
+	return lc.AddBillIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (lc *LeaseCreate) Mutation() *LeaseMutation {
 	return lc.mutation
@@ -112,6 +140,27 @@ func (lc *LeaseCreate) Save(ctx context.Context) (*Lease, error) {
 	}
 	if _, ok := lc.mutation.Tenant(); !ok {
 		return nil, &ValidationError{Name: "tenant", err: errors.New("ent: missing required field \"tenant\"")}
+	}
+	if v, ok := lc.mutation.Tenant(); ok {
+		if err := lease.TenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tenant", err: fmt.Errorf("ent: validator failed for field \"tenant\": %w", err)}
+		}
+	}
+	if _, ok := lc.mutation.Numbtenant(); !ok {
+		return nil, &ValidationError{Name: "numbtenant", err: errors.New("ent: missing required field \"numbtenant\"")}
+	}
+	if v, ok := lc.mutation.Numbtenant(); ok {
+		if err := lease.NumbtenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
+		}
+	}
+	if _, ok := lc.mutation.Pettenant(); !ok {
+		return nil, &ValidationError{Name: "pettenant", err: errors.New("ent: missing required field \"pettenant\"")}
+	}
+	if v, ok := lc.mutation.Pettenant(); ok {
+		if err := lease.PettenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+		}
 	}
 	if _, ok := lc.mutation.RoomdetailID(); !ok {
 		return nil, &ValidationError{Name: "Roomdetail", err: errors.New("ent: missing required edge \"Roomdetail\"")}
@@ -192,6 +241,22 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 		})
 		l.Tenant = value
 	}
+	if value, ok := lc.mutation.Numbtenant(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldNumbtenant,
+		})
+		l.Numbtenant = value
+	}
+	if value, ok := lc.mutation.Pettenant(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: lease.FieldPettenant,
+		})
+		l.Pettenant = value
+	}
 	if nodes := lc.mutation.WifiIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -260,6 +325,25 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: deposit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := lc.mutation.BillIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.BillTable,
+			Columns: []string{lease.BillColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: bill.FieldID,
 				},
 			},
 		}

@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
@@ -33,6 +34,7 @@ type LeaseQuery struct {
 	withRoomdetail *RoomdetailQuery
 	withEmployee   *EmployeeQuery
 	withLeases     *DepositQuery
+	withBill       *BillQuery
 	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -128,6 +130,24 @@ func (lq *LeaseQuery) QueryLeases() *DepositQuery {
 			sqlgraph.From(lease.Table, lease.FieldID, lq.sqlQuery()),
 			sqlgraph.To(deposit.Table, deposit.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, lease.LeasesTable, lease.LeasesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryBill chains the current query on the bill edge.
+func (lq *LeaseQuery) QueryBill() *BillQuery {
+	query := &BillQuery{config: lq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := lq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, lq.sqlQuery()),
+			sqlgraph.To(bill.Table, bill.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, lease.BillTable, lease.BillColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
 		return fromU, nil
@@ -358,6 +378,17 @@ func (lq *LeaseQuery) WithLeases(opts ...func(*DepositQuery)) *LeaseQuery {
 	return lq
 }
 
+//  WithBill tells the query-builder to eager-loads the nodes that are connected to
+// the "bill" edge. The optional arguments used to configure the query builder of the edge.
+func (lq *LeaseQuery) WithBill(opts ...func(*BillQuery)) *LeaseQuery {
+	query := &BillQuery{config: lq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	lq.withBill = query
+	return lq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -425,11 +456,12 @@ func (lq *LeaseQuery) sqlAll(ctx context.Context) ([]*Lease, error) {
 		nodes       = []*Lease{}
 		withFKs     = lq.withFKs
 		_spec       = lq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			lq.withWifi != nil,
 			lq.withRoomdetail != nil,
 			lq.withEmployee != nil,
 			lq.withLeases != nil,
+			lq.withBill != nil,
 		}
 	)
 	if lq.withWifi != nil || lq.withRoomdetail != nil || lq.withEmployee != nil {
@@ -562,6 +594,34 @@ func (lq *LeaseQuery) sqlAll(ctx context.Context) ([]*Lease, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "lease_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Leases = append(node.Edges.Leases, n)
+		}
+	}
+
+	if query := lq.withBill; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Lease)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Bill(func(s *sql.Selector) {
+			s.Where(sql.InValues(lease.BillColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.lease_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "lease_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "lease_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Bill = append(node.Edges.Bill, n)
 		}
 	}
 

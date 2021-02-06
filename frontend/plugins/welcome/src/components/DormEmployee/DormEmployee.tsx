@@ -7,15 +7,19 @@ import {
   pageTheme,
   TabbedCard, 
   CardTab ,
+  HeaderLabel
 } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ComponanceRoomDetails from '../RoomDetails';
 import ComponanceRepairinvoice from '../RecordRepairinvoice';
 import ComponanceRecordDeposit from '../RecordDeposit';
+import ComponanceRecordBill from '../RecordBill';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import ComponanceRecordLease from '../RecordLease';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import ComCleaningroom from '../Cleaningroom';
+import Button from '@material-ui/core/Button';
+
 const HeaderCustom = {
   minHeight: '50px',
 };
@@ -25,6 +29,8 @@ const useStyles = makeStyles({
     maxWidth: 345,
   },
 });
+
+
 
 const cardContentStyle = { height: 200, width: 500 };
 const DormEmployee: FC<{}> = () => {
@@ -37,6 +43,12 @@ const DormEmployee: FC<{}> = () => {
   const [loading, setLoading] = useState(true);
 
   const [employeeid, setEmployee] = useState(Number);
+
+  const SearchRoom = () => {
+    setStatus(false);
+    window.location.href ="http://localhost:3000/Search";
+    
+  };
 
   
   useEffect(() => { 
@@ -62,7 +74,12 @@ const DormEmployee: FC<{}> = () => {
 
   return (
     <Page theme={pageTheme.service}>
-      <Header style={HeaderCustom} title={`Dormitory`} subtitle={'ยินดีต้อนรับเข้าสู่หน้า หอพัก สำหรับพนักงานหอพัก'}></Header>
+      <Header style={HeaderCustom} title={`Dormitory`} subtitle={'ยินดีต้อนรับเข้าสู่หน้า หอพัก สำหรับพนักงานหอพัก'}>
+      <Button style={{ backgroundColor: "#ffffff"}} 
+               onClick={() => {
+                SearchRoom();
+              }} > ค้นหาข้อมูล </Button>
+      </Header>
       <Content>
         <TabbedCard title="">
 
@@ -75,7 +92,7 @@ const DormEmployee: FC<{}> = () => {
         </CardTab>
 
         <CardTab label="ออกใบเสร็จ">
-          <div style={cardContentStyle}>Some content 4</div>
+        <div><ComponanceRecordBill></ComponanceRecordBill></div>
         </CardTab>
 
         <CardTab label="แจ้งซ่อมอุปกรณ์ที่ชำรุด">

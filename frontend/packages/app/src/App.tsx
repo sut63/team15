@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import * as plugins from './plugins';
 import { createApp, SidebarPage } from '@backstage/core';
 import { AppSidebar } from './sidebar';
-import SignIn from './components/SignIn';
 
 const app = createApp({
   plugins: Object.values(plugins),
@@ -17,7 +16,7 @@ const App: FC<{}> = () => (
     <AppRouter>
       {/* <SignIn></SignIn> */}
       <SidebarPage>
-        <AppSidebar />
+      <AppSidebar />
         <AppRoutes />
       </SidebarPage>
     </AppRouter>

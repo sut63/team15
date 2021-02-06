@@ -9,6 +9,10 @@ const (
 	FieldID = "id"
 	// FieldAddedtime holds the string denoting the addedtime field in the database.
 	FieldAddedtime = "addedtime"
+	// FieldTell holds the string denoting the tell field in the database.
+	FieldTell = "tell"
+	// FieldTaxpayer holds the string denoting the taxpayer field in the database.
+	FieldTaxpayer = "taxpayer"
 	// FieldTotal holds the string denoting the total field in the database.
 	FieldTotal = "total"
 
@@ -16,6 +20,8 @@ const (
 	EdgeSituation = "Situation"
 	// EdgePayment holds the string denoting the payment edge name in mutations.
 	EdgePayment = "Payment"
+	// EdgeLease holds the string denoting the lease edge name in mutations.
+	EdgeLease = "Lease"
 
 	// Table holds the table name of the bill in the database.
 	Table = "bills"
@@ -33,17 +39,36 @@ const (
 	PaymentInverseTable = "payments"
 	// PaymentColumn is the table column denoting the Payment relation/edge.
 	PaymentColumn = "payment_id"
+	// LeaseTable is the table the holds the Lease relation/edge.
+	LeaseTable = "bills"
+	// LeaseInverseTable is the table name for the Lease entity.
+	// It exists in this package in order to avoid circular dependency with the "lease" package.
+	LeaseInverseTable = "leases"
+	// LeaseColumn is the table column denoting the Lease relation/edge.
+	LeaseColumn = "lease_id"
 )
 
 // Columns holds all SQL columns for bill fields.
 var Columns = []string{
 	FieldID,
 	FieldAddedtime,
+	FieldTell,
+	FieldTaxpayer,
 	FieldTotal,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Bill type.
 var ForeignKeys = []string{
+	"lease_id",
 	"payment_id",
 	"situation_id",
 }
+
+var (
+	// TellValidator is a validator for the "tell" field. It is called by the builders before save.
+	TellValidator func(string) error
+	// TaxpayerValidator is a validator for the "taxpayer" field. It is called by the builders before save.
+	TaxpayerValidator func(string) error
+	// TotalValidator is a validator for the "total" field. It is called by the builders before save.
+	TotalValidator func(string) error
+)

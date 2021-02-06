@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/bill"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/situation"
 )
@@ -28,9 +29,21 @@ func (bc *BillCreate) SetAddedtime(t time.Time) *BillCreate {
 	return bc
 }
 
+// SetTell sets the tell field.
+func (bc *BillCreate) SetTell(s string) *BillCreate {
+	bc.mutation.SetTell(s)
+	return bc
+}
+
+// SetTaxpayer sets the taxpayer field.
+func (bc *BillCreate) SetTaxpayer(s string) *BillCreate {
+	bc.mutation.SetTaxpayer(s)
+	return bc
+}
+
 // SetTotal sets the total field.
-func (bc *BillCreate) SetTotal(i int) *BillCreate {
-	bc.mutation.SetTotal(i)
+func (bc *BillCreate) SetTotal(s string) *BillCreate {
+	bc.mutation.SetTotal(s)
 	return bc
 }
 
@@ -72,6 +85,25 @@ func (bc *BillCreate) SetPayment(p *Payment) *BillCreate {
 	return bc.SetPaymentID(p.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (bc *BillCreate) SetLeaseID(id int) *BillCreate {
+	bc.mutation.SetLeaseID(id)
+	return bc
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (bc *BillCreate) SetNillableLeaseID(id *int) *BillCreate {
+	if id != nil {
+		bc = bc.SetLeaseID(*id)
+	}
+	return bc
+}
+
+// SetLease sets the Lease edge to Lease.
+func (bc *BillCreate) SetLease(l *Lease) *BillCreate {
+	return bc.SetLeaseID(l.ID)
+}
+
 // Mutation returns the BillMutation object of the builder.
 func (bc *BillCreate) Mutation() *BillMutation {
 	return bc.mutation
@@ -82,8 +114,29 @@ func (bc *BillCreate) Save(ctx context.Context) (*Bill, error) {
 	if _, ok := bc.mutation.Addedtime(); !ok {
 		return nil, &ValidationError{Name: "addedtime", err: errors.New("ent: missing required field \"addedtime\"")}
 	}
+	if _, ok := bc.mutation.Tell(); !ok {
+		return nil, &ValidationError{Name: "tell", err: errors.New("ent: missing required field \"tell\"")}
+	}
+	if v, ok := bc.mutation.Tell(); ok {
+		if err := bill.TellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "tell", err: fmt.Errorf("ent: validator failed for field \"tell\": %w", err)}
+		}
+	}
+	if _, ok := bc.mutation.Taxpayer(); !ok {
+		return nil, &ValidationError{Name: "taxpayer", err: errors.New("ent: missing required field \"taxpayer\"")}
+	}
+	if v, ok := bc.mutation.Taxpayer(); ok {
+		if err := bill.TaxpayerValidator(v); err != nil {
+			return nil, &ValidationError{Name: "taxpayer", err: fmt.Errorf("ent: validator failed for field \"taxpayer\": %w", err)}
+		}
+	}
 	if _, ok := bc.mutation.Total(); !ok {
 		return nil, &ValidationError{Name: "total", err: errors.New("ent: missing required field \"total\"")}
+	}
+	if v, ok := bc.mutation.Total(); ok {
+		if err := bill.TotalValidator(v); err != nil {
+			return nil, &ValidationError{Name: "total", err: fmt.Errorf("ent: validator failed for field \"total\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -153,9 +206,25 @@ func (bc *BillCreate) createSpec() (*Bill, *sqlgraph.CreateSpec) {
 		})
 		b.Addedtime = value
 	}
+	if value, ok := bc.mutation.Tell(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: bill.FieldTell,
+		})
+		b.Tell = value
+	}
+	if value, ok := bc.mutation.Taxpayer(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: bill.FieldTaxpayer,
+		})
+		b.Taxpayer = value
+	}
 	if value, ok := bc.mutation.Total(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: bill.FieldTotal,
 		})
@@ -191,6 +260,25 @@ func (bc *BillCreate) createSpec() (*Bill, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: payment.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := bc.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   bill.LeaseTable,
+			Columns: []string{bill.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

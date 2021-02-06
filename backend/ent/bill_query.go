@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/bill"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/situation"
@@ -28,6 +29,7 @@ type BillQuery struct {
 	// eager-loading edges.
 	withSituation *SituationQuery
 	withPayment   *PaymentQuery
+	withLease     *LeaseQuery
 	withFKs       bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -87,6 +89,24 @@ func (bq *BillQuery) QueryPayment() *PaymentQuery {
 			sqlgraph.From(bill.Table, bill.FieldID, bq.sqlQuery()),
 			sqlgraph.To(payment.Table, payment.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, bill.PaymentTable, bill.PaymentColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryLease chains the current query on the Lease edge.
+func (bq *BillQuery) QueryLease() *LeaseQuery {
+	query := &LeaseQuery{config: bq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := bq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(bill.Table, bill.FieldID, bq.sqlQuery()),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, bill.LeaseTable, bill.LeaseColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,6 +315,17 @@ func (bq *BillQuery) WithPayment(opts ...func(*PaymentQuery)) *BillQuery {
 	return bq
 }
 
+//  WithLease tells the query-builder to eager-loads the nodes that are connected to
+// the "Lease" edge. The optional arguments used to configure the query builder of the edge.
+func (bq *BillQuery) WithLease(opts ...func(*LeaseQuery)) *BillQuery {
+	query := &LeaseQuery{config: bq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	bq.withLease = query
+	return bq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -362,12 +393,13 @@ func (bq *BillQuery) sqlAll(ctx context.Context) ([]*Bill, error) {
 		nodes       = []*Bill{}
 		withFKs     = bq.withFKs
 		_spec       = bq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			bq.withSituation != nil,
 			bq.withPayment != nil,
+			bq.withLease != nil,
 		}
 	)
-	if bq.withSituation != nil || bq.withPayment != nil {
+	if bq.withSituation != nil || bq.withPayment != nil || bq.withLease != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -443,6 +475,31 @@ func (bq *BillQuery) sqlAll(ctx context.Context) ([]*Bill, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Payment = n
+			}
+		}
+	}
+
+	if query := bq.withLease; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Bill)
+		for i := range nodes {
+			if fk := nodes[i].lease_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(lease.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "lease_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Lease = n
 			}
 		}
 	}

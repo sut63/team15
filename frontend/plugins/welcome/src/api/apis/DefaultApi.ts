@@ -1637,16 +1637,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list bill entities
      * List bill entities
      */
-    async listBillRaw(requestParameters: ListBillRequest): Promise<runtime.ApiResponse<Array<EntBill>>> {
+    async listBillRaw(): Promise<runtime.ApiResponse<Array<EntBill>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1664,8 +1656,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list bill entities
      * List bill entities
      */
-    async listBill(requestParameters: ListBillRequest): Promise<Array<EntBill>> {
-        const response = await this.listBillRaw(requestParameters);
+    async listBill(): Promise<Array<EntBill>> {
+        const response = await this.listBillRaw();
         return await response.value();
     }
 
@@ -1745,9 +1737,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list deposit entities
      * List deposit entities
      */
-    async listDepositRaw(requestParameters: ListDepositRequest): Promise<runtime.ApiResponse<Array<EntDeposit>>> {
+    async listDepositRaw(): Promise<runtime.ApiResponse<Array<EntDeposit>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -1764,8 +1755,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list deposit entities
      * List deposit entities
      */
-    async listDeposit(requestParameters: ListDepositRequest): Promise<Array<EntDeposit>> {
-        const response = await this.listDepositRaw(requestParameters);
+    async listDeposit(): Promise<Array<EntDeposit>> {
+        const response = await this.listDepositRaw();
         return await response.value();
     }
 
@@ -1801,17 +1792,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list lease entities
      * List lease entities
      */
-    async listLeaseRaw(requestParameters: ListLeaseRequest): Promise<runtime.ApiResponse<Array<EntLease>>> {
+    async listLeaseRaw(): Promise<runtime.ApiResponse<Array<EntLease>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -1828,8 +1810,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list lease entities
      * List lease entities
      */
-    async listLease(requestParameters: ListLeaseRequest): Promise<Array<EntLease>> {
-        const response = await this.listLeaseRaw(requestParameters);
+    async listLease(): Promise<Array<EntLease>> {
+        const response = await this.listLeaseRaw();
         return await response.value();
     }
 

@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/team15/app/ent"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/payment"
 	"github.com/team15/app/ent/situation"
 )
@@ -22,7 +24,10 @@ type Bill struct {
 	Room      int
 	Situation int
 	Payment   int
-	Total     int
+	Total     string
+	Tell      string
+	Taxpayer  string
+	Lease     int
 }
 
 // CreateBill handles POST requests for adding bill entities
@@ -68,6 +73,17 @@ func (ctl *BillController) CreateBill(c *gin.Context) {
 		})
 		return
 	}
+	le, err := ctl.client.Lease.
+		Query().
+		Where(lease.IDEQ(int(obj.Lease))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "lease not found",
+		})
+		return
+	}
 
 	time, err := time.Parse(time.RFC3339, obj.Added)
 	ret, err := ctl.client.Bill.
@@ -75,16 +91,24 @@ func (ctl *BillController) CreateBill(c *gin.Context) {
 		SetAddedtime(time).
 		SetSituation(si).
 		SetTotal(obj.Total).
+		SetTaxpayer(obj.Taxpayer).
+		SetTell(obj.Tell).
 		SetPayment(p).
+		SetLease(le).
 		Save(context.Background())
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, ret)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   ret,
+	})
 }
 
 // ListBill handles request to get a list of bill entities
@@ -121,6 +145,7 @@ func (ctl *BillController) ListBill(c *gin.Context) {
 		Query().
 		WithSituation().
 		WithPayment().
+		WithLease().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

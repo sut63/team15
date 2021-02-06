@@ -30,6 +30,12 @@ export interface ControllersBill {
      * @type {number}
      * @memberof ControllersBill
      */
+    lease?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersBill
+     */
     payment?: number;
     /**
      * 
@@ -45,10 +51,22 @@ export interface ControllersBill {
     situation?: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ControllersBill
      */
-    total?: number;
+    taxpayer?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersBill
+     */
+    tell?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersBill
+     */
+    total?: string;
 }
 
 export function ControllersBillFromJSON(json: any): ControllersBill {
@@ -62,9 +80,12 @@ export function ControllersBillFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'added': !exists(json, 'added') ? undefined : json['added'],
+        'lease': !exists(json, 'lease') ? undefined : json['lease'],
         'payment': !exists(json, 'payment') ? undefined : json['payment'],
         'room': !exists(json, 'room') ? undefined : json['room'],
         'situation': !exists(json, 'situation') ? undefined : json['situation'],
+        'taxpayer': !exists(json, 'taxpayer') ? undefined : json['taxpayer'],
+        'tell': !exists(json, 'tell') ? undefined : json['tell'],
         'total': !exists(json, 'total') ? undefined : json['total'],
     };
 }
@@ -79,9 +100,12 @@ export function ControllersBillToJSON(value?: ControllersBill | null): any {
     return {
         
         'added': value.added,
+        'lease': value.lease,
         'payment': value.payment,
         'room': value.room,
         'situation': value.situation,
+        'taxpayer': value.taxpayer,
+        'tell': value.tell,
         'total': value.total,
     };
 }

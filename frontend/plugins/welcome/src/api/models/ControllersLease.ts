@@ -33,6 +33,18 @@ export interface ControllersLease {
     employee?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersLease
+     */
+    numbtenant?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersLease
+     */
+    pettenant?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersLease
      */
@@ -63,6 +75,8 @@ export function ControllersLeaseFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'added': !exists(json, 'added') ? undefined : json['added'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
+        'numbtenant': !exists(json, 'numbtenant') ? undefined : json['numbtenant'],
+        'pettenant': !exists(json, 'pettenant') ? undefined : json['pettenant'],
         'roomdetail': !exists(json, 'roomdetail') ? undefined : json['roomdetail'],
         'tenant': !exists(json, 'tenant') ? undefined : json['tenant'],
         'wifi': !exists(json, 'wifi') ? undefined : json['wifi'],
@@ -80,6 +94,8 @@ export function ControllersLeaseToJSON(value?: ControllersLease | null): any {
         
         'added': value.added,
         'employee': value.employee,
+        'numbtenant': value.numbtenant,
+        'pettenant': value.pettenant,
         'roomdetail': value.roomdetail,
         'tenant': value.tenant,
         'wifi': value.wifi,

@@ -11,6 +11,10 @@ const (
 	FieldAddedtime = "addedtime"
 	// FieldTenant holds the string denoting the tenant field in the database.
 	FieldTenant = "tenant"
+	// FieldNumbtenant holds the string denoting the numbtenant field in the database.
+	FieldNumbtenant = "numbtenant"
+	// FieldPettenant holds the string denoting the pettenant field in the database.
+	FieldPettenant = "pettenant"
 
 	// EdgeWifi holds the string denoting the wifi edge name in mutations.
 	EdgeWifi = "Wifi"
@@ -20,6 +24,8 @@ const (
 	EdgeEmployee = "employee"
 	// EdgeLeases holds the string denoting the leases edge name in mutations.
 	EdgeLeases = "leases"
+	// EdgeBill holds the string denoting the bill edge name in mutations.
+	EdgeBill = "bill"
 
 	// Table holds the table name of the lease in the database.
 	Table = "leases"
@@ -51,6 +57,13 @@ const (
 	LeasesInverseTable = "deposits"
 	// LeasesColumn is the table column denoting the leases relation/edge.
 	LeasesColumn = "lease_id"
+	// BillTable is the table the holds the bill relation/edge.
+	BillTable = "bills"
+	// BillInverseTable is the table name for the Bill entity.
+	// It exists in this package in order to avoid circular dependency with the "bill" package.
+	BillInverseTable = "bills"
+	// BillColumn is the table column denoting the bill relation/edge.
+	BillColumn = "lease_id"
 )
 
 // Columns holds all SQL columns for lease fields.
@@ -58,6 +71,8 @@ var Columns = []string{
 	FieldID,
 	FieldAddedtime,
 	FieldTenant,
+	FieldNumbtenant,
+	FieldPettenant,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Lease type.
@@ -66,3 +81,12 @@ var ForeignKeys = []string{
 	"room_num",
 	"wifi_id",
 }
+
+var (
+	// TenantValidator is a validator for the "tenant" field. It is called by the builders before save.
+	TenantValidator func(string) error
+	// NumbtenantValidator is a validator for the "numbtenant" field. It is called by the builders before save.
+	NumbtenantValidator func(string) error
+	// PettenantValidator is a validator for the "pettenant" field. It is called by the builders before save.
+	PettenantValidator func(string) error
+)

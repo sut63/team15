@@ -94,8 +94,6 @@ export default function CreateRoomdetail() {
   const classes = useStyles();
   const api = new DefaultApi();
   const [status, setStatus] = useState(false);
-  const [alert, setAlert] = useState(true);
-  const [alert2, setAlerts] = useState(true);
 
   //เก็บข้อมูลที่จะดึงมา
   const [roomdetail, setRoomdetail] = useState<EntRoomdetail[]>([]);
@@ -127,7 +125,7 @@ export default function CreateRoomdetail() {
   const [petrule, setPetrule] = useState(Number);
   const [pledge, setPledge] = useState(Number);
   const [employeeid, setEmployee] = useState(Number);
-
+ 
   useEffect(() => {
     const getRoomdetais = async () => {
       const rd = await api.listRoomdetail();
@@ -292,8 +290,7 @@ export default function CreateRoomdetail() {
     checkPattern('bed', validateValue)
     setBed(event.target.value as number);
   };
-  
-  
+ 
   const BedtypehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setBedtype(event.target.value as number);
   };
@@ -314,14 +311,29 @@ export default function CreateRoomdetail() {
     setEmployee(event.target.value as number);
   };
 
+
   const listRoom = () => {
     setStatus(false);
     if(errormessege == "บันทึกข้อมูลสำเร็จ"){
-    window.location.href ="http://localhost:3000/RoomDetails";
+      window.location.href ="http://localhost:3000/DormEmployee"
     }
   };
 
- 
+  const clearData = () => {
+    setRoomprice('');
+    setRoomnumber('');
+    setRoomtypename('');
+    setPhone('');
+    setRoomprice('');
+    setBed(0);
+    setSleep(0);
+    setBedtype(0);
+    setStaytype(0);
+    setPledge(0);
+    setPetrule(0);
+  }
+
+  
   const forCheck = () => {
     var i = 0;
     var check = 0;
@@ -339,6 +351,7 @@ export default function CreateRoomdetail() {
         //console.log("ซ้ำ");
         setAlertType("error");
         setErrorMessege("มีข้อมูลห้องในระบบแล้ว")
+        clearData();
         setStatus(true);
         check = 1;
         break;
@@ -350,6 +363,7 @@ export default function CreateRoomdetail() {
 }
    }
   }
+
 
   const checkCaseSaveError = (field: string) => {
     if (field == "bed") { setErrorMessege("ข้อมูลfield จำนวนเตียงผิด"); }
@@ -601,7 +615,7 @@ export default function CreateRoomdetail() {
                     style={{ width: 400 }}/>
              
               <Button
-                style={{ width: 200, backgroundColor: "#5319e7",marginTop: 30,marginLeft: 7}}
+                style={{ width: 130, backgroundColor: "#5319e7",marginTop: 30,marginLeft: 7}}
                 onClick={() => {
                   forCheck();
                 }}
@@ -609,6 +623,17 @@ export default function CreateRoomdetail() {
                 color="primary"
               >
                 บันทึกข้อมูลห้อง
+             </Button>
+
+             <Button
+                style={{ width: 130, backgroundColor: "#C70039",marginTop: 30,marginLeft: 7}}
+                onClick={() => { clearData(); }}
+                //defaultValue="Reset"
+                type="reset"
+                variant="contained"
+                color="primary"
+              >
+                ล้างข้อมูลที่กรอก
              </Button>
 
           
@@ -621,17 +646,18 @@ export default function CreateRoomdetail() {
               >
                 ดูข้อมูลที่บันทึก
               </Button> */}
-              <div>
+              
+      </InfoCard>
+      <div>
              {status ? (
                         <div>
                             {alerttype != "" ? (
-                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => { listRoom() }}>
+                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20 }} onClose={() => { listRoom() }}>
                                     {errormessege}
                                 </Alert>
                             ) : null}
                         </div>
                     ) : null}</div>
-      </InfoCard>
     </Grid>
   </Grid>
           </form>

@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     table: {
         minWidth: 650,
-    }
+    },
   }),
 );
 
@@ -132,9 +132,7 @@ export default function SearchRoom() {
               setLoading(false);
               setPetrules(res);
             };
-            getPetrules();
-
-        
+            getPetrules();    
 
     {/*const checkEmployeeLoginData = async () => {
         const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
@@ -152,6 +150,13 @@ export default function SearchRoom() {
     checkEmployeeLoginData();*/} 
 
     }, [loading]);
+
+    const ListRoomdetais = async () => {
+        const res = await api.listRoomdetail();
+          setLoading(false);
+          setRoomdetail(res);
+        };
+        //getRoomdetais();
 
     const SearchRoomdetail = async () => {
         const res = await api.listRoomdetail();
@@ -292,9 +297,9 @@ export default function SearchRoom() {
     
 
     return (
-        <Page theme={pageTheme.service}>
+        <Page>
             <Content>
-            <InfoCard title="ค้นหาข้อมูลห้องพัก">
+            <InfoCard title={'ค้นหาข้อมูลห้องพัก'}>
 
             <FormControl
                     className={classes.margin}
@@ -324,7 +329,7 @@ export default function SearchRoom() {
                         size="medium"
                         value={pricesearch}
                         onChange={PriceSearchhandleChange}
-                        style={{ width: 110,marginLeft: 8}}
+                        style={{ width: 115,marginLeft: 8}}
                     />
                 </FormControl>
 
@@ -338,7 +343,7 @@ export default function SearchRoom() {
                         id="staytype"
                         value={staytypesearch}
                         onChange={StaytypehandleChange}
-                        style={{ width: 200, marginLeft: 8 }}
+                        style={{ width: 175, marginLeft: 8 }}
 
                     >   <MenuItem value={0}>-</MenuItem>
                          {staytypes.map((item: EntStaytype) => (
@@ -357,7 +362,7 @@ export default function SearchRoom() {
                         id="bedtype"
                         value={bedtypesearch}
                         onChange={BedtypehandleChange}
-                        style={{ width: 200, marginLeft: 8 }}
+                        style={{ width: 170, marginLeft: 8 }}
 
                     >   <MenuItem value={0}>-</MenuItem>
                          {bedtypes.map((item: EntBedtype) => (
@@ -376,7 +381,7 @@ export default function SearchRoom() {
                         id="petrule"
                         value={petrulesearch}
                         onChange={PetrulehandleChange}
-                        style={{ width: 200, marginLeft: 8 }}
+                        style={{ width: 140, marginLeft: 8 }}
 
                     >   <MenuItem value={0}>-</MenuItem>
                          {petrules.map((item: EntPetrule) => (
@@ -385,18 +390,33 @@ export default function SearchRoom() {
                     </Select>
                 </FormControl>
 
+                <FormControl
+                    className={classes.margin}
+                >
                     <Button
-                style={{ width: 100, backgroundColor: "#5319e7",marginTop: 49,marginLeft: 20}}
+                style={{ width: 165, backgroundColor: "#5319e7"}}
                 onClick={() => {
                   SearchRoomdetail();
                 }}
                 variant="contained"
                 color="primary"
-                startIcon={<SearchIcon />}
+                startIcon={<SearchIcon style={{fontSize: 'medium'}} />}
               >
-                ค้นหา
+                ค้นหาข้อมูลห้องพัก
              </Button>
-             
+
+             <Button
+                style={{ width: 165, backgroundColor: "#adf279",marginTop: 5}}
+                onClick={() => {
+                    ListRoomdetais();
+                }}
+                variant="contained"
+                color="primary"
+              >
+                แสดงข้อมูลห้องทั้งหมด
+             </Button>
+           
+                </FormControl>
         
              <div><br></br></div>
              <TableContainer component={Paper}>
@@ -431,20 +451,20 @@ export default function SearchRoom() {
                             </Table>
                         </TableContainer>
 
+                        
+
+                </InfoCard>
+
                         <div>
              {status ? (
                         <div>
                             {alerttype != "" ? (
-                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20, marginLeft:6 }} onClose={() => { setStatus(false) }}>
+                                <Alert severity={alerttype} style={{ width: 400 ,marginTop: 20}} onClose={() => { setStatus(false) }}>
                                     {errormessege}
                                 </Alert>
                             ) : null}
                         </div>
                     ) : null}</div>
-
-                </InfoCard>
-
-                        
 
             </Content>
      </Page>
