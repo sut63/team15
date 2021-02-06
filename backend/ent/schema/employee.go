@@ -30,6 +30,6 @@ func (Employee) Edges() []ent.Edge {
 			Ref("employees").
 			Unique(),
 			edge.To("repairinvoices", Repairinvoice.Type).StorageKey(edge.Column("employee_id")),
-			edge.To("cleaningrooms", CleaningRoom.Type).StorageKey(edge.Column("employee_id")),
+			edge.To("cleaningrooms", Cleaningroom.Type).StorageKey(edge.Column("employee_id")),
 	}
 }
