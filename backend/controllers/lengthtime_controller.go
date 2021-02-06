@@ -9,28 +9,28 @@ import (
 	"github.com/team15/app/ent/lengthtime"
 )
 
-// LengthTimeController defines the struct for the lengthtime controller
-type LengthTimeController struct {
+// LengthtimeController defines the struct for the lengthtime controller
+type LengthtimeController struct {
 	client *ent.Client
 	router gin.IRouter
 }
 
-type LengthTime struct {
+type Lengthtime struct {
 	lengthtime string
 }
 
-// ListLengthTime handles request to get a list of lengthtime entities
+// ListLengthtime handles request to get a list of lengthtime entities
 // @Summary List lengthtime entities
 // @Description list lengthtime entities
 // @ID list-lengthtime
 // @Produce json
 // @Param limit  query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {array} ent.LengthTime
+// @Success 200 {array} ent.Lengthtime
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /lengthtimes [get]
-func (ctl *LengthTimeController) ListLengthTime(c *gin.Context) {
+func (ctl *LengthtimeController) ListLengthtime(c *gin.Context) {
 	limitQuery := c.Query("limit")
 	limit := 10
 	if limitQuery != "" {
@@ -49,7 +49,7 @@ func (ctl *LengthTimeController) ListLengthTime(c *gin.Context) {
 		}
 	}
 
-	lengthtimes, err := ctl.client.LengthTime.
+	lengthtimes, err := ctl.client.Lengthtime.
 		Query().
 		Limit(limit).
 		Offset(offset).
@@ -62,18 +62,18 @@ func (ctl *LengthTimeController) ListLengthTime(c *gin.Context) {
 	c.JSON(200, lengthtimes)
 }
 
-// GetLengthTime handles GET requests to retrieve a lengthtime entity
+// GetLengthtime handles GET requests to retrieve a lengthtime entity
 // @Summary Get a lengthtime entity by ID
 // @Description get lengthtime by ID
 // @ID get-lengthtime
 // @Produce  json
-// @Param id path int true "LengthTime ID"
-// @Success 200 {object} ent.LengthTime
+// @Param id path int true "Lengthtime ID"
+// @Success 200 {object} ent.Lengthtime
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /lengthtimes/{id} [get]
-func (ctl *LengthTimeController) GetLengthTime(c *gin.Context) {
+func (ctl *LengthtimeController) GetLengthtime(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -82,7 +82,7 @@ func (ctl *LengthTimeController) GetLengthTime(c *gin.Context) {
 		return
 	}
 
-	u, err := ctl.client.LengthTime.
+	u, err := ctl.client.Lengthtime.
 		Query().
 		Where(lengthtime.IDEQ(int(id))).
 		Only(context.Background())
@@ -96,9 +96,9 @@ func (ctl *LengthTimeController) GetLengthTime(c *gin.Context) {
 	c.JSON(200, u)
 }
 
-// NewLengthTimeController creates and registers handles for the lengthtime controller
-func NewLengthTimeController(router gin.IRouter, client *ent.Client) *LengthTimeController {
-	sc := &LengthTimeController{
+// NewLengthtimeController creates and registers handles for the lengthtime controller
+func NewLengthtimeController(router gin.IRouter, client *ent.Client) *LengthtimeController {
+	sc := &LengthtimeController{
 		client: client,
 		router: router,
 	}
@@ -109,10 +109,10 @@ func NewLengthTimeController(router gin.IRouter, client *ent.Client) *LengthTime
 
 }
 
-func (ctl *LengthTimeController) register() {
+func (ctl *LengthtimeController) register() {
 	lengthtimes := ctl.router.Group("/lengthtimes")
 
-	lengthtimes.GET(":id", ctl.GetLengthTime)
-	lengthtimes.GET("", ctl.ListLengthTime)
+	lengthtimes.GET(":id", ctl.GetLengthtime)
+	lengthtimes.GET("", ctl.ListLengthtime)
 
 }
