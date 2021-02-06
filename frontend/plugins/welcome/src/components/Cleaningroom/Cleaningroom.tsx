@@ -2,46 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Content,
-  Header,
   Page,
   pageTheme,
   ContentHeader,
-  HeaderLabel,
   InfoCard,
-  Sidebar,
-  SidebarItem,
-  SidebarDivider,
-  SidebarSpace,
-  SidebarUserSettings,
-  SidebarThemeToggle,
-  SidebarPinButton,
 } from '@backstage/core';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import { Box, Chip, Grid, Link, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 import { DefaultApi } from '../../api/apis';
-import SaveIcon from '@material-ui/icons/Save';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import { EntStaytype, EntBedtype, EntPetrule, EntPledge } from '../../api';
-import RoomDetails from '.';
+import SearchIcon from '@material-ui/icons/Search';
 
+import { EntCleaningroom } from '../../api/models/EntCleaningroom';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
-import ComponanceRoomdetailsTable from '../RoomdetailsTable';
-import { EntCleanerName } from '../../api/models/EntCleanerName';
+import { EntCleanername } from '../../api/models/EntCleanername';
+import { EntLengthtime } from '../../api/models/EntLengthtime';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
-import { EntLengthTime } from '../../api/models/EntLengthTime'
-import Cleaningroom from '.';
+import ComponanceCleaningroomTable from '../CleaningroomTable';
 import Swal from 'sweetalert2';
+
 // css style 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,58 +58,90 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       marginLeft: theme.spacing(1),
     },
+    center: {
+      marginTop: theme.spacing(2),
+      marginLeft: theme.spacing(23),
+    },
+    cardtable: {
+      marginTop: theme.spacing(2),
+    },
+    fieldText: {
+      width: 200,
+      marginLeft: 7,
+    },
+    fieldLabel: {
+      marginLeft: 8,
+      marginRight: 20,
+
+    }
   }),
 );
 
-export default function CreateRoomdetail() {
+
+export default function CreateCleaningroom() {
   const classes = useStyles();
   const api = new DefaultApi();
+
   const [status, setStatus] = useState(false);
-  const [alert, setAlert] = useState(true);
-  const [alert2, setAlerts] = useState(true);
+  const [errormessege, setErrorMessege] = useState(String);
+  const [alerttype, setAlertType] = useState(String);
+
 
   //เก็บข้อมูลที่จะดึงมา
-  const [roomdetails, setRoomdetail] = useState<EntRoomdetail[]>([]);
-  const [cleanernames, setCleanername] = useState<EntCleanerName[]>([]);
-  const [lengthtimes, setLengthtime] = useState<EntLengthTime[]>([]);
+  const [cleaningroom, setCleaningroom] = useState<EntCleaningroom[]>([]);
+  const [cleanernames, setCleanernames] = useState<EntCleanername[]>([]);
+  const [lengthtimes, setLengthtimes] = useState<EntLengthtime[]>([]);
+  const [roomdetails, setRoomdetails] = useState<EntRoomdetail[]>([]);
   const [employees, setEmployees] = useState<EntEmployee[]>([]);
   const [loading, setLoading] = useState(true);
 
+
+  const [numofemerror, setNumofemerror] = React.useState('');
+  const [phonenumbererror, setPhonenumbererror] = React.useState('');
+  const [noteerror, setNoteerror] = React.useState('');
+
   //เอาไว้เก็บค่าจาก user
-  const [roomdetail, setRoomdetails] = useState(Number);
-  const [cleanername, setCleanernames] = useState(Number);
-  const [lengthtime, setLengthtimes] = useState(Number);
   const [employeeid, setEmployee] = useState(Number);
-  const [note, setNote] = useState(String);
+  const [cleanername, setCleanername] = useState(Number);
+  const [numofem, setNumofem] = useState(Number);
+  const [roomdetail, setRoomdetail] = useState(Number);
+  const [lengthtime, setLengthtime] = useState(Number);
   const [timedate, setTime] = useState(String);
-
-
+  const [phonenumber, setPhonenumber] = useState(String);
+  const [note, setNote] = useState(String);
 
   useEffect(() => {
 
-    //ดึงDetailRoom
-    const getRoomdetail = async () => {
-      const res = await api.listRoomdetail()
+    const getCleaningrooms = async () => {
+      const cr = await api.listCleaningroom();
       setLoading(false);
-      setRoomdetail(res);
+      setCleaningroom(cr);
+    };
+    getCleaningrooms();
+
+    //ดึงDetailRoom
+    const getRoomdetails = async () => {
+      const rd = await api.listRoomdetail()
+      setLoading(false);
+      setRoomdetails(rd);
     }
-    getRoomdetail();
+    getRoomdetails();
 
     //ดึงชื่อคนทำความสะอาด
-    const getCleanername = async () => {
-      const res = await api.listCleanername({ limit: 15, offset: 0 })
+    const getCleanernames = async () => {
+      const cn = await api.listCleanername({ limit: 15, offset: 0 })
       setLoading(false);
-      setCleanername(res);
+      setCleanernames(cn);
     }
-    getCleanername();
+    getCleanernames();
 
     //ดึงช่วงเวลา
-    const getLegnthtime = async () => {
-      const res = await api.listLengthtime({ limit: 15, offset: 0 })
+    const getLegnthtimes = async () => {
+      const lt = await api.listLengthtime({ limit: 15, offset: 0 })
       setLoading(false);
-      setLengthtime(res);
+      setLengthtimes(lt);
     }
-    getLegnthtime();
+    getLegnthtimes();
 
     //ดึง Employee
     const getEmployees = async () => {
@@ -135,49 +152,89 @@ export default function CreateRoomdetail() {
     getEmployees();
 
 
-    {
-      const checkEmployeeLoginData = async () => {
-        const jobdata = JSON.parse(String(localStorage.getItem("jobpositiondata")));
-        setLoading(false);
-        if (jobdata != "พนักงานหอพัก") {
-          localStorage.setItem("employeedata", JSON.stringify(null));
-          localStorage.setItem("jobpositiondata", JSON.stringify(null));
-          history.pushState("", "", "./");
-          window.location.reload(false);
-        }
-        else {
-          setEmployee(Number(localStorage.getItem("employeedata")))
-        }
-      }
-      checkEmployeeLoginData();
-    }
+    const checkEmployee = async () => {
+      const edata = JSON.parse(String(localStorage.getItem("employeedata")));
+      setLoading(false);
+      setEmployee(edata)
+    console.log(edata);
+    };
+    checkEmployee();
+  
   }, [loading]);
-  // console.log(employeeid)
-  // console.log("testing")
 
-  const roomdetailhandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setRoomdetails(event.target.value as number)
-  };
 
-  const cleanernamehandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCleanernames(event.target.value as number)
-  };
 
-  const lengthtimehandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setLengthtimes(event.target.value as number)
-  };
+  const validateNumofem = (val: number) => {
+    return val <= 4 && val >= 1 ? true : false
+  }
 
+  const validatePhonenumber = (val: string) => {
+    return val.match("^([0-9]{3})-([0-9]{3})-([0-9]{4})$");
+  }
+
+  const ValidateNote = (val: string) => {
+    return val.match("^[ก-๏\s]+$");
+  }
+
+
+  const checkPattern = (id: string, value: string) => {
+    console.log(value);
+    switch (id) {
+      case 'numofem':
+        validateNumofem(Number(value)) ? setNumofemerror('') : setNumofemerror('จำนวนพนักงานทำความสะอาดต้องไม่เกิน 1-4 คน');
+        return;
+      case 'phonenumber':
+        validatePhonenumber(value) ? setPhonenumbererror('') : setPhonenumbererror('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
+        return;
+      case 'note':
+        ValidateNote(value) ? setNoteerror('') : setNoteerror("กรุณากรอกข้อมูลเฉพาะภาษาไทย");
+        return;
+      default:
+        return;
+    }
+  }
 
   const EmployeehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setEmployee(event.target.value as number);
   };
 
-  const noteehandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setNote(event.target.value as string)
+  const cleanernamehandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setCleanername(event.target.value as number)
   };
 
-  const datetimehandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const numofemhandChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('numofem', validateValue)
+    setNumofem(event.target.value as number)
+  };
+
+  const roomdetailhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setRoomdetail(event.target.value as number);
+  };
+
+  const lengthtimehandChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setLengthtime(event.target.value as number)
+  };
+
+  const datetimehandChange = (event: any) => {
     setTime(event.target.value as string)
+  };
+
+  const phonenumberhandChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as typeof phonenumber;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
+    setPhonenumber(event.target.value as string)
+  };
+
+  const notehandChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+    const id = event.target.id as typeof note;
+    const { value } = event.target;
+    const validateValue = value.toString()
+    checkPattern(id, validateValue)
+    setNote(event.target.value as string)
   };
 
   const Toast = Swal.mixin({
@@ -190,52 +247,93 @@ export default function CreateRoomdetail() {
     },
   });
 
-  const CreateCleaningroom = async () => {
-    if (timedate === "" || note === "" || employeeid === 0 || lengthtime === 0 || cleanername === 0 || roomdetail === 0) {
-      Toast.fire({
-        icon: 'warning',
-        title: 'โปรดระบุข้อมูลให้ครบ',
-      });
-    } else {
-      const cleaningroom = {
-        dateandstarttime: timedate,
-        note: note,
-        cleanername: cleanername,
-        lengthtime: lengthtime,
-        roomdetail: roomdetail,
-        employee: employeeid,
-      }
+  const listCleaning = () => {
+    setStatus(false);
+    if (errormessege == "บันทึกข้อมูลสำเร็จ") {
+      window.location.href = "http://localhost:3000/DormEmployee";
+    }
+  };
 
-      console.log(cleaningroom);
-      Toast.fire({
-        icon: 'success',
-        title: 'บันทึกข้อมูลเส็จ',
-      });
-      const res: any = await api.createCleaningroom({ cleaningroom: cleaningroom });
+  const checkCaseSaveError = (field: string) => {
+    if (field == "numofem") { setErrorMessege("ข้อมูล field จำนวนพนักงานทำความสะอาดผิด"); }
+    else if (field == "phonenumber") { setErrorMessege("ข้อมูล field เบอร์โทร์ศัพท์ผิด"); }
+    else if (field == "note") { setErrorMessege("กรุณากรอกข้อมูลเฉพาะภาษาไทย"); }
+    else { setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ"); }
+  }
+
+
+  const CreateCleaningroom = async () => {
+    if ((cleanername != null) && (roomdetail != null) && (lengthtime != null)) {
+      const apiUrl = 'http://localhost:8080/api/v1/cleaningrooms';
+      const cleaningroom = {
+        employee: employeeid,
+        cleanername: cleanername,
+        numofem: Number(numofem),
+        roomdetail: roomdetail,
+        lengthtime: lengthtime,
+        dateandstarttime: timedate + ":00+07:00",
+        phonenumber: phonenumber,
+        note: note,
+      };
+
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cleaningroom),
+      };
+      fetch(apiUrl, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          setStatus(true);
+          if (data.status === true) {
+            setErrorMessege("บันทึกข้อมูลสำเร็จ");
+            setAlertType("success");
+          }
+          else {
+            checkCaseSaveError(data.error.Name);
+            setAlertType("error");
+          }
+        });
+    }
+    else {
+      setErrorMessege("บันทึกไม่สำเร็จ ใส่ข้อมูลไม่ครบ");
+      setAlertType("error");
       setStatus(true);
-      
-    }    
+    }
   };
 
 
   return (
     <Page theme={pageTheme.service}>
       <Content>
-        <InfoCard title="แจ้งทำความสะอาด">
+
+        <ContentHeader title="แจ้งทำความสะอาด">
+          <Button
+            style={{ width: 250, backgroundColor: "#5319e7", marginTop: 49, marginLeft: 20 }}
+            component={RouterLink} to="/SearchCleaningroom"
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+          >
+            Search Cleaningroom
+             </Button>
+        </ContentHeader>
+        <InfoCard>
           <div className={classes.root}>
             <form noValidate autoComplete="off">
               <Grid container>
                 <FormControl>
+
                   <div className={classes.paper}><strong>พนักงานที่ทำการบันทึก(Employee)</strong></div>
                   <TextField className={classes.select}
                     id="employee"
-                    variant="outlined"
-                    size="medium"
+                    label="employee"
+                    type="string"
                     value={employees.filter((filter: EntEmployee) => filter.id == employeeid).map((item: EntEmployee) => `${item.name}`)}
-                    onChange={EmployeehandleChange}
                     style={{ width: 400 }} />
 
-                  <div className={classes.paper}><strong>พนักงานทำความสะอาด</strong></div>
+                  <div className={classes.paper}><strong>พนักงานทำความสะอาดที่รับผิดชอบ</strong></div>
                   <Select className={classes.select}
                     //color="secondary"
                     labelId="cleanername-label"
@@ -244,10 +342,23 @@ export default function CreateRoomdetail() {
                     variant="outlined"
                     onChange={cleanernamehandChange}
                   >
-                    {cleanernames.map((item: EntCleanerName) => (
+                    {cleanernames.map((item: EntCleanername) => (
                       <MenuItem value={item.id}>{item.cleanername}</MenuItem>
                     ))}
                   </Select>
+
+                  <div className={classes.paper}><strong>จำนวนพนักงานในการทำความสะอาด</strong></div>
+                  <TextField className={classes.select}
+                    id="numofem"
+                    error={numofemerror ? true : false}
+                    variant="outlined"
+                    size="medium"
+                    type="number"
+                    helperText={numofemerror}
+                    value={numofem}
+                    onChange={numofemhandChange}
+                    style={{ width: 400 }}
+                  />
 
                   <div className={classes.paper}><strong>ห้องพัก</strong></div>
                   <Select className={classes.select}
@@ -256,12 +367,13 @@ export default function CreateRoomdetail() {
                     id="roomdetail"
                     value={roomdetail}
                     variant="outlined"
-                    onChange={roomdetailhandChange}
+                    onChange={roomdetailhandleChange}
                   >
                     {roomdetails.map((item: EntRoomdetail) => (
                       <MenuItem value={item.id}>{item.roomnumber}</MenuItem>
                     ))}
                   </Select>
+
                   <div className={classes.paper}><strong>ระยะเวลา</strong></div>
                   <Select className={classes.select}
                     //color="secondary"
@@ -271,7 +383,7 @@ export default function CreateRoomdetail() {
                     variant="outlined"
                     onChange={lengthtimehandChange}
                   >
-                    {lengthtimes.map((item: EntLengthTime) => (
+                    {lengthtimes.map((item: EntLengthtime) => (
                       <MenuItem value={item.id}>{item.lengthtime}</MenuItem>
                     ))}
                   </Select>
@@ -291,29 +403,70 @@ export default function CreateRoomdetail() {
                     style={{ width: 400 }}
                   />
 
+                  <div className={classes.paper}><strong>เบอร์โทรศัพท์ที่สามารถติดต่อได้</strong></div>
+                  <TextField className={classes.select}
+                    id="phonenumber"
+                    error={phonenumbererror ? true : false}
+                    variant="outlined"
+                    size="medium"
+                    type="string"
+                    helperText={phonenumbererror}
+                    value={phonenumber}
+                    onChange={phonenumberhandChange}
+                    style={{ width: 400 }}
+                  />
+
                   <div className={classes.paper}><strong>Note</strong></div>
                   <TextField className={classes.select}
                     id="note"
+                    error={noteerror ? true : false}
                     variant="outlined"
                     size="medium"
+                    type="string"
+                    helperText={noteerror}
                     value={note}
-                    onChange={noteehandChange}
-                    style={{ width: 400 }} />
+                    onChange={notehandChange}
+                    style={{ width: 400 }}
+                  />
+
+
                   <br />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    className={classes.paper}
-                    startIcon={<SaveIcon />}
-                    onClick={CreateCleaningroom}
-                  >Save</Button>
+                  <div>
+                    <Button
+                      style={{ width: 200, backgroundColor: "#5319e7", marginLeft: 7 }}
+                      onClick={() => {
+                        CreateCleaningroom();
+                      }}
+                      variant="contained"
+                      color="primary"
+                    >
+                      บันทึกข้อมูล
+             </Button>
+
+
+                  </div>
+
+                  <div>
+                    {status ? (
+                      <div>
+                        {alerttype != "" ? (
+                          <Alert severity={alerttype} style={{ width: 400, marginTop: 20, marginLeft: 6 }} onClose={() => { listCleaning() }}>
+                            {errormessege}
+                          </Alert>
+                        ) : null}
+                      </div>
+                    ) : null}</div>
 
                 </FormControl>
               </Grid>
             </form>
           </div>
         </InfoCard>
+        <div>
+          <InfoCard className={classes.cardtable} title="Cleaningroom table" subheader="ตารางรายละเอียดแจ้งทำความสะอาดห้อง">
+            <ComponanceCleaningroomTable></ComponanceCleaningroomTable>
+          </InfoCard>
+        </div>
 
       </Content>
     </Page>
