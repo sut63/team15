@@ -52,9 +52,9 @@ func (lu *LeaseUpdate) SetNumbtenant(s string) *LeaseUpdate {
 	return lu
 }
 
-// SetPettenant sets the pettenant field.
-func (lu *LeaseUpdate) SetPettenant(s string) *LeaseUpdate {
-	lu.mutation.SetPettenant(s)
+// SetIdtenant sets the idtenant field.
+func (lu *LeaseUpdate) SetIdtenant(s string) *LeaseUpdate {
+	lu.mutation.SetIdtenant(s)
 	return lu
 }
 
@@ -202,9 +202,9 @@ func (lu *LeaseUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
 		}
 	}
-	if v, ok := lu.mutation.Pettenant(); ok {
-		if err := lease.PettenantValidator(v); err != nil {
-			return 0, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+	if v, ok := lu.mutation.Idtenant(); ok {
+		if err := lease.IdtenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "idtenant", err: fmt.Errorf("ent: validator failed for field \"idtenant\": %w", err)}
 		}
 	}
 
@@ -300,11 +300,11 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: lease.FieldNumbtenant,
 		})
 	}
-	if value, ok := lu.mutation.Pettenant(); ok {
+	if value, ok := lu.mutation.Idtenant(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: lease.FieldPettenant,
+			Column: lease.FieldIdtenant,
 		})
 	}
 	if lu.mutation.WifiCleared() {
@@ -524,9 +524,9 @@ func (luo *LeaseUpdateOne) SetNumbtenant(s string) *LeaseUpdateOne {
 	return luo
 }
 
-// SetPettenant sets the pettenant field.
-func (luo *LeaseUpdateOne) SetPettenant(s string) *LeaseUpdateOne {
-	luo.mutation.SetPettenant(s)
+// SetIdtenant sets the idtenant field.
+func (luo *LeaseUpdateOne) SetIdtenant(s string) *LeaseUpdateOne {
+	luo.mutation.SetIdtenant(s)
 	return luo
 }
 
@@ -674,9 +674,9 @@ func (luo *LeaseUpdateOne) Save(ctx context.Context) (*Lease, error) {
 			return nil, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
 		}
 	}
-	if v, ok := luo.mutation.Pettenant(); ok {
-		if err := lease.PettenantValidator(v); err != nil {
-			return nil, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+	if v, ok := luo.mutation.Idtenant(); ok {
+		if err := lease.IdtenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "idtenant", err: fmt.Errorf("ent: validator failed for field \"idtenant\": %w", err)}
 		}
 	}
 
@@ -770,11 +770,11 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 			Column: lease.FieldNumbtenant,
 		})
 	}
-	if value, ok := luo.mutation.Pettenant(); ok {
+	if value, ok := luo.mutation.Idtenant(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: lease.FieldPettenant,
+			Column: lease.FieldIdtenant,
 		})
 	}
 	if luo.mutation.WifiCleared() {

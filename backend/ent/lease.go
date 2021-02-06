@@ -25,8 +25,8 @@ type Lease struct {
 	Tenant string `json:"tenant,omitempty"`
 	// Numbtenant holds the value of the "numbtenant" field.
 	Numbtenant string `json:"numbtenant,omitempty"`
-	// Pettenant holds the value of the "pettenant" field.
-	Pettenant string `json:"pettenant,omitempty"`
+	// Idtenant holds the value of the "idtenant" field.
+	Idtenant string `json:"idtenant,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LeaseQuery when eager-loading is set.
 	Edges       LeaseEdges `json:"edges"`
@@ -119,7 +119,7 @@ func (*Lease) scanValues() []interface{} {
 		&sql.NullTime{},   // addedtime
 		&sql.NullString{}, // tenant
 		&sql.NullString{}, // numbtenant
-		&sql.NullString{}, // pettenant
+		&sql.NullString{}, // idtenant
 	}
 }
 
@@ -160,9 +160,9 @@ func (l *Lease) assignValues(values ...interface{}) error {
 		l.Numbtenant = value.String
 	}
 	if value, ok := values[3].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field pettenant", values[3])
+		return fmt.Errorf("unexpected type %T for field idtenant", values[3])
 	} else if value.Valid {
-		l.Pettenant = value.String
+		l.Idtenant = value.String
 	}
 	values = values[4:]
 	if len(values) == len(lease.ForeignKeys) {
@@ -242,8 +242,8 @@ func (l *Lease) String() string {
 	builder.WriteString(l.Tenant)
 	builder.WriteString(", numbtenant=")
 	builder.WriteString(l.Numbtenant)
-	builder.WriteString(", pettenant=")
-	builder.WriteString(l.Pettenant)
+	builder.WriteString(", idtenant=")
+	builder.WriteString(l.Idtenant)
 	builder.WriteByte(')')
 	return builder.String()
 }
