@@ -58,19 +58,19 @@ type Situation struct {
 	Situationname string
 }
 
-type CleanerNames struct {
-	CleanerName []CleanerName
+type Cleanernames struct {
+	Cleanername []Cleanername
 }
 
-type CleanerName struct {
+type Cleanername struct {
 	cleanername string
 }
 
-type LengthTimes struct {
-	LengthTime []LengthTime
+type Lengthtimes struct {
+	Lengthtime []Lengthtime
 }
 
-type LengthTime struct {
+type Lengthtime struct {
 	lengthtime string
 }
 type Staytypes struct {
@@ -178,9 +178,9 @@ func main() {
 	controllers.NewEmployeeController(v1, client)
 	controllers.NewDepositController(v1, client)
 	controllers.NewBillController(v1, client)
-	controllers.NewCleaningRoomController(v1, client)
-	controllers.NewCleanerNameController(v1, client)
-	controllers.NewLengthTimeController(v1, client)
+	controllers.NewCleaningroomController(v1, client)
+	controllers.NewCleanernameController(v1, client)
+	controllers.NewLengthtimeController(v1, client)
 	controllers.NewRoomdetailController(v1, client)
 	controllers.NewBedtypeController(v1, client)
 	controllers.NewPetruleController(v1, client)
@@ -270,32 +270,32 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set CleanerNames Data
-	cleanernames := CleanerNames{
-		CleanerName: []CleanerName{
-			CleanerName{"supaporn"},
-			CleanerName{"sutida"},
-			CleanerName{"sompong"},
+	// Set Cleanernames Data
+	cleanernames := Cleanernames{
+		Cleanername: []Cleanername{
+			Cleanername{"supaporn"},
+			Cleanername{"sutida"},
+			Cleanername{"sompong"},
 		},
 	}
-	for _, cn := range cleanernames.CleanerName {
-		client.CleanerName.
+	for _, cn := range cleanernames.Cleanername {
+		client.Cleanername.
 			Create().
 			SetCleanername(cn.cleanername).
 			Save(context.Background())
 	}
 
-	// Set LengthTimes Data
-	lengthtimes := LengthTimes{
-		LengthTime: []LengthTime{
-			LengthTime{"30 min."},
-			LengthTime{"1 hr."},
-			LengthTime{"2 hr."},
-			LengthTime{"3 hr."},
+	// Set Lengthtimes Data
+	lengthtimes := Lengthtimes{
+		Lengthtime: []Lengthtime{
+			Lengthtime{"30 min."},
+			Lengthtime{"1 hr."},
+			Lengthtime{"2 hr."},
+			Lengthtime{"3 hr."},
 		},
 	}
-	for _, lt := range lengthtimes.LengthTime {
-		client.LengthTime.
+	for _, lt := range lengthtimes.Lengthtime {
+		client.Lengthtime.
 			Create().
 			SetLengthtime(lt.lengthtime).
 			Save(context.Background())
