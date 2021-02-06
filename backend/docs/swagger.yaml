@@ -46,9 +46,9 @@ definitions:
         type: string
       employee:
         type: integer
-      numbtenant:
+      idtenant:
         type: string
-      pettenant:
+      numbtenant:
         type: string
       roomdetail:
         type: integer
@@ -353,11 +353,11 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
+      idtenant:
+        description: Idtenant holds the value of the "idtenant" field.
+        type: string
       numbtenant:
         description: Numbtenant holds the value of the "numbtenant" field.
-        type: string
-      pettenant:
-        description: Pettenant holds the value of the "pettenant" field.
         type: string
       tenant:
         description: Tenant holds the value of the "tenant" field.

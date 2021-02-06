@@ -4031,7 +4031,7 @@ type LeaseMutation struct {
 	addedtime          *time.Time
 	tenant             *string
 	numbtenant         *string
-	pettenant          *string
+	idtenant           *string
 	clearedFields      map[string]struct{}
 	_Wifi              *int
 	cleared_Wifi       bool
@@ -4237,41 +4237,41 @@ func (m *LeaseMutation) ResetNumbtenant() {
 	m.numbtenant = nil
 }
 
-// SetPettenant sets the pettenant field.
-func (m *LeaseMutation) SetPettenant(s string) {
-	m.pettenant = &s
+// SetIdtenant sets the idtenant field.
+func (m *LeaseMutation) SetIdtenant(s string) {
+	m.idtenant = &s
 }
 
-// Pettenant returns the pettenant value in the mutation.
-func (m *LeaseMutation) Pettenant() (r string, exists bool) {
-	v := m.pettenant
+// Idtenant returns the idtenant value in the mutation.
+func (m *LeaseMutation) Idtenant() (r string, exists bool) {
+	v := m.idtenant
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPettenant returns the old pettenant value of the Lease.
+// OldIdtenant returns the old idtenant value of the Lease.
 // If the Lease object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *LeaseMutation) OldPettenant(ctx context.Context) (v string, err error) {
+func (m *LeaseMutation) OldIdtenant(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPettenant is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldIdtenant is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPettenant requires an ID field in the mutation")
+		return v, fmt.Errorf("OldIdtenant requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPettenant: %w", err)
+		return v, fmt.Errorf("querying old value for OldIdtenant: %w", err)
 	}
-	return oldValue.Pettenant, nil
+	return oldValue.Idtenant, nil
 }
 
-// ResetPettenant reset all changes of the "pettenant" field.
-func (m *LeaseMutation) ResetPettenant() {
-	m.pettenant = nil
+// ResetIdtenant reset all changes of the "idtenant" field.
+func (m *LeaseMutation) ResetIdtenant() {
+	m.idtenant = nil
 }
 
 // SetWifiID sets the Wifi edge to Wifi by id.
@@ -4499,8 +4499,8 @@ func (m *LeaseMutation) Fields() []string {
 	if m.numbtenant != nil {
 		fields = append(fields, lease.FieldNumbtenant)
 	}
-	if m.pettenant != nil {
-		fields = append(fields, lease.FieldPettenant)
+	if m.idtenant != nil {
+		fields = append(fields, lease.FieldIdtenant)
 	}
 	return fields
 }
@@ -4516,8 +4516,8 @@ func (m *LeaseMutation) Field(name string) (ent.Value, bool) {
 		return m.Tenant()
 	case lease.FieldNumbtenant:
 		return m.Numbtenant()
-	case lease.FieldPettenant:
-		return m.Pettenant()
+	case lease.FieldIdtenant:
+		return m.Idtenant()
 	}
 	return nil, false
 }
@@ -4533,8 +4533,8 @@ func (m *LeaseMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldTenant(ctx)
 	case lease.FieldNumbtenant:
 		return m.OldNumbtenant(ctx)
-	case lease.FieldPettenant:
-		return m.OldPettenant(ctx)
+	case lease.FieldIdtenant:
+		return m.OldIdtenant(ctx)
 	}
 	return nil, fmt.Errorf("unknown Lease field %s", name)
 }
@@ -4565,12 +4565,12 @@ func (m *LeaseMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNumbtenant(v)
 		return nil
-	case lease.FieldPettenant:
+	case lease.FieldIdtenant:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPettenant(v)
+		m.SetIdtenant(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Lease field %s", name)
@@ -4631,8 +4631,8 @@ func (m *LeaseMutation) ResetField(name string) error {
 	case lease.FieldNumbtenant:
 		m.ResetNumbtenant()
 		return nil
-	case lease.FieldPettenant:
-		m.ResetPettenant()
+	case lease.FieldIdtenant:
+		m.ResetIdtenant()
 		return nil
 	}
 	return fmt.Errorf("unknown Lease field %s", name)

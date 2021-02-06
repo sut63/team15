@@ -114,10 +114,10 @@ func Numbtenant(v string) predicate.Lease {
 	})
 }
 
-// Pettenant applies equality check predicate on the "pettenant" field. It's identical to PettenantEQ.
-func Pettenant(v string) predicate.Lease {
+// Idtenant applies equality check predicate on the "idtenant" field. It's identical to IdtenantEQ.
+func Idtenant(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPettenant), v))
+		s.Where(sql.EQ(s.C(FieldIdtenant), v))
 	})
 }
 
@@ -419,22 +419,22 @@ func NumbtenantContainsFold(v string) predicate.Lease {
 	})
 }
 
-// PettenantEQ applies the EQ predicate on the "pettenant" field.
-func PettenantEQ(v string) predicate.Lease {
+// IdtenantEQ applies the EQ predicate on the "idtenant" field.
+func IdtenantEQ(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPettenant), v))
+		s.Where(sql.EQ(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantNEQ applies the NEQ predicate on the "pettenant" field.
-func PettenantNEQ(v string) predicate.Lease {
+// IdtenantNEQ applies the NEQ predicate on the "idtenant" field.
+func IdtenantNEQ(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPettenant), v))
+		s.Where(sql.NEQ(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantIn applies the In predicate on the "pettenant" field.
-func PettenantIn(vs ...string) predicate.Lease {
+// IdtenantIn applies the In predicate on the "idtenant" field.
+func IdtenantIn(vs ...string) predicate.Lease {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -446,12 +446,12 @@ func PettenantIn(vs ...string) predicate.Lease {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldPettenant), v...))
+		s.Where(sql.In(s.C(FieldIdtenant), v...))
 	})
 }
 
-// PettenantNotIn applies the NotIn predicate on the "pettenant" field.
-func PettenantNotIn(vs ...string) predicate.Lease {
+// IdtenantNotIn applies the NotIn predicate on the "idtenant" field.
+func IdtenantNotIn(vs ...string) predicate.Lease {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -463,70 +463,70 @@ func PettenantNotIn(vs ...string) predicate.Lease {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldPettenant), v...))
+		s.Where(sql.NotIn(s.C(FieldIdtenant), v...))
 	})
 }
 
-// PettenantGT applies the GT predicate on the "pettenant" field.
-func PettenantGT(v string) predicate.Lease {
+// IdtenantGT applies the GT predicate on the "idtenant" field.
+func IdtenantGT(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPettenant), v))
+		s.Where(sql.GT(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantGTE applies the GTE predicate on the "pettenant" field.
-func PettenantGTE(v string) predicate.Lease {
+// IdtenantGTE applies the GTE predicate on the "idtenant" field.
+func IdtenantGTE(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPettenant), v))
+		s.Where(sql.GTE(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantLT applies the LT predicate on the "pettenant" field.
-func PettenantLT(v string) predicate.Lease {
+// IdtenantLT applies the LT predicate on the "idtenant" field.
+func IdtenantLT(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPettenant), v))
+		s.Where(sql.LT(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantLTE applies the LTE predicate on the "pettenant" field.
-func PettenantLTE(v string) predicate.Lease {
+// IdtenantLTE applies the LTE predicate on the "idtenant" field.
+func IdtenantLTE(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPettenant), v))
+		s.Where(sql.LTE(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantContains applies the Contains predicate on the "pettenant" field.
-func PettenantContains(v string) predicate.Lease {
+// IdtenantContains applies the Contains predicate on the "idtenant" field.
+func IdtenantContains(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldPettenant), v))
+		s.Where(sql.Contains(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantHasPrefix applies the HasPrefix predicate on the "pettenant" field.
-func PettenantHasPrefix(v string) predicate.Lease {
+// IdtenantHasPrefix applies the HasPrefix predicate on the "idtenant" field.
+func IdtenantHasPrefix(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldPettenant), v))
+		s.Where(sql.HasPrefix(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantHasSuffix applies the HasSuffix predicate on the "pettenant" field.
-func PettenantHasSuffix(v string) predicate.Lease {
+// IdtenantHasSuffix applies the HasSuffix predicate on the "idtenant" field.
+func IdtenantHasSuffix(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldPettenant), v))
+		s.Where(sql.HasSuffix(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantEqualFold applies the EqualFold predicate on the "pettenant" field.
-func PettenantEqualFold(v string) predicate.Lease {
+// IdtenantEqualFold applies the EqualFold predicate on the "idtenant" field.
+func IdtenantEqualFold(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldPettenant), v))
+		s.Where(sql.EqualFold(s.C(FieldIdtenant), v))
 	})
 }
 
-// PettenantContainsFold applies the ContainsFold predicate on the "pettenant" field.
-func PettenantContainsFold(v string) predicate.Lease {
+// IdtenantContainsFold applies the ContainsFold predicate on the "idtenant" field.
+func IdtenantContainsFold(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldPettenant), v))
+		s.Where(sql.ContainsFold(s.C(FieldIdtenant), v))
 	})
 }
 

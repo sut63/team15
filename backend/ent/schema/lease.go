@@ -16,8 +16,8 @@ func (Lease) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("addedtime"),
 		field.String("tenant").NotEmpty(),
-		field.String("numbtenant").NotEmpty(),
-		field.String("pettenant").NotEmpty(),
+		field.String("numbtenant").MaxLen(12).MinLen(12),
+		field.String("idtenant").MaxLen(17).MinLen(17),
 	}
 }
 

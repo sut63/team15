@@ -43,9 +43,9 @@ func (lc *LeaseCreate) SetNumbtenant(s string) *LeaseCreate {
 	return lc
 }
 
-// SetPettenant sets the pettenant field.
-func (lc *LeaseCreate) SetPettenant(s string) *LeaseCreate {
-	lc.mutation.SetPettenant(s)
+// SetIdtenant sets the idtenant field.
+func (lc *LeaseCreate) SetIdtenant(s string) *LeaseCreate {
+	lc.mutation.SetIdtenant(s)
 	return lc
 }
 
@@ -154,12 +154,12 @@ func (lc *LeaseCreate) Save(ctx context.Context) (*Lease, error) {
 			return nil, &ValidationError{Name: "numbtenant", err: fmt.Errorf("ent: validator failed for field \"numbtenant\": %w", err)}
 		}
 	}
-	if _, ok := lc.mutation.Pettenant(); !ok {
-		return nil, &ValidationError{Name: "pettenant", err: errors.New("ent: missing required field \"pettenant\"")}
+	if _, ok := lc.mutation.Idtenant(); !ok {
+		return nil, &ValidationError{Name: "idtenant", err: errors.New("ent: missing required field \"idtenant\"")}
 	}
-	if v, ok := lc.mutation.Pettenant(); ok {
-		if err := lease.PettenantValidator(v); err != nil {
-			return nil, &ValidationError{Name: "pettenant", err: fmt.Errorf("ent: validator failed for field \"pettenant\": %w", err)}
+	if v, ok := lc.mutation.Idtenant(); ok {
+		if err := lease.IdtenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "idtenant", err: fmt.Errorf("ent: validator failed for field \"idtenant\": %w", err)}
 		}
 	}
 	if _, ok := lc.mutation.RoomdetailID(); !ok {
@@ -249,13 +249,13 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 		})
 		l.Numbtenant = value
 	}
-	if value, ok := lc.mutation.Pettenant(); ok {
+	if value, ok := lc.mutation.Idtenant(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: lease.FieldPettenant,
+			Column: lease.FieldIdtenant,
 		})
-		l.Pettenant = value
+		l.Idtenant = value
 	}
 	if nodes := lc.mutation.WifiIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

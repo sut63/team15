@@ -21,7 +21,7 @@ type LeaseController struct {
 type Lease struct {
 	Added      string
 	Tenant     string
-	Pettenant  string
+	Idtenant   string
 	Numbtenant string
 	Employee   int
 	Roomdetail int
@@ -89,7 +89,7 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 		Create().
 		SetAddedtime(time).
 		SetTenant(obj.Tenant).
-		SetPettenant(obj.Pettenant).
+		SetIdtenant(obj.Idtenant).
 		SetNumbtenant(obj.Numbtenant).
 		SetRoomdetail(rdc).
 		SetWifi(wf).
@@ -102,7 +102,10 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, lea)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   lea,
+	})
 }
 
 // ListLease handles request to get a list of lease entities

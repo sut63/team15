@@ -142,11 +142,39 @@ func init() {
 	// leaseDescNumbtenant is the schema descriptor for numbtenant field.
 	leaseDescNumbtenant := leaseFields[2].Descriptor()
 	// lease.NumbtenantValidator is a validator for the "numbtenant" field. It is called by the builders before save.
-	lease.NumbtenantValidator = leaseDescNumbtenant.Validators[0].(func(string) error)
-	// leaseDescPettenant is the schema descriptor for pettenant field.
-	leaseDescPettenant := leaseFields[3].Descriptor()
-	// lease.PettenantValidator is a validator for the "pettenant" field. It is called by the builders before save.
-	lease.PettenantValidator = leaseDescPettenant.Validators[0].(func(string) error)
+	lease.NumbtenantValidator = func() func(string) error {
+		validators := leaseDescNumbtenant.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(numbtenant string) error {
+			for _, fn := range fns {
+				if err := fn(numbtenant); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// leaseDescIdtenant is the schema descriptor for idtenant field.
+	leaseDescIdtenant := leaseFields[3].Descriptor()
+	// lease.IdtenantValidator is a validator for the "idtenant" field. It is called by the builders before save.
+	lease.IdtenantValidator = func() func(string) error {
+		validators := leaseDescIdtenant.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(idtenant string) error {
+			for _, fn := range fns {
+				if err := fn(idtenant); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	lengthtimeFields := schema.LengthTime{}.Fields()
 	_ = lengthtimeFields
 	// lengthtimeDescLengthtime is the schema descriptor for lengthtime field.
