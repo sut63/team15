@@ -18,6 +18,9 @@ import {
     ControllersBill,
     ControllersBillFromJSON,
     ControllersBillToJSON,
+    ControllersCleaningroom,
+    ControllersCleaningroomFromJSON,
+    ControllersCleaningroomToJSON,
     ControllersDeposit,
     ControllersDepositFromJSON,
     ControllersDepositToJSON,
@@ -36,12 +39,12 @@ import {
     EntBill,
     EntBillFromJSON,
     EntBillToJSON,
-    EntCleanerName,
-    EntCleanerNameFromJSON,
-    EntCleanerNameToJSON,
-    EntCleaningRoom,
-    EntCleaningRoomFromJSON,
-    EntCleaningRoomToJSON,
+    EntCleanername,
+    EntCleanernameFromJSON,
+    EntCleanernameToJSON,
+    EntCleaningroom,
+    EntCleaningroomFromJSON,
+    EntCleaningroomToJSON,
     EntDeposit,
     EntDepositFromJSON,
     EntDepositToJSON,
@@ -51,9 +54,9 @@ import {
     EntLease,
     EntLeaseFromJSON,
     EntLeaseToJSON,
-    EntLengthTime,
-    EntLengthTimeFromJSON,
-    EntLengthTimeToJSON,
+    EntLengthtime,
+    EntLengthtimeFromJSON,
+    EntLengthtimeToJSON,
     EntPayment,
     EntPaymentFromJSON,
     EntPaymentToJSON,
@@ -95,7 +98,7 @@ export interface CreateBillRequest {
 }
 
 export interface CreateCleaningroomRequest {
-    cleaningroom: EntCleaningRoom;
+    cleaningroom: ControllersCleaningroom;
 }
 
 export interface CreateDepositRequest {
@@ -252,11 +255,6 @@ export interface ListCleanernameRequest {
     offset?: number;
 }
 
-export interface ListCleaningroomRequest {
-    limit?: number;
-    offset?: number;
-}
-
 export interface ListDepositRequest {
     limit?: number;
     offset?: number;
@@ -386,7 +384,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * Create cleaningroom
      * Create cleaningroom
      */
-    async createCleaningroomRaw(requestParameters: CreateCleaningroomRequest): Promise<runtime.ApiResponse<EntCleaningRoom>> {
+    async createCleaningroomRaw(requestParameters: CreateCleaningroomRequest): Promise<runtime.ApiResponse<EntCleaningroom>> {
         if (requestParameters.cleaningroom === null || requestParameters.cleaningroom === undefined) {
             throw new runtime.RequiredError('cleaningroom','Required parameter requestParameters.cleaningroom was null or undefined when calling createCleaningroom.');
         }
@@ -402,17 +400,17 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntCleaningRoomToJSON(requestParameters.cleaningroom),
+            body: ControllersCleaningroomToJSON(requestParameters.cleaningroom),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleaningRoomFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleaningroomFromJSON(jsonValue));
     }
 
     /**
      * Create cleaningroom
      * Create cleaningroom
      */
-    async createCleaningroom(requestParameters: CreateCleaningroomRequest): Promise<EntCleaningRoom> {
+    async createCleaningroom(requestParameters: CreateCleaningroomRequest): Promise<EntCleaningroom> {
         const response = await this.createCleaningroomRaw(requestParameters);
         return await response.value();
     }
@@ -1193,7 +1191,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * get cleanername by ID
      * Get a cleanername entity by ID
      */
-    async getCleanernameRaw(requestParameters: GetCleanernameRequest): Promise<runtime.ApiResponse<EntCleanerName>> {
+    async getCleanernameRaw(requestParameters: GetCleanernameRequest): Promise<runtime.ApiResponse<EntCleanername>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getCleanername.');
         }
@@ -1209,14 +1207,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleanerNameFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleanernameFromJSON(jsonValue));
     }
 
     /**
      * get cleanername by ID
      * Get a cleanername entity by ID
      */
-    async getCleanername(requestParameters: GetCleanernameRequest): Promise<EntCleanerName> {
+    async getCleanername(requestParameters: GetCleanernameRequest): Promise<EntCleanername> {
         const response = await this.getCleanernameRaw(requestParameters);
         return await response.value();
     }
@@ -1225,7 +1223,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * get cleaningroom by ID
      * Get a cleaningroom entity by ID
      */
-    async getCleaningroomRaw(requestParameters: GetCleaningroomRequest): Promise<runtime.ApiResponse<EntCleaningRoom>> {
+    async getCleaningroomRaw(requestParameters: GetCleaningroomRequest): Promise<runtime.ApiResponse<EntCleaningroom>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getCleaningroom.');
         }
@@ -1241,14 +1239,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleaningRoomFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCleaningroomFromJSON(jsonValue));
     }
 
     /**
      * get cleaningroom by ID
      * Get a cleaningroom entity by ID
      */
-    async getCleaningroom(requestParameters: GetCleaningroomRequest): Promise<EntCleaningRoom> {
+    async getCleaningroom(requestParameters: GetCleaningroomRequest): Promise<EntCleaningroom> {
         const response = await this.getCleaningroomRaw(requestParameters);
         return await response.value();
     }
@@ -1289,7 +1287,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * get lengthtime by ID
      * Get a lengthtime entity by ID
      */
-    async getLengthtimeRaw(requestParameters: GetLengthtimeRequest): Promise<runtime.ApiResponse<EntLengthTime>> {
+    async getLengthtimeRaw(requestParameters: GetLengthtimeRequest): Promise<runtime.ApiResponse<EntLengthtime>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getLengthtime.');
         }
@@ -1305,14 +1303,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntLengthTimeFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntLengthtimeFromJSON(jsonValue));
     }
 
     /**
      * get lengthtime by ID
      * Get a lengthtime entity by ID
      */
-    async getLengthtime(requestParameters: GetLengthtimeRequest): Promise<EntLengthTime> {
+    async getLengthtime(requestParameters: GetLengthtimeRequest): Promise<EntLengthtime> {
         const response = await this.getLengthtimeRaw(requestParameters);
         return await response.value();
     }
@@ -1673,7 +1671,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * list cleanername entities
      * List cleanername entities
      */
-    async listCleanernameRaw(requestParameters: ListCleanernameRequest): Promise<runtime.ApiResponse<Array<EntCleanerName>>> {
+    async listCleanernameRaw(requestParameters: ListCleanernameRequest): Promise<runtime.ApiResponse<Array<EntCleanername>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1693,14 +1691,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntCleanerNameFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntCleanernameFromJSON));
     }
 
     /**
      * list cleanername entities
      * List cleanername entities
      */
-    async listCleanername(requestParameters: ListCleanernameRequest): Promise<Array<EntCleanerName>> {
+    async listCleanername(requestParameters: ListCleanernameRequest): Promise<Array<EntCleanername>> {
         const response = await this.listCleanernameRaw(requestParameters);
         return await response.value();
     }
@@ -1709,16 +1707,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * list cleaningroom entities
      * List cleaningroom entities
      */
-    async listCleaningroomRaw(requestParameters: ListCleaningroomRequest): Promise<runtime.ApiResponse<Array<EntCleaningRoom>>> {
+    async listCleaningroomRaw(): Promise<runtime.ApiResponse<Array<EntCleaningroom>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1729,15 +1719,15 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntCleaningRoomFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntCleaningroomFromJSON));
     }
 
     /**
      * list cleaningroom entities
      * List cleaningroom entities
      */
-    async listCleaningroom(requestParameters: ListCleaningroomRequest): Promise<Array<EntCleaningRoom>> {
-        const response = await this.listCleaningroomRaw(requestParameters);
+    async listCleaningroom(): Promise<Array<EntCleaningroom>> {
+        const response = await this.listCleaningroomRaw();
         return await response.value();
     }
 
@@ -1812,7 +1802,14 @@ export class DefaultApi extends runtime.BaseAPI {
     async listLeaseRaw(requestParameters: ListLeaseRequest): Promise<runtime.ApiResponse<Array<EntLease>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
-        
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -1838,7 +1835,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * list lengthtime entities
      * List lengthtime entities
      */
-    async listLengthtimeRaw(requestParameters: ListLengthtimeRequest): Promise<runtime.ApiResponse<Array<EntLengthTime>>> {
+    async listLengthtimeRaw(requestParameters: ListLengthtimeRequest): Promise<runtime.ApiResponse<Array<EntLengthtime>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.limit !== undefined) {
@@ -1858,14 +1855,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntLengthTimeFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntLengthtimeFromJSON));
     }
 
     /**
      * list lengthtime entities
      * List lengthtime entities
      */
-    async listLengthtime(requestParameters: ListLengthtimeRequest): Promise<Array<EntLengthTime>> {
+    async listLengthtime(requestParameters: ListLengthtimeRequest): Promise<Array<EntLengthtime>> {
         const response = await this.listLengthtimeRaw(requestParameters);
         return await response.value();
     }
@@ -2004,14 +2001,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listRepairinvoiceRaw(requestParameters: ListRepairinvoiceRequest): Promise<runtime.ApiResponse<Array<EntRepairinvoice>>> {
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.limit !== undefined) {
-            queryParameters['limit'] = requestParameters.limit;
-        }
-
-        if (requestParameters.offset !== undefined) {
-            queryParameters['offset'] = requestParameters.offset;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

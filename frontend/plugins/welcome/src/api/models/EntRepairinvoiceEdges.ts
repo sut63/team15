@@ -18,6 +18,10 @@ import {
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
     EntEmployeeToJSON,
+    EntLease,
+    EntLeaseFromJSON,
+    EntLeaseFromJSONTyped,
+    EntLeaseToJSON,
     EntRentalstatus,
     EntRentalstatusFromJSON,
     EntRentalstatusFromJSONTyped,
@@ -38,6 +42,12 @@ export interface EntRepairinvoiceEdges {
     employee?: EntEmployee;
     /**
      * 
+     * @type {EntLease}
+     * @memberof EntRepairinvoiceEdges
+     */
+    lease?: EntLease;
+    /**
+     * 
      * @type {EntRentalstatus}
      * @memberof EntRepairinvoiceEdges
      */
@@ -54,8 +64,9 @@ export function EntRepairinvoiceEdgesFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
-        'rentalstatus': !exists(json, 'rentalstatus') ? undefined : EntRentalstatusFromJSON(json['rentalstatus']),
+        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
+        'lease': !exists(json, 'Lease') ? undefined : EntLeaseFromJSON(json['Lease']),
+        'rentalstatus': !exists(json, 'Rentalstatus') ? undefined : EntRentalstatusFromJSON(json['Rentalstatus']),
     };
 }
 
@@ -69,6 +80,7 @@ export function EntRepairinvoiceEdgesToJSON(value?: EntRepairinvoiceEdges | null
     return {
         
         'employee': EntEmployeeToJSON(value.employee),
+        'lease': EntLeaseToJSON(value.lease),
         'rentalstatus': EntRentalstatusToJSON(value.rentalstatus),
     };
 }

@@ -14,55 +14,55 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntCleanerNameEdges,
-    EntCleanerNameEdgesFromJSON,
-    EntCleanerNameEdgesFromJSONTyped,
-    EntCleanerNameEdgesToJSON,
+    EntCleanernameEdges,
+    EntCleanernameEdgesFromJSON,
+    EntCleanernameEdgesFromJSONTyped,
+    EntCleanernameEdgesToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntCleanerName
+ * @interface EntCleanername
  */
-export interface EntCleanerName {
+export interface EntCleanername {
     /**
      * Cleanername holds the value of the "cleanername" field.
      * @type {string}
-     * @memberof EntCleanerName
+     * @memberof EntCleanername
      */
     cleanername?: string;
     /**
      * 
-     * @type {EntCleanerNameEdges}
-     * @memberof EntCleanerName
+     * @type {EntCleanernameEdges}
+     * @memberof EntCleanername
      */
-    edges?: EntCleanerNameEdges;
+    edges?: EntCleanernameEdges;
     /**
      * ID of the ent.
      * @type {number}
-     * @memberof EntCleanerName
+     * @memberof EntCleanername
      */
     id?: number;
 }
 
-export function EntCleanerNameFromJSON(json: any): EntCleanerName {
-    return EntCleanerNameFromJSONTyped(json, false);
+export function EntCleanernameFromJSON(json: any): EntCleanername {
+    return EntCleanernameFromJSONTyped(json, false);
 }
 
-export function EntCleanerNameFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleanerName {
+export function EntCleanernameFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleanername {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'cleanername': !exists(json, 'cleanername') ? undefined : json['cleanername'],
-        'edges': !exists(json, 'edges') ? undefined : EntCleanerNameEdgesFromJSON(json['edges']),
+        'edges': !exists(json, 'edges') ? undefined : EntCleanernameEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
     };
 }
 
-export function EntCleanerNameToJSON(value?: EntCleanerName | null): any {
+export function EntCleanernameToJSON(value?: EntCleanername | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -72,7 +72,7 @@ export function EntCleanerNameToJSON(value?: EntCleanerName | null): any {
     return {
         
         'cleanername': value.cleanername,
-        'edges': EntCleanerNameEdgesToJSON(value.edges),
+        'edges': EntCleanernameEdgesToJSON(value.edges),
         'id': value.id,
     };
 }

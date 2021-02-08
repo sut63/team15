@@ -18,10 +18,10 @@ import {
     EntBedtypeFromJSON,
     EntBedtypeFromJSONTyped,
     EntBedtypeToJSON,
-    EntCleaningRoom,
-    EntCleaningRoomFromJSON,
-    EntCleaningRoomFromJSONTyped,
-    EntCleaningRoomToJSON,
+    EntCleaningroom,
+    EntCleaningroomFromJSON,
+    EntCleaningroomFromJSONTyped,
+    EntCleaningroomToJSON,
     EntEmployee,
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
@@ -62,10 +62,10 @@ export interface EntRoomdetailEdges {
     bedtype?: EntBedtype;
     /**
      * Cleaningrooms holds the value of the cleaningrooms edge.
-     * @type {Array<EntCleaningRoom>}
+     * @type {Array<EntCleaningroom>}
      * @memberof EntRoomdetailEdges
      */
-    cleaningrooms?: Array<EntCleaningRoom>;
+    cleaningrooms?: Array<EntCleaningroom>;
     /**
      * 
      * @type {EntEmployee}
@@ -115,7 +115,7 @@ export function EntRoomdetailEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'bedtype': !exists(json, 'bedtype') ? undefined : EntBedtypeFromJSON(json['bedtype']),
-        'cleaningrooms': !exists(json, 'cleaningrooms') ? undefined : ((json['cleaningrooms'] as Array<any>).map(EntCleaningRoomFromJSON)),
+        'cleaningrooms': !exists(json, 'cleaningrooms') ? undefined : ((json['cleaningrooms'] as Array<any>).map(EntCleaningroomFromJSON)),
         'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
         'jobposition': !exists(json, 'jobposition') ? undefined : EntJobpositionFromJSON(json['jobposition']),
         'petrule': !exists(json, 'petrule') ? undefined : EntPetruleFromJSON(json['petrule']),
@@ -135,7 +135,7 @@ export function EntRoomdetailEdgesToJSON(value?: EntRoomdetailEdges | null): any
     return {
         
         'bedtype': EntBedtypeToJSON(value.bedtype),
-        'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningRoomToJSON)),
+        'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningroomToJSON)),
         'employee': EntEmployeeToJSON(value.employee),
         'jobposition': EntJobpositionToJSON(value.jobposition),
         'petrule': EntPetruleToJSON(value.petrule),

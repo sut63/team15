@@ -51,7 +51,10 @@ export default function ComponentsTable() {
          <TableCell align="center">ลำดับ</TableCell>
            <TableCell align="center">พนักงาน</TableCell>
            <TableCell align="center">อุปกรณ์ที่ชำรุด</TableCell>
+           <TableCell align="center">เบอร์โทรศัพท์ของพนักงาน</TableCell>
+           <TableCell align="center">จำนวนอุปกรณ์ที่ชำรุด</TableCell>
            <TableCell align="center">สถานะการเข้าพัก</TableCell>
+           
          </TableRow>
        </TableHead>
        <TableBody>
@@ -60,6 +63,8 @@ export default function ComponentsTable() {
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.edges?.employee?.name}</TableCell>
              <TableCell align="center">{item.bequipment}</TableCell>
+             <TableCell align="center">{item.emtell}</TableCell>
+             <TableCell align="center">{item.num}</TableCell>
              <TableCell align="center">{item.edges?.rentalstatus?.rentalstatus}</TableCell>
            </TableRow>
          ))}

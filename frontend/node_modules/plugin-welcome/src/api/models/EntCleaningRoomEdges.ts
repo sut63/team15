@@ -14,18 +14,18 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntCleanerName,
-    EntCleanerNameFromJSON,
-    EntCleanerNameFromJSONTyped,
-    EntCleanerNameToJSON,
+    EntCleanername,
+    EntCleanernameFromJSON,
+    EntCleanernameFromJSONTyped,
+    EntCleanernameToJSON,
     EntEmployee,
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
     EntEmployeeToJSON,
-    EntLengthTime,
-    EntLengthTimeFromJSON,
-    EntLengthTimeFromJSONTyped,
-    EntLengthTimeToJSON,
+    EntLengthtime,
+    EntLengthtimeFromJSON,
+    EntLengthtimeFromJSONTyped,
+    EntLengthtimeToJSON,
     EntRoomdetail,
     EntRoomdetailFromJSON,
     EntRoomdetailFromJSONTyped,
@@ -35,53 +35,53 @@ import {
 /**
  * 
  * @export
- * @interface EntCleaningRoomEdges
+ * @interface EntCleaningroomEdges
  */
-export interface EntCleaningRoomEdges {
+export interface EntCleaningroomEdges {
     /**
      * 
-     * @type {EntCleanerName}
-     * @memberof EntCleaningRoomEdges
+     * @type {EntCleanername}
+     * @memberof EntCleaningroomEdges
      */
-    cleanerName?: EntCleanerName;
+    cleanername?: EntCleanername;
     /**
      * 
      * @type {EntEmployee}
-     * @memberof EntCleaningRoomEdges
+     * @memberof EntCleaningroomEdges
      */
     employee?: EntEmployee;
     /**
      * 
-     * @type {EntLengthTime}
-     * @memberof EntCleaningRoomEdges
+     * @type {EntLengthtime}
+     * @memberof EntCleaningroomEdges
      */
-    lengthTime?: EntLengthTime;
+    lengthtime?: EntLengthtime;
     /**
      * 
      * @type {EntRoomdetail}
-     * @memberof EntCleaningRoomEdges
+     * @memberof EntCleaningroomEdges
      */
     roomdetail?: EntRoomdetail;
 }
 
-export function EntCleaningRoomEdgesFromJSON(json: any): EntCleaningRoomEdges {
-    return EntCleaningRoomEdgesFromJSONTyped(json, false);
+export function EntCleaningroomEdgesFromJSON(json: any): EntCleaningroomEdges {
+    return EntCleaningroomEdgesFromJSONTyped(json, false);
 }
 
-export function EntCleaningRoomEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleaningRoomEdges {
+export function EntCleaningroomEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleaningroomEdges {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'cleanerName': !exists(json, 'cleanerName') ? undefined : EntCleanerNameFromJSON(json['cleanerName']),
+        'cleanername': !exists(json, 'cleanername') ? undefined : EntCleanernameFromJSON(json['cleanername']),
         'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
-        'lengthTime': !exists(json, 'lengthTime') ? undefined : EntLengthTimeFromJSON(json['lengthTime']),
+        'lengthtime': !exists(json, 'lengthtime') ? undefined : EntLengthtimeFromJSON(json['lengthtime']),
         'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
     };
 }
 
-export function EntCleaningRoomEdgesToJSON(value?: EntCleaningRoomEdges | null): any {
+export function EntCleaningroomEdgesToJSON(value?: EntCleaningroomEdges | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -90,9 +90,9 @@ export function EntCleaningRoomEdgesToJSON(value?: EntCleaningRoomEdges | null):
     }
     return {
         
-        'cleanerName': EntCleanerNameToJSON(value.cleanerName),
+        'cleanername': EntCleanernameToJSON(value.cleanername),
         'employee': EntEmployeeToJSON(value.employee),
-        'lengthTime': EntLengthTimeToJSON(value.lengthTime),
+        'lengthtime': EntLengthtimeToJSON(value.lengthtime),
         'roomdetail': EntRoomdetailToJSON(value.roomdetail),
     };
 }

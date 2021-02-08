@@ -14,62 +14,76 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntCleaningRoomEdges,
-    EntCleaningRoomEdgesFromJSON,
-    EntCleaningRoomEdgesFromJSONTyped,
-    EntCleaningRoomEdgesToJSON,
+    EntCleaningroomEdges,
+    EntCleaningroomEdgesFromJSON,
+    EntCleaningroomEdgesFromJSONTyped,
+    EntCleaningroomEdgesToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntCleaningRoom
+ * @interface EntCleaningroom
  */
-export interface EntCleaningRoom {
+export interface EntCleaningroom {
     /**
      * Dateandstarttime holds the value of the "dateandstarttime" field.
      * @type {string}
-     * @memberof EntCleaningRoom
+     * @memberof EntCleaningroom
      */
     dateandstarttime?: string;
     /**
      * 
-     * @type {EntCleaningRoomEdges}
-     * @memberof EntCleaningRoom
+     * @type {EntCleaningroomEdges}
+     * @memberof EntCleaningroom
      */
-    edges?: EntCleaningRoomEdges;
+    edges?: EntCleaningroomEdges;
     /**
      * ID of the ent.
      * @type {number}
-     * @memberof EntCleaningRoom
+     * @memberof EntCleaningroom
      */
     id?: number;
     /**
      * Note holds the value of the "note" field.
      * @type {string}
-     * @memberof EntCleaningRoom
+     * @memberof EntCleaningroom
      */
     note?: string;
+    /**
+     * Numofem holds the value of the "numofem" field.
+     * @type {number}
+     * @memberof EntCleaningroom
+     */
+    numofem?: number;
+    /**
+     * Phonenumber holds the value of the "phonenumber" field.
+     * @type {string}
+     * @memberof EntCleaningroom
+     */
+    phonenumber?: string;
 }
 
-export function EntCleaningRoomFromJSON(json: any): EntCleaningRoom {
-    return EntCleaningRoomFromJSONTyped(json, false);
+export function EntCleaningroomFromJSON(json: any): EntCleaningroom {
+    return EntCleaningroomFromJSONTyped(json, false);
 }
 
-export function EntCleaningRoomFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleaningRoom {
+export function EntCleaningroomFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleaningroom {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'dateandstarttime': !exists(json, 'dateandstarttime') ? undefined : json['dateandstarttime'],
-        'edges': !exists(json, 'edges') ? undefined : EntCleaningRoomEdgesFromJSON(json['edges']),
+        'edges': !exists(json, 'edges') ? undefined : EntCleaningroomEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'note': !exists(json, 'note') ? undefined : json['note'],
+        'numofem': !exists(json, 'numofem') ? undefined : json['numofem'],
+        'phonenumber': !exists(json, 'phonenumber') ? undefined : json['phonenumber'],
     };
 }
 
-export function EntCleaningRoomToJSON(value?: EntCleaningRoom | null): any {
+export function EntCleaningroomToJSON(value?: EntCleaningroom | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -79,9 +93,11 @@ export function EntCleaningRoomToJSON(value?: EntCleaningRoom | null): any {
     return {
         
         'dateandstarttime': value.dateandstarttime,
-        'edges': EntCleaningRoomEdgesToJSON(value.edges),
+        'edges': EntCleaningroomEdgesToJSON(value.edges),
         'id': value.id,
         'note': value.note,
+        'numofem': value.numofem,
+        'phonenumber': value.phonenumber,
     };
 }
 

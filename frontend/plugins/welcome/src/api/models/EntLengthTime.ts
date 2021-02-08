@@ -14,55 +14,55 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntLengthTimeEdges,
-    EntLengthTimeEdgesFromJSON,
-    EntLengthTimeEdgesFromJSONTyped,
-    EntLengthTimeEdgesToJSON,
+    EntLengthtimeEdges,
+    EntLengthtimeEdgesFromJSON,
+    EntLengthtimeEdgesFromJSONTyped,
+    EntLengthtimeEdgesToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntLengthTime
+ * @interface EntLengthtime
  */
-export interface EntLengthTime {
+export interface EntLengthtime {
     /**
      * 
-     * @type {EntLengthTimeEdges}
-     * @memberof EntLengthTime
+     * @type {EntLengthtimeEdges}
+     * @memberof EntLengthtime
      */
-    edges?: EntLengthTimeEdges;
+    edges?: EntLengthtimeEdges;
     /**
      * ID of the ent.
      * @type {number}
-     * @memberof EntLengthTime
+     * @memberof EntLengthtime
      */
     id?: number;
     /**
      * Lengthtime holds the value of the "lengthtime" field.
      * @type {string}
-     * @memberof EntLengthTime
+     * @memberof EntLengthtime
      */
     lengthtime?: string;
 }
 
-export function EntLengthTimeFromJSON(json: any): EntLengthTime {
-    return EntLengthTimeFromJSONTyped(json, false);
+export function EntLengthtimeFromJSON(json: any): EntLengthtime {
+    return EntLengthtimeFromJSONTyped(json, false);
 }
 
-export function EntLengthTimeFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntLengthTime {
+export function EntLengthtimeFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntLengthtime {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'edges': !exists(json, 'edges') ? undefined : EntLengthTimeEdgesFromJSON(json['edges']),
+        'edges': !exists(json, 'edges') ? undefined : EntLengthtimeEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'lengthtime': !exists(json, 'lengthtime') ? undefined : json['lengthtime'],
     };
 }
 
-export function EntLengthTimeToJSON(value?: EntLengthTime | null): any {
+export function EntLengthtimeToJSON(value?: EntLengthtime | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -71,7 +71,7 @@ export function EntLengthTimeToJSON(value?: EntLengthTime | null): any {
     }
     return {
         
-        'edges': EntLengthTimeEdgesToJSON(value.edges),
+        'edges': EntLengthtimeEdgesToJSON(value.edges),
         'id': value.id,
         'lengthtime': value.lengthtime,
     };
