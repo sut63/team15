@@ -14,41 +14,41 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntCleaningRoom,
-    EntCleaningRoomFromJSON,
-    EntCleaningRoomFromJSONTyped,
-    EntCleaningRoomToJSON,
+    EntCleaningroom,
+    EntCleaningroomFromJSON,
+    EntCleaningroomFromJSONTyped,
+    EntCleaningroomToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface EntCleanerNameEdges
+ * @interface EntCleanernameEdges
  */
-export interface EntCleanerNameEdges {
+export interface EntCleanernameEdges {
     /**
      * Cleaningrooms holds the value of the cleaningrooms edge.
-     * @type {Array<EntCleaningRoom>}
-     * @memberof EntCleanerNameEdges
+     * @type {Array<EntCleaningroom>}
+     * @memberof EntCleanernameEdges
      */
-    cleaningrooms?: Array<EntCleaningRoom>;
+    cleaningrooms?: Array<EntCleaningroom>;
 }
 
-export function EntCleanerNameEdgesFromJSON(json: any): EntCleanerNameEdges {
-    return EntCleanerNameEdgesFromJSONTyped(json, false);
+export function EntCleanernameEdgesFromJSON(json: any): EntCleanernameEdges {
+    return EntCleanernameEdgesFromJSONTyped(json, false);
 }
 
-export function EntCleanerNameEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleanerNameEdges {
+export function EntCleanernameEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean): EntCleanernameEdges {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'cleaningrooms': !exists(json, 'cleaningrooms') ? undefined : ((json['cleaningrooms'] as Array<any>).map(EntCleaningRoomFromJSON)),
+        'cleaningrooms': !exists(json, 'cleaningrooms') ? undefined : ((json['cleaningrooms'] as Array<any>).map(EntCleaningroomFromJSON)),
     };
 }
 
-export function EntCleanerNameEdgesToJSON(value?: EntCleanerNameEdges | null): any {
+export function EntCleanernameEdgesToJSON(value?: EntCleanernameEdges | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +57,7 @@ export function EntCleanerNameEdgesToJSON(value?: EntCleanerNameEdges | null): a
     }
     return {
         
-        'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningRoomToJSON)),
+        'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningroomToJSON)),
     };
 }
 

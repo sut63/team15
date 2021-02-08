@@ -26,6 +26,10 @@ import {
     EntEmployeeFromJSON,
     EntEmployeeFromJSONTyped,
     EntEmployeeToJSON,
+    EntRepairinvoice,
+    EntRepairinvoiceFromJSON,
+    EntRepairinvoiceFromJSONTyped,
+    EntRepairinvoiceToJSON,
     EntRoomdetail,
     EntRoomdetailFromJSON,
     EntRoomdetailFromJSONTyped,
@@ -61,6 +65,12 @@ export interface EntLeaseEdges {
      */
     leases?: Array<EntDeposit>;
     /**
+     * Repairinvoices holds the value of the repairinvoices edge.
+     * @type {Array<EntRepairinvoice>}
+     * @memberof EntLeaseEdges
+     */
+    repairinvoices?: Array<EntRepairinvoice>;
+    /**
      * 
      * @type {EntRoomdetail}
      * @memberof EntLeaseEdges
@@ -84,11 +94,12 @@ export function EntLeaseEdgesFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'bill': !exists(json, 'Bill') ? undefined : ((json['Bill'] as Array<any>).map(EntBillFromJSON)),
-        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
-        'leases': !exists(json, 'Leases') ? undefined : ((json['Leases'] as Array<any>).map(EntDepositFromJSON)),
-        'roomdetail': !exists(json, 'Roomdetail') ? undefined : EntRoomdetailFromJSON(json['Roomdetail']),
-        'wifi': !exists(json, 'Wifi') ? undefined : EntWifiFromJSON(json['Wifi']),
+        'bill': !exists(json, 'bill') ? undefined : ((json['bill'] as Array<any>).map(EntBillFromJSON)),
+        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
+        'leases': !exists(json, 'leases') ? undefined : ((json['leases'] as Array<any>).map(EntDepositFromJSON)),
+        'repairinvoices': !exists(json, 'repairinvoices') ? undefined : ((json['repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
+        'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
+        'wifi': !exists(json, 'wifi') ? undefined : EntWifiFromJSON(json['wifi']),
     };
 }
 
@@ -104,6 +115,7 @@ export function EntLeaseEdgesToJSON(value?: EntLeaseEdges | null): any {
         'bill': value.bill === undefined ? undefined : ((value.bill as Array<any>).map(EntBillToJSON)),
         'employee': EntEmployeeToJSON(value.employee),
         'leases': value.leases === undefined ? undefined : ((value.leases as Array<any>).map(EntDepositToJSON)),
+        'repairinvoices': value.repairinvoices === undefined ? undefined : ((value.repairinvoices as Array<any>).map(EntRepairinvoiceToJSON)),
         'roomdetail': EntRoomdetailToJSON(value.roomdetail),
         'wifi': EntWifiToJSON(value.wifi),
     };
