@@ -9,29 +9,29 @@ import (
 )
 
 // ID filters vertices based on their identifier.
-func ID(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func ID(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDEQ(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDNEQ(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDIn(ids ...int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(ids) == 0 {
@@ -47,8 +47,8 @@ func IDIn(ids ...int) predicate.LengthTime {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDNotIn(ids ...int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(ids) == 0 {
@@ -64,61 +64,61 @@ func IDNotIn(ids ...int) predicate.LengthTime {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDGT(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDGTE(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDLT(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func IDLTE(id int) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
 }
 
 // Lengthtime applies equality check predicate on the "lengthtime" field. It's identical to LengthtimeEQ.
-func Lengthtime(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func Lengthtime(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeEQ applies the EQ predicate on the "lengthtime" field.
-func LengthtimeEQ(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeEQ(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeNEQ applies the NEQ predicate on the "lengthtime" field.
-func LengthtimeNEQ(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeNEQ(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeIn applies the In predicate on the "lengthtime" field.
-func LengthtimeIn(vs ...string) predicate.LengthTime {
+func LengthtimeIn(vs ...string) predicate.Lengthtime {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
-	return predicate.LengthTime(func(s *sql.Selector) {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(v) == 0 {
@@ -130,12 +130,12 @@ func LengthtimeIn(vs ...string) predicate.LengthTime {
 }
 
 // LengthtimeNotIn applies the NotIn predicate on the "lengthtime" field.
-func LengthtimeNotIn(vs ...string) predicate.LengthTime {
+func LengthtimeNotIn(vs ...string) predicate.Lengthtime {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
-	return predicate.LengthTime(func(s *sql.Selector) {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(v) == 0 {
@@ -147,71 +147,71 @@ func LengthtimeNotIn(vs ...string) predicate.LengthTime {
 }
 
 // LengthtimeGT applies the GT predicate on the "lengthtime" field.
-func LengthtimeGT(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeGT(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeGTE applies the GTE predicate on the "lengthtime" field.
-func LengthtimeGTE(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeGTE(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeLT applies the LT predicate on the "lengthtime" field.
-func LengthtimeLT(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeLT(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeLTE applies the LTE predicate on the "lengthtime" field.
-func LengthtimeLTE(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeLTE(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeContains applies the Contains predicate on the "lengthtime" field.
-func LengthtimeContains(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeContains(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeHasPrefix applies the HasPrefix predicate on the "lengthtime" field.
-func LengthtimeHasPrefix(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeHasPrefix(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeHasSuffix applies the HasSuffix predicate on the "lengthtime" field.
-func LengthtimeHasSuffix(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeHasSuffix(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeEqualFold applies the EqualFold predicate on the "lengthtime" field.
-func LengthtimeEqualFold(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeEqualFold(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldLengthtime), v))
 	})
 }
 
 // LengthtimeContainsFold applies the ContainsFold predicate on the "lengthtime" field.
-func LengthtimeContainsFold(v string) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func LengthtimeContainsFold(v string) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldLengthtime), v))
 	})
 }
 
 // HasCleaningrooms applies the HasEdge predicate on the "cleaningrooms" edge.
-func HasCleaningrooms() predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func HasCleaningrooms() predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CleaningroomsTable, FieldID),
@@ -222,8 +222,8 @@ func HasCleaningrooms() predicate.LengthTime {
 }
 
 // HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
-func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func HasCleaningroomsWith(preds ...predicate.Cleaningroom) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CleaningroomsInverseTable, FieldID),
@@ -238,8 +238,8 @@ func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.LengthTime 
 }
 
 // And groups list of predicates with the AND operator between them.
-func And(predicates ...predicate.LengthTime) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func And(predicates ...predicate.Lengthtime) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s1 := s.Clone().SetP(nil)
 		for _, p := range predicates {
 			p(s1)
@@ -249,8 +249,8 @@ func And(predicates ...predicate.LengthTime) predicate.LengthTime {
 }
 
 // Or groups list of predicates with the OR operator between them.
-func Or(predicates ...predicate.LengthTime) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func Or(predicates ...predicate.Lengthtime) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		s1 := s.Clone().SetP(nil)
 		for i, p := range predicates {
 			if i > 0 {
@@ -263,8 +263,8 @@ func Or(predicates ...predicate.LengthTime) predicate.LengthTime {
 }
 
 // Not applies the not operator on the given predicate.
-func Not(p predicate.LengthTime) predicate.LengthTime {
-	return predicate.LengthTime(func(s *sql.Selector) {
+func Not(p predicate.Lengthtime) predicate.Lengthtime {
+	return predicate.Lengthtime(func(s *sql.Selector) {
 		p(s.Not())
 	})
 }

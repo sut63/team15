@@ -17,88 +17,88 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// LengthTimeQuery is the builder for querying LengthTime entities.
-type LengthTimeQuery struct {
+// LengthtimeQuery is the builder for querying Lengthtime entities.
+type LengthtimeQuery struct {
 	config
 	limit      *int
 	offset     *int
 	order      []OrderFunc
 	unique     []string
-	predicates []predicate.LengthTime
+	predicates []predicate.Lengthtime
 	// eager-loading edges.
-	withCleaningrooms *CleaningRoomQuery
+	withCleaningrooms *CleaningroomQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
 // Where adds a new predicate for the builder.
-func (ltq *LengthTimeQuery) Where(ps ...predicate.LengthTime) *LengthTimeQuery {
-	ltq.predicates = append(ltq.predicates, ps...)
-	return ltq
+func (lq *LengthtimeQuery) Where(ps ...predicate.Lengthtime) *LengthtimeQuery {
+	lq.predicates = append(lq.predicates, ps...)
+	return lq
 }
 
 // Limit adds a limit step to the query.
-func (ltq *LengthTimeQuery) Limit(limit int) *LengthTimeQuery {
-	ltq.limit = &limit
-	return ltq
+func (lq *LengthtimeQuery) Limit(limit int) *LengthtimeQuery {
+	lq.limit = &limit
+	return lq
 }
 
 // Offset adds an offset step to the query.
-func (ltq *LengthTimeQuery) Offset(offset int) *LengthTimeQuery {
-	ltq.offset = &offset
-	return ltq
+func (lq *LengthtimeQuery) Offset(offset int) *LengthtimeQuery {
+	lq.offset = &offset
+	return lq
 }
 
 // Order adds an order step to the query.
-func (ltq *LengthTimeQuery) Order(o ...OrderFunc) *LengthTimeQuery {
-	ltq.order = append(ltq.order, o...)
-	return ltq
+func (lq *LengthtimeQuery) Order(o ...OrderFunc) *LengthtimeQuery {
+	lq.order = append(lq.order, o...)
+	return lq
 }
 
 // QueryCleaningrooms chains the current query on the cleaningrooms edge.
-func (ltq *LengthTimeQuery) QueryCleaningrooms() *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: ltq.config}
+func (lq *LengthtimeQuery) QueryCleaningrooms() *CleaningroomQuery {
+	query := &CleaningroomQuery{config: lq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := ltq.prepareQuery(ctx); err != nil {
+		if err := lq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(lengthtime.Table, lengthtime.FieldID, ltq.sqlQuery()),
+			sqlgraph.From(lengthtime.Table, lengthtime.FieldID, lq.sqlQuery()),
 			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, lengthtime.CleaningroomsTable, lengthtime.CleaningroomsColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(ltq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
 }
 
-// First returns the first LengthTime entity in the query. Returns *NotFoundError when no lengthtime was found.
-func (ltq *LengthTimeQuery) First(ctx context.Context) (*LengthTime, error) {
-	lts, err := ltq.Limit(1).All(ctx)
+// First returns the first Lengthtime entity in the query. Returns *NotFoundError when no lengthtime was found.
+func (lq *LengthtimeQuery) First(ctx context.Context) (*Lengthtime, error) {
+	ls, err := lq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if len(lts) == 0 {
+	if len(ls) == 0 {
 		return nil, &NotFoundError{lengthtime.Label}
 	}
-	return lts[0], nil
+	return ls[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (ltq *LengthTimeQuery) FirstX(ctx context.Context) *LengthTime {
-	lt, err := ltq.First(ctx)
+func (lq *LengthtimeQuery) FirstX(ctx context.Context) *Lengthtime {
+	l, err := lq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
-	return lt
+	return l
 }
 
-// FirstID returns the first LengthTime id in the query. Returns *NotFoundError when no id was found.
-func (ltq *LengthTimeQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Lengthtime id in the query. Returns *NotFoundError when no id was found.
+func (lq *LengthtimeQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ltq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = lq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -109,23 +109,23 @@ func (ltq *LengthTimeQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstXID is like FirstID, but panics if an error occurs.
-func (ltq *LengthTimeQuery) FirstXID(ctx context.Context) int {
-	id, err := ltq.FirstID(ctx)
+func (lq *LengthtimeQuery) FirstXID(ctx context.Context) int {
+	id, err := lq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
 	return id
 }
 
-// Only returns the only LengthTime entity in the query, returns an error if not exactly one entity was returned.
-func (ltq *LengthTimeQuery) Only(ctx context.Context) (*LengthTime, error) {
-	lts, err := ltq.Limit(2).All(ctx)
+// Only returns the only Lengthtime entity in the query, returns an error if not exactly one entity was returned.
+func (lq *LengthtimeQuery) Only(ctx context.Context) (*Lengthtime, error) {
+	ls, err := lq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	switch len(lts) {
+	switch len(ls) {
 	case 1:
-		return lts[0], nil
+		return ls[0], nil
 	case 0:
 		return nil, &NotFoundError{lengthtime.Label}
 	default:
@@ -134,18 +134,18 @@ func (ltq *LengthTimeQuery) Only(ctx context.Context) (*LengthTime, error) {
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (ltq *LengthTimeQuery) OnlyX(ctx context.Context) *LengthTime {
-	lt, err := ltq.Only(ctx)
+func (lq *LengthtimeQuery) OnlyX(ctx context.Context) *Lengthtime {
+	l, err := lq.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return lt
+	return l
 }
 
-// OnlyID returns the only LengthTime id in the query, returns an error if not exactly one id was returned.
-func (ltq *LengthTimeQuery) OnlyID(ctx context.Context) (id int, err error) {
+// OnlyID returns the only Lengthtime id in the query, returns an error if not exactly one id was returned.
+func (lq *LengthtimeQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ltq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = lq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -160,43 +160,43 @@ func (ltq *LengthTimeQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (ltq *LengthTimeQuery) OnlyIDX(ctx context.Context) int {
-	id, err := ltq.OnlyID(ctx)
+func (lq *LengthtimeQuery) OnlyIDX(ctx context.Context) int {
+	id, err := lq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return id
 }
 
-// All executes the query and returns a list of LengthTimes.
-func (ltq *LengthTimeQuery) All(ctx context.Context) ([]*LengthTime, error) {
-	if err := ltq.prepareQuery(ctx); err != nil {
+// All executes the query and returns a list of Lengthtimes.
+func (lq *LengthtimeQuery) All(ctx context.Context) ([]*Lengthtime, error) {
+	if err := lq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return ltq.sqlAll(ctx)
+	return lq.sqlAll(ctx)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (ltq *LengthTimeQuery) AllX(ctx context.Context) []*LengthTime {
-	lts, err := ltq.All(ctx)
+func (lq *LengthtimeQuery) AllX(ctx context.Context) []*Lengthtime {
+	ls, err := lq.All(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return lts
+	return ls
 }
 
-// IDs executes the query and returns a list of LengthTime ids.
-func (ltq *LengthTimeQuery) IDs(ctx context.Context) ([]int, error) {
+// IDs executes the query and returns a list of Lengthtime ids.
+func (lq *LengthtimeQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := ltq.Select(lengthtime.FieldID).Scan(ctx, &ids); err != nil {
+	if err := lq.Select(lengthtime.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (ltq *LengthTimeQuery) IDsX(ctx context.Context) []int {
-	ids, err := ltq.IDs(ctx)
+func (lq *LengthtimeQuery) IDsX(ctx context.Context) []int {
+	ids, err := lq.IDs(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -204,16 +204,16 @@ func (ltq *LengthTimeQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (ltq *LengthTimeQuery) Count(ctx context.Context) (int, error) {
-	if err := ltq.prepareQuery(ctx); err != nil {
+func (lq *LengthtimeQuery) Count(ctx context.Context) (int, error) {
+	if err := lq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return ltq.sqlCount(ctx)
+	return lq.sqlCount(ctx)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (ltq *LengthTimeQuery) CountX(ctx context.Context) int {
-	count, err := ltq.Count(ctx)
+func (lq *LengthtimeQuery) CountX(ctx context.Context) int {
+	count, err := lq.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -221,16 +221,16 @@ func (ltq *LengthTimeQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (ltq *LengthTimeQuery) Exist(ctx context.Context) (bool, error) {
-	if err := ltq.prepareQuery(ctx); err != nil {
+func (lq *LengthtimeQuery) Exist(ctx context.Context) (bool, error) {
+	if err := lq.prepareQuery(ctx); err != nil {
 		return false, err
 	}
-	return ltq.sqlExist(ctx)
+	return lq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (ltq *LengthTimeQuery) ExistX(ctx context.Context) bool {
-	exist, err := ltq.Exist(ctx)
+func (lq *LengthtimeQuery) ExistX(ctx context.Context) bool {
+	exist, err := lq.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -239,29 +239,29 @@ func (ltq *LengthTimeQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the query builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (ltq *LengthTimeQuery) Clone() *LengthTimeQuery {
-	return &LengthTimeQuery{
-		config:     ltq.config,
-		limit:      ltq.limit,
-		offset:     ltq.offset,
-		order:      append([]OrderFunc{}, ltq.order...),
-		unique:     append([]string{}, ltq.unique...),
-		predicates: append([]predicate.LengthTime{}, ltq.predicates...),
+func (lq *LengthtimeQuery) Clone() *LengthtimeQuery {
+	return &LengthtimeQuery{
+		config:     lq.config,
+		limit:      lq.limit,
+		offset:     lq.offset,
+		order:      append([]OrderFunc{}, lq.order...),
+		unique:     append([]string{}, lq.unique...),
+		predicates: append([]predicate.Lengthtime{}, lq.predicates...),
 		// clone intermediate query.
-		sql:  ltq.sql.Clone(),
-		path: ltq.path,
+		sql:  lq.sql.Clone(),
+		path: lq.path,
 	}
 }
 
 //  WithCleaningrooms tells the query-builder to eager-loads the nodes that are connected to
 // the "cleaningrooms" edge. The optional arguments used to configure the query builder of the edge.
-func (ltq *LengthTimeQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) *LengthTimeQuery {
-	query := &CleaningRoomQuery{config: ltq.config}
+func (lq *LengthtimeQuery) WithCleaningrooms(opts ...func(*CleaningroomQuery)) *LengthtimeQuery {
+	query := &CleaningroomQuery{config: lq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	ltq.withCleaningrooms = query
-	return ltq
+	lq.withCleaningrooms = query
+	return lq
 }
 
 // GroupBy used to group vertices by one or more fields/columns.
@@ -274,19 +274,19 @@ func (ltq *LengthTimeQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) 
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.LengthTime.Query().
+//	client.Lengthtime.Query().
 //		GroupBy(lengthtime.FieldLengthtime).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
-func (ltq *LengthTimeQuery) GroupBy(field string, fields ...string) *LengthTimeGroupBy {
-	group := &LengthTimeGroupBy{config: ltq.config}
+func (lq *LengthtimeQuery) GroupBy(field string, fields ...string) *LengthtimeGroupBy {
+	group := &LengthtimeGroupBy{config: lq.config}
 	group.fields = append([]string{field}, fields...)
 	group.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := ltq.prepareQuery(ctx); err != nil {
+		if err := lq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		return ltq.sqlQuery(), nil
+		return lq.sqlQuery(), nil
 	}
 	return group
 }
@@ -299,43 +299,43 @@ func (ltq *LengthTimeQuery) GroupBy(field string, fields ...string) *LengthTimeG
 //		Lengthtime string `json:"lengthtime,omitempty"`
 //	}
 //
-//	client.LengthTime.Query().
+//	client.Lengthtime.Query().
 //		Select(lengthtime.FieldLengthtime).
 //		Scan(ctx, &v)
 //
-func (ltq *LengthTimeQuery) Select(field string, fields ...string) *LengthTimeSelect {
-	selector := &LengthTimeSelect{config: ltq.config}
+func (lq *LengthtimeQuery) Select(field string, fields ...string) *LengthtimeSelect {
+	selector := &LengthtimeSelect{config: lq.config}
 	selector.fields = append([]string{field}, fields...)
 	selector.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := ltq.prepareQuery(ctx); err != nil {
+		if err := lq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		return ltq.sqlQuery(), nil
+		return lq.sqlQuery(), nil
 	}
 	return selector
 }
 
-func (ltq *LengthTimeQuery) prepareQuery(ctx context.Context) error {
-	if ltq.path != nil {
-		prev, err := ltq.path(ctx)
+func (lq *LengthtimeQuery) prepareQuery(ctx context.Context) error {
+	if lq.path != nil {
+		prev, err := lq.path(ctx)
 		if err != nil {
 			return err
 		}
-		ltq.sql = prev
+		lq.sql = prev
 	}
 	return nil
 }
 
-func (ltq *LengthTimeQuery) sqlAll(ctx context.Context) ([]*LengthTime, error) {
+func (lq *LengthtimeQuery) sqlAll(ctx context.Context) ([]*Lengthtime, error) {
 	var (
-		nodes       = []*LengthTime{}
-		_spec       = ltq.querySpec()
+		nodes       = []*Lengthtime{}
+		_spec       = lq.querySpec()
 		loadedTypes = [1]bool{
-			ltq.withCleaningrooms != nil,
+			lq.withCleaningrooms != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
-		node := &LengthTime{config: ltq.config}
+		node := &Lengthtime{config: lq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
 		return values
@@ -348,22 +348,22 @@ func (ltq *LengthTimeQuery) sqlAll(ctx context.Context) ([]*LengthTime, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
-	if err := sqlgraph.QueryNodes(ctx, ltq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, lq.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
 
-	if query := ltq.withCleaningrooms; query != nil {
+	if query := lq.withCleaningrooms; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*LengthTime)
+		nodeids := make(map[int]*Lengthtime)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.CleaningRoom(func(s *sql.Selector) {
+		query.Where(predicate.Cleaningroom(func(s *sql.Selector) {
 			s.Where(sql.InValues(lengthtime.CleaningroomsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
@@ -386,20 +386,20 @@ func (ltq *LengthTimeQuery) sqlAll(ctx context.Context) ([]*LengthTime, error) {
 	return nodes, nil
 }
 
-func (ltq *LengthTimeQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := ltq.querySpec()
-	return sqlgraph.CountNodes(ctx, ltq.driver, _spec)
+func (lq *LengthtimeQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := lq.querySpec()
+	return sqlgraph.CountNodes(ctx, lq.driver, _spec)
 }
 
-func (ltq *LengthTimeQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := ltq.sqlCount(ctx)
+func (lq *LengthtimeQuery) sqlExist(ctx context.Context) (bool, error) {
+	n, err := lq.sqlCount(ctx)
 	if err != nil {
 		return false, fmt.Errorf("ent: check existence: %v", err)
 	}
 	return n > 0, nil
 }
 
-func (ltq *LengthTimeQuery) querySpec() *sqlgraph.QuerySpec {
+func (lq *LengthtimeQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   lengthtime.Table,
@@ -409,23 +409,23 @@ func (ltq *LengthTimeQuery) querySpec() *sqlgraph.QuerySpec {
 				Column: lengthtime.FieldID,
 			},
 		},
-		From:   ltq.sql,
+		From:   lq.sql,
 		Unique: true,
 	}
-	if ps := ltq.predicates; len(ps) > 0 {
+	if ps := lq.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := ltq.limit; limit != nil {
+	if limit := lq.limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := ltq.offset; offset != nil {
+	if offset := lq.offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := ltq.order; len(ps) > 0 {
+	if ps := lq.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -435,33 +435,33 @@ func (ltq *LengthTimeQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (ltq *LengthTimeQuery) sqlQuery() *sql.Selector {
-	builder := sql.Dialect(ltq.driver.Dialect())
+func (lq *LengthtimeQuery) sqlQuery() *sql.Selector {
+	builder := sql.Dialect(lq.driver.Dialect())
 	t1 := builder.Table(lengthtime.Table)
 	selector := builder.Select(t1.Columns(lengthtime.Columns...)...).From(t1)
-	if ltq.sql != nil {
-		selector = ltq.sql
+	if lq.sql != nil {
+		selector = lq.sql
 		selector.Select(selector.Columns(lengthtime.Columns...)...)
 	}
-	for _, p := range ltq.predicates {
+	for _, p := range lq.predicates {
 		p(selector)
 	}
-	for _, p := range ltq.order {
+	for _, p := range lq.order {
 		p(selector)
 	}
-	if offset := ltq.offset; offset != nil {
+	if offset := lq.offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := ltq.limit; limit != nil {
+	if limit := lq.limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
 }
 
-// LengthTimeGroupBy is the builder for group-by LengthTime entities.
-type LengthTimeGroupBy struct {
+// LengthtimeGroupBy is the builder for group-by Lengthtime entities.
+type LengthtimeGroupBy struct {
 	config
 	fields []string
 	fns    []AggregateFunc
@@ -471,43 +471,43 @@ type LengthTimeGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (ltgb *LengthTimeGroupBy) Aggregate(fns ...AggregateFunc) *LengthTimeGroupBy {
-	ltgb.fns = append(ltgb.fns, fns...)
-	return ltgb
+func (lgb *LengthtimeGroupBy) Aggregate(fns ...AggregateFunc) *LengthtimeGroupBy {
+	lgb.fns = append(lgb.fns, fns...)
+	return lgb
 }
 
 // Scan applies the group-by query and scan the result into the given value.
-func (ltgb *LengthTimeGroupBy) Scan(ctx context.Context, v interface{}) error {
-	query, err := ltgb.path(ctx)
+func (lgb *LengthtimeGroupBy) Scan(ctx context.Context, v interface{}) error {
+	query, err := lgb.path(ctx)
 	if err != nil {
 		return err
 	}
-	ltgb.sql = query
-	return ltgb.sqlScan(ctx, v)
+	lgb.sql = query
+	return lgb.sqlScan(ctx, v)
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) ScanX(ctx context.Context, v interface{}) {
-	if err := ltgb.Scan(ctx, v); err != nil {
+func (lgb *LengthtimeGroupBy) ScanX(ctx context.Context, v interface{}) {
+	if err := lgb.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Strings(ctx context.Context) ([]string, error) {
-	if len(ltgb.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeGroupBy.Strings is not achievable when grouping more than 1 field")
+func (lgb *LengthtimeGroupBy) Strings(ctx context.Context) ([]string, error) {
+	if len(lgb.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeGroupBy.Strings is not achievable when grouping more than 1 field")
 	}
 	var v []string
-	if err := ltgb.Scan(ctx, &v); err != nil {
+	if err := lgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) StringsX(ctx context.Context) []string {
-	v, err := ltgb.Strings(ctx)
+func (lgb *LengthtimeGroupBy) StringsX(ctx context.Context) []string {
+	v, err := lgb.Strings(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -515,9 +515,9 @@ func (ltgb *LengthTimeGroupBy) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) String(ctx context.Context) (_ string, err error) {
+func (lgb *LengthtimeGroupBy) String(ctx context.Context) (_ string, err error) {
 	var v []string
-	if v, err = ltgb.Strings(ctx); err != nil {
+	if v, err = lgb.Strings(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -526,14 +526,14 @@ func (ltgb *LengthTimeGroupBy) String(ctx context.Context) (_ string, err error)
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeGroupBy.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeGroupBy.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) StringX(ctx context.Context) string {
-	v, err := ltgb.String(ctx)
+func (lgb *LengthtimeGroupBy) StringX(ctx context.Context) string {
+	v, err := lgb.String(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -541,20 +541,20 @@ func (ltgb *LengthTimeGroupBy) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Ints(ctx context.Context) ([]int, error) {
-	if len(ltgb.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeGroupBy.Ints is not achievable when grouping more than 1 field")
+func (lgb *LengthtimeGroupBy) Ints(ctx context.Context) ([]int, error) {
+	if len(lgb.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeGroupBy.Ints is not achievable when grouping more than 1 field")
 	}
 	var v []int
-	if err := ltgb.Scan(ctx, &v); err != nil {
+	if err := lgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) IntsX(ctx context.Context) []int {
-	v, err := ltgb.Ints(ctx)
+func (lgb *LengthtimeGroupBy) IntsX(ctx context.Context) []int {
+	v, err := lgb.Ints(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -562,9 +562,9 @@ func (ltgb *LengthTimeGroupBy) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Int(ctx context.Context) (_ int, err error) {
+func (lgb *LengthtimeGroupBy) Int(ctx context.Context) (_ int, err error) {
 	var v []int
-	if v, err = ltgb.Ints(ctx); err != nil {
+	if v, err = lgb.Ints(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -573,14 +573,14 @@ func (ltgb *LengthTimeGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeGroupBy.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeGroupBy.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) IntX(ctx context.Context) int {
-	v, err := ltgb.Int(ctx)
+func (lgb *LengthtimeGroupBy) IntX(ctx context.Context) int {
+	v, err := lgb.Int(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -588,20 +588,20 @@ func (ltgb *LengthTimeGroupBy) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Float64s(ctx context.Context) ([]float64, error) {
-	if len(ltgb.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeGroupBy.Float64s is not achievable when grouping more than 1 field")
+func (lgb *LengthtimeGroupBy) Float64s(ctx context.Context) ([]float64, error) {
+	if len(lgb.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeGroupBy.Float64s is not achievable when grouping more than 1 field")
 	}
 	var v []float64
-	if err := ltgb.Scan(ctx, &v); err != nil {
+	if err := lgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) Float64sX(ctx context.Context) []float64 {
-	v, err := ltgb.Float64s(ctx)
+func (lgb *LengthtimeGroupBy) Float64sX(ctx context.Context) []float64 {
+	v, err := lgb.Float64s(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -609,9 +609,9 @@ func (ltgb *LengthTimeGroupBy) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Float64(ctx context.Context) (_ float64, err error) {
+func (lgb *LengthtimeGroupBy) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
-	if v, err = ltgb.Float64s(ctx); err != nil {
+	if v, err = lgb.Float64s(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -620,14 +620,14 @@ func (ltgb *LengthTimeGroupBy) Float64(ctx context.Context) (_ float64, err erro
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeGroupBy.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) Float64X(ctx context.Context) float64 {
-	v, err := ltgb.Float64(ctx)
+func (lgb *LengthtimeGroupBy) Float64X(ctx context.Context) float64 {
+	v, err := lgb.Float64(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -635,20 +635,20 @@ func (ltgb *LengthTimeGroupBy) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Bools(ctx context.Context) ([]bool, error) {
-	if len(ltgb.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeGroupBy.Bools is not achievable when grouping more than 1 field")
+func (lgb *LengthtimeGroupBy) Bools(ctx context.Context) ([]bool, error) {
+	if len(lgb.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeGroupBy.Bools is not achievable when grouping more than 1 field")
 	}
 	var v []bool
-	if err := ltgb.Scan(ctx, &v); err != nil {
+	if err := lgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) BoolsX(ctx context.Context) []bool {
-	v, err := ltgb.Bools(ctx)
+func (lgb *LengthtimeGroupBy) BoolsX(ctx context.Context) []bool {
+	v, err := lgb.Bools(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -656,9 +656,9 @@ func (ltgb *LengthTimeGroupBy) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from group-by. It is only allowed when querying group-by with one field.
-func (ltgb *LengthTimeGroupBy) Bool(ctx context.Context) (_ bool, err error) {
+func (lgb *LengthtimeGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
-	if v, err = ltgb.Bools(ctx); err != nil {
+	if v, err = lgb.Bools(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -667,42 +667,42 @@ func (ltgb *LengthTimeGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeGroupBy.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeGroupBy.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (ltgb *LengthTimeGroupBy) BoolX(ctx context.Context) bool {
-	v, err := ltgb.Bool(ctx)
+func (lgb *LengthtimeGroupBy) BoolX(ctx context.Context) bool {
+	v, err := lgb.Bool(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (ltgb *LengthTimeGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (lgb *LengthtimeGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
-	query, args := ltgb.sqlQuery().Query()
-	if err := ltgb.driver.Query(ctx, query, args, rows); err != nil {
+	query, args := lgb.sqlQuery().Query()
+	if err := lgb.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (ltgb *LengthTimeGroupBy) sqlQuery() *sql.Selector {
-	selector := ltgb.sql
-	columns := make([]string, 0, len(ltgb.fields)+len(ltgb.fns))
-	columns = append(columns, ltgb.fields...)
-	for _, fn := range ltgb.fns {
+func (lgb *LengthtimeGroupBy) sqlQuery() *sql.Selector {
+	selector := lgb.sql
+	columns := make([]string, 0, len(lgb.fields)+len(lgb.fns))
+	columns = append(columns, lgb.fields...)
+	for _, fn := range lgb.fns {
 		columns = append(columns, fn(selector))
 	}
-	return selector.Select(columns...).GroupBy(ltgb.fields...)
+	return selector.Select(columns...).GroupBy(lgb.fields...)
 }
 
-// LengthTimeSelect is the builder for select fields of LengthTime entities.
-type LengthTimeSelect struct {
+// LengthtimeSelect is the builder for select fields of Lengthtime entities.
+type LengthtimeSelect struct {
 	config
 	fields []string
 	// intermediate query (i.e. traversal path).
@@ -711,37 +711,37 @@ type LengthTimeSelect struct {
 }
 
 // Scan applies the selector query and scan the result into the given value.
-func (lts *LengthTimeSelect) Scan(ctx context.Context, v interface{}) error {
-	query, err := lts.path(ctx)
+func (ls *LengthtimeSelect) Scan(ctx context.Context, v interface{}) error {
+	query, err := ls.path(ctx)
 	if err != nil {
 		return err
 	}
-	lts.sql = query
-	return lts.sqlScan(ctx, v)
+	ls.sql = query
+	return ls.sqlScan(ctx, v)
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (lts *LengthTimeSelect) ScanX(ctx context.Context, v interface{}) {
-	if err := lts.Scan(ctx, v); err != nil {
+func (ls *LengthtimeSelect) ScanX(ctx context.Context, v interface{}) {
+	if err := ls.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Strings(ctx context.Context) ([]string, error) {
-	if len(lts.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeSelect.Strings is not achievable when selecting more than 1 field")
+func (ls *LengthtimeSelect) Strings(ctx context.Context) ([]string, error) {
+	if len(ls.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeSelect.Strings is not achievable when selecting more than 1 field")
 	}
 	var v []string
-	if err := lts.Scan(ctx, &v); err != nil {
+	if err := ls.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (lts *LengthTimeSelect) StringsX(ctx context.Context) []string {
-	v, err := lts.Strings(ctx)
+func (ls *LengthtimeSelect) StringsX(ctx context.Context) []string {
+	v, err := ls.Strings(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -749,9 +749,9 @@ func (lts *LengthTimeSelect) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) String(ctx context.Context) (_ string, err error) {
+func (ls *LengthtimeSelect) String(ctx context.Context) (_ string, err error) {
 	var v []string
-	if v, err = lts.Strings(ctx); err != nil {
+	if v, err = ls.Strings(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -760,14 +760,14 @@ func (lts *LengthTimeSelect) String(ctx context.Context) (_ string, err error) {
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeSelect.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeSelect.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (lts *LengthTimeSelect) StringX(ctx context.Context) string {
-	v, err := lts.String(ctx)
+func (ls *LengthtimeSelect) StringX(ctx context.Context) string {
+	v, err := ls.String(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -775,20 +775,20 @@ func (lts *LengthTimeSelect) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Ints(ctx context.Context) ([]int, error) {
-	if len(lts.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeSelect.Ints is not achievable when selecting more than 1 field")
+func (ls *LengthtimeSelect) Ints(ctx context.Context) ([]int, error) {
+	if len(ls.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeSelect.Ints is not achievable when selecting more than 1 field")
 	}
 	var v []int
-	if err := lts.Scan(ctx, &v); err != nil {
+	if err := ls.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (lts *LengthTimeSelect) IntsX(ctx context.Context) []int {
-	v, err := lts.Ints(ctx)
+func (ls *LengthtimeSelect) IntsX(ctx context.Context) []int {
+	v, err := ls.Ints(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -796,9 +796,9 @@ func (lts *LengthTimeSelect) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Int(ctx context.Context) (_ int, err error) {
+func (ls *LengthtimeSelect) Int(ctx context.Context) (_ int, err error) {
 	var v []int
-	if v, err = lts.Ints(ctx); err != nil {
+	if v, err = ls.Ints(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -807,14 +807,14 @@ func (lts *LengthTimeSelect) Int(ctx context.Context) (_ int, err error) {
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeSelect.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeSelect.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (lts *LengthTimeSelect) IntX(ctx context.Context) int {
-	v, err := lts.Int(ctx)
+func (ls *LengthtimeSelect) IntX(ctx context.Context) int {
+	v, err := ls.Int(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -822,20 +822,20 @@ func (lts *LengthTimeSelect) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Float64s(ctx context.Context) ([]float64, error) {
-	if len(lts.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeSelect.Float64s is not achievable when selecting more than 1 field")
+func (ls *LengthtimeSelect) Float64s(ctx context.Context) ([]float64, error) {
+	if len(ls.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeSelect.Float64s is not achievable when selecting more than 1 field")
 	}
 	var v []float64
-	if err := lts.Scan(ctx, &v); err != nil {
+	if err := ls.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (lts *LengthTimeSelect) Float64sX(ctx context.Context) []float64 {
-	v, err := lts.Float64s(ctx)
+func (ls *LengthtimeSelect) Float64sX(ctx context.Context) []float64 {
+	v, err := ls.Float64s(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -843,9 +843,9 @@ func (lts *LengthTimeSelect) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Float64(ctx context.Context) (_ float64, err error) {
+func (ls *LengthtimeSelect) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
-	if v, err = lts.Float64s(ctx); err != nil {
+	if v, err = ls.Float64s(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -854,14 +854,14 @@ func (lts *LengthTimeSelect) Float64(ctx context.Context) (_ float64, err error)
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeSelect.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeSelect.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (lts *LengthTimeSelect) Float64X(ctx context.Context) float64 {
-	v, err := lts.Float64(ctx)
+func (ls *LengthtimeSelect) Float64X(ctx context.Context) float64 {
+	v, err := ls.Float64(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -869,20 +869,20 @@ func (lts *LengthTimeSelect) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Bools(ctx context.Context) ([]bool, error) {
-	if len(lts.fields) > 1 {
-		return nil, errors.New("ent: LengthTimeSelect.Bools is not achievable when selecting more than 1 field")
+func (ls *LengthtimeSelect) Bools(ctx context.Context) ([]bool, error) {
+	if len(ls.fields) > 1 {
+		return nil, errors.New("ent: LengthtimeSelect.Bools is not achievable when selecting more than 1 field")
 	}
 	var v []bool
-	if err := lts.Scan(ctx, &v); err != nil {
+	if err := ls.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (lts *LengthTimeSelect) BoolsX(ctx context.Context) []bool {
-	v, err := lts.Bools(ctx)
+func (ls *LengthtimeSelect) BoolsX(ctx context.Context) []bool {
+	v, err := ls.Bools(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -890,9 +890,9 @@ func (lts *LengthTimeSelect) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from selector. It is only allowed when selecting one field.
-func (lts *LengthTimeSelect) Bool(ctx context.Context) (_ bool, err error) {
+func (ls *LengthtimeSelect) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
-	if v, err = lts.Bools(ctx); err != nil {
+	if v, err = ls.Bools(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -901,32 +901,32 @@ func (lts *LengthTimeSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 0:
 		err = &NotFoundError{lengthtime.Label}
 	default:
-		err = fmt.Errorf("ent: LengthTimeSelect.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: LengthtimeSelect.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (lts *LengthTimeSelect) BoolX(ctx context.Context) bool {
-	v, err := lts.Bool(ctx)
+func (ls *LengthtimeSelect) BoolX(ctx context.Context) bool {
+	v, err := ls.Bool(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (lts *LengthTimeSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ls *LengthtimeSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
-	query, args := lts.sqlQuery().Query()
-	if err := lts.driver.Query(ctx, query, args, rows); err != nil {
+	query, args := ls.sqlQuery().Query()
+	if err := ls.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (lts *LengthTimeSelect) sqlQuery() sql.Querier {
-	selector := lts.sql
-	selector.Select(selector.Columns(lts.fields...)...)
+func (ls *LengthtimeSelect) sqlQuery() sql.Querier {
+	selector := ls.sql
+	selector.Select(selector.Columns(ls.fields...)...)
 	return selector
 }

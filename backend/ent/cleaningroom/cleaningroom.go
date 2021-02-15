@@ -4,48 +4,52 @@ package cleaningroom
 
 const (
 	// Label holds the string label denoting the cleaningroom type in the database.
-	Label = "cleaning_room"
+	Label = "cleaningroom"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldDateandstarttime holds the string denoting the dateandstarttime field in the database.
-	FieldDateandstarttime = "dateandstarttime"
 	// FieldNote holds the string denoting the note field in the database.
 	FieldNote = "note"
+	// FieldDateandstarttime holds the string denoting the dateandstarttime field in the database.
+	FieldDateandstarttime = "dateandstarttime"
+	// FieldPhonenumber holds the string denoting the phonenumber field in the database.
+	FieldPhonenumber = "phonenumber"
+	// FieldNumofem holds the string denoting the numofem field in the database.
+	FieldNumofem = "numofem"
 
 	// EdgeRoomdetail holds the string denoting the roomdetail edge name in mutations.
 	EdgeRoomdetail = "roomdetail"
-	// EdgeCleanerName holds the string denoting the cleanername edge name in mutations.
-	EdgeCleanerName = "CleanerName"
-	// EdgeLengthTime holds the string denoting the lengthtime edge name in mutations.
-	EdgeLengthTime = "LengthTime"
+	// EdgeCleanername holds the string denoting the cleanername edge name in mutations.
+	EdgeCleanername = "Cleanername"
+	// EdgeLengthtime holds the string denoting the lengthtime edge name in mutations.
+	EdgeLengthtime = "Lengthtime"
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "Employee"
 
 	// Table holds the table name of the cleaningroom in the database.
-	Table = "cleaning_rooms"
+	Table = "cleaningrooms"
 	// RoomdetailTable is the table the holds the roomdetail relation/edge.
-	RoomdetailTable = "cleaning_rooms"
+	RoomdetailTable = "cleaningrooms"
 	// RoomdetailInverseTable is the table name for the Roomdetail entity.
 	// It exists in this package in order to avoid circular dependency with the "roomdetail" package.
 	RoomdetailInverseTable = "roomdetails"
 	// RoomdetailColumn is the table column denoting the roomdetail relation/edge.
 	RoomdetailColumn = "roomdetail_id"
-	// CleanerNameTable is the table the holds the CleanerName relation/edge.
-	CleanerNameTable = "cleaning_rooms"
-	// CleanerNameInverseTable is the table name for the CleanerName entity.
+	// CleanernameTable is the table the holds the Cleanername relation/edge.
+	CleanernameTable = "cleaningrooms"
+	// CleanernameInverseTable is the table name for the Cleanername entity.
 	// It exists in this package in order to avoid circular dependency with the "cleanername" package.
-	CleanerNameInverseTable = "cleaner_names"
-	// CleanerNameColumn is the table column denoting the CleanerName relation/edge.
-	CleanerNameColumn = "cleanerroom_id"
-	// LengthTimeTable is the table the holds the LengthTime relation/edge.
-	LengthTimeTable = "cleaning_rooms"
-	// LengthTimeInverseTable is the table name for the LengthTime entity.
+	CleanernameInverseTable = "cleanernames"
+	// CleanernameColumn is the table column denoting the Cleanername relation/edge.
+	CleanernameColumn = "cleanerroom_id"
+	// LengthtimeTable is the table the holds the Lengthtime relation/edge.
+	LengthtimeTable = "cleaningrooms"
+	// LengthtimeInverseTable is the table name for the Lengthtime entity.
 	// It exists in this package in order to avoid circular dependency with the "lengthtime" package.
-	LengthTimeInverseTable = "length_times"
-	// LengthTimeColumn is the table column denoting the LengthTime relation/edge.
-	LengthTimeColumn = "lengthtime_id"
+	LengthtimeInverseTable = "lengthtimes"
+	// LengthtimeColumn is the table column denoting the Lengthtime relation/edge.
+	LengthtimeColumn = "lengthtime_id"
 	// EmployeeTable is the table the holds the Employee relation/edge.
-	EmployeeTable = "cleaning_rooms"
+	EmployeeTable = "cleaningrooms"
 	// EmployeeInverseTable is the table name for the Employee entity.
 	// It exists in this package in order to avoid circular dependency with the "employee" package.
 	EmployeeInverseTable = "employees"
@@ -56,14 +60,25 @@ const (
 // Columns holds all SQL columns for cleaningroom fields.
 var Columns = []string{
 	FieldID,
-	FieldDateandstarttime,
 	FieldNote,
+	FieldDateandstarttime,
+	FieldPhonenumber,
+	FieldNumofem,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the CleaningRoom type.
+// ForeignKeys holds the SQL foreign-keys that are owned by the Cleaningroom type.
 var ForeignKeys = []string{
 	"cleanerroom_id",
 	"employee_id",
 	"lengthtime_id",
 	"roomdetail_id",
 }
+
+var (
+	// NoteValidator is a validator for the "note" field. It is called by the builders before save.
+	NoteValidator func(string) error
+	// PhonenumberValidator is a validator for the "phonenumber" field. It is called by the builders before save.
+	PhonenumberValidator func(string) error
+	// NumofemValidator is a validator for the "numofem" field. It is called by the builders before save.
+	NumofemValidator func(int) error
+)

@@ -196,14 +196,14 @@ func (rc *RoomdetailCreate) SetRoomdetails(l *Lease) *RoomdetailCreate {
 	return rc.SetRoomdetailsID(l.ID)
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
 func (rc *RoomdetailCreate) AddCleaningroomIDs(ids ...int) *RoomdetailCreate {
 	rc.mutation.AddCleaningroomIDs(ids...)
 	return rc
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (rc *RoomdetailCreate) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailCreate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (rc *RoomdetailCreate) AddCleaningrooms(c ...*Cleaningroom) *RoomdetailCreate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID

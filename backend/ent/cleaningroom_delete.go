@@ -13,43 +13,43 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// CleaningRoomDelete is the builder for deleting a CleaningRoom entity.
-type CleaningRoomDelete struct {
+// CleaningroomDelete is the builder for deleting a Cleaningroom entity.
+type CleaningroomDelete struct {
 	config
 	hooks      []Hook
-	mutation   *CleaningRoomMutation
-	predicates []predicate.CleaningRoom
+	mutation   *CleaningroomMutation
+	predicates []predicate.Cleaningroom
 }
 
 // Where adds a new predicate to the delete builder.
-func (crd *CleaningRoomDelete) Where(ps ...predicate.CleaningRoom) *CleaningRoomDelete {
-	crd.predicates = append(crd.predicates, ps...)
-	return crd
+func (cd *CleaningroomDelete) Where(ps ...predicate.Cleaningroom) *CleaningroomDelete {
+	cd.predicates = append(cd.predicates, ps...)
+	return cd
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (crd *CleaningRoomDelete) Exec(ctx context.Context) (int, error) {
+func (cd *CleaningroomDelete) Exec(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
 	)
-	if len(crd.hooks) == 0 {
-		affected, err = crd.sqlExec(ctx)
+	if len(cd.hooks) == 0 {
+		affected, err = cd.sqlExec(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleaningRoomMutation)
+			mutation, ok := m.(*CleaningroomMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			crd.mutation = mutation
-			affected, err = crd.sqlExec(ctx)
+			cd.mutation = mutation
+			affected, err = cd.sqlExec(ctx)
 			mutation.done = true
 			return affected, err
 		})
-		for i := len(crd.hooks) - 1; i >= 0; i-- {
-			mut = crd.hooks[i](mut)
+		for i := len(cd.hooks) - 1; i >= 0; i-- {
+			mut = cd.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, crd.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cd.mutation); err != nil {
 			return 0, err
 		}
 	}
@@ -57,15 +57,15 @@ func (crd *CleaningRoomDelete) Exec(ctx context.Context) (int, error) {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (crd *CleaningRoomDelete) ExecX(ctx context.Context) int {
-	n, err := crd.Exec(ctx)
+func (cd *CleaningroomDelete) ExecX(ctx context.Context) int {
+	n, err := cd.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (crd *CleaningRoomDelete) sqlExec(ctx context.Context) (int, error) {
+func (cd *CleaningroomDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table: cleaningroom.Table,
@@ -75,24 +75,24 @@ func (crd *CleaningRoomDelete) sqlExec(ctx context.Context) (int, error) {
 			},
 		},
 	}
-	if ps := crd.predicates; len(ps) > 0 {
+	if ps := cd.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	return sqlgraph.DeleteNodes(ctx, crd.driver, _spec)
+	return sqlgraph.DeleteNodes(ctx, cd.driver, _spec)
 }
 
-// CleaningRoomDeleteOne is the builder for deleting a single CleaningRoom entity.
-type CleaningRoomDeleteOne struct {
-	crd *CleaningRoomDelete
+// CleaningroomDeleteOne is the builder for deleting a single Cleaningroom entity.
+type CleaningroomDeleteOne struct {
+	cd *CleaningroomDelete
 }
 
 // Exec executes the deletion query.
-func (crdo *CleaningRoomDeleteOne) Exec(ctx context.Context) error {
-	n, err := crdo.crd.Exec(ctx)
+func (cdo *CleaningroomDeleteOne) Exec(ctx context.Context) error {
+	n, err := cdo.cd.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -104,6 +104,6 @@ func (crdo *CleaningRoomDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (crdo *CleaningRoomDeleteOne) ExecX(ctx context.Context) {
-	crdo.crd.ExecX(ctx)
+func (cdo *CleaningroomDeleteOne) ExecX(ctx context.Context) {
+	cdo.cd.ExecX(ctx)
 }

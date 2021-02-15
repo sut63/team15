@@ -13,70 +13,70 @@ import (
 	"github.com/team15/app/ent/cleaningroom"
 )
 
-// CleanerNameCreate is the builder for creating a CleanerName entity.
-type CleanerNameCreate struct {
+// CleanernameCreate is the builder for creating a Cleanername entity.
+type CleanernameCreate struct {
 	config
-	mutation *CleanerNameMutation
+	mutation *CleanernameMutation
 	hooks    []Hook
 }
 
 // SetCleanername sets the cleanername field.
-func (cnc *CleanerNameCreate) SetCleanername(s string) *CleanerNameCreate {
-	cnc.mutation.SetCleanername(s)
-	return cnc
+func (cc *CleanernameCreate) SetCleanername(s string) *CleanernameCreate {
+	cc.mutation.SetCleanername(s)
+	return cc
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
-func (cnc *CleanerNameCreate) AddCleaningroomIDs(ids ...int) *CleanerNameCreate {
-	cnc.mutation.AddCleaningroomIDs(ids...)
-	return cnc
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
+func (cc *CleanernameCreate) AddCleaningroomIDs(ids ...int) *CleanernameCreate {
+	cc.mutation.AddCleaningroomIDs(ids...)
+	return cc
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (cnc *CleanerNameCreate) AddCleaningrooms(c ...*CleaningRoom) *CleanerNameCreate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (cc *CleanernameCreate) AddCleaningrooms(c ...*Cleaningroom) *CleanernameCreate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cnc.AddCleaningroomIDs(ids...)
+	return cc.AddCleaningroomIDs(ids...)
 }
 
-// Mutation returns the CleanerNameMutation object of the builder.
-func (cnc *CleanerNameCreate) Mutation() *CleanerNameMutation {
-	return cnc.mutation
+// Mutation returns the CleanernameMutation object of the builder.
+func (cc *CleanernameCreate) Mutation() *CleanernameMutation {
+	return cc.mutation
 }
 
-// Save creates the CleanerName in the database.
-func (cnc *CleanerNameCreate) Save(ctx context.Context) (*CleanerName, error) {
-	if _, ok := cnc.mutation.Cleanername(); !ok {
+// Save creates the Cleanername in the database.
+func (cc *CleanernameCreate) Save(ctx context.Context) (*Cleanername, error) {
+	if _, ok := cc.mutation.Cleanername(); !ok {
 		return nil, &ValidationError{Name: "cleanername", err: errors.New("ent: missing required field \"cleanername\"")}
 	}
-	if v, ok := cnc.mutation.Cleanername(); ok {
+	if v, ok := cc.mutation.Cleanername(); ok {
 		if err := cleanername.CleanernameValidator(v); err != nil {
 			return nil, &ValidationError{Name: "cleanername", err: fmt.Errorf("ent: validator failed for field \"cleanername\": %w", err)}
 		}
 	}
 	var (
 		err  error
-		node *CleanerName
+		node *Cleanername
 	)
-	if len(cnc.hooks) == 0 {
-		node, err = cnc.sqlSave(ctx)
+	if len(cc.hooks) == 0 {
+		node, err = cc.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleanerNameMutation)
+			mutation, ok := m.(*CleanernameMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			cnc.mutation = mutation
-			node, err = cnc.sqlSave(ctx)
+			cc.mutation = mutation
+			node, err = cc.sqlSave(ctx)
 			mutation.done = true
 			return node, err
 		})
-		for i := len(cnc.hooks) - 1; i >= 0; i-- {
-			mut = cnc.hooks[i](mut)
+		for i := len(cc.hooks) - 1; i >= 0; i-- {
+			mut = cc.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, cnc.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cc.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -84,30 +84,30 @@ func (cnc *CleanerNameCreate) Save(ctx context.Context) (*CleanerName, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (cnc *CleanerNameCreate) SaveX(ctx context.Context) *CleanerName {
-	v, err := cnc.Save(ctx)
+func (cc *CleanernameCreate) SaveX(ctx context.Context) *Cleanername {
+	v, err := cc.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (cnc *CleanerNameCreate) sqlSave(ctx context.Context) (*CleanerName, error) {
-	cn, _spec := cnc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, cnc.driver, _spec); err != nil {
+func (cc *CleanernameCreate) sqlSave(ctx context.Context) (*Cleanername, error) {
+	c, _spec := cc.createSpec()
+	if err := sqlgraph.CreateNode(ctx, cc.driver, _spec); err != nil {
 		if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	cn.ID = int(id)
-	return cn, nil
+	c.ID = int(id)
+	return c, nil
 }
 
-func (cnc *CleanerNameCreate) createSpec() (*CleanerName, *sqlgraph.CreateSpec) {
+func (cc *CleanernameCreate) createSpec() (*Cleanername, *sqlgraph.CreateSpec) {
 	var (
-		cn    = &CleanerName{config: cnc.config}
+		c     = &Cleanername{config: cc.config}
 		_spec = &sqlgraph.CreateSpec{
 			Table: cleanername.Table,
 			ID: &sqlgraph.FieldSpec{
@@ -116,15 +116,15 @@ func (cnc *CleanerNameCreate) createSpec() (*CleanerName, *sqlgraph.CreateSpec) 
 			},
 		}
 	)
-	if value, ok := cnc.mutation.Cleanername(); ok {
+	if value, ok := cc.mutation.Cleanername(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: cleanername.FieldCleanername,
 		})
-		cn.Cleanername = value
+		c.Cleanername = value
 	}
-	if nodes := cnc.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.CleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -143,5 +143,5 @@ func (cnc *CleanerNameCreate) createSpec() (*CleanerName, *sqlgraph.CreateSpec) 
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	return cn, _spec
+	return c, _spec
 }

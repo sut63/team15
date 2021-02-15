@@ -473,25 +473,25 @@ func HasEmployeesWith(preds ...predicate.Deposit) predicate.Employee {
 	})
 }
 
-// HasLeases applies the HasEdge predicate on the "leases" edge.
-func HasLeases() predicate.Employee {
+// HasLeasess applies the HasEdge predicate on the "leasess" edge.
+func HasLeasess() predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(LeasesTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, LeasesTable, LeasesColumn),
+			sqlgraph.To(LeasessTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, LeasessTable, LeasessColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasLeasesWith applies the HasEdge predicate on the "leases" edge with a given conditions (other predicates).
-func HasLeasesWith(preds ...predicate.Lease) predicate.Employee {
+// HasLeasessWith applies the HasEdge predicate on the "leasess" edge with a given conditions (other predicates).
+func HasLeasessWith(preds ...predicate.Lease) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(LeasesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, LeasesTable, LeasesColumn),
+			sqlgraph.To(LeasessInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, LeasessTable, LeasessColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -598,7 +598,7 @@ func HasCleaningrooms() predicate.Employee {
 }
 
 // HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
-func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.Employee {
+func HasCleaningroomsWith(preds ...predicate.Cleaningroom) predicate.Employee {
 	return predicate.Employee(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),

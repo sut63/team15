@@ -35,28 +35,28 @@ func (f BillFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
-// The CleanerNameFunc type is an adapter to allow the use of ordinary
-// function as CleanerName mutator.
-type CleanerNameFunc func(context.Context, *ent.CleanerNameMutation) (ent.Value, error)
+// The CleanernameFunc type is an adapter to allow the use of ordinary
+// function as Cleanername mutator.
+type CleanernameFunc func(context.Context, *ent.CleanernameMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f CleanerNameFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.CleanerNameMutation)
+func (f CleanernameFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CleanernameMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CleanerNameMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CleanernameMutation", m)
 	}
 	return f(ctx, mv)
 }
 
-// The CleaningRoomFunc type is an adapter to allow the use of ordinary
-// function as CleaningRoom mutator.
-type CleaningRoomFunc func(context.Context, *ent.CleaningRoomMutation) (ent.Value, error)
+// The CleaningroomFunc type is an adapter to allow the use of ordinary
+// function as Cleaningroom mutator.
+type CleaningroomFunc func(context.Context, *ent.CleaningroomMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f CleaningRoomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.CleaningRoomMutation)
+func (f CleaningroomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CleaningroomMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CleaningRoomMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CleaningroomMutation", m)
 	}
 	return f(ctx, mv)
 }
@@ -113,15 +113,15 @@ func (f LeaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	return f(ctx, mv)
 }
 
-// The LengthTimeFunc type is an adapter to allow the use of ordinary
-// function as LengthTime mutator.
-type LengthTimeFunc func(context.Context, *ent.LengthTimeMutation) (ent.Value, error)
+// The LengthtimeFunc type is an adapter to allow the use of ordinary
+// function as Lengthtime mutator.
+type LengthtimeFunc func(context.Context, *ent.LengthtimeMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f LengthTimeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.LengthTimeMutation)
+func (f LengthtimeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.LengthtimeMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LengthTimeMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LengthtimeMutation", m)
 	}
 	return f(ctx, mv)
 }

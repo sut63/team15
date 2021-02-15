@@ -49,6 +49,12 @@ func (lc *LeaseCreate) SetIdtenant(s string) *LeaseCreate {
 	return lc
 }
 
+// SetAgetenant sets the agetenant field.
+func (lc *LeaseCreate) SetAgetenant(i int) *LeaseCreate {
+	lc.mutation.SetAgetenant(i)
+	return lc
+}
+
 // SetWifiID sets the Wifi edge to Wifi by id.
 func (lc *LeaseCreate) SetWifiID(id int) *LeaseCreate {
 	lc.mutation.SetWifiID(id)
@@ -162,6 +168,14 @@ func (lc *LeaseCreate) Save(ctx context.Context) (*Lease, error) {
 			return nil, &ValidationError{Name: "idtenant", err: fmt.Errorf("ent: validator failed for field \"idtenant\": %w", err)}
 		}
 	}
+	if _, ok := lc.mutation.Agetenant(); !ok {
+		return nil, &ValidationError{Name: "agetenant", err: errors.New("ent: missing required field \"agetenant\"")}
+	}
+	if v, ok := lc.mutation.Agetenant(); ok {
+		if err := lease.AgetenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "agetenant", err: fmt.Errorf("ent: validator failed for field \"agetenant\": %w", err)}
+		}
+	}
 	if _, ok := lc.mutation.RoomdetailID(); !ok {
 		return nil, &ValidationError{Name: "Roomdetail", err: errors.New("ent: missing required edge \"Roomdetail\"")}
 	}
@@ -256,6 +270,14 @@ func (lc *LeaseCreate) createSpec() (*Lease, *sqlgraph.CreateSpec) {
 			Column: lease.FieldIdtenant,
 		})
 		l.Idtenant = value
+	}
+	if value, ok := lc.mutation.Agetenant(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: lease.FieldAgetenant,
+		})
+		l.Agetenant = value
 	}
 	if nodes := lc.mutation.WifiIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

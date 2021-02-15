@@ -16,8 +16,8 @@ const (
 
 	// EdgeEmployees holds the string denoting the employees edge name in mutations.
 	EdgeEmployees = "employees"
-	// EdgeLeases holds the string denoting the leases edge name in mutations.
-	EdgeLeases = "leases"
+	// EdgeLeasess holds the string denoting the leasess edge name in mutations.
+	EdgeLeasess = "leasess"
 	// EdgeRoomdetails holds the string denoting the roomdetails edge name in mutations.
 	EdgeRoomdetails = "roomdetails"
 	// EdgeJobposition holds the string denoting the jobposition edge name in mutations.
@@ -36,13 +36,13 @@ const (
 	EmployeesInverseTable = "deposits"
 	// EmployeesColumn is the table column denoting the employees relation/edge.
 	EmployeesColumn = "employee_id"
-	// LeasesTable is the table the holds the leases relation/edge.
-	LeasesTable = "leases"
-	// LeasesInverseTable is the table name for the Lease entity.
+	// LeasessTable is the table the holds the leasess relation/edge.
+	LeasessTable = "leases"
+	// LeasessInverseTable is the table name for the Lease entity.
 	// It exists in this package in order to avoid circular dependency with the "lease" package.
-	LeasesInverseTable = "leases"
-	// LeasesColumn is the table column denoting the leases relation/edge.
-	LeasesColumn = "employee_id"
+	LeasessInverseTable = "leases"
+	// LeasessColumn is the table column denoting the leasess relation/edge.
+	LeasessColumn = "employee_id"
 	// RoomdetailsTable is the table the holds the roomdetails relation/edge.
 	RoomdetailsTable = "roomdetails"
 	// RoomdetailsInverseTable is the table name for the Roomdetail entity.
@@ -65,10 +65,10 @@ const (
 	// RepairinvoicesColumn is the table column denoting the repairinvoices relation/edge.
 	RepairinvoicesColumn = "employee_id"
 	// CleaningroomsTable is the table the holds the cleaningrooms relation/edge.
-	CleaningroomsTable = "cleaning_rooms"
-	// CleaningroomsInverseTable is the table name for the CleaningRoom entity.
+	CleaningroomsTable = "cleaningrooms"
+	// CleaningroomsInverseTable is the table name for the Cleaningroom entity.
 	// It exists in this package in order to avoid circular dependency with the "cleaningroom" package.
-	CleaningroomsInverseTable = "cleaning_rooms"
+	CleaningroomsInverseTable = "cleaningrooms"
 	// CleaningroomsColumn is the table column denoting the cleaningrooms relation/edge.
 	CleaningroomsColumn = "employee_id"
 )

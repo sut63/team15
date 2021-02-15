@@ -19,6 +19,25 @@ definitions:
       total:
         type: string
     type: object
+  controllers.Cleaningroom:
+    properties:
+      cleanername:
+        type: integer
+      dateandstarttime:
+        type: string
+      employee:
+        type: integer
+      lengthtime:
+        type: integer
+      note:
+        type: string
+      numofem:
+        type: integer
+      phonenumber:
+        type: string
+      roomdetail:
+        type: integer
+    type: object
   controllers.Deposit:
     properties:
       added:
@@ -44,6 +63,8 @@ definitions:
     properties:
       added:
         type: string
+      agetenant:
+        type: integer
       employee:
         type: integer
       idtenant:
@@ -153,39 +174,39 @@ definitions:
         description: Situation holds the value of the Situation edge.
         type: object
     type: object
-  ent.CleanerName:
+  ent.Cleanername:
     properties:
       cleanername:
         description: Cleanername holds the value of the "cleanername" field.
         type: string
       edges:
-        $ref: '#/definitions/ent.CleanerNameEdges'
+        $ref: '#/definitions/ent.CleanernameEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the CleanerNameQuery when eager-loading is set.
+          The values are being populated by the CleanernameQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
         type: integer
     type: object
-  ent.CleanerNameEdges:
+  ent.CleanernameEdges:
     properties:
       cleaningrooms:
         description: Cleaningrooms holds the value of the cleaningrooms edge.
         items:
-          $ref: '#/definitions/ent.CleaningRoom'
+          $ref: '#/definitions/ent.Cleaningroom'
         type: array
     type: object
-  ent.CleaningRoom:
+  ent.Cleaningroom:
     properties:
       dateandstarttime:
         description: Dateandstarttime holds the value of the "dateandstarttime" field.
         type: string
       edges:
-        $ref: '#/definitions/ent.CleaningRoomEdges'
+        $ref: '#/definitions/ent.CleaningroomEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the CleaningRoomQuery when eager-loading is set.
+          The values are being populated by the CleaningroomQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
@@ -193,20 +214,26 @@ definitions:
       note:
         description: Note holds the value of the "note" field.
         type: string
+      numofem:
+        description: Numofem holds the value of the "numofem" field.
+        type: integer
+      phonenumber:
+        description: Phonenumber holds the value of the "phonenumber" field.
+        type: string
     type: object
-  ent.CleaningRoomEdges:
+  ent.CleaningroomEdges:
     properties:
-      cleanerName:
-        $ref: '#/definitions/ent.CleanerName'
-        description: CleanerName holds the value of the CleanerName edge.
+      cleanername:
+        $ref: '#/definitions/ent.Cleanername'
+        description: Cleanername holds the value of the Cleanername edge.
         type: object
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the Employee edge.
         type: object
-      lengthTime:
-        $ref: '#/definitions/ent.LengthTime'
-        description: LengthTime holds the value of the LengthTime edge.
+      lengthtime:
+        $ref: '#/definitions/ent.Lengthtime'
+        description: Lengthtime holds the value of the Lengthtime edge.
         type: object
       roomdetail:
         $ref: '#/definitions/ent.Roomdetail'
@@ -284,7 +311,7 @@ definitions:
       cleaningrooms:
         description: Cleaningrooms holds the value of the cleaningrooms edge.
         items:
-          $ref: '#/definitions/ent.CleaningRoom'
+          $ref: '#/definitions/ent.Cleaningroom'
         type: array
       employees:
         description: Employees holds the value of the employees edge.
@@ -295,8 +322,8 @@ definitions:
         $ref: '#/definitions/ent.Jobposition'
         description: Jobposition holds the value of the jobposition edge.
         type: object
-      leases:
-        description: Leases holds the value of the leases edge.
+      leasess:
+        description: Leasess holds the value of the leasess edge.
         items:
           $ref: '#/definitions/ent.Lease'
         type: array
@@ -344,6 +371,9 @@ definitions:
       addedtime:
         description: Addedtime holds the value of the "addedtime" field.
         type: string
+      agetenant:
+        description: Agetenant holds the value of the "agetenant" field.
+        type: integer
       edges:
         $ref: '#/definitions/ent.LeaseEdges'
         description: |-
@@ -388,13 +418,13 @@ definitions:
         description: Wifi holds the value of the Wifi edge.
         type: object
     type: object
-  ent.LengthTime:
+  ent.Lengthtime:
     properties:
       edges:
-        $ref: '#/definitions/ent.LengthTimeEdges'
+        $ref: '#/definitions/ent.LengthtimeEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the LengthTimeQuery when eager-loading is set.
+          The values are being populated by the LengthtimeQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
@@ -403,12 +433,12 @@ definitions:
         description: Lengthtime holds the value of the "lengthtime" field.
         type: string
     type: object
-  ent.LengthTimeEdges:
+  ent.LengthtimeEdges:
     properties:
       cleaningrooms:
         description: Cleaningrooms holds the value of the cleaningrooms edge.
         items:
-          $ref: '#/definitions/ent.CleaningRoom'
+          $ref: '#/definitions/ent.Cleaningroom'
         type: array
     type: object
   ent.Payment:
@@ -568,7 +598,7 @@ definitions:
       cleaningrooms:
         description: Cleaningrooms holds the value of the cleaningrooms edge.
         items:
-          $ref: '#/definitions/ent.CleaningRoom'
+          $ref: '#/definitions/ent.Cleaningroom'
         type: array
       employee:
         $ref: '#/definitions/ent.Employee'
@@ -923,7 +953,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.CleanerName'
+              $ref: '#/definitions/ent.Cleanername'
             type: array
         "400":
           description: Bad Request
@@ -939,7 +969,7 @@ paths:
       description: get cleanername by ID
       operationId: get-cleanername
       parameters:
-      - description: CleanerName ID
+      - description: Cleanername ID
         in: path
         name: id
         required: true
@@ -950,7 +980,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.CleanerName'
+            $ref: '#/definitions/ent.Cleanername'
         "400":
           description: Bad Request
           schema:
@@ -968,15 +998,6 @@ paths:
     get:
       description: list cleaningroom entities
       operationId: list-cleaningroom
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
       produces:
       - application/json
       responses:
@@ -984,7 +1005,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.CleaningRoom'
+              $ref: '#/definitions/ent.Cleaningroom'
             type: array
         "400":
           description: Bad Request
@@ -1001,19 +1022,19 @@ paths:
       description: Create cleaningroom
       operationId: create-cleaningroom
       parameters:
-      - description: CleaningRoom entity
+      - description: Cleaningroom entity
         in: body
         name: cleaningroom
         required: true
         schema:
-          $ref: '#/definitions/ent.CleaningRoom'
+          $ref: '#/definitions/controllers.Cleaningroom'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.CleaningRoom'
+            $ref: '#/definitions/ent.Cleaningroom'
         "400":
           description: Bad Request
           schema:
@@ -1028,7 +1049,7 @@ paths:
       description: get cleaningroom by ID
       operationId: get-cleaningroom
       parameters:
-      - description: CleaningRoom ID
+      - description: Cleaningroom ID
         in: path
         name: id
         required: true
@@ -1039,7 +1060,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.CleaningRoom'
+            $ref: '#/definitions/ent.Cleaningroom'
         "400":
           description: Bad Request
           schema:
@@ -1273,7 +1294,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.LengthTime'
+              $ref: '#/definitions/ent.Lengthtime'
             type: array
         "400":
           description: Bad Request
@@ -1289,7 +1310,7 @@ paths:
       description: get lengthtime by ID
       operationId: get-lengthtime
       parameters:
-      - description: LengthTime ID
+      - description: Lengthtime ID
         in: path
         name: id
         required: true
@@ -1300,7 +1321,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.LengthTime'
+            $ref: '#/definitions/ent.Lengthtime'
         "400":
           description: Bad Request
           schema:

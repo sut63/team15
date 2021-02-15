@@ -360,7 +360,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.CleanerName"
+                                "$ref": "#/definitions/ent.Cleanername"
                             }
                         }
                     },
@@ -390,7 +390,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "CleanerName ID",
+                        "description": "Cleanername ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -400,7 +400,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.CleanerName"
+                            "$ref": "#/definitions/ent.Cleanername"
                         }
                     },
                     "400": {
@@ -432,27 +432,13 @@ var doc = `{
                 ],
                 "summary": "List cleaningroom entities",
                 "operationId": "list-cleaningroom",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.CleaningRoom"
+                                "$ref": "#/definitions/ent.Cleaningroom"
                             }
                         }
                     },
@@ -482,12 +468,12 @@ var doc = `{
                 "operationId": "create-cleaningroom",
                 "parameters": [
                     {
-                        "description": "CleaningRoom entity",
+                        "description": "Cleaningroom entity",
                         "name": "cleaningroom",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.CleaningRoom"
+                            "$ref": "#/definitions/controllers.Cleaningroom"
                         }
                     }
                 ],
@@ -495,7 +481,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.CleaningRoom"
+                            "$ref": "#/definitions/ent.Cleaningroom"
                         }
                     },
                     "400": {
@@ -524,7 +510,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "CleaningRoom ID",
+                        "description": "Cleaningroom ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -534,7 +520,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.CleaningRoom"
+                            "$ref": "#/definitions/ent.Cleaningroom"
                         }
                     },
                     "400": {
@@ -887,7 +873,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.LengthTime"
+                                "$ref": "#/definitions/ent.Lengthtime"
                             }
                         }
                     },
@@ -917,7 +903,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "LengthTime ID",
+                        "description": "Lengthtime ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -927,7 +913,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.LengthTime"
+                            "$ref": "#/definitions/ent.Lengthtime"
                         }
                     },
                     "400": {
@@ -2546,6 +2532,35 @@ var doc = `{
                 }
             }
         },
+        "controllers.Cleaningroom": {
+            "type": "object",
+            "properties": {
+                "cleanername": {
+                    "type": "integer"
+                },
+                "dateandstarttime": {
+                    "type": "string"
+                },
+                "employee": {
+                    "type": "integer"
+                },
+                "lengthtime": {
+                    "type": "integer"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "numofem": {
+                    "type": "integer"
+                },
+                "phonenumber": {
+                    "type": "string"
+                },
+                "roomdetail": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Deposit": {
             "type": "object",
             "properties": {
@@ -2583,6 +2598,9 @@ var doc = `{
             "properties": {
                 "added": {
                     "type": "string"
+                },
+                "agetenant": {
+                    "type": "integer"
                 },
                 "employee": {
                     "type": "integer"
@@ -2736,7 +2754,7 @@ var doc = `{
                 }
             }
         },
-        "ent.CleanerName": {
+        "ent.Cleanername": {
             "type": "object",
             "properties": {
                 "cleanername": {
@@ -2744,9 +2762,9 @@ var doc = `{
                     "type": "string"
                 },
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CleanerNameQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CleanernameQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.CleanerNameEdges"
+                    "$ref": "#/definitions/ent.CleanernameEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
@@ -2754,19 +2772,19 @@ var doc = `{
                 }
             }
         },
-        "ent.CleanerNameEdges": {
+        "ent.CleanernameEdges": {
             "type": "object",
             "properties": {
                 "cleaningrooms": {
                     "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.CleaningRoom"
+                        "$ref": "#/definitions/ent.Cleaningroom"
                     }
                 }
             }
         },
-        "ent.CleaningRoom": {
+        "ent.Cleaningroom": {
             "type": "object",
             "properties": {
                 "dateandstarttime": {
@@ -2774,9 +2792,9 @@ var doc = `{
                     "type": "string"
                 },
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CleaningRoomQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CleaningroomQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.CleaningRoomEdges"
+                    "$ref": "#/definitions/ent.CleaningroomEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
@@ -2785,26 +2803,34 @@ var doc = `{
                 "note": {
                     "description": "Note holds the value of the \"note\" field.",
                     "type": "string"
+                },
+                "numofem": {
+                    "description": "Numofem holds the value of the \"numofem\" field.",
+                    "type": "integer"
+                },
+                "phonenumber": {
+                    "description": "Phonenumber holds the value of the \"phonenumber\" field.",
+                    "type": "string"
                 }
             }
         },
-        "ent.CleaningRoomEdges": {
+        "ent.CleaningroomEdges": {
             "type": "object",
             "properties": {
-                "cleanerName": {
-                    "description": "CleanerName holds the value of the CleanerName edge.",
+                "cleanername": {
+                    "description": "Cleanername holds the value of the Cleanername edge.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.CleanerName"
+                    "$ref": "#/definitions/ent.Cleanername"
                 },
                 "employee": {
                     "description": "Employee holds the value of the Employee edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Employee"
                 },
-                "lengthTime": {
-                    "description": "LengthTime holds the value of the LengthTime edge.",
+                "lengthtime": {
+                    "description": "Lengthtime holds the value of the Lengthtime edge.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.LengthTime"
+                    "$ref": "#/definitions/ent.Lengthtime"
                 },
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the roomdetail edge.",
@@ -2904,7 +2930,7 @@ var doc = `{
                     "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.CleaningRoom"
+                        "$ref": "#/definitions/ent.Cleaningroom"
                     }
                 },
                 "employees": {
@@ -2919,8 +2945,8 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Jobposition"
                 },
-                "leases": {
-                    "description": "Leases holds the value of the leases edge.",
+                "leasess": {
+                    "description": "Leasess holds the value of the leasess edge.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Lease"
@@ -2986,6 +3012,10 @@ var doc = `{
                     "description": "Addedtime holds the value of the \"addedtime\" field.",
                     "type": "string"
                 },
+                "agetenant": {
+                    "description": "Agetenant holds the value of the \"agetenant\" field.",
+                    "type": "integer"
+                },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the LeaseQuery when eager-loading is set.",
                     "type": "object",
@@ -3043,13 +3073,13 @@ var doc = `{
                 }
             }
         },
-        "ent.LengthTime": {
+        "ent.Lengthtime": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the LengthTimeQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the LengthtimeQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.LengthTimeEdges"
+                    "$ref": "#/definitions/ent.LengthtimeEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
@@ -3061,14 +3091,14 @@ var doc = `{
                 }
             }
         },
-        "ent.LengthTimeEdges": {
+        "ent.LengthtimeEdges": {
             "type": "object",
             "properties": {
                 "cleaningrooms": {
                     "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.CleaningRoom"
+                        "$ref": "#/definitions/ent.Cleaningroom"
                     }
                 }
             }
@@ -3276,7 +3306,7 @@ var doc = `{
                     "description": "Cleaningrooms holds the value of the cleaningrooms edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.CleaningRoom"
+                        "$ref": "#/definitions/ent.Cleaningroom"
                     }
                 },
                 "employee": {

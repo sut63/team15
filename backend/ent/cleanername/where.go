@@ -9,29 +9,29 @@ import (
 )
 
 // ID filters vertices based on their identifier.
-func ID(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func ID(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDEQ(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDNEQ(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDIn(ids ...int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(ids) == 0 {
@@ -47,8 +47,8 @@ func IDIn(ids ...int) predicate.CleanerName {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDNotIn(ids ...int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(ids) == 0 {
@@ -64,61 +64,61 @@ func IDNotIn(ids ...int) predicate.CleanerName {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDGT(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDGTE(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDLT(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func IDLTE(id int) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
 }
 
 // Cleanername applies equality check predicate on the "cleanername" field. It's identical to CleanernameEQ.
-func Cleanername(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func Cleanername(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameEQ applies the EQ predicate on the "cleanername" field.
-func CleanernameEQ(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameEQ(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameNEQ applies the NEQ predicate on the "cleanername" field.
-func CleanernameNEQ(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameNEQ(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameIn applies the In predicate on the "cleanername" field.
-func CleanernameIn(vs ...string) predicate.CleanerName {
+func CleanernameIn(vs ...string) predicate.Cleanername {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
-	return predicate.CleanerName(func(s *sql.Selector) {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(v) == 0 {
@@ -130,12 +130,12 @@ func CleanernameIn(vs ...string) predicate.CleanerName {
 }
 
 // CleanernameNotIn applies the NotIn predicate on the "cleanername" field.
-func CleanernameNotIn(vs ...string) predicate.CleanerName {
+func CleanernameNotIn(vs ...string) predicate.Cleanername {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
-	return predicate.CleanerName(func(s *sql.Selector) {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(v) == 0 {
@@ -147,71 +147,71 @@ func CleanernameNotIn(vs ...string) predicate.CleanerName {
 }
 
 // CleanernameGT applies the GT predicate on the "cleanername" field.
-func CleanernameGT(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameGT(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameGTE applies the GTE predicate on the "cleanername" field.
-func CleanernameGTE(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameGTE(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameLT applies the LT predicate on the "cleanername" field.
-func CleanernameLT(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameLT(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameLTE applies the LTE predicate on the "cleanername" field.
-func CleanernameLTE(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameLTE(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameContains applies the Contains predicate on the "cleanername" field.
-func CleanernameContains(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameContains(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameHasPrefix applies the HasPrefix predicate on the "cleanername" field.
-func CleanernameHasPrefix(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameHasPrefix(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameHasSuffix applies the HasSuffix predicate on the "cleanername" field.
-func CleanernameHasSuffix(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameHasSuffix(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameEqualFold applies the EqualFold predicate on the "cleanername" field.
-func CleanernameEqualFold(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameEqualFold(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldCleanername), v))
 	})
 }
 
 // CleanernameContainsFold applies the ContainsFold predicate on the "cleanername" field.
-func CleanernameContainsFold(v string) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func CleanernameContainsFold(v string) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldCleanername), v))
 	})
 }
 
 // HasCleaningrooms applies the HasEdge predicate on the "cleaningrooms" edge.
-func HasCleaningrooms() predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func HasCleaningrooms() predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CleaningroomsTable, FieldID),
@@ -222,8 +222,8 @@ func HasCleaningrooms() predicate.CleanerName {
 }
 
 // HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
-func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func HasCleaningroomsWith(preds ...predicate.Cleaningroom) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CleaningroomsInverseTable, FieldID),
@@ -238,8 +238,8 @@ func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.CleanerName
 }
 
 // And groups list of predicates with the AND operator between them.
-func And(predicates ...predicate.CleanerName) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func And(predicates ...predicate.Cleanername) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s1 := s.Clone().SetP(nil)
 		for _, p := range predicates {
 			p(s1)
@@ -249,8 +249,8 @@ func And(predicates ...predicate.CleanerName) predicate.CleanerName {
 }
 
 // Or groups list of predicates with the OR operator between them.
-func Or(predicates ...predicate.CleanerName) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func Or(predicates ...predicate.Cleanername) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		s1 := s.Clone().SetP(nil)
 		for i, p := range predicates {
 			if i > 0 {
@@ -263,8 +263,8 @@ func Or(predicates ...predicate.CleanerName) predicate.CleanerName {
 }
 
 // Not applies the not operator on the given predicate.
-func Not(p predicate.CleanerName) predicate.CleanerName {
-	return predicate.CleanerName(func(s *sql.Selector) {
+func Not(p predicate.Cleanername) predicate.Cleanername {
+	return predicate.Cleanername(func(s *sql.Selector) {
 		p(s.Not())
 	})
 }

@@ -938,7 +938,7 @@ func HasCleaningrooms() predicate.Roomdetail {
 }
 
 // HasCleaningroomsWith applies the HasEdge predicate on the "cleaningrooms" edge with a given conditions (other predicates).
-func HasCleaningroomsWith(preds ...predicate.CleaningRoom) predicate.Roomdetail {
+func HasCleaningroomsWith(preds ...predicate.Cleaningroom) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),

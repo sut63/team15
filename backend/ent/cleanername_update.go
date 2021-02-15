@@ -14,64 +14,64 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// CleanerNameUpdate is the builder for updating CleanerName entities.
-type CleanerNameUpdate struct {
+// CleanernameUpdate is the builder for updating Cleanername entities.
+type CleanernameUpdate struct {
 	config
 	hooks      []Hook
-	mutation   *CleanerNameMutation
-	predicates []predicate.CleanerName
+	mutation   *CleanernameMutation
+	predicates []predicate.Cleanername
 }
 
 // Where adds a new predicate for the builder.
-func (cnu *CleanerNameUpdate) Where(ps ...predicate.CleanerName) *CleanerNameUpdate {
-	cnu.predicates = append(cnu.predicates, ps...)
-	return cnu
+func (cu *CleanernameUpdate) Where(ps ...predicate.Cleanername) *CleanernameUpdate {
+	cu.predicates = append(cu.predicates, ps...)
+	return cu
 }
 
 // SetCleanername sets the cleanername field.
-func (cnu *CleanerNameUpdate) SetCleanername(s string) *CleanerNameUpdate {
-	cnu.mutation.SetCleanername(s)
-	return cnu
+func (cu *CleanernameUpdate) SetCleanername(s string) *CleanernameUpdate {
+	cu.mutation.SetCleanername(s)
+	return cu
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
-func (cnu *CleanerNameUpdate) AddCleaningroomIDs(ids ...int) *CleanerNameUpdate {
-	cnu.mutation.AddCleaningroomIDs(ids...)
-	return cnu
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
+func (cu *CleanernameUpdate) AddCleaningroomIDs(ids ...int) *CleanernameUpdate {
+	cu.mutation.AddCleaningroomIDs(ids...)
+	return cu
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (cnu *CleanerNameUpdate) AddCleaningrooms(c ...*CleaningRoom) *CleanerNameUpdate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (cu *CleanernameUpdate) AddCleaningrooms(c ...*Cleaningroom) *CleanernameUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cnu.AddCleaningroomIDs(ids...)
+	return cu.AddCleaningroomIDs(ids...)
 }
 
-// Mutation returns the CleanerNameMutation object of the builder.
-func (cnu *CleanerNameUpdate) Mutation() *CleanerNameMutation {
-	return cnu.mutation
+// Mutation returns the CleanernameMutation object of the builder.
+func (cu *CleanernameUpdate) Mutation() *CleanernameMutation {
+	return cu.mutation
 }
 
-// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
-func (cnu *CleanerNameUpdate) RemoveCleaningroomIDs(ids ...int) *CleanerNameUpdate {
-	cnu.mutation.RemoveCleaningroomIDs(ids...)
-	return cnu
+// RemoveCleaningroomIDs removes the cleaningrooms edge to Cleaningroom by ids.
+func (cu *CleanernameUpdate) RemoveCleaningroomIDs(ids ...int) *CleanernameUpdate {
+	cu.mutation.RemoveCleaningroomIDs(ids...)
+	return cu
 }
 
-// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
-func (cnu *CleanerNameUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *CleanerNameUpdate {
+// RemoveCleaningrooms removes cleaningrooms edges to Cleaningroom.
+func (cu *CleanernameUpdate) RemoveCleaningrooms(c ...*Cleaningroom) *CleanernameUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cnu.RemoveCleaningroomIDs(ids...)
+	return cu.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
-func (cnu *CleanerNameUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := cnu.mutation.Cleanername(); ok {
+func (cu *CleanernameUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := cu.mutation.Cleanername(); ok {
 		if err := cleanername.CleanernameValidator(v); err != nil {
 			return 0, &ValidationError{Name: "cleanername", err: fmt.Errorf("ent: validator failed for field \"cleanername\": %w", err)}
 		}
@@ -81,23 +81,23 @@ func (cnu *CleanerNameUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	if len(cnu.hooks) == 0 {
-		affected, err = cnu.sqlSave(ctx)
+	if len(cu.hooks) == 0 {
+		affected, err = cu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleanerNameMutation)
+			mutation, ok := m.(*CleanernameMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			cnu.mutation = mutation
-			affected, err = cnu.sqlSave(ctx)
+			cu.mutation = mutation
+			affected, err = cu.sqlSave(ctx)
 			mutation.done = true
 			return affected, err
 		})
-		for i := len(cnu.hooks) - 1; i >= 0; i-- {
-			mut = cnu.hooks[i](mut)
+		for i := len(cu.hooks) - 1; i >= 0; i-- {
+			mut = cu.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, cnu.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cu.mutation); err != nil {
 			return 0, err
 		}
 	}
@@ -105,8 +105,8 @@ func (cnu *CleanerNameUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cnu *CleanerNameUpdate) SaveX(ctx context.Context) int {
-	affected, err := cnu.Save(ctx)
+func (cu *CleanernameUpdate) SaveX(ctx context.Context) int {
+	affected, err := cu.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -114,19 +114,19 @@ func (cnu *CleanerNameUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (cnu *CleanerNameUpdate) Exec(ctx context.Context) error {
-	_, err := cnu.Save(ctx)
+func (cu *CleanernameUpdate) Exec(ctx context.Context) error {
+	_, err := cu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cnu *CleanerNameUpdate) ExecX(ctx context.Context) {
-	if err := cnu.Exec(ctx); err != nil {
+func (cu *CleanernameUpdate) ExecX(ctx context.Context) {
+	if err := cu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (cnu *CleanerNameUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (cu *CleanernameUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   cleanername.Table,
@@ -137,21 +137,21 @@ func (cnu *CleanerNameUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			},
 		},
 	}
-	if ps := cnu.predicates; len(ps) > 0 {
+	if ps := cu.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := cnu.mutation.Cleanername(); ok {
+	if value, ok := cu.mutation.Cleanername(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: cleanername.FieldCleanername,
 		})
 	}
-	if nodes := cnu.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -170,7 +170,7 @@ func (cnu *CleanerNameUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cnu.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.CleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -189,7 +189,7 @@ func (cnu *CleanerNameUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, cnu.driver, _spec); err != nil {
+	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{cleanername.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
@@ -200,57 +200,57 @@ func (cnu *CleanerNameUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// CleanerNameUpdateOne is the builder for updating a single CleanerName entity.
-type CleanerNameUpdateOne struct {
+// CleanernameUpdateOne is the builder for updating a single Cleanername entity.
+type CleanernameUpdateOne struct {
 	config
 	hooks    []Hook
-	mutation *CleanerNameMutation
+	mutation *CleanernameMutation
 }
 
 // SetCleanername sets the cleanername field.
-func (cnuo *CleanerNameUpdateOne) SetCleanername(s string) *CleanerNameUpdateOne {
-	cnuo.mutation.SetCleanername(s)
-	return cnuo
+func (cuo *CleanernameUpdateOne) SetCleanername(s string) *CleanernameUpdateOne {
+	cuo.mutation.SetCleanername(s)
+	return cuo
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
-func (cnuo *CleanerNameUpdateOne) AddCleaningroomIDs(ids ...int) *CleanerNameUpdateOne {
-	cnuo.mutation.AddCleaningroomIDs(ids...)
-	return cnuo
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
+func (cuo *CleanernameUpdateOne) AddCleaningroomIDs(ids ...int) *CleanernameUpdateOne {
+	cuo.mutation.AddCleaningroomIDs(ids...)
+	return cuo
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (cnuo *CleanerNameUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *CleanerNameUpdateOne {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (cuo *CleanernameUpdateOne) AddCleaningrooms(c ...*Cleaningroom) *CleanernameUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cnuo.AddCleaningroomIDs(ids...)
+	return cuo.AddCleaningroomIDs(ids...)
 }
 
-// Mutation returns the CleanerNameMutation object of the builder.
-func (cnuo *CleanerNameUpdateOne) Mutation() *CleanerNameMutation {
-	return cnuo.mutation
+// Mutation returns the CleanernameMutation object of the builder.
+func (cuo *CleanernameUpdateOne) Mutation() *CleanernameMutation {
+	return cuo.mutation
 }
 
-// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
-func (cnuo *CleanerNameUpdateOne) RemoveCleaningroomIDs(ids ...int) *CleanerNameUpdateOne {
-	cnuo.mutation.RemoveCleaningroomIDs(ids...)
-	return cnuo
+// RemoveCleaningroomIDs removes the cleaningrooms edge to Cleaningroom by ids.
+func (cuo *CleanernameUpdateOne) RemoveCleaningroomIDs(ids ...int) *CleanernameUpdateOne {
+	cuo.mutation.RemoveCleaningroomIDs(ids...)
+	return cuo
 }
 
-// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
-func (cnuo *CleanerNameUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *CleanerNameUpdateOne {
+// RemoveCleaningrooms removes cleaningrooms edges to Cleaningroom.
+func (cuo *CleanernameUpdateOne) RemoveCleaningrooms(c ...*Cleaningroom) *CleanernameUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return cnuo.RemoveCleaningroomIDs(ids...)
+	return cuo.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
-func (cnuo *CleanerNameUpdateOne) Save(ctx context.Context) (*CleanerName, error) {
-	if v, ok := cnuo.mutation.Cleanername(); ok {
+func (cuo *CleanernameUpdateOne) Save(ctx context.Context) (*Cleanername, error) {
+	if v, ok := cuo.mutation.Cleanername(); ok {
 		if err := cleanername.CleanernameValidator(v); err != nil {
 			return nil, &ValidationError{Name: "cleanername", err: fmt.Errorf("ent: validator failed for field \"cleanername\": %w", err)}
 		}
@@ -258,25 +258,25 @@ func (cnuo *CleanerNameUpdateOne) Save(ctx context.Context) (*CleanerName, error
 
 	var (
 		err  error
-		node *CleanerName
+		node *Cleanername
 	)
-	if len(cnuo.hooks) == 0 {
-		node, err = cnuo.sqlSave(ctx)
+	if len(cuo.hooks) == 0 {
+		node, err = cuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleanerNameMutation)
+			mutation, ok := m.(*CleanernameMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			cnuo.mutation = mutation
-			node, err = cnuo.sqlSave(ctx)
+			cuo.mutation = mutation
+			node, err = cuo.sqlSave(ctx)
 			mutation.done = true
 			return node, err
 		})
-		for i := len(cnuo.hooks) - 1; i >= 0; i-- {
-			mut = cnuo.hooks[i](mut)
+		for i := len(cuo.hooks) - 1; i >= 0; i-- {
+			mut = cuo.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, cnuo.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cuo.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -284,28 +284,28 @@ func (cnuo *CleanerNameUpdateOne) Save(ctx context.Context) (*CleanerName, error
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cnuo *CleanerNameUpdateOne) SaveX(ctx context.Context) *CleanerName {
-	cn, err := cnuo.Save(ctx)
+func (cuo *CleanernameUpdateOne) SaveX(ctx context.Context) *Cleanername {
+	c, err := cuo.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return cn
+	return c
 }
 
 // Exec executes the query on the entity.
-func (cnuo *CleanerNameUpdateOne) Exec(ctx context.Context) error {
-	_, err := cnuo.Save(ctx)
+func (cuo *CleanernameUpdateOne) Exec(ctx context.Context) error {
+	_, err := cuo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cnuo *CleanerNameUpdateOne) ExecX(ctx context.Context) {
-	if err := cnuo.Exec(ctx); err != nil {
+func (cuo *CleanernameUpdateOne) ExecX(ctx context.Context) {
+	if err := cuo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (cnuo *CleanerNameUpdateOne) sqlSave(ctx context.Context) (cn *CleanerName, err error) {
+func (cuo *CleanernameUpdateOne) sqlSave(ctx context.Context) (c *Cleanername, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   cleanername.Table,
@@ -316,19 +316,19 @@ func (cnuo *CleanerNameUpdateOne) sqlSave(ctx context.Context) (cn *CleanerName,
 			},
 		},
 	}
-	id, ok := cnuo.mutation.ID()
+	id, ok := cuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing CleanerName.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Cleanername.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := cnuo.mutation.Cleanername(); ok {
+	if value, ok := cuo.mutation.Cleanername(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: cleanername.FieldCleanername,
 		})
 	}
-	if nodes := cnuo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -347,7 +347,7 @@ func (cnuo *CleanerNameUpdateOne) sqlSave(ctx context.Context) (cn *CleanerName,
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cnuo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -366,10 +366,10 @@ func (cnuo *CleanerNameUpdateOne) sqlSave(ctx context.Context) (cn *CleanerName,
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	cn = &CleanerName{config: cnuo.config}
-	_spec.Assign = cn.assignValues
-	_spec.ScanValues = cn.scanValues()
-	if err = sqlgraph.UpdateNode(ctx, cnuo.driver, _spec); err != nil {
+	c = &Cleanername{config: cuo.config}
+	_spec.Assign = c.assignValues
+	_spec.ScanValues = c.scanValues()
+	if err = sqlgraph.UpdateNode(ctx, cuo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{cleanername.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
@@ -377,5 +377,5 @@ func (cnuo *CleanerNameUpdateOne) sqlSave(ctx context.Context) (cn *CleanerName,
 		}
 		return nil, err
 	}
-	return cn, nil
+	return c, nil
 }

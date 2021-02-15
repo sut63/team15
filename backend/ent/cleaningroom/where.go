@@ -11,29 +11,29 @@ import (
 )
 
 // ID filters vertices based on their identifier.
-func ID(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func ID(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDEQ(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDNEQ(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDIn(ids ...int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(ids) == 0 {
@@ -49,8 +49,8 @@ func IDIn(ids ...int) predicate.CleaningRoom {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDNotIn(ids ...int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(ids) == 0 {
@@ -66,144 +66,82 @@ func IDNotIn(ids ...int) predicate.CleaningRoom {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDGT(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDGTE(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDLT(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func IDLTE(id int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
 }
 
-// Dateandstarttime applies equality check predicate on the "dateandstarttime" field. It's identical to DateandstarttimeEQ.
-func Dateandstarttime(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDateandstarttime), v))
-	})
-}
-
 // Note applies equality check predicate on the "note" field. It's identical to NoteEQ.
-func Note(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func Note(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldNote), v))
 	})
 }
 
-// DateandstarttimeEQ applies the EQ predicate on the "dateandstarttime" field.
-func DateandstarttimeEQ(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+// Dateandstarttime applies equality check predicate on the "dateandstarttime" field. It's identical to DateandstarttimeEQ.
+func Dateandstarttime(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDateandstarttime), v))
 	})
 }
 
-// DateandstarttimeNEQ applies the NEQ predicate on the "dateandstarttime" field.
-func DateandstarttimeNEQ(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDateandstarttime), v))
+// Phonenumber applies equality check predicate on the "phonenumber" field. It's identical to PhonenumberEQ.
+func Phonenumber(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPhonenumber), v))
 	})
 }
 
-// DateandstarttimeIn applies the In predicate on the "dateandstarttime" field.
-func DateandstarttimeIn(vs ...time.Time) predicate.CleaningRoom {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldDateandstarttime), v...))
-	})
-}
-
-// DateandstarttimeNotIn applies the NotIn predicate on the "dateandstarttime" field.
-func DateandstarttimeNotIn(vs ...time.Time) predicate.CleaningRoom {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldDateandstarttime), v...))
-	})
-}
-
-// DateandstarttimeGT applies the GT predicate on the "dateandstarttime" field.
-func DateandstarttimeGT(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDateandstarttime), v))
-	})
-}
-
-// DateandstarttimeGTE applies the GTE predicate on the "dateandstarttime" field.
-func DateandstarttimeGTE(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDateandstarttime), v))
-	})
-}
-
-// DateandstarttimeLT applies the LT predicate on the "dateandstarttime" field.
-func DateandstarttimeLT(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDateandstarttime), v))
-	})
-}
-
-// DateandstarttimeLTE applies the LTE predicate on the "dateandstarttime" field.
-func DateandstarttimeLTE(v time.Time) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDateandstarttime), v))
+// Numofem applies equality check predicate on the "numofem" field. It's identical to NumofemEQ.
+func Numofem(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumofem), v))
 	})
 }
 
 // NoteEQ applies the EQ predicate on the "note" field.
-func NoteEQ(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteEQ(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldNote), v))
 	})
 }
 
 // NoteNEQ applies the NEQ predicate on the "note" field.
-func NoteNEQ(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteNEQ(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldNote), v))
 	})
 }
 
 // NoteIn applies the In predicate on the "note" field.
-func NoteIn(vs ...string) predicate.CleaningRoom {
+func NoteIn(vs ...string) predicate.Cleaningroom {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(v) == 0 {
@@ -215,12 +153,12 @@ func NoteIn(vs ...string) predicate.CleaningRoom {
 }
 
 // NoteNotIn applies the NotIn predicate on the "note" field.
-func NoteNotIn(vs ...string) predicate.CleaningRoom {
+func NoteNotIn(vs ...string) predicate.Cleaningroom {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
 		if len(v) == 0 {
@@ -232,71 +170,334 @@ func NoteNotIn(vs ...string) predicate.CleaningRoom {
 }
 
 // NoteGT applies the GT predicate on the "note" field.
-func NoteGT(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteGT(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldNote), v))
 	})
 }
 
 // NoteGTE applies the GTE predicate on the "note" field.
-func NoteGTE(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteGTE(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldNote), v))
 	})
 }
 
 // NoteLT applies the LT predicate on the "note" field.
-func NoteLT(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteLT(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldNote), v))
 	})
 }
 
 // NoteLTE applies the LTE predicate on the "note" field.
-func NoteLTE(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteLTE(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldNote), v))
 	})
 }
 
 // NoteContains applies the Contains predicate on the "note" field.
-func NoteContains(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteContains(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.Contains(s.C(FieldNote), v))
 	})
 }
 
 // NoteHasPrefix applies the HasPrefix predicate on the "note" field.
-func NoteHasPrefix(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteHasPrefix(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.HasPrefix(s.C(FieldNote), v))
 	})
 }
 
 // NoteHasSuffix applies the HasSuffix predicate on the "note" field.
-func NoteHasSuffix(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteHasSuffix(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldNote), v))
 	})
 }
 
 // NoteEqualFold applies the EqualFold predicate on the "note" field.
-func NoteEqualFold(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteEqualFold(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.EqualFold(s.C(FieldNote), v))
 	})
 }
 
 // NoteContainsFold applies the ContainsFold predicate on the "note" field.
-func NoteContainsFold(v string) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func NoteContainsFold(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldNote), v))
 	})
 }
 
+// DateandstarttimeEQ applies the EQ predicate on the "dateandstarttime" field.
+func DateandstarttimeEQ(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDateandstarttime), v))
+	})
+}
+
+// DateandstarttimeNEQ applies the NEQ predicate on the "dateandstarttime" field.
+func DateandstarttimeNEQ(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDateandstarttime), v))
+	})
+}
+
+// DateandstarttimeIn applies the In predicate on the "dateandstarttime" field.
+func DateandstarttimeIn(vs ...time.Time) predicate.Cleaningroom {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDateandstarttime), v...))
+	})
+}
+
+// DateandstarttimeNotIn applies the NotIn predicate on the "dateandstarttime" field.
+func DateandstarttimeNotIn(vs ...time.Time) predicate.Cleaningroom {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDateandstarttime), v...))
+	})
+}
+
+// DateandstarttimeGT applies the GT predicate on the "dateandstarttime" field.
+func DateandstarttimeGT(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDateandstarttime), v))
+	})
+}
+
+// DateandstarttimeGTE applies the GTE predicate on the "dateandstarttime" field.
+func DateandstarttimeGTE(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDateandstarttime), v))
+	})
+}
+
+// DateandstarttimeLT applies the LT predicate on the "dateandstarttime" field.
+func DateandstarttimeLT(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDateandstarttime), v))
+	})
+}
+
+// DateandstarttimeLTE applies the LTE predicate on the "dateandstarttime" field.
+func DateandstarttimeLTE(v time.Time) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDateandstarttime), v))
+	})
+}
+
+// PhonenumberEQ applies the EQ predicate on the "phonenumber" field.
+func PhonenumberEQ(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberNEQ applies the NEQ predicate on the "phonenumber" field.
+func PhonenumberNEQ(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberIn applies the In predicate on the "phonenumber" field.
+func PhonenumberIn(vs ...string) predicate.Cleaningroom {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPhonenumber), v...))
+	})
+}
+
+// PhonenumberNotIn applies the NotIn predicate on the "phonenumber" field.
+func PhonenumberNotIn(vs ...string) predicate.Cleaningroom {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPhonenumber), v...))
+	})
+}
+
+// PhonenumberGT applies the GT predicate on the "phonenumber" field.
+func PhonenumberGT(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberGTE applies the GTE predicate on the "phonenumber" field.
+func PhonenumberGTE(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberLT applies the LT predicate on the "phonenumber" field.
+func PhonenumberLT(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberLTE applies the LTE predicate on the "phonenumber" field.
+func PhonenumberLTE(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberContains applies the Contains predicate on the "phonenumber" field.
+func PhonenumberContains(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberHasPrefix applies the HasPrefix predicate on the "phonenumber" field.
+func PhonenumberHasPrefix(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberHasSuffix applies the HasSuffix predicate on the "phonenumber" field.
+func PhonenumberHasSuffix(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberEqualFold applies the EqualFold predicate on the "phonenumber" field.
+func PhonenumberEqualFold(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPhonenumber), v))
+	})
+}
+
+// PhonenumberContainsFold applies the ContainsFold predicate on the "phonenumber" field.
+func PhonenumberContainsFold(v string) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPhonenumber), v))
+	})
+}
+
+// NumofemEQ applies the EQ predicate on the "numofem" field.
+func NumofemEQ(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumofem), v))
+	})
+}
+
+// NumofemNEQ applies the NEQ predicate on the "numofem" field.
+func NumofemNEQ(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumofem), v))
+	})
+}
+
+// NumofemIn applies the In predicate on the "numofem" field.
+func NumofemIn(vs ...int) predicate.Cleaningroom {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumofem), v...))
+	})
+}
+
+// NumofemNotIn applies the NotIn predicate on the "numofem" field.
+func NumofemNotIn(vs ...int) predicate.Cleaningroom {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumofem), v...))
+	})
+}
+
+// NumofemGT applies the GT predicate on the "numofem" field.
+func NumofemGT(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumofem), v))
+	})
+}
+
+// NumofemGTE applies the GTE predicate on the "numofem" field.
+func NumofemGTE(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumofem), v))
+	})
+}
+
+// NumofemLT applies the LT predicate on the "numofem" field.
+func NumofemLT(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumofem), v))
+	})
+}
+
+// NumofemLTE applies the LTE predicate on the "numofem" field.
+func NumofemLTE(v int) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumofem), v))
+	})
+}
+
 // HasRoomdetail applies the HasEdge predicate on the "roomdetail" edge.
-func HasRoomdetail() predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func HasRoomdetail() predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(RoomdetailTable, FieldID),
@@ -307,8 +508,8 @@ func HasRoomdetail() predicate.CleaningRoom {
 }
 
 // HasRoomdetailWith applies the HasEdge predicate on the "roomdetail" edge with a given conditions (other predicates).
-func HasRoomdetailWith(preds ...predicate.Roomdetail) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func HasRoomdetailWith(preds ...predicate.Roomdetail) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(RoomdetailInverseTable, FieldID),
@@ -322,25 +523,25 @@ func HasRoomdetailWith(preds ...predicate.Roomdetail) predicate.CleaningRoom {
 	})
 }
 
-// HasCleanerName applies the HasEdge predicate on the "CleanerName" edge.
-func HasCleanerName() predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+// HasCleanername applies the HasEdge predicate on the "Cleanername" edge.
+func HasCleanername() predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CleanerNameTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, CleanerNameTable, CleanerNameColumn),
+			sqlgraph.To(CleanernameTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CleanernameTable, CleanernameColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasCleanerNameWith applies the HasEdge predicate on the "CleanerName" edge with a given conditions (other predicates).
-func HasCleanerNameWith(preds ...predicate.CleanerName) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+// HasCleanernameWith applies the HasEdge predicate on the "Cleanername" edge with a given conditions (other predicates).
+func HasCleanernameWith(preds ...predicate.Cleanername) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CleanerNameInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, CleanerNameTable, CleanerNameColumn),
+			sqlgraph.To(CleanernameInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CleanernameTable, CleanernameColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -350,25 +551,25 @@ func HasCleanerNameWith(preds ...predicate.CleanerName) predicate.CleaningRoom {
 	})
 }
 
-// HasLengthTime applies the HasEdge predicate on the "LengthTime" edge.
-func HasLengthTime() predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+// HasLengthtime applies the HasEdge predicate on the "Lengthtime" edge.
+func HasLengthtime() predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(LengthTimeTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, LengthTimeTable, LengthTimeColumn),
+			sqlgraph.To(LengthtimeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, LengthtimeTable, LengthtimeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasLengthTimeWith applies the HasEdge predicate on the "LengthTime" edge with a given conditions (other predicates).
-func HasLengthTimeWith(preds ...predicate.LengthTime) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+// HasLengthtimeWith applies the HasEdge predicate on the "Lengthtime" edge with a given conditions (other predicates).
+func HasLengthtimeWith(preds ...predicate.Lengthtime) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(LengthTimeInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, LengthTimeTable, LengthTimeColumn),
+			sqlgraph.To(LengthtimeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, LengthtimeTable, LengthtimeColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -379,8 +580,8 @@ func HasLengthTimeWith(preds ...predicate.LengthTime) predicate.CleaningRoom {
 }
 
 // HasEmployee applies the HasEdge predicate on the "Employee" edge.
-func HasEmployee() predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func HasEmployee() predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(EmployeeTable, FieldID),
@@ -391,8 +592,8 @@ func HasEmployee() predicate.CleaningRoom {
 }
 
 // HasEmployeeWith applies the HasEdge predicate on the "Employee" edge with a given conditions (other predicates).
-func HasEmployeeWith(preds ...predicate.Employee) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func HasEmployeeWith(preds ...predicate.Employee) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(EmployeeInverseTable, FieldID),
@@ -407,8 +608,8 @@ func HasEmployeeWith(preds ...predicate.Employee) predicate.CleaningRoom {
 }
 
 // And groups list of predicates with the AND operator between them.
-func And(predicates ...predicate.CleaningRoom) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func And(predicates ...predicate.Cleaningroom) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s1 := s.Clone().SetP(nil)
 		for _, p := range predicates {
 			p(s1)
@@ -418,8 +619,8 @@ func And(predicates ...predicate.CleaningRoom) predicate.CleaningRoom {
 }
 
 // Or groups list of predicates with the OR operator between them.
-func Or(predicates ...predicate.CleaningRoom) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func Or(predicates ...predicate.Cleaningroom) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		s1 := s.Clone().SetP(nil)
 		for i, p := range predicates {
 			if i > 0 {
@@ -432,8 +633,8 @@ func Or(predicates ...predicate.CleaningRoom) predicate.CleaningRoom {
 }
 
 // Not applies the not operator on the given predicate.
-func Not(p predicate.CleaningRoom) predicate.CleaningRoom {
-	return predicate.CleaningRoom(func(s *sql.Selector) {
+func Not(p predicate.Cleaningroom) predicate.Cleaningroom {
+	return predicate.Cleaningroom(func(s *sql.Selector) {
 		p(s.Not())
 	})
 }

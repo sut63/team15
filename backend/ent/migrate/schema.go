@@ -60,58 +60,60 @@ var (
 			},
 		},
 	}
-	// CleanerNamesColumns holds the columns for the "cleaner_names" table.
-	CleanerNamesColumns = []*schema.Column{
+	// CleanernamesColumns holds the columns for the "cleanernames" table.
+	CleanernamesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "cleanername", Type: field.TypeString, Unique: true},
 	}
-	// CleanerNamesTable holds the schema information for the "cleaner_names" table.
-	CleanerNamesTable = &schema.Table{
-		Name:        "cleaner_names",
-		Columns:     CleanerNamesColumns,
-		PrimaryKey:  []*schema.Column{CleanerNamesColumns[0]},
+	// CleanernamesTable holds the schema information for the "cleanernames" table.
+	CleanernamesTable = &schema.Table{
+		Name:        "cleanernames",
+		Columns:     CleanernamesColumns,
+		PrimaryKey:  []*schema.Column{CleanernamesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// CleaningRoomsColumns holds the columns for the "cleaning_rooms" table.
-	CleaningRoomsColumns = []*schema.Column{
+	// CleaningroomsColumns holds the columns for the "cleaningrooms" table.
+	CleaningroomsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "dateandstarttime", Type: field.TypeTime},
 		{Name: "note", Type: field.TypeString},
+		{Name: "dateandstarttime", Type: field.TypeTime},
+		{Name: "phonenumber", Type: field.TypeString, Size: 12},
+		{Name: "numofem", Type: field.TypeInt},
 		{Name: "cleanerroom_id", Type: field.TypeInt, Nullable: true},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "lengthtime_id", Type: field.TypeInt, Nullable: true},
 		{Name: "roomdetail_id", Type: field.TypeInt, Nullable: true},
 	}
-	// CleaningRoomsTable holds the schema information for the "cleaning_rooms" table.
-	CleaningRoomsTable = &schema.Table{
-		Name:       "cleaning_rooms",
-		Columns:    CleaningRoomsColumns,
-		PrimaryKey: []*schema.Column{CleaningRoomsColumns[0]},
+	// CleaningroomsTable holds the schema information for the "cleaningrooms" table.
+	CleaningroomsTable = &schema.Table{
+		Name:       "cleaningrooms",
+		Columns:    CleaningroomsColumns,
+		PrimaryKey: []*schema.Column{CleaningroomsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "cleaning_rooms_cleaner_names_cleaningrooms",
-				Columns: []*schema.Column{CleaningRoomsColumns[3]},
+				Symbol:  "cleaningrooms_cleanernames_cleaningrooms",
+				Columns: []*schema.Column{CleaningroomsColumns[5]},
 
-				RefColumns: []*schema.Column{CleanerNamesColumns[0]},
+				RefColumns: []*schema.Column{CleanernamesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "cleaning_rooms_employees_cleaningrooms",
-				Columns: []*schema.Column{CleaningRoomsColumns[4]},
+				Symbol:  "cleaningrooms_employees_cleaningrooms",
+				Columns: []*schema.Column{CleaningroomsColumns[6]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "cleaning_rooms_length_times_cleaningrooms",
-				Columns: []*schema.Column{CleaningRoomsColumns[5]},
+				Symbol:  "cleaningrooms_lengthtimes_cleaningrooms",
+				Columns: []*schema.Column{CleaningroomsColumns[7]},
 
-				RefColumns: []*schema.Column{LengthTimesColumns[0]},
+				RefColumns: []*schema.Column{LengthtimesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "cleaning_rooms_roomdetails_cleaningrooms",
-				Columns: []*schema.Column{CleaningRoomsColumns[6]},
+				Symbol:  "cleaningrooms_roomdetails_cleaningrooms",
+				Columns: []*schema.Column{CleaningroomsColumns[8]},
 
 				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -202,6 +204,7 @@ var (
 		{Name: "tenant", Type: field.TypeString},
 		{Name: "numbtenant", Type: field.TypeString, Size: 12},
 		{Name: "idtenant", Type: field.TypeString, Size: 17},
+		{Name: "agetenant", Type: field.TypeInt},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
 		{Name: "room_num", Type: field.TypeInt, Unique: true, Nullable: true},
 		{Name: "wifi_id", Type: field.TypeInt, Nullable: true},
@@ -213,38 +216,38 @@ var (
 		PrimaryKey: []*schema.Column{LeasesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "leases_employees_leases",
-				Columns: []*schema.Column{LeasesColumns[5]},
+				Symbol:  "leases_employees_leasess",
+				Columns: []*schema.Column{LeasesColumns[6]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "leases_roomdetails_roomdetails",
-				Columns: []*schema.Column{LeasesColumns[6]},
+				Columns: []*schema.Column{LeasesColumns[7]},
 
 				RefColumns: []*schema.Column{RoomdetailsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "leases_wifis_wifis",
-				Columns: []*schema.Column{LeasesColumns[7]},
+				Columns: []*schema.Column{LeasesColumns[8]},
 
 				RefColumns: []*schema.Column{WifisColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
-	// LengthTimesColumns holds the columns for the "length_times" table.
-	LengthTimesColumns = []*schema.Column{
+	// LengthtimesColumns holds the columns for the "lengthtimes" table.
+	LengthtimesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "lengthtime", Type: field.TypeString, Unique: true},
 	}
-	// LengthTimesTable holds the schema information for the "length_times" table.
-	LengthTimesTable = &schema.Table{
-		Name:        "length_times",
-		Columns:     LengthTimesColumns,
-		PrimaryKey:  []*schema.Column{LengthTimesColumns[0]},
+	// LengthtimesTable holds the schema information for the "lengthtimes" table.
+	LengthtimesTable = &schema.Table{
+		Name:        "lengthtimes",
+		Columns:     LengthtimesColumns,
+		PrimaryKey:  []*schema.Column{LengthtimesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// PaymentsColumns holds the columns for the "payments" table.
@@ -442,13 +445,13 @@ var (
 	Tables = []*schema.Table{
 		BedtypesTable,
 		BillsTable,
-		CleanerNamesTable,
-		CleaningRoomsTable,
+		CleanernamesTable,
+		CleaningroomsTable,
 		DepositsTable,
 		EmployeesTable,
 		JobpositionsTable,
 		LeasesTable,
-		LengthTimesTable,
+		LengthtimesTable,
 		PaymentsTable,
 		PetrulesTable,
 		PledgesTable,
@@ -466,10 +469,10 @@ func init() {
 	BillsTable.ForeignKeys[0].RefTable = LeasesTable
 	BillsTable.ForeignKeys[1].RefTable = PaymentsTable
 	BillsTable.ForeignKeys[2].RefTable = SituationsTable
-	CleaningRoomsTable.ForeignKeys[0].RefTable = CleanerNamesTable
-	CleaningRoomsTable.ForeignKeys[1].RefTable = EmployeesTable
-	CleaningRoomsTable.ForeignKeys[2].RefTable = LengthTimesTable
-	CleaningRoomsTable.ForeignKeys[3].RefTable = RoomdetailsTable
+	CleaningroomsTable.ForeignKeys[0].RefTable = CleanernamesTable
+	CleaningroomsTable.ForeignKeys[1].RefTable = EmployeesTable
+	CleaningroomsTable.ForeignKeys[2].RefTable = LengthtimesTable
+	CleaningroomsTable.ForeignKeys[3].RefTable = RoomdetailsTable
 	DepositsTable.ForeignKeys[0].RefTable = EmployeesTable
 	DepositsTable.ForeignKeys[1].RefTable = LeasesTable
 	DepositsTable.ForeignKeys[2].RefTable = StatusdsTable

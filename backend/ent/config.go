@@ -26,13 +26,13 @@ type config struct {
 type hooks struct {
 	Bedtype       []ent.Hook
 	Bill          []ent.Hook
-	CleanerName   []ent.Hook
-	CleaningRoom  []ent.Hook
+	Cleanername   []ent.Hook
+	Cleaningroom  []ent.Hook
 	Deposit       []ent.Hook
 	Employee      []ent.Hook
 	Jobposition   []ent.Hook
 	Lease         []ent.Hook
-	LengthTime    []ent.Hook
+	Lengthtime    []ent.Hook
 	Payment       []ent.Hook
 	Petrule       []ent.Hook
 	Pledge        []ent.Hook

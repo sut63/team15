@@ -91,11 +91,13 @@ export default function RecordLease() {
  const [tenanterror, setTenanterror] = React.useState('');
  const [numbtenanterror, setNumbtenanterror] = React.useState('');
  const [idtenanterror, setIdtenanterror] = React.useState('');
+ const [agetenanterror, setAgetenanterror] = React.useState('');
 
  const [employee, setEmployee] = useState(Number);
  const [tenant, setTenant] = useState(String);
  const [numbtenant, setNumbtenant] = useState(String);
  const [idtenant, setIdtenant] = useState(String);
+ const [agetenant, setAgetenant] = useState(Number);
  const [added, setAdded] = useState(String);
  const [wifi, setWifi] = useState(Number);
  const [roomdetail, setRoomdetail] = useState(Number);
@@ -143,12 +145,19 @@ const validateIdtenant = (val: string) => {
   return val.match("^([0-9]{1})-([0-9]{4})-([0-9]{5})-([0-9]{2})-([0-9]{1})$");
 }
 
+const validateAgetenant = (val: number) => {
+  return (val <=200 && val >=1) ? true:false
+}
+
 const checkPattern  = (id: string, value:string) => {
   console.log(value);
   switch(id) {
     case 'numbtenant':
       validateNumbtenant(value) ? setNumbtenanterror('') : setNumbtenanterror ('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
     return;
+    case 'agetenant':
+        validateAgetenant(Number(value)) ? setAgetenanterror('') : setAgetenanterror('อายุต้องมากกว่า 0 แต่ไม่เกิน 200 ปี');
+        return;
     case 'idtenant':
       validateIdtenant(value) ? setIdtenanterror('') : setIdtenanterror ('รูปแบบของเลขบัตรประจำตัวประชาชนต้องเป็น x-xxxx-xxxxx-xx-x');
     return;
@@ -173,6 +182,13 @@ const getLease = async () => {
     const validateValue = value.toString()
     checkPattern(id, validateValue)
     setIdtenant(event.target.value as string);
+  };
+
+  const AgetenanthandleChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('agetenant', validateValue)
+    setAgetenant(event.target.value as number);
   };
 
   const NumbtenanthandleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
@@ -203,6 +219,7 @@ const getLease = async () => {
     if (field == "numbtenant") { setErrorMessege("ข้อมูลเบอร์โทรศัพท์ผิด"); }
         else if (field == "idtenant") { setErrorMessege("ข้อมูลรหัสบัตรประชาชนผิด"); }
         else if (field == "tenant") { setErrorMessege("โปรดกรอกชื่อผู้ทำสัญญาเช่า"); }
+        else if (field == "agetenant") { setErrorMessege("ข้อมูลอายุผิด"); }
         else { setErrorMessege("บันทึกไม่สำเร็จ/ใส่ข้อมูลไม่ครบ"); }
   }
 
@@ -218,6 +235,7 @@ const CreateLease = async () => {
     tenant: tenant,
     numbtenant: numbtenant,
     idtenant: idtenant,
+    agetenant: Number(agetenant),
     wifi: wifi,
     roomdetail: roomdetail,
     employee: employee,
@@ -344,6 +362,24 @@ else{
                   onChange={LeasehandleChange}
                 />
         </form>
+        <div className={classes.paper}><strong>Age</strong></div>
+        <form className={classes.root} noValidate>
+                <TextField
+                  name="agetenant"
+				          id="agetenant"
+				          error = {agetenanterror ? true : false}
+				          helperText= {agetenanterror}
+				          style={{ margin: 8 }}
+                  type="number"
+				          fullWidth
+				          margin="normal"
+				          InputLabelProps={{
+					        shrink: true,
+				          }}
+                  value={agetenant} 
+                  onChange={AgetenanthandleChange}
+                />
+          </form>
         <div className={classes.paper}><strong>Phone Number</strong></div>
         <form className={classes.root} noValidate>
                 <TextField

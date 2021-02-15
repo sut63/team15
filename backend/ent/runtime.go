@@ -5,6 +5,7 @@ package ent
 import (
 	"github.com/team15/app/ent/bill"
 	"github.com/team15/app/ent/cleanername"
+	"github.com/team15/app/ent/cleaningroom"
 	"github.com/team15/app/ent/deposit"
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
@@ -63,12 +64,54 @@ func init() {
 	billDescTotal := billFields[3].Descriptor()
 	// bill.TotalValidator is a validator for the "total" field. It is called by the builders before save.
 	bill.TotalValidator = billDescTotal.Validators[0].(func(string) error)
-	cleanernameFields := schema.CleanerName{}.Fields()
+	cleanernameFields := schema.Cleanername{}.Fields()
 	_ = cleanernameFields
 	// cleanernameDescCleanername is the schema descriptor for cleanername field.
 	cleanernameDescCleanername := cleanernameFields[0].Descriptor()
 	// cleanername.CleanernameValidator is a validator for the "cleanername" field. It is called by the builders before save.
 	cleanername.CleanernameValidator = cleanernameDescCleanername.Validators[0].(func(string) error)
+	cleaningroomFields := schema.Cleaningroom{}.Fields()
+	_ = cleaningroomFields
+	// cleaningroomDescNote is the schema descriptor for note field.
+	cleaningroomDescNote := cleaningroomFields[0].Descriptor()
+	// cleaningroom.NoteValidator is a validator for the "note" field. It is called by the builders before save.
+	cleaningroom.NoteValidator = cleaningroomDescNote.Validators[0].(func(string) error)
+	// cleaningroomDescPhonenumber is the schema descriptor for phonenumber field.
+	cleaningroomDescPhonenumber := cleaningroomFields[2].Descriptor()
+	// cleaningroom.PhonenumberValidator is a validator for the "phonenumber" field. It is called by the builders before save.
+	cleaningroom.PhonenumberValidator = func() func(string) error {
+		validators := cleaningroomDescPhonenumber.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(phonenumber string) error {
+			for _, fn := range fns {
+				if err := fn(phonenumber); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// cleaningroomDescNumofem is the schema descriptor for numofem field.
+	cleaningroomDescNumofem := cleaningroomFields[3].Descriptor()
+	// cleaningroom.NumofemValidator is a validator for the "numofem" field. It is called by the builders before save.
+	cleaningroom.NumofemValidator = func() func(int) error {
+		validators := cleaningroomDescNumofem.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(numofem int) error {
+			for _, fn := range fns {
+				if err := fn(numofem); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	depositFields := schema.Deposit{}.Fields()
 	_ = depositFields
 	// depositDescInfo is the schema descriptor for info field.
@@ -175,7 +218,11 @@ func init() {
 			return nil
 		}
 	}()
-	lengthtimeFields := schema.LengthTime{}.Fields()
+	// leaseDescAgetenant is the schema descriptor for agetenant field.
+	leaseDescAgetenant := leaseFields[4].Descriptor()
+	// lease.AgetenantValidator is a validator for the "agetenant" field. It is called by the builders before save.
+	lease.AgetenantValidator = leaseDescAgetenant.Validators[0].(func(int) error)
+	lengthtimeFields := schema.Lengthtime{}.Fields()
 	_ = lengthtimeFields
 	// lengthtimeDescLengthtime is the schema descriptor for lengthtime field.
 	lengthtimeDescLengthtime := lengthtimeFields[0].Descriptor()

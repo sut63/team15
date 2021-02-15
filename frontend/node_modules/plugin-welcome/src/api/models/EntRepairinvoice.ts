@@ -39,23 +39,11 @@ export interface EntRepairinvoice {
      */
     edges?: EntRepairinvoiceEdges;
     /**
-     * Emtell holds the value of the "emtell" field.
-     * @type {string}
-     * @memberof EntRepairinvoice
-     */
-    emtell?: string;
-    /**
      * ID of the ent.
      * @type {number}
      * @memberof EntRepairinvoice
      */
     id?: number;
-    /**
-     * Num holds the value of the "num" field.
-     * @type {number}
-     * @memberof EntRepairinvoice
-     */
-    num?: number;
 }
 
 export function EntRepairinvoiceFromJSON(json: any): EntRepairinvoice {
@@ -70,9 +58,7 @@ export function EntRepairinvoiceFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'bequipment': !exists(json, 'bequipment') ? undefined : json['bequipment'],
         'edges': !exists(json, 'edges') ? undefined : EntRepairinvoiceEdgesFromJSON(json['edges']),
-        'emtell': !exists(json, 'emtell') ? undefined : json['emtell'],
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'num': !exists(json, 'num') ? undefined : json['num'],
     };
 }
 
@@ -87,9 +73,7 @@ export function EntRepairinvoiceToJSON(value?: EntRepairinvoice | null): any {
         
         'bequipment': value.bequipment,
         'edges': EntRepairinvoiceEdgesToJSON(value.edges),
-        'emtell': value.emtell,
         'id': value.id,
-        'num': value.num,
     };
 }
 

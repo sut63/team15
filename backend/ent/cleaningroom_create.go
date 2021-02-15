@@ -17,135 +17,168 @@ import (
 	"github.com/team15/app/ent/roomdetail"
 )
 
-// CleaningRoomCreate is the builder for creating a CleaningRoom entity.
-type CleaningRoomCreate struct {
+// CleaningroomCreate is the builder for creating a Cleaningroom entity.
+type CleaningroomCreate struct {
 	config
-	mutation *CleaningRoomMutation
+	mutation *CleaningroomMutation
 	hooks    []Hook
 }
 
-// SetDateandstarttime sets the dateandstarttime field.
-func (crc *CleaningRoomCreate) SetDateandstarttime(t time.Time) *CleaningRoomCreate {
-	crc.mutation.SetDateandstarttime(t)
-	return crc
+// SetNote sets the note field.
+func (cc *CleaningroomCreate) SetNote(s string) *CleaningroomCreate {
+	cc.mutation.SetNote(s)
+	return cc
 }
 
-// SetNote sets the note field.
-func (crc *CleaningRoomCreate) SetNote(s string) *CleaningRoomCreate {
-	crc.mutation.SetNote(s)
-	return crc
+// SetDateandstarttime sets the dateandstarttime field.
+func (cc *CleaningroomCreate) SetDateandstarttime(t time.Time) *CleaningroomCreate {
+	cc.mutation.SetDateandstarttime(t)
+	return cc
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (cc *CleaningroomCreate) SetPhonenumber(s string) *CleaningroomCreate {
+	cc.mutation.SetPhonenumber(s)
+	return cc
+}
+
+// SetNumofem sets the numofem field.
+func (cc *CleaningroomCreate) SetNumofem(i int) *CleaningroomCreate {
+	cc.mutation.SetNumofem(i)
+	return cc
 }
 
 // SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (crc *CleaningRoomCreate) SetRoomdetailID(id int) *CleaningRoomCreate {
-	crc.mutation.SetRoomdetailID(id)
-	return crc
+func (cc *CleaningroomCreate) SetRoomdetailID(id int) *CleaningroomCreate {
+	cc.mutation.SetRoomdetailID(id)
+	return cc
 }
 
 // SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (crc *CleaningRoomCreate) SetNillableRoomdetailID(id *int) *CleaningRoomCreate {
+func (cc *CleaningroomCreate) SetNillableRoomdetailID(id *int) *CleaningroomCreate {
 	if id != nil {
-		crc = crc.SetRoomdetailID(*id)
+		cc = cc.SetRoomdetailID(*id)
 	}
-	return crc
+	return cc
 }
 
 // SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (crc *CleaningRoomCreate) SetRoomdetail(r *Roomdetail) *CleaningRoomCreate {
-	return crc.SetRoomdetailID(r.ID)
+func (cc *CleaningroomCreate) SetRoomdetail(r *Roomdetail) *CleaningroomCreate {
+	return cc.SetRoomdetailID(r.ID)
 }
 
-// SetCleanerNameID sets the CleanerName edge to CleanerName by id.
-func (crc *CleaningRoomCreate) SetCleanerNameID(id int) *CleaningRoomCreate {
-	crc.mutation.SetCleanerNameID(id)
-	return crc
+// SetCleanernameID sets the Cleanername edge to Cleanername by id.
+func (cc *CleaningroomCreate) SetCleanernameID(id int) *CleaningroomCreate {
+	cc.mutation.SetCleanernameID(id)
+	return cc
 }
 
-// SetNillableCleanerNameID sets the CleanerName edge to CleanerName by id if the given value is not nil.
-func (crc *CleaningRoomCreate) SetNillableCleanerNameID(id *int) *CleaningRoomCreate {
+// SetNillableCleanernameID sets the Cleanername edge to Cleanername by id if the given value is not nil.
+func (cc *CleaningroomCreate) SetNillableCleanernameID(id *int) *CleaningroomCreate {
 	if id != nil {
-		crc = crc.SetCleanerNameID(*id)
+		cc = cc.SetCleanernameID(*id)
 	}
-	return crc
+	return cc
 }
 
-// SetCleanerName sets the CleanerName edge to CleanerName.
-func (crc *CleaningRoomCreate) SetCleanerName(c *CleanerName) *CleaningRoomCreate {
-	return crc.SetCleanerNameID(c.ID)
+// SetCleanername sets the Cleanername edge to Cleanername.
+func (cc *CleaningroomCreate) SetCleanername(c *Cleanername) *CleaningroomCreate {
+	return cc.SetCleanernameID(c.ID)
 }
 
-// SetLengthTimeID sets the LengthTime edge to LengthTime by id.
-func (crc *CleaningRoomCreate) SetLengthTimeID(id int) *CleaningRoomCreate {
-	crc.mutation.SetLengthTimeID(id)
-	return crc
+// SetLengthtimeID sets the Lengthtime edge to Lengthtime by id.
+func (cc *CleaningroomCreate) SetLengthtimeID(id int) *CleaningroomCreate {
+	cc.mutation.SetLengthtimeID(id)
+	return cc
 }
 
-// SetNillableLengthTimeID sets the LengthTime edge to LengthTime by id if the given value is not nil.
-func (crc *CleaningRoomCreate) SetNillableLengthTimeID(id *int) *CleaningRoomCreate {
+// SetNillableLengthtimeID sets the Lengthtime edge to Lengthtime by id if the given value is not nil.
+func (cc *CleaningroomCreate) SetNillableLengthtimeID(id *int) *CleaningroomCreate {
 	if id != nil {
-		crc = crc.SetLengthTimeID(*id)
+		cc = cc.SetLengthtimeID(*id)
 	}
-	return crc
+	return cc
 }
 
-// SetLengthTime sets the LengthTime edge to LengthTime.
-func (crc *CleaningRoomCreate) SetLengthTime(l *LengthTime) *CleaningRoomCreate {
-	return crc.SetLengthTimeID(l.ID)
+// SetLengthtime sets the Lengthtime edge to Lengthtime.
+func (cc *CleaningroomCreate) SetLengthtime(l *Lengthtime) *CleaningroomCreate {
+	return cc.SetLengthtimeID(l.ID)
 }
 
 // SetEmployeeID sets the Employee edge to Employee by id.
-func (crc *CleaningRoomCreate) SetEmployeeID(id int) *CleaningRoomCreate {
-	crc.mutation.SetEmployeeID(id)
-	return crc
+func (cc *CleaningroomCreate) SetEmployeeID(id int) *CleaningroomCreate {
+	cc.mutation.SetEmployeeID(id)
+	return cc
 }
 
 // SetNillableEmployeeID sets the Employee edge to Employee by id if the given value is not nil.
-func (crc *CleaningRoomCreate) SetNillableEmployeeID(id *int) *CleaningRoomCreate {
+func (cc *CleaningroomCreate) SetNillableEmployeeID(id *int) *CleaningroomCreate {
 	if id != nil {
-		crc = crc.SetEmployeeID(*id)
+		cc = cc.SetEmployeeID(*id)
 	}
-	return crc
+	return cc
 }
 
 // SetEmployee sets the Employee edge to Employee.
-func (crc *CleaningRoomCreate) SetEmployee(e *Employee) *CleaningRoomCreate {
-	return crc.SetEmployeeID(e.ID)
+func (cc *CleaningroomCreate) SetEmployee(e *Employee) *CleaningroomCreate {
+	return cc.SetEmployeeID(e.ID)
 }
 
-// Mutation returns the CleaningRoomMutation object of the builder.
-func (crc *CleaningRoomCreate) Mutation() *CleaningRoomMutation {
-	return crc.mutation
+// Mutation returns the CleaningroomMutation object of the builder.
+func (cc *CleaningroomCreate) Mutation() *CleaningroomMutation {
+	return cc.mutation
 }
 
-// Save creates the CleaningRoom in the database.
-func (crc *CleaningRoomCreate) Save(ctx context.Context) (*CleaningRoom, error) {
-	if _, ok := crc.mutation.Dateandstarttime(); !ok {
+// Save creates the Cleaningroom in the database.
+func (cc *CleaningroomCreate) Save(ctx context.Context) (*Cleaningroom, error) {
+	if _, ok := cc.mutation.Note(); !ok {
+		return nil, &ValidationError{Name: "note", err: errors.New("ent: missing required field \"note\"")}
+	}
+	if v, ok := cc.mutation.Note(); ok {
+		if err := cleaningroom.NoteValidator(v); err != nil {
+			return nil, &ValidationError{Name: "note", err: fmt.Errorf("ent: validator failed for field \"note\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Dateandstarttime(); !ok {
 		return nil, &ValidationError{Name: "dateandstarttime", err: errors.New("ent: missing required field \"dateandstarttime\"")}
 	}
-	if _, ok := crc.mutation.Note(); !ok {
-		return nil, &ValidationError{Name: "note", err: errors.New("ent: missing required field \"note\"")}
+	if _, ok := cc.mutation.Phonenumber(); !ok {
+		return nil, &ValidationError{Name: "phonenumber", err: errors.New("ent: missing required field \"phonenumber\"")}
+	}
+	if v, ok := cc.mutation.Phonenumber(); ok {
+		if err := cleaningroom.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phonenumber", err: fmt.Errorf("ent: validator failed for field \"phonenumber\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Numofem(); !ok {
+		return nil, &ValidationError{Name: "numofem", err: errors.New("ent: missing required field \"numofem\"")}
+	}
+	if v, ok := cc.mutation.Numofem(); ok {
+		if err := cleaningroom.NumofemValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numofem", err: fmt.Errorf("ent: validator failed for field \"numofem\": %w", err)}
+		}
 	}
 	var (
 		err  error
-		node *CleaningRoom
+		node *Cleaningroom
 	)
-	if len(crc.hooks) == 0 {
-		node, err = crc.sqlSave(ctx)
+	if len(cc.hooks) == 0 {
+		node, err = cc.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleaningRoomMutation)
+			mutation, ok := m.(*CleaningroomMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			crc.mutation = mutation
-			node, err = crc.sqlSave(ctx)
+			cc.mutation = mutation
+			node, err = cc.sqlSave(ctx)
 			mutation.done = true
 			return node, err
 		})
-		for i := len(crc.hooks) - 1; i >= 0; i-- {
-			mut = crc.hooks[i](mut)
+		for i := len(cc.hooks) - 1; i >= 0; i-- {
+			mut = cc.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, crc.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cc.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -153,30 +186,30 @@ func (crc *CleaningRoomCreate) Save(ctx context.Context) (*CleaningRoom, error) 
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (crc *CleaningRoomCreate) SaveX(ctx context.Context) *CleaningRoom {
-	v, err := crc.Save(ctx)
+func (cc *CleaningroomCreate) SaveX(ctx context.Context) *Cleaningroom {
+	v, err := cc.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (crc *CleaningRoomCreate) sqlSave(ctx context.Context) (*CleaningRoom, error) {
-	cr, _spec := crc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, crc.driver, _spec); err != nil {
+func (cc *CleaningroomCreate) sqlSave(ctx context.Context) (*Cleaningroom, error) {
+	c, _spec := cc.createSpec()
+	if err := sqlgraph.CreateNode(ctx, cc.driver, _spec); err != nil {
 		if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	cr.ID = int(id)
-	return cr, nil
+	c.ID = int(id)
+	return c, nil
 }
 
-func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec) {
+func (cc *CleaningroomCreate) createSpec() (*Cleaningroom, *sqlgraph.CreateSpec) {
 	var (
-		cr    = &CleaningRoom{config: crc.config}
+		c     = &Cleaningroom{config: cc.config}
 		_spec = &sqlgraph.CreateSpec{
 			Table: cleaningroom.Table,
 			ID: &sqlgraph.FieldSpec{
@@ -185,23 +218,39 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 			},
 		}
 	)
-	if value, ok := crc.mutation.Dateandstarttime(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: cleaningroom.FieldDateandstarttime,
-		})
-		cr.Dateandstarttime = value
-	}
-	if value, ok := crc.mutation.Note(); ok {
+	if value, ok := cc.mutation.Note(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: cleaningroom.FieldNote,
 		})
-		cr.Note = value
+		c.Note = value
 	}
-	if nodes := crc.mutation.RoomdetailIDs(); len(nodes) > 0 {
+	if value, ok := cc.mutation.Dateandstarttime(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: cleaningroom.FieldDateandstarttime,
+		})
+		c.Dateandstarttime = value
+	}
+	if value, ok := cc.mutation.Phonenumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: cleaningroom.FieldPhonenumber,
+		})
+		c.Phonenumber = value
+	}
+	if value, ok := cc.mutation.Numofem(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cleaningroom.FieldNumofem,
+		})
+		c.Numofem = value
+	}
+	if nodes := cc.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -220,12 +269,12 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := crc.mutation.CleanerNameIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.CleanernameIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.CleanerNameTable,
-			Columns: []string{cleaningroom.CleanerNameColumn},
+			Table:   cleaningroom.CleanernameTable,
+			Columns: []string{cleaningroom.CleanernameColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -239,12 +288,12 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := crc.mutation.LengthTimeIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.LengthtimeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.LengthTimeTable,
-			Columns: []string{cleaningroom.LengthTimeColumn},
+			Table:   cleaningroom.LengthtimeTable,
+			Columns: []string{cleaningroom.LengthtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -258,7 +307,7 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := crc.mutation.EmployeeIDs(); len(nodes) > 0 {
+	if nodes := cc.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -277,5 +326,5 @@ func (crc *CleaningRoomCreate) createSpec() (*CleaningRoom, *sqlgraph.CreateSpec
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	return cr, _spec
+	return c, _spec
 }

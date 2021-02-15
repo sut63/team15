@@ -10,22 +10,22 @@ import (
 	"github.com/team15/app/ent/lengthtime"
 )
 
-// LengthTime is the model entity for the LengthTime schema.
-type LengthTime struct {
+// Lengthtime is the model entity for the Lengthtime schema.
+type Lengthtime struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Lengthtime holds the value of the "lengthtime" field.
 	Lengthtime string `json:"lengthtime,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the LengthTimeQuery when eager-loading is set.
-	Edges LengthTimeEdges `json:"edges"`
+	// The values are being populated by the LengthtimeQuery when eager-loading is set.
+	Edges LengthtimeEdges `json:"edges"`
 }
 
-// LengthTimeEdges holds the relations/edges for other nodes in the graph.
-type LengthTimeEdges struct {
+// LengthtimeEdges holds the relations/edges for other nodes in the graph.
+type LengthtimeEdges struct {
 	// Cleaningrooms holds the value of the cleaningrooms edge.
-	Cleaningrooms []*CleaningRoom
+	Cleaningrooms []*Cleaningroom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
@@ -33,7 +33,7 @@ type LengthTimeEdges struct {
 
 // CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
 // was not loaded in eager-loading.
-func (e LengthTimeEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+func (e LengthtimeEdges) CleaningroomsOrErr() ([]*Cleaningroom, error) {
 	if e.loadedTypes[0] {
 		return e.Cleaningrooms, nil
 	}
@@ -41,7 +41,7 @@ func (e LengthTimeEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*LengthTime) scanValues() []interface{} {
+func (*Lengthtime) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // lengthtime
@@ -49,8 +49,8 @@ func (*LengthTime) scanValues() []interface{} {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the LengthTime fields.
-func (lt *LengthTime) assignValues(values ...interface{}) error {
+// to the Lengthtime fields.
+func (l *Lengthtime) assignValues(values ...interface{}) error {
 	if m, n := len(values), len(lengthtime.Columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -58,55 +58,55 @@ func (lt *LengthTime) assignValues(values ...interface{}) error {
 	if !ok {
 		return fmt.Errorf("unexpected type %T for field id", value)
 	}
-	lt.ID = int(value.Int64)
+	l.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field lengthtime", values[0])
 	} else if value.Valid {
-		lt.Lengthtime = value.String
+		l.Lengthtime = value.String
 	}
 	return nil
 }
 
-// QueryCleaningrooms queries the cleaningrooms edge of the LengthTime.
-func (lt *LengthTime) QueryCleaningrooms() *CleaningRoomQuery {
-	return (&LengthTimeClient{config: lt.config}).QueryCleaningrooms(lt)
+// QueryCleaningrooms queries the cleaningrooms edge of the Lengthtime.
+func (l *Lengthtime) QueryCleaningrooms() *CleaningroomQuery {
+	return (&LengthtimeClient{config: l.config}).QueryCleaningrooms(l)
 }
 
-// Update returns a builder for updating this LengthTime.
-// Note that, you need to call LengthTime.Unwrap() before calling this method, if this LengthTime
+// Update returns a builder for updating this Lengthtime.
+// Note that, you need to call Lengthtime.Unwrap() before calling this method, if this Lengthtime
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (lt *LengthTime) Update() *LengthTimeUpdateOne {
-	return (&LengthTimeClient{config: lt.config}).UpdateOne(lt)
+func (l *Lengthtime) Update() *LengthtimeUpdateOne {
+	return (&LengthtimeClient{config: l.config}).UpdateOne(l)
 }
 
 // Unwrap unwraps the entity that was returned from a transaction after it was closed,
 // so that all next queries will be executed through the driver which created the transaction.
-func (lt *LengthTime) Unwrap() *LengthTime {
-	tx, ok := lt.config.driver.(*txDriver)
+func (l *Lengthtime) Unwrap() *Lengthtime {
+	tx, ok := l.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: LengthTime is not a transactional entity")
+		panic("ent: Lengthtime is not a transactional entity")
 	}
-	lt.config.driver = tx.drv
-	return lt
+	l.config.driver = tx.drv
+	return l
 }
 
 // String implements the fmt.Stringer.
-func (lt *LengthTime) String() string {
+func (l *Lengthtime) String() string {
 	var builder strings.Builder
-	builder.WriteString("LengthTime(")
-	builder.WriteString(fmt.Sprintf("id=%v", lt.ID))
+	builder.WriteString("Lengthtime(")
+	builder.WriteString(fmt.Sprintf("id=%v", l.ID))
 	builder.WriteString(", lengthtime=")
-	builder.WriteString(lt.Lengthtime)
+	builder.WriteString(l.Lengthtime)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// LengthTimes is a parsable slice of LengthTime.
-type LengthTimes []*LengthTime
+// Lengthtimes is a parsable slice of Lengthtime.
+type Lengthtimes []*Lengthtime
 
-func (lt LengthTimes) config(cfg config) {
-	for _i := range lt {
-		lt[_i].config = cfg
+func (l Lengthtimes) config(cfg config) {
+	for _i := range l {
+		l[_i].config = cfg
 	}
 }
