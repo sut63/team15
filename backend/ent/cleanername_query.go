@@ -17,88 +17,88 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// CleanerNameQuery is the builder for querying CleanerName entities.
-type CleanerNameQuery struct {
+// CleanernameQuery is the builder for querying Cleanername entities.
+type CleanernameQuery struct {
 	config
 	limit      *int
 	offset     *int
 	order      []OrderFunc
 	unique     []string
-	predicates []predicate.CleanerName
+	predicates []predicate.Cleanername
 	// eager-loading edges.
-	withCleaningrooms *CleaningRoomQuery
+	withCleaningrooms *CleaningroomQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
 }
 
 // Where adds a new predicate for the builder.
-func (cnq *CleanerNameQuery) Where(ps ...predicate.CleanerName) *CleanerNameQuery {
-	cnq.predicates = append(cnq.predicates, ps...)
-	return cnq
+func (cq *CleanernameQuery) Where(ps ...predicate.Cleanername) *CleanernameQuery {
+	cq.predicates = append(cq.predicates, ps...)
+	return cq
 }
 
 // Limit adds a limit step to the query.
-func (cnq *CleanerNameQuery) Limit(limit int) *CleanerNameQuery {
-	cnq.limit = &limit
-	return cnq
+func (cq *CleanernameQuery) Limit(limit int) *CleanernameQuery {
+	cq.limit = &limit
+	return cq
 }
 
 // Offset adds an offset step to the query.
-func (cnq *CleanerNameQuery) Offset(offset int) *CleanerNameQuery {
-	cnq.offset = &offset
-	return cnq
+func (cq *CleanernameQuery) Offset(offset int) *CleanernameQuery {
+	cq.offset = &offset
+	return cq
 }
 
 // Order adds an order step to the query.
-func (cnq *CleanerNameQuery) Order(o ...OrderFunc) *CleanerNameQuery {
-	cnq.order = append(cnq.order, o...)
-	return cnq
+func (cq *CleanernameQuery) Order(o ...OrderFunc) *CleanernameQuery {
+	cq.order = append(cq.order, o...)
+	return cq
 }
 
 // QueryCleaningrooms chains the current query on the cleaningrooms edge.
-func (cnq *CleanerNameQuery) QueryCleaningrooms() *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: cnq.config}
+func (cq *CleanernameQuery) QueryCleaningrooms() *CleaningroomQuery {
+	query := &CleaningroomQuery{config: cq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := cnq.prepareQuery(ctx); err != nil {
+		if err := cq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(cleanername.Table, cleanername.FieldID, cnq.sqlQuery()),
+			sqlgraph.From(cleanername.Table, cleanername.FieldID, cq.sqlQuery()),
 			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, cleanername.CleaningroomsTable, cleanername.CleaningroomsColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(cnq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
 }
 
-// First returns the first CleanerName entity in the query. Returns *NotFoundError when no cleanername was found.
-func (cnq *CleanerNameQuery) First(ctx context.Context) (*CleanerName, error) {
-	cns, err := cnq.Limit(1).All(ctx)
+// First returns the first Cleanername entity in the query. Returns *NotFoundError when no cleanername was found.
+func (cq *CleanernameQuery) First(ctx context.Context) (*Cleanername, error) {
+	cs, err := cq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if len(cns) == 0 {
+	if len(cs) == 0 {
 		return nil, &NotFoundError{cleanername.Label}
 	}
-	return cns[0], nil
+	return cs[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (cnq *CleanerNameQuery) FirstX(ctx context.Context) *CleanerName {
-	cn, err := cnq.First(ctx)
+func (cq *CleanernameQuery) FirstX(ctx context.Context) *Cleanername {
+	c, err := cq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
-	return cn
+	return c
 }
 
-// FirstID returns the first CleanerName id in the query. Returns *NotFoundError when no id was found.
-func (cnq *CleanerNameQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Cleanername id in the query. Returns *NotFoundError when no id was found.
+func (cq *CleanernameQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = cnq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = cq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -109,23 +109,23 @@ func (cnq *CleanerNameQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstXID is like FirstID, but panics if an error occurs.
-func (cnq *CleanerNameQuery) FirstXID(ctx context.Context) int {
-	id, err := cnq.FirstID(ctx)
+func (cq *CleanernameQuery) FirstXID(ctx context.Context) int {
+	id, err := cq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
 	return id
 }
 
-// Only returns the only CleanerName entity in the query, returns an error if not exactly one entity was returned.
-func (cnq *CleanerNameQuery) Only(ctx context.Context) (*CleanerName, error) {
-	cns, err := cnq.Limit(2).All(ctx)
+// Only returns the only Cleanername entity in the query, returns an error if not exactly one entity was returned.
+func (cq *CleanernameQuery) Only(ctx context.Context) (*Cleanername, error) {
+	cs, err := cq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	switch len(cns) {
+	switch len(cs) {
 	case 1:
-		return cns[0], nil
+		return cs[0], nil
 	case 0:
 		return nil, &NotFoundError{cleanername.Label}
 	default:
@@ -134,18 +134,18 @@ func (cnq *CleanerNameQuery) Only(ctx context.Context) (*CleanerName, error) {
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (cnq *CleanerNameQuery) OnlyX(ctx context.Context) *CleanerName {
-	cn, err := cnq.Only(ctx)
+func (cq *CleanernameQuery) OnlyX(ctx context.Context) *Cleanername {
+	c, err := cq.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return cn
+	return c
 }
 
-// OnlyID returns the only CleanerName id in the query, returns an error if not exactly one id was returned.
-func (cnq *CleanerNameQuery) OnlyID(ctx context.Context) (id int, err error) {
+// OnlyID returns the only Cleanername id in the query, returns an error if not exactly one id was returned.
+func (cq *CleanernameQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = cnq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = cq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -160,43 +160,43 @@ func (cnq *CleanerNameQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (cnq *CleanerNameQuery) OnlyIDX(ctx context.Context) int {
-	id, err := cnq.OnlyID(ctx)
+func (cq *CleanernameQuery) OnlyIDX(ctx context.Context) int {
+	id, err := cq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return id
 }
 
-// All executes the query and returns a list of CleanerNames.
-func (cnq *CleanerNameQuery) All(ctx context.Context) ([]*CleanerName, error) {
-	if err := cnq.prepareQuery(ctx); err != nil {
+// All executes the query and returns a list of Cleanernames.
+func (cq *CleanernameQuery) All(ctx context.Context) ([]*Cleanername, error) {
+	if err := cq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return cnq.sqlAll(ctx)
+	return cq.sqlAll(ctx)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (cnq *CleanerNameQuery) AllX(ctx context.Context) []*CleanerName {
-	cns, err := cnq.All(ctx)
+func (cq *CleanernameQuery) AllX(ctx context.Context) []*Cleanername {
+	cs, err := cq.All(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return cns
+	return cs
 }
 
-// IDs executes the query and returns a list of CleanerName ids.
-func (cnq *CleanerNameQuery) IDs(ctx context.Context) ([]int, error) {
+// IDs executes the query and returns a list of Cleanername ids.
+func (cq *CleanernameQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := cnq.Select(cleanername.FieldID).Scan(ctx, &ids); err != nil {
+	if err := cq.Select(cleanername.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (cnq *CleanerNameQuery) IDsX(ctx context.Context) []int {
-	ids, err := cnq.IDs(ctx)
+func (cq *CleanernameQuery) IDsX(ctx context.Context) []int {
+	ids, err := cq.IDs(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -204,16 +204,16 @@ func (cnq *CleanerNameQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (cnq *CleanerNameQuery) Count(ctx context.Context) (int, error) {
-	if err := cnq.prepareQuery(ctx); err != nil {
+func (cq *CleanernameQuery) Count(ctx context.Context) (int, error) {
+	if err := cq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return cnq.sqlCount(ctx)
+	return cq.sqlCount(ctx)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (cnq *CleanerNameQuery) CountX(ctx context.Context) int {
-	count, err := cnq.Count(ctx)
+func (cq *CleanernameQuery) CountX(ctx context.Context) int {
+	count, err := cq.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -221,16 +221,16 @@ func (cnq *CleanerNameQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (cnq *CleanerNameQuery) Exist(ctx context.Context) (bool, error) {
-	if err := cnq.prepareQuery(ctx); err != nil {
+func (cq *CleanernameQuery) Exist(ctx context.Context) (bool, error) {
+	if err := cq.prepareQuery(ctx); err != nil {
 		return false, err
 	}
-	return cnq.sqlExist(ctx)
+	return cq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (cnq *CleanerNameQuery) ExistX(ctx context.Context) bool {
-	exist, err := cnq.Exist(ctx)
+func (cq *CleanernameQuery) ExistX(ctx context.Context) bool {
+	exist, err := cq.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -239,29 +239,29 @@ func (cnq *CleanerNameQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the query builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (cnq *CleanerNameQuery) Clone() *CleanerNameQuery {
-	return &CleanerNameQuery{
-		config:     cnq.config,
-		limit:      cnq.limit,
-		offset:     cnq.offset,
-		order:      append([]OrderFunc{}, cnq.order...),
-		unique:     append([]string{}, cnq.unique...),
-		predicates: append([]predicate.CleanerName{}, cnq.predicates...),
+func (cq *CleanernameQuery) Clone() *CleanernameQuery {
+	return &CleanernameQuery{
+		config:     cq.config,
+		limit:      cq.limit,
+		offset:     cq.offset,
+		order:      append([]OrderFunc{}, cq.order...),
+		unique:     append([]string{}, cq.unique...),
+		predicates: append([]predicate.Cleanername{}, cq.predicates...),
 		// clone intermediate query.
-		sql:  cnq.sql.Clone(),
-		path: cnq.path,
+		sql:  cq.sql.Clone(),
+		path: cq.path,
 	}
 }
 
 //  WithCleaningrooms tells the query-builder to eager-loads the nodes that are connected to
 // the "cleaningrooms" edge. The optional arguments used to configure the query builder of the edge.
-func (cnq *CleanerNameQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) *CleanerNameQuery {
-	query := &CleaningRoomQuery{config: cnq.config}
+func (cq *CleanernameQuery) WithCleaningrooms(opts ...func(*CleaningroomQuery)) *CleanernameQuery {
+	query := &CleaningroomQuery{config: cq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	cnq.withCleaningrooms = query
-	return cnq
+	cq.withCleaningrooms = query
+	return cq
 }
 
 // GroupBy used to group vertices by one or more fields/columns.
@@ -274,19 +274,19 @@ func (cnq *CleanerNameQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery))
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.CleanerName.Query().
+//	client.Cleanername.Query().
 //		GroupBy(cleanername.FieldCleanername).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
-func (cnq *CleanerNameQuery) GroupBy(field string, fields ...string) *CleanerNameGroupBy {
-	group := &CleanerNameGroupBy{config: cnq.config}
+func (cq *CleanernameQuery) GroupBy(field string, fields ...string) *CleanernameGroupBy {
+	group := &CleanernameGroupBy{config: cq.config}
 	group.fields = append([]string{field}, fields...)
 	group.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := cnq.prepareQuery(ctx); err != nil {
+		if err := cq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		return cnq.sqlQuery(), nil
+		return cq.sqlQuery(), nil
 	}
 	return group
 }
@@ -299,43 +299,43 @@ func (cnq *CleanerNameQuery) GroupBy(field string, fields ...string) *CleanerNam
 //		Cleanername string `json:"cleanername,omitempty"`
 //	}
 //
-//	client.CleanerName.Query().
+//	client.Cleanername.Query().
 //		Select(cleanername.FieldCleanername).
 //		Scan(ctx, &v)
 //
-func (cnq *CleanerNameQuery) Select(field string, fields ...string) *CleanerNameSelect {
-	selector := &CleanerNameSelect{config: cnq.config}
+func (cq *CleanernameQuery) Select(field string, fields ...string) *CleanernameSelect {
+	selector := &CleanernameSelect{config: cq.config}
 	selector.fields = append([]string{field}, fields...)
 	selector.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := cnq.prepareQuery(ctx); err != nil {
+		if err := cq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		return cnq.sqlQuery(), nil
+		return cq.sqlQuery(), nil
 	}
 	return selector
 }
 
-func (cnq *CleanerNameQuery) prepareQuery(ctx context.Context) error {
-	if cnq.path != nil {
-		prev, err := cnq.path(ctx)
+func (cq *CleanernameQuery) prepareQuery(ctx context.Context) error {
+	if cq.path != nil {
+		prev, err := cq.path(ctx)
 		if err != nil {
 			return err
 		}
-		cnq.sql = prev
+		cq.sql = prev
 	}
 	return nil
 }
 
-func (cnq *CleanerNameQuery) sqlAll(ctx context.Context) ([]*CleanerName, error) {
+func (cq *CleanernameQuery) sqlAll(ctx context.Context) ([]*Cleanername, error) {
 	var (
-		nodes       = []*CleanerName{}
-		_spec       = cnq.querySpec()
+		nodes       = []*Cleanername{}
+		_spec       = cq.querySpec()
 		loadedTypes = [1]bool{
-			cnq.withCleaningrooms != nil,
+			cq.withCleaningrooms != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
-		node := &CleanerName{config: cnq.config}
+		node := &Cleanername{config: cq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
 		return values
@@ -348,22 +348,22 @@ func (cnq *CleanerNameQuery) sqlAll(ctx context.Context) ([]*CleanerName, error)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
-	if err := sqlgraph.QueryNodes(ctx, cnq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, cq.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
 
-	if query := cnq.withCleaningrooms; query != nil {
+	if query := cq.withCleaningrooms; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*CleanerName)
+		nodeids := make(map[int]*Cleanername)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.CleaningRoom(func(s *sql.Selector) {
+		query.Where(predicate.Cleaningroom(func(s *sql.Selector) {
 			s.Where(sql.InValues(cleanername.CleaningroomsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
@@ -386,20 +386,20 @@ func (cnq *CleanerNameQuery) sqlAll(ctx context.Context) ([]*CleanerName, error)
 	return nodes, nil
 }
 
-func (cnq *CleanerNameQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := cnq.querySpec()
-	return sqlgraph.CountNodes(ctx, cnq.driver, _spec)
+func (cq *CleanernameQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := cq.querySpec()
+	return sqlgraph.CountNodes(ctx, cq.driver, _spec)
 }
 
-func (cnq *CleanerNameQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := cnq.sqlCount(ctx)
+func (cq *CleanernameQuery) sqlExist(ctx context.Context) (bool, error) {
+	n, err := cq.sqlCount(ctx)
 	if err != nil {
 		return false, fmt.Errorf("ent: check existence: %v", err)
 	}
 	return n > 0, nil
 }
 
-func (cnq *CleanerNameQuery) querySpec() *sqlgraph.QuerySpec {
+func (cq *CleanernameQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   cleanername.Table,
@@ -409,23 +409,23 @@ func (cnq *CleanerNameQuery) querySpec() *sqlgraph.QuerySpec {
 				Column: cleanername.FieldID,
 			},
 		},
-		From:   cnq.sql,
+		From:   cq.sql,
 		Unique: true,
 	}
-	if ps := cnq.predicates; len(ps) > 0 {
+	if ps := cq.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := cnq.limit; limit != nil {
+	if limit := cq.limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := cnq.offset; offset != nil {
+	if offset := cq.offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := cnq.order; len(ps) > 0 {
+	if ps := cq.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -435,33 +435,33 @@ func (cnq *CleanerNameQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (cnq *CleanerNameQuery) sqlQuery() *sql.Selector {
-	builder := sql.Dialect(cnq.driver.Dialect())
+func (cq *CleanernameQuery) sqlQuery() *sql.Selector {
+	builder := sql.Dialect(cq.driver.Dialect())
 	t1 := builder.Table(cleanername.Table)
 	selector := builder.Select(t1.Columns(cleanername.Columns...)...).From(t1)
-	if cnq.sql != nil {
-		selector = cnq.sql
+	if cq.sql != nil {
+		selector = cq.sql
 		selector.Select(selector.Columns(cleanername.Columns...)...)
 	}
-	for _, p := range cnq.predicates {
+	for _, p := range cq.predicates {
 		p(selector)
 	}
-	for _, p := range cnq.order {
+	for _, p := range cq.order {
 		p(selector)
 	}
-	if offset := cnq.offset; offset != nil {
+	if offset := cq.offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := cnq.limit; limit != nil {
+	if limit := cq.limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
 }
 
-// CleanerNameGroupBy is the builder for group-by CleanerName entities.
-type CleanerNameGroupBy struct {
+// CleanernameGroupBy is the builder for group-by Cleanername entities.
+type CleanernameGroupBy struct {
 	config
 	fields []string
 	fns    []AggregateFunc
@@ -471,43 +471,43 @@ type CleanerNameGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (cngb *CleanerNameGroupBy) Aggregate(fns ...AggregateFunc) *CleanerNameGroupBy {
-	cngb.fns = append(cngb.fns, fns...)
-	return cngb
+func (cgb *CleanernameGroupBy) Aggregate(fns ...AggregateFunc) *CleanernameGroupBy {
+	cgb.fns = append(cgb.fns, fns...)
+	return cgb
 }
 
 // Scan applies the group-by query and scan the result into the given value.
-func (cngb *CleanerNameGroupBy) Scan(ctx context.Context, v interface{}) error {
-	query, err := cngb.path(ctx)
+func (cgb *CleanernameGroupBy) Scan(ctx context.Context, v interface{}) error {
+	query, err := cgb.path(ctx)
 	if err != nil {
 		return err
 	}
-	cngb.sql = query
-	return cngb.sqlScan(ctx, v)
+	cgb.sql = query
+	return cgb.sqlScan(ctx, v)
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) ScanX(ctx context.Context, v interface{}) {
-	if err := cngb.Scan(ctx, v); err != nil {
+func (cgb *CleanernameGroupBy) ScanX(ctx context.Context, v interface{}) {
+	if err := cgb.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Strings(ctx context.Context) ([]string, error) {
-	if len(cngb.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameGroupBy.Strings is not achievable when grouping more than 1 field")
+func (cgb *CleanernameGroupBy) Strings(ctx context.Context) ([]string, error) {
+	if len(cgb.fields) > 1 {
+		return nil, errors.New("ent: CleanernameGroupBy.Strings is not achievable when grouping more than 1 field")
 	}
 	var v []string
-	if err := cngb.Scan(ctx, &v); err != nil {
+	if err := cgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) StringsX(ctx context.Context) []string {
-	v, err := cngb.Strings(ctx)
+func (cgb *CleanernameGroupBy) StringsX(ctx context.Context) []string {
+	v, err := cgb.Strings(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -515,9 +515,9 @@ func (cngb *CleanerNameGroupBy) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) String(ctx context.Context) (_ string, err error) {
+func (cgb *CleanernameGroupBy) String(ctx context.Context) (_ string, err error) {
 	var v []string
-	if v, err = cngb.Strings(ctx); err != nil {
+	if v, err = cgb.Strings(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -526,14 +526,14 @@ func (cngb *CleanerNameGroupBy) String(ctx context.Context) (_ string, err error
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameGroupBy.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameGroupBy.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) StringX(ctx context.Context) string {
-	v, err := cngb.String(ctx)
+func (cgb *CleanernameGroupBy) StringX(ctx context.Context) string {
+	v, err := cgb.String(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -541,20 +541,20 @@ func (cngb *CleanerNameGroupBy) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Ints(ctx context.Context) ([]int, error) {
-	if len(cngb.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameGroupBy.Ints is not achievable when grouping more than 1 field")
+func (cgb *CleanernameGroupBy) Ints(ctx context.Context) ([]int, error) {
+	if len(cgb.fields) > 1 {
+		return nil, errors.New("ent: CleanernameGroupBy.Ints is not achievable when grouping more than 1 field")
 	}
 	var v []int
-	if err := cngb.Scan(ctx, &v); err != nil {
+	if err := cgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) IntsX(ctx context.Context) []int {
-	v, err := cngb.Ints(ctx)
+func (cgb *CleanernameGroupBy) IntsX(ctx context.Context) []int {
+	v, err := cgb.Ints(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -562,9 +562,9 @@ func (cngb *CleanerNameGroupBy) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Int(ctx context.Context) (_ int, err error) {
+func (cgb *CleanernameGroupBy) Int(ctx context.Context) (_ int, err error) {
 	var v []int
-	if v, err = cngb.Ints(ctx); err != nil {
+	if v, err = cgb.Ints(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -573,14 +573,14 @@ func (cngb *CleanerNameGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameGroupBy.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameGroupBy.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) IntX(ctx context.Context) int {
-	v, err := cngb.Int(ctx)
+func (cgb *CleanernameGroupBy) IntX(ctx context.Context) int {
+	v, err := cgb.Int(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -588,20 +588,20 @@ func (cngb *CleanerNameGroupBy) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Float64s(ctx context.Context) ([]float64, error) {
-	if len(cngb.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameGroupBy.Float64s is not achievable when grouping more than 1 field")
+func (cgb *CleanernameGroupBy) Float64s(ctx context.Context) ([]float64, error) {
+	if len(cgb.fields) > 1 {
+		return nil, errors.New("ent: CleanernameGroupBy.Float64s is not achievable when grouping more than 1 field")
 	}
 	var v []float64
-	if err := cngb.Scan(ctx, &v); err != nil {
+	if err := cgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) Float64sX(ctx context.Context) []float64 {
-	v, err := cngb.Float64s(ctx)
+func (cgb *CleanernameGroupBy) Float64sX(ctx context.Context) []float64 {
+	v, err := cgb.Float64s(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -609,9 +609,9 @@ func (cngb *CleanerNameGroupBy) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Float64(ctx context.Context) (_ float64, err error) {
+func (cgb *CleanernameGroupBy) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
-	if v, err = cngb.Float64s(ctx); err != nil {
+	if v, err = cgb.Float64s(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -620,14 +620,14 @@ func (cngb *CleanerNameGroupBy) Float64(ctx context.Context) (_ float64, err err
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameGroupBy.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) Float64X(ctx context.Context) float64 {
-	v, err := cngb.Float64(ctx)
+func (cgb *CleanernameGroupBy) Float64X(ctx context.Context) float64 {
+	v, err := cgb.Float64(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -635,20 +635,20 @@ func (cngb *CleanerNameGroupBy) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Bools(ctx context.Context) ([]bool, error) {
-	if len(cngb.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameGroupBy.Bools is not achievable when grouping more than 1 field")
+func (cgb *CleanernameGroupBy) Bools(ctx context.Context) ([]bool, error) {
+	if len(cgb.fields) > 1 {
+		return nil, errors.New("ent: CleanernameGroupBy.Bools is not achievable when grouping more than 1 field")
 	}
 	var v []bool
-	if err := cngb.Scan(ctx, &v); err != nil {
+	if err := cgb.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) BoolsX(ctx context.Context) []bool {
-	v, err := cngb.Bools(ctx)
+func (cgb *CleanernameGroupBy) BoolsX(ctx context.Context) []bool {
+	v, err := cgb.Bools(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -656,9 +656,9 @@ func (cngb *CleanerNameGroupBy) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from group-by. It is only allowed when querying group-by with one field.
-func (cngb *CleanerNameGroupBy) Bool(ctx context.Context) (_ bool, err error) {
+func (cgb *CleanernameGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
-	if v, err = cngb.Bools(ctx); err != nil {
+	if v, err = cgb.Bools(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -667,42 +667,42 @@ func (cngb *CleanerNameGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameGroupBy.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameGroupBy.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (cngb *CleanerNameGroupBy) BoolX(ctx context.Context) bool {
-	v, err := cngb.Bool(ctx)
+func (cgb *CleanernameGroupBy) BoolX(ctx context.Context) bool {
+	v, err := cgb.Bool(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (cngb *CleanerNameGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (cgb *CleanernameGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
-	query, args := cngb.sqlQuery().Query()
-	if err := cngb.driver.Query(ctx, query, args, rows); err != nil {
+	query, args := cgb.sqlQuery().Query()
+	if err := cgb.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (cngb *CleanerNameGroupBy) sqlQuery() *sql.Selector {
-	selector := cngb.sql
-	columns := make([]string, 0, len(cngb.fields)+len(cngb.fns))
-	columns = append(columns, cngb.fields...)
-	for _, fn := range cngb.fns {
+func (cgb *CleanernameGroupBy) sqlQuery() *sql.Selector {
+	selector := cgb.sql
+	columns := make([]string, 0, len(cgb.fields)+len(cgb.fns))
+	columns = append(columns, cgb.fields...)
+	for _, fn := range cgb.fns {
 		columns = append(columns, fn(selector))
 	}
-	return selector.Select(columns...).GroupBy(cngb.fields...)
+	return selector.Select(columns...).GroupBy(cgb.fields...)
 }
 
-// CleanerNameSelect is the builder for select fields of CleanerName entities.
-type CleanerNameSelect struct {
+// CleanernameSelect is the builder for select fields of Cleanername entities.
+type CleanernameSelect struct {
 	config
 	fields []string
 	// intermediate query (i.e. traversal path).
@@ -711,37 +711,37 @@ type CleanerNameSelect struct {
 }
 
 // Scan applies the selector query and scan the result into the given value.
-func (cns *CleanerNameSelect) Scan(ctx context.Context, v interface{}) error {
-	query, err := cns.path(ctx)
+func (cs *CleanernameSelect) Scan(ctx context.Context, v interface{}) error {
+	query, err := cs.path(ctx)
 	if err != nil {
 		return err
 	}
-	cns.sql = query
-	return cns.sqlScan(ctx, v)
+	cs.sql = query
+	return cs.sqlScan(ctx, v)
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (cns *CleanerNameSelect) ScanX(ctx context.Context, v interface{}) {
-	if err := cns.Scan(ctx, v); err != nil {
+func (cs *CleanernameSelect) ScanX(ctx context.Context, v interface{}) {
+	if err := cs.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Strings(ctx context.Context) ([]string, error) {
-	if len(cns.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameSelect.Strings is not achievable when selecting more than 1 field")
+func (cs *CleanernameSelect) Strings(ctx context.Context) ([]string, error) {
+	if len(cs.fields) > 1 {
+		return nil, errors.New("ent: CleanernameSelect.Strings is not achievable when selecting more than 1 field")
 	}
 	var v []string
-	if err := cns.Scan(ctx, &v); err != nil {
+	if err := cs.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (cns *CleanerNameSelect) StringsX(ctx context.Context) []string {
-	v, err := cns.Strings(ctx)
+func (cs *CleanernameSelect) StringsX(ctx context.Context) []string {
+	v, err := cs.Strings(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -749,9 +749,9 @@ func (cns *CleanerNameSelect) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) String(ctx context.Context) (_ string, err error) {
+func (cs *CleanernameSelect) String(ctx context.Context) (_ string, err error) {
 	var v []string
-	if v, err = cns.Strings(ctx); err != nil {
+	if v, err = cs.Strings(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -760,14 +760,14 @@ func (cns *CleanerNameSelect) String(ctx context.Context) (_ string, err error) 
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameSelect.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameSelect.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (cns *CleanerNameSelect) StringX(ctx context.Context) string {
-	v, err := cns.String(ctx)
+func (cs *CleanernameSelect) StringX(ctx context.Context) string {
+	v, err := cs.String(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -775,20 +775,20 @@ func (cns *CleanerNameSelect) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Ints(ctx context.Context) ([]int, error) {
-	if len(cns.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameSelect.Ints is not achievable when selecting more than 1 field")
+func (cs *CleanernameSelect) Ints(ctx context.Context) ([]int, error) {
+	if len(cs.fields) > 1 {
+		return nil, errors.New("ent: CleanernameSelect.Ints is not achievable when selecting more than 1 field")
 	}
 	var v []int
-	if err := cns.Scan(ctx, &v); err != nil {
+	if err := cs.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (cns *CleanerNameSelect) IntsX(ctx context.Context) []int {
-	v, err := cns.Ints(ctx)
+func (cs *CleanernameSelect) IntsX(ctx context.Context) []int {
+	v, err := cs.Ints(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -796,9 +796,9 @@ func (cns *CleanerNameSelect) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Int(ctx context.Context) (_ int, err error) {
+func (cs *CleanernameSelect) Int(ctx context.Context) (_ int, err error) {
 	var v []int
-	if v, err = cns.Ints(ctx); err != nil {
+	if v, err = cs.Ints(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -807,14 +807,14 @@ func (cns *CleanerNameSelect) Int(ctx context.Context) (_ int, err error) {
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameSelect.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameSelect.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (cns *CleanerNameSelect) IntX(ctx context.Context) int {
-	v, err := cns.Int(ctx)
+func (cs *CleanernameSelect) IntX(ctx context.Context) int {
+	v, err := cs.Int(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -822,20 +822,20 @@ func (cns *CleanerNameSelect) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Float64s(ctx context.Context) ([]float64, error) {
-	if len(cns.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameSelect.Float64s is not achievable when selecting more than 1 field")
+func (cs *CleanernameSelect) Float64s(ctx context.Context) ([]float64, error) {
+	if len(cs.fields) > 1 {
+		return nil, errors.New("ent: CleanernameSelect.Float64s is not achievable when selecting more than 1 field")
 	}
 	var v []float64
-	if err := cns.Scan(ctx, &v); err != nil {
+	if err := cs.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (cns *CleanerNameSelect) Float64sX(ctx context.Context) []float64 {
-	v, err := cns.Float64s(ctx)
+func (cs *CleanernameSelect) Float64sX(ctx context.Context) []float64 {
+	v, err := cs.Float64s(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -843,9 +843,9 @@ func (cns *CleanerNameSelect) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Float64(ctx context.Context) (_ float64, err error) {
+func (cs *CleanernameSelect) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
-	if v, err = cns.Float64s(ctx); err != nil {
+	if v, err = cs.Float64s(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -854,14 +854,14 @@ func (cns *CleanerNameSelect) Float64(ctx context.Context) (_ float64, err error
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameSelect.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameSelect.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (cns *CleanerNameSelect) Float64X(ctx context.Context) float64 {
-	v, err := cns.Float64(ctx)
+func (cs *CleanernameSelect) Float64X(ctx context.Context) float64 {
+	v, err := cs.Float64(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -869,20 +869,20 @@ func (cns *CleanerNameSelect) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Bools(ctx context.Context) ([]bool, error) {
-	if len(cns.fields) > 1 {
-		return nil, errors.New("ent: CleanerNameSelect.Bools is not achievable when selecting more than 1 field")
+func (cs *CleanernameSelect) Bools(ctx context.Context) ([]bool, error) {
+	if len(cs.fields) > 1 {
+		return nil, errors.New("ent: CleanernameSelect.Bools is not achievable when selecting more than 1 field")
 	}
 	var v []bool
-	if err := cns.Scan(ctx, &v); err != nil {
+	if err := cs.Scan(ctx, &v); err != nil {
 		return nil, err
 	}
 	return v, nil
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (cns *CleanerNameSelect) BoolsX(ctx context.Context) []bool {
-	v, err := cns.Bools(ctx)
+func (cs *CleanernameSelect) BoolsX(ctx context.Context) []bool {
+	v, err := cs.Bools(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -890,9 +890,9 @@ func (cns *CleanerNameSelect) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from selector. It is only allowed when selecting one field.
-func (cns *CleanerNameSelect) Bool(ctx context.Context) (_ bool, err error) {
+func (cs *CleanernameSelect) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
-	if v, err = cns.Bools(ctx); err != nil {
+	if v, err = cs.Bools(ctx); err != nil {
 		return
 	}
 	switch len(v) {
@@ -901,32 +901,32 @@ func (cns *CleanerNameSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 0:
 		err = &NotFoundError{cleanername.Label}
 	default:
-		err = fmt.Errorf("ent: CleanerNameSelect.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: CleanernameSelect.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (cns *CleanerNameSelect) BoolX(ctx context.Context) bool {
-	v, err := cns.Bool(ctx)
+func (cs *CleanernameSelect) BoolX(ctx context.Context) bool {
+	v, err := cs.Bool(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (cns *CleanerNameSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (cs *CleanernameSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
-	query, args := cns.sqlQuery().Query()
-	if err := cns.driver.Query(ctx, query, args, rows); err != nil {
+	query, args := cs.sqlQuery().Query()
+	if err := cs.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (cns *CleanerNameSelect) sqlQuery() sql.Querier {
-	selector := cns.sql
-	selector.Select(selector.Columns(cns.fields...)...)
+func (cs *CleanernameSelect) sqlQuery() sql.Querier {
+	selector := cs.sql
+	selector.Select(selector.Columns(cs.fields...)...)
 	return selector
 }

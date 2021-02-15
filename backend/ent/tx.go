@@ -16,10 +16,10 @@ type Tx struct {
 	Bedtype *BedtypeClient
 	// Bill is the client for interacting with the Bill builders.
 	Bill *BillClient
-	// CleanerName is the client for interacting with the CleanerName builders.
-	CleanerName *CleanerNameClient
-	// CleaningRoom is the client for interacting with the CleaningRoom builders.
-	CleaningRoom *CleaningRoomClient
+	// Cleanername is the client for interacting with the Cleanername builders.
+	Cleanername *CleanernameClient
+	// Cleaningroom is the client for interacting with the Cleaningroom builders.
+	Cleaningroom *CleaningroomClient
 	// Deposit is the client for interacting with the Deposit builders.
 	Deposit *DepositClient
 	// Employee is the client for interacting with the Employee builders.
@@ -28,8 +28,8 @@ type Tx struct {
 	Jobposition *JobpositionClient
 	// Lease is the client for interacting with the Lease builders.
 	Lease *LeaseClient
-	// LengthTime is the client for interacting with the LengthTime builders.
-	LengthTime *LengthTimeClient
+	// Lengthtime is the client for interacting with the Lengthtime builders.
+	Lengthtime *LengthtimeClient
 	// Payment is the client for interacting with the Payment builders.
 	Payment *PaymentClient
 	// Petrule is the client for interacting with the Petrule builders.
@@ -187,13 +187,13 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Bedtype = NewBedtypeClient(tx.config)
 	tx.Bill = NewBillClient(tx.config)
-	tx.CleanerName = NewCleanerNameClient(tx.config)
-	tx.CleaningRoom = NewCleaningRoomClient(tx.config)
+	tx.Cleanername = NewCleanernameClient(tx.config)
+	tx.Cleaningroom = NewCleaningroomClient(tx.config)
 	tx.Deposit = NewDepositClient(tx.config)
 	tx.Employee = NewEmployeeClient(tx.config)
 	tx.Jobposition = NewJobpositionClient(tx.config)
 	tx.Lease = NewLeaseClient(tx.config)
-	tx.LengthTime = NewLengthTimeClient(tx.config)
+	tx.Lengthtime = NewLengthtimeClient(tx.config)
 	tx.Payment = NewPaymentClient(tx.config)
 	tx.Petrule = NewPetruleClient(tx.config)
 	tx.Pledge = NewPledgeClient(tx.config)

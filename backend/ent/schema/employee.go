@@ -24,12 +24,12 @@ func (Employee) Fields() []ent.Field {
 func (Employee) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("employees", Deposit.Type).StorageKey(edge.Column("employee_id")),
-		edge.To("leases", Lease.Type).StorageKey(edge.Column("employee_id")),
+		edge.To("leasess", Lease.Type).StorageKey(edge.Column("employee_id")),
 		edge.To("roomdetails", Roomdetail.Type).StorageKey(edge.Column("employee_id")),
 		edge.From("jobposition", Jobposition.Type).
 			Ref("employees").
 			Unique(),
-			edge.To("repairinvoices", Repairinvoice.Type).StorageKey(edge.Column("employee_id")),
-			edge.To("cleaningrooms", Cleaningroom.Type).StorageKey(edge.Column("employee_id")),
+		edge.To("repairinvoices", Repairinvoice.Type).StorageKey(edge.Column("employee_id")),
+		edge.To("cleaningrooms", Cleaningroom.Type).StorageKey(edge.Column("employee_id")),
 	}
 }

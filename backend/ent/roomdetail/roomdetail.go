@@ -89,10 +89,10 @@ const (
 	// RoomdetailsColumn is the table column denoting the roomdetails relation/edge.
 	RoomdetailsColumn = "room_num"
 	// CleaningroomsTable is the table the holds the cleaningrooms relation/edge.
-	CleaningroomsTable = "cleaning_rooms"
-	// CleaningroomsInverseTable is the table name for the CleaningRoom entity.
+	CleaningroomsTable = "cleaningrooms"
+	// CleaningroomsInverseTable is the table name for the Cleaningroom entity.
 	// It exists in this package in order to avoid circular dependency with the "cleaningroom" package.
-	CleaningroomsInverseTable = "cleaning_rooms"
+	CleaningroomsInverseTable = "cleaningrooms"
 	// CleaningroomsColumn is the table column denoting the cleaningrooms relation/edge.
 	CleaningroomsColumn = "roomdetail_id"
 )

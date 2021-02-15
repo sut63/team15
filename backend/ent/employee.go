@@ -32,8 +32,8 @@ type Employee struct {
 type EmployeeEdges struct {
 	// Employees holds the value of the employees edge.
 	Employees []*Deposit
-	// Leases holds the value of the leases edge.
-	Leases []*Lease
+	// Leasess holds the value of the leasess edge.
+	Leasess []*Lease
 	// Roomdetails holds the value of the roomdetails edge.
 	Roomdetails []*Roomdetail
 	// Jobposition holds the value of the jobposition edge.
@@ -41,7 +41,7 @@ type EmployeeEdges struct {
 	// Repairinvoices holds the value of the repairinvoices edge.
 	Repairinvoices []*Repairinvoice
 	// Cleaningrooms holds the value of the cleaningrooms edge.
-	Cleaningrooms []*CleaningRoom
+	Cleaningrooms []*Cleaningroom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [6]bool
@@ -56,13 +56,13 @@ func (e EmployeeEdges) EmployeesOrErr() ([]*Deposit, error) {
 	return nil, &NotLoadedError{edge: "employees"}
 }
 
-// LeasesOrErr returns the Leases value or an error if the edge
+// LeasessOrErr returns the Leasess value or an error if the edge
 // was not loaded in eager-loading.
-func (e EmployeeEdges) LeasesOrErr() ([]*Lease, error) {
+func (e EmployeeEdges) LeasessOrErr() ([]*Lease, error) {
 	if e.loadedTypes[1] {
-		return e.Leases, nil
+		return e.Leasess, nil
 	}
-	return nil, &NotLoadedError{edge: "leases"}
+	return nil, &NotLoadedError{edge: "leasess"}
 }
 
 // RoomdetailsOrErr returns the Roomdetails value or an error if the edge
@@ -99,7 +99,7 @@ func (e EmployeeEdges) RepairinvoicesOrErr() ([]*Repairinvoice, error) {
 
 // CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
 // was not loaded in eager-loading.
-func (e EmployeeEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+func (e EmployeeEdges) CleaningroomsOrErr() ([]*Cleaningroom, error) {
 	if e.loadedTypes[5] {
 		return e.Cleaningrooms, nil
 	}
@@ -167,9 +167,9 @@ func (e *Employee) QueryEmployees() *DepositQuery {
 	return (&EmployeeClient{config: e.config}).QueryEmployees(e)
 }
 
-// QueryLeases queries the leases edge of the Employee.
-func (e *Employee) QueryLeases() *LeaseQuery {
-	return (&EmployeeClient{config: e.config}).QueryLeases(e)
+// QueryLeasess queries the leasess edge of the Employee.
+func (e *Employee) QueryLeasess() *LeaseQuery {
+	return (&EmployeeClient{config: e.config}).QueryLeasess(e)
 }
 
 // QueryRoomdetails queries the roomdetails edge of the Employee.
@@ -188,7 +188,7 @@ func (e *Employee) QueryRepairinvoices() *RepairinvoiceQuery {
 }
 
 // QueryCleaningrooms queries the cleaningrooms edge of the Employee.
-func (e *Employee) QueryCleaningrooms() *CleaningRoomQuery {
+func (e *Employee) QueryCleaningrooms() *CleaningroomQuery {
 	return (&EmployeeClient{config: e.config}).QueryCleaningrooms(e)
 }
 

@@ -15,32 +15,36 @@ import (
 	"github.com/team15/app/ent/roomdetail"
 )
 
-// CleaningRoom is the model entity for the CleaningRoom schema.
-type CleaningRoom struct {
+// Cleaningroom is the model entity for the Cleaningroom schema.
+type Cleaningroom struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Dateandstarttime holds the value of the "dateandstarttime" field.
-	Dateandstarttime time.Time `json:"dateandstarttime,omitempty"`
 	// Note holds the value of the "note" field.
 	Note string `json:"note,omitempty"`
+	// Dateandstarttime holds the value of the "dateandstarttime" field.
+	Dateandstarttime time.Time `json:"dateandstarttime,omitempty"`
+	// Phonenumber holds the value of the "phonenumber" field.
+	Phonenumber string `json:"phonenumber,omitempty"`
+	// Numofem holds the value of the "numofem" field.
+	Numofem int `json:"numofem,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the CleaningRoomQuery when eager-loading is set.
-	Edges          CleaningRoomEdges `json:"edges"`
+	// The values are being populated by the CleaningroomQuery when eager-loading is set.
+	Edges          CleaningroomEdges `json:"edges"`
 	cleanerroom_id *int
 	employee_id    *int
 	lengthtime_id  *int
 	roomdetail_id  *int
 }
 
-// CleaningRoomEdges holds the relations/edges for other nodes in the graph.
-type CleaningRoomEdges struct {
+// CleaningroomEdges holds the relations/edges for other nodes in the graph.
+type CleaningroomEdges struct {
 	// Roomdetail holds the value of the roomdetail edge.
 	Roomdetail *Roomdetail
-	// CleanerName holds the value of the CleanerName edge.
-	CleanerName *CleanerName
-	// LengthTime holds the value of the LengthTime edge.
-	LengthTime *LengthTime
+	// Cleanername holds the value of the Cleanername edge.
+	Cleanername *Cleanername
+	// Lengthtime holds the value of the Lengthtime edge.
+	Lengthtime *Lengthtime
 	// Employee holds the value of the Employee edge.
 	Employee *Employee
 	// loadedTypes holds the information for reporting if a
@@ -50,7 +54,7 @@ type CleaningRoomEdges struct {
 
 // RoomdetailOrErr returns the Roomdetail value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e CleaningRoomEdges) RoomdetailOrErr() (*Roomdetail, error) {
+func (e CleaningroomEdges) RoomdetailOrErr() (*Roomdetail, error) {
 	if e.loadedTypes[0] {
 		if e.Roomdetail == nil {
 			// The edge roomdetail was loaded in eager-loading,
@@ -62,37 +66,37 @@ func (e CleaningRoomEdges) RoomdetailOrErr() (*Roomdetail, error) {
 	return nil, &NotLoadedError{edge: "roomdetail"}
 }
 
-// CleanerNameOrErr returns the CleanerName value or an error if the edge
+// CleanernameOrErr returns the Cleanername value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e CleaningRoomEdges) CleanerNameOrErr() (*CleanerName, error) {
+func (e CleaningroomEdges) CleanernameOrErr() (*Cleanername, error) {
 	if e.loadedTypes[1] {
-		if e.CleanerName == nil {
-			// The edge CleanerName was loaded in eager-loading,
+		if e.Cleanername == nil {
+			// The edge Cleanername was loaded in eager-loading,
 			// but was not found.
 			return nil, &NotFoundError{label: cleanername.Label}
 		}
-		return e.CleanerName, nil
+		return e.Cleanername, nil
 	}
-	return nil, &NotLoadedError{edge: "CleanerName"}
+	return nil, &NotLoadedError{edge: "Cleanername"}
 }
 
-// LengthTimeOrErr returns the LengthTime value or an error if the edge
+// LengthtimeOrErr returns the Lengthtime value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e CleaningRoomEdges) LengthTimeOrErr() (*LengthTime, error) {
+func (e CleaningroomEdges) LengthtimeOrErr() (*Lengthtime, error) {
 	if e.loadedTypes[2] {
-		if e.LengthTime == nil {
-			// The edge LengthTime was loaded in eager-loading,
+		if e.Lengthtime == nil {
+			// The edge Lengthtime was loaded in eager-loading,
 			// but was not found.
 			return nil, &NotFoundError{label: lengthtime.Label}
 		}
-		return e.LengthTime, nil
+		return e.Lengthtime, nil
 	}
-	return nil, &NotLoadedError{edge: "LengthTime"}
+	return nil, &NotLoadedError{edge: "Lengthtime"}
 }
 
 // EmployeeOrErr returns the Employee value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e CleaningRoomEdges) EmployeeOrErr() (*Employee, error) {
+func (e CleaningroomEdges) EmployeeOrErr() (*Employee, error) {
 	if e.loadedTypes[3] {
 		if e.Employee == nil {
 			// The edge Employee was loaded in eager-loading,
@@ -105,16 +109,18 @@ func (e CleaningRoomEdges) EmployeeOrErr() (*Employee, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*CleaningRoom) scanValues() []interface{} {
+func (*Cleaningroom) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullTime{},   // dateandstarttime
 		&sql.NullString{}, // note
+		&sql.NullTime{},   // dateandstarttime
+		&sql.NullString{}, // phonenumber
+		&sql.NullInt64{},  // numofem
 	}
 }
 
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
-func (*CleaningRoom) fkValues() []interface{} {
+func (*Cleaningroom) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // cleanerroom_id
 		&sql.NullInt64{}, // employee_id
@@ -124,8 +130,8 @@ func (*CleaningRoom) fkValues() []interface{} {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the CleaningRoom fields.
-func (cr *CleaningRoom) assignValues(values ...interface{}) error {
+// to the Cleaningroom fields.
+func (c *Cleaningroom) assignValues(values ...interface{}) error {
 	if m, n := len(values), len(cleaningroom.Columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -133,104 +139,118 @@ func (cr *CleaningRoom) assignValues(values ...interface{}) error {
 	if !ok {
 		return fmt.Errorf("unexpected type %T for field id", value)
 	}
-	cr.ID = int(value.Int64)
+	c.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field dateandstarttime", values[0])
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field note", values[0])
 	} else if value.Valid {
-		cr.Dateandstarttime = value.Time
+		c.Note = value.String
 	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field note", values[1])
+	if value, ok := values[1].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field dateandstarttime", values[1])
 	} else if value.Valid {
-		cr.Note = value.String
+		c.Dateandstarttime = value.Time
 	}
-	values = values[2:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field phonenumber", values[2])
+	} else if value.Valid {
+		c.Phonenumber = value.String
+	}
+	if value, ok := values[3].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field numofem", values[3])
+	} else if value.Valid {
+		c.Numofem = int(value.Int64)
+	}
+	values = values[4:]
 	if len(values) == len(cleaningroom.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field cleanerroom_id", value)
 		} else if value.Valid {
-			cr.cleanerroom_id = new(int)
-			*cr.cleanerroom_id = int(value.Int64)
+			c.cleanerroom_id = new(int)
+			*c.cleanerroom_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
 		} else if value.Valid {
-			cr.employee_id = new(int)
-			*cr.employee_id = int(value.Int64)
+			c.employee_id = new(int)
+			*c.employee_id = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field lengthtime_id", value)
 		} else if value.Valid {
-			cr.lengthtime_id = new(int)
-			*cr.lengthtime_id = int(value.Int64)
+			c.lengthtime_id = new(int)
+			*c.lengthtime_id = int(value.Int64)
 		}
 		if value, ok := values[3].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field roomdetail_id", value)
 		} else if value.Valid {
-			cr.roomdetail_id = new(int)
-			*cr.roomdetail_id = int(value.Int64)
+			c.roomdetail_id = new(int)
+			*c.roomdetail_id = int(value.Int64)
 		}
 	}
 	return nil
 }
 
-// QueryRoomdetail queries the roomdetail edge of the CleaningRoom.
-func (cr *CleaningRoom) QueryRoomdetail() *RoomdetailQuery {
-	return (&CleaningRoomClient{config: cr.config}).QueryRoomdetail(cr)
+// QueryRoomdetail queries the roomdetail edge of the Cleaningroom.
+func (c *Cleaningroom) QueryRoomdetail() *RoomdetailQuery {
+	return (&CleaningroomClient{config: c.config}).QueryRoomdetail(c)
 }
 
-// QueryCleanerName queries the CleanerName edge of the CleaningRoom.
-func (cr *CleaningRoom) QueryCleanerName() *CleanerNameQuery {
-	return (&CleaningRoomClient{config: cr.config}).QueryCleanerName(cr)
+// QueryCleanername queries the Cleanername edge of the Cleaningroom.
+func (c *Cleaningroom) QueryCleanername() *CleanernameQuery {
+	return (&CleaningroomClient{config: c.config}).QueryCleanername(c)
 }
 
-// QueryLengthTime queries the LengthTime edge of the CleaningRoom.
-func (cr *CleaningRoom) QueryLengthTime() *LengthTimeQuery {
-	return (&CleaningRoomClient{config: cr.config}).QueryLengthTime(cr)
+// QueryLengthtime queries the Lengthtime edge of the Cleaningroom.
+func (c *Cleaningroom) QueryLengthtime() *LengthtimeQuery {
+	return (&CleaningroomClient{config: c.config}).QueryLengthtime(c)
 }
 
-// QueryEmployee queries the Employee edge of the CleaningRoom.
-func (cr *CleaningRoom) QueryEmployee() *EmployeeQuery {
-	return (&CleaningRoomClient{config: cr.config}).QueryEmployee(cr)
+// QueryEmployee queries the Employee edge of the Cleaningroom.
+func (c *Cleaningroom) QueryEmployee() *EmployeeQuery {
+	return (&CleaningroomClient{config: c.config}).QueryEmployee(c)
 }
 
-// Update returns a builder for updating this CleaningRoom.
-// Note that, you need to call CleaningRoom.Unwrap() before calling this method, if this CleaningRoom
+// Update returns a builder for updating this Cleaningroom.
+// Note that, you need to call Cleaningroom.Unwrap() before calling this method, if this Cleaningroom
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (cr *CleaningRoom) Update() *CleaningRoomUpdateOne {
-	return (&CleaningRoomClient{config: cr.config}).UpdateOne(cr)
+func (c *Cleaningroom) Update() *CleaningroomUpdateOne {
+	return (&CleaningroomClient{config: c.config}).UpdateOne(c)
 }
 
 // Unwrap unwraps the entity that was returned from a transaction after it was closed,
 // so that all next queries will be executed through the driver which created the transaction.
-func (cr *CleaningRoom) Unwrap() *CleaningRoom {
-	tx, ok := cr.config.driver.(*txDriver)
+func (c *Cleaningroom) Unwrap() *Cleaningroom {
+	tx, ok := c.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: CleaningRoom is not a transactional entity")
+		panic("ent: Cleaningroom is not a transactional entity")
 	}
-	cr.config.driver = tx.drv
-	return cr
+	c.config.driver = tx.drv
+	return c
 }
 
 // String implements the fmt.Stringer.
-func (cr *CleaningRoom) String() string {
+func (c *Cleaningroom) String() string {
 	var builder strings.Builder
-	builder.WriteString("CleaningRoom(")
-	builder.WriteString(fmt.Sprintf("id=%v", cr.ID))
-	builder.WriteString(", dateandstarttime=")
-	builder.WriteString(cr.Dateandstarttime.Format(time.ANSIC))
+	builder.WriteString("Cleaningroom(")
+	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
 	builder.WriteString(", note=")
-	builder.WriteString(cr.Note)
+	builder.WriteString(c.Note)
+	builder.WriteString(", dateandstarttime=")
+	builder.WriteString(c.Dateandstarttime.Format(time.ANSIC))
+	builder.WriteString(", phonenumber=")
+	builder.WriteString(c.Phonenumber)
+	builder.WriteString(", numofem=")
+	builder.WriteString(fmt.Sprintf("%v", c.Numofem))
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// CleaningRooms is a parsable slice of CleaningRoom.
-type CleaningRooms []*CleaningRoom
+// Cleaningrooms is a parsable slice of Cleaningroom.
+type Cleaningrooms []*Cleaningroom
 
-func (cr CleaningRooms) config(cfg config) {
-	for _i := range cr {
-		cr[_i].config = cfg
+func (c Cleaningrooms) config(cfg config) {
+	for _i := range c {
+		c[_i].config = cfg
 	}
 }

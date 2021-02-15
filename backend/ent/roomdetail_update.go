@@ -218,14 +218,14 @@ func (ru *RoomdetailUpdate) SetRoomdetails(l *Lease) *RoomdetailUpdate {
 	return ru.SetRoomdetailsID(l.ID)
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
 func (ru *RoomdetailUpdate) AddCleaningroomIDs(ids ...int) *RoomdetailUpdate {
 	ru.mutation.AddCleaningroomIDs(ids...)
 	return ru
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (ru *RoomdetailUpdate) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (ru *RoomdetailUpdate) AddCleaningrooms(c ...*Cleaningroom) *RoomdetailUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
@@ -280,14 +280,14 @@ func (ru *RoomdetailUpdate) ClearRoomdetails() *RoomdetailUpdate {
 	return ru
 }
 
-// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+// RemoveCleaningroomIDs removes the cleaningrooms edge to Cleaningroom by ids.
 func (ru *RoomdetailUpdate) RemoveCleaningroomIDs(ids ...int) *RoomdetailUpdate {
 	ru.mutation.RemoveCleaningroomIDs(ids...)
 	return ru
 }
 
-// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
-func (ru *RoomdetailUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdate {
+// RemoveCleaningrooms removes cleaningrooms edges to Cleaningroom.
+func (ru *RoomdetailUpdate) RemoveCleaningrooms(c ...*Cleaningroom) *RoomdetailUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
@@ -935,14 +935,14 @@ func (ruo *RoomdetailUpdateOne) SetRoomdetails(l *Lease) *RoomdetailUpdateOne {
 	return ruo.SetRoomdetailsID(l.ID)
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
 func (ruo *RoomdetailUpdateOne) AddCleaningroomIDs(ids ...int) *RoomdetailUpdateOne {
 	ruo.mutation.AddCleaningroomIDs(ids...)
 	return ruo
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (ruo *RoomdetailUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdateOne {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (ruo *RoomdetailUpdateOne) AddCleaningrooms(c ...*Cleaningroom) *RoomdetailUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
@@ -997,14 +997,14 @@ func (ruo *RoomdetailUpdateOne) ClearRoomdetails() *RoomdetailUpdateOne {
 	return ruo
 }
 
-// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
+// RemoveCleaningroomIDs removes the cleaningrooms edge to Cleaningroom by ids.
 func (ruo *RoomdetailUpdateOne) RemoveCleaningroomIDs(ids ...int) *RoomdetailUpdateOne {
 	ruo.mutation.RemoveCleaningroomIDs(ids...)
 	return ruo
 }
 
-// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
-func (ruo *RoomdetailUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *RoomdetailUpdateOne {
+// RemoveCleaningrooms removes cleaningrooms edges to Cleaningroom.
+func (ruo *RoomdetailUpdateOne) RemoveCleaningrooms(c ...*Cleaningroom) *RoomdetailUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID

@@ -299,28 +299,28 @@ export default function Search() {
                             <Table className={classes.table} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                <TableCell align="center">No</TableCell>
-								<TableCell align="center">Room number</TableCell>
-								<TableCell align="center">Tenant's Name</TableCell>
-								<TableCell align="center">Identification Code</TableCell>
-								<TableCell align="center">Number</TableCell>
-								<TableCell align="center">Wifi Status</TableCell>
-								<TableCell align="center">Time</TableCell>
-                                <TableCell align="center">Employees</TableCell>
+                                <TableCell align="center">Contract No.</TableCell>
+                                <TableCell align="center">Room no.</TableCell>
+                                <TableCell align="center">Name</TableCell>
+                                 <TableCell align="center">Age</TableCell>
+                                 <TableCell align="center">Identified ID</TableCell>
+                                <TableCell align="center">Phone No.</TableCell>
+                                <TableCell align="center">Wifi Status</TableCell>
+		                        <TableCell align="center">Time</TableCell>
 								
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {lease.map((item:any ) => (
                                 <TableRow key={item.id}>
-                                    <TableCell align="center">{item.id}</TableCell>
-									<TableCell align="center">{item.edges?.roomdetail?.roomnumber}</TableCell>
-									<TableCell align="center">{item.tenant}</TableCell>
-									<TableCell align="center">{item.idtenant}</TableCell>
-									<TableCell align="center">{item.numbtenant}</TableCell>
-									<TableCell align="center">{item.edges?.wifi?.wifiname}</TableCell>
-									<TableCell align="center">{item.addedtime}</TableCell>
-                                    <TableCell align="center">{item.edges?.employee?.name}</TableCell>                           
+                                     <TableCell align="center">{item.id}</TableCell>
+                                    <TableCell align="center">{item.edges?.roomdetail?.roomnumber}</TableCell>
+                                     <TableCell align="center">{item.tenant}</TableCell>
+                                    <TableCell align="center">{item.agetenant}</TableCell>
+                                     <TableCell align="center">{item.idtenant}</TableCell>
+                                    <TableCell align="center">{item.numbtenant}</TableCell>
+                                    <TableCell align="center">{item.edges?.wifi?.wifiname}</TableCell>
+			                        <TableCell align="center">{item.addedtime}</TableCell>                         
                                 </TableRow>
                                 ))}
                             </TableBody>

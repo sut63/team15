@@ -14,64 +14,64 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// LengthTimeUpdate is the builder for updating LengthTime entities.
-type LengthTimeUpdate struct {
+// LengthtimeUpdate is the builder for updating Lengthtime entities.
+type LengthtimeUpdate struct {
 	config
 	hooks      []Hook
-	mutation   *LengthTimeMutation
-	predicates []predicate.LengthTime
+	mutation   *LengthtimeMutation
+	predicates []predicate.Lengthtime
 }
 
 // Where adds a new predicate for the builder.
-func (ltu *LengthTimeUpdate) Where(ps ...predicate.LengthTime) *LengthTimeUpdate {
-	ltu.predicates = append(ltu.predicates, ps...)
-	return ltu
+func (lu *LengthtimeUpdate) Where(ps ...predicate.Lengthtime) *LengthtimeUpdate {
+	lu.predicates = append(lu.predicates, ps...)
+	return lu
 }
 
 // SetLengthtime sets the lengthtime field.
-func (ltu *LengthTimeUpdate) SetLengthtime(s string) *LengthTimeUpdate {
-	ltu.mutation.SetLengthtime(s)
-	return ltu
+func (lu *LengthtimeUpdate) SetLengthtime(s string) *LengthtimeUpdate {
+	lu.mutation.SetLengthtime(s)
+	return lu
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
-func (ltu *LengthTimeUpdate) AddCleaningroomIDs(ids ...int) *LengthTimeUpdate {
-	ltu.mutation.AddCleaningroomIDs(ids...)
-	return ltu
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
+func (lu *LengthtimeUpdate) AddCleaningroomIDs(ids ...int) *LengthtimeUpdate {
+	lu.mutation.AddCleaningroomIDs(ids...)
+	return lu
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (ltu *LengthTimeUpdate) AddCleaningrooms(c ...*CleaningRoom) *LengthTimeUpdate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (lu *LengthtimeUpdate) AddCleaningrooms(c ...*Cleaningroom) *LengthtimeUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return ltu.AddCleaningroomIDs(ids...)
+	return lu.AddCleaningroomIDs(ids...)
 }
 
-// Mutation returns the LengthTimeMutation object of the builder.
-func (ltu *LengthTimeUpdate) Mutation() *LengthTimeMutation {
-	return ltu.mutation
+// Mutation returns the LengthtimeMutation object of the builder.
+func (lu *LengthtimeUpdate) Mutation() *LengthtimeMutation {
+	return lu.mutation
 }
 
-// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
-func (ltu *LengthTimeUpdate) RemoveCleaningroomIDs(ids ...int) *LengthTimeUpdate {
-	ltu.mutation.RemoveCleaningroomIDs(ids...)
-	return ltu
+// RemoveCleaningroomIDs removes the cleaningrooms edge to Cleaningroom by ids.
+func (lu *LengthtimeUpdate) RemoveCleaningroomIDs(ids ...int) *LengthtimeUpdate {
+	lu.mutation.RemoveCleaningroomIDs(ids...)
+	return lu
 }
 
-// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
-func (ltu *LengthTimeUpdate) RemoveCleaningrooms(c ...*CleaningRoom) *LengthTimeUpdate {
+// RemoveCleaningrooms removes cleaningrooms edges to Cleaningroom.
+func (lu *LengthtimeUpdate) RemoveCleaningrooms(c ...*Cleaningroom) *LengthtimeUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return ltu.RemoveCleaningroomIDs(ids...)
+	return lu.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
-func (ltu *LengthTimeUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ltu.mutation.Lengthtime(); ok {
+func (lu *LengthtimeUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := lu.mutation.Lengthtime(); ok {
 		if err := lengthtime.LengthtimeValidator(v); err != nil {
 			return 0, &ValidationError{Name: "lengthtime", err: fmt.Errorf("ent: validator failed for field \"lengthtime\": %w", err)}
 		}
@@ -81,23 +81,23 @@ func (ltu *LengthTimeUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
-	if len(ltu.hooks) == 0 {
-		affected, err = ltu.sqlSave(ctx)
+	if len(lu.hooks) == 0 {
+		affected, err = lu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*LengthTimeMutation)
+			mutation, ok := m.(*LengthtimeMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			ltu.mutation = mutation
-			affected, err = ltu.sqlSave(ctx)
+			lu.mutation = mutation
+			affected, err = lu.sqlSave(ctx)
 			mutation.done = true
 			return affected, err
 		})
-		for i := len(ltu.hooks) - 1; i >= 0; i-- {
-			mut = ltu.hooks[i](mut)
+		for i := len(lu.hooks) - 1; i >= 0; i-- {
+			mut = lu.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, ltu.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, lu.mutation); err != nil {
 			return 0, err
 		}
 	}
@@ -105,8 +105,8 @@ func (ltu *LengthTimeUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ltu *LengthTimeUpdate) SaveX(ctx context.Context) int {
-	affected, err := ltu.Save(ctx)
+func (lu *LengthtimeUpdate) SaveX(ctx context.Context) int {
+	affected, err := lu.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -114,19 +114,19 @@ func (ltu *LengthTimeUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (ltu *LengthTimeUpdate) Exec(ctx context.Context) error {
-	_, err := ltu.Save(ctx)
+func (lu *LengthtimeUpdate) Exec(ctx context.Context) error {
+	_, err := lu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ltu *LengthTimeUpdate) ExecX(ctx context.Context) {
-	if err := ltu.Exec(ctx); err != nil {
+func (lu *LengthtimeUpdate) ExecX(ctx context.Context) {
+	if err := lu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (ltu *LengthTimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (lu *LengthtimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   lengthtime.Table,
@@ -137,21 +137,21 @@ func (ltu *LengthTimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			},
 		},
 	}
-	if ps := ltu.predicates; len(ps) > 0 {
+	if ps := lu.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := ltu.mutation.Lengthtime(); ok {
+	if value, ok := lu.mutation.Lengthtime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lengthtime.FieldLengthtime,
 		})
 	}
-	if nodes := ltu.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := lu.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -170,7 +170,7 @@ func (ltu *LengthTimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ltu.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := lu.mutation.CleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -189,7 +189,7 @@ func (ltu *LengthTimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, ltu.driver, _spec); err != nil {
+	if n, err = sqlgraph.UpdateNodes(ctx, lu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{lengthtime.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
@@ -200,57 +200,57 @@ func (ltu *LengthTimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// LengthTimeUpdateOne is the builder for updating a single LengthTime entity.
-type LengthTimeUpdateOne struct {
+// LengthtimeUpdateOne is the builder for updating a single Lengthtime entity.
+type LengthtimeUpdateOne struct {
 	config
 	hooks    []Hook
-	mutation *LengthTimeMutation
+	mutation *LengthtimeMutation
 }
 
 // SetLengthtime sets the lengthtime field.
-func (ltuo *LengthTimeUpdateOne) SetLengthtime(s string) *LengthTimeUpdateOne {
-	ltuo.mutation.SetLengthtime(s)
-	return ltuo
+func (luo *LengthtimeUpdateOne) SetLengthtime(s string) *LengthtimeUpdateOne {
+	luo.mutation.SetLengthtime(s)
+	return luo
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
-func (ltuo *LengthTimeUpdateOne) AddCleaningroomIDs(ids ...int) *LengthTimeUpdateOne {
-	ltuo.mutation.AddCleaningroomIDs(ids...)
-	return ltuo
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
+func (luo *LengthtimeUpdateOne) AddCleaningroomIDs(ids ...int) *LengthtimeUpdateOne {
+	luo.mutation.AddCleaningroomIDs(ids...)
+	return luo
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (ltuo *LengthTimeUpdateOne) AddCleaningrooms(c ...*CleaningRoom) *LengthTimeUpdateOne {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (luo *LengthtimeUpdateOne) AddCleaningrooms(c ...*Cleaningroom) *LengthtimeUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return ltuo.AddCleaningroomIDs(ids...)
+	return luo.AddCleaningroomIDs(ids...)
 }
 
-// Mutation returns the LengthTimeMutation object of the builder.
-func (ltuo *LengthTimeUpdateOne) Mutation() *LengthTimeMutation {
-	return ltuo.mutation
+// Mutation returns the LengthtimeMutation object of the builder.
+func (luo *LengthtimeUpdateOne) Mutation() *LengthtimeMutation {
+	return luo.mutation
 }
 
-// RemoveCleaningroomIDs removes the cleaningrooms edge to CleaningRoom by ids.
-func (ltuo *LengthTimeUpdateOne) RemoveCleaningroomIDs(ids ...int) *LengthTimeUpdateOne {
-	ltuo.mutation.RemoveCleaningroomIDs(ids...)
-	return ltuo
+// RemoveCleaningroomIDs removes the cleaningrooms edge to Cleaningroom by ids.
+func (luo *LengthtimeUpdateOne) RemoveCleaningroomIDs(ids ...int) *LengthtimeUpdateOne {
+	luo.mutation.RemoveCleaningroomIDs(ids...)
+	return luo
 }
 
-// RemoveCleaningrooms removes cleaningrooms edges to CleaningRoom.
-func (ltuo *LengthTimeUpdateOne) RemoveCleaningrooms(c ...*CleaningRoom) *LengthTimeUpdateOne {
+// RemoveCleaningrooms removes cleaningrooms edges to Cleaningroom.
+func (luo *LengthtimeUpdateOne) RemoveCleaningrooms(c ...*Cleaningroom) *LengthtimeUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return ltuo.RemoveCleaningroomIDs(ids...)
+	return luo.RemoveCleaningroomIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
-func (ltuo *LengthTimeUpdateOne) Save(ctx context.Context) (*LengthTime, error) {
-	if v, ok := ltuo.mutation.Lengthtime(); ok {
+func (luo *LengthtimeUpdateOne) Save(ctx context.Context) (*Lengthtime, error) {
+	if v, ok := luo.mutation.Lengthtime(); ok {
 		if err := lengthtime.LengthtimeValidator(v); err != nil {
 			return nil, &ValidationError{Name: "lengthtime", err: fmt.Errorf("ent: validator failed for field \"lengthtime\": %w", err)}
 		}
@@ -258,25 +258,25 @@ func (ltuo *LengthTimeUpdateOne) Save(ctx context.Context) (*LengthTime, error) 
 
 	var (
 		err  error
-		node *LengthTime
+		node *Lengthtime
 	)
-	if len(ltuo.hooks) == 0 {
-		node, err = ltuo.sqlSave(ctx)
+	if len(luo.hooks) == 0 {
+		node, err = luo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*LengthTimeMutation)
+			mutation, ok := m.(*LengthtimeMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			ltuo.mutation = mutation
-			node, err = ltuo.sqlSave(ctx)
+			luo.mutation = mutation
+			node, err = luo.sqlSave(ctx)
 			mutation.done = true
 			return node, err
 		})
-		for i := len(ltuo.hooks) - 1; i >= 0; i-- {
-			mut = ltuo.hooks[i](mut)
+		for i := len(luo.hooks) - 1; i >= 0; i-- {
+			mut = luo.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, ltuo.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, luo.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -284,28 +284,28 @@ func (ltuo *LengthTimeUpdateOne) Save(ctx context.Context) (*LengthTime, error) 
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ltuo *LengthTimeUpdateOne) SaveX(ctx context.Context) *LengthTime {
-	lt, err := ltuo.Save(ctx)
+func (luo *LengthtimeUpdateOne) SaveX(ctx context.Context) *Lengthtime {
+	l, err := luo.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return lt
+	return l
 }
 
 // Exec executes the query on the entity.
-func (ltuo *LengthTimeUpdateOne) Exec(ctx context.Context) error {
-	_, err := ltuo.Save(ctx)
+func (luo *LengthtimeUpdateOne) Exec(ctx context.Context) error {
+	_, err := luo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ltuo *LengthTimeUpdateOne) ExecX(ctx context.Context) {
-	if err := ltuo.Exec(ctx); err != nil {
+func (luo *LengthtimeUpdateOne) ExecX(ctx context.Context) {
+	if err := luo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (ltuo *LengthTimeUpdateOne) sqlSave(ctx context.Context) (lt *LengthTime, err error) {
+func (luo *LengthtimeUpdateOne) sqlSave(ctx context.Context) (l *Lengthtime, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   lengthtime.Table,
@@ -316,19 +316,19 @@ func (ltuo *LengthTimeUpdateOne) sqlSave(ctx context.Context) (lt *LengthTime, e
 			},
 		},
 	}
-	id, ok := ltuo.mutation.ID()
+	id, ok := luo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing LengthTime.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Lengthtime.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := ltuo.mutation.Lengthtime(); ok {
+	if value, ok := luo.mutation.Lengthtime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lengthtime.FieldLengthtime,
 		})
 	}
-	if nodes := ltuo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := luo.mutation.RemovedCleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -347,7 +347,7 @@ func (ltuo *LengthTimeUpdateOne) sqlSave(ctx context.Context) (lt *LengthTime, e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ltuo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := luo.mutation.CleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -366,10 +366,10 @@ func (ltuo *LengthTimeUpdateOne) sqlSave(ctx context.Context) (lt *LengthTime, e
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	lt = &LengthTime{config: ltuo.config}
-	_spec.Assign = lt.assignValues
-	_spec.ScanValues = lt.scanValues()
-	if err = sqlgraph.UpdateNode(ctx, ltuo.driver, _spec); err != nil {
+	l = &Lengthtime{config: luo.config}
+	_spec.Assign = l.assignValues
+	_spec.ScanValues = l.scanValues()
+	if err = sqlgraph.UpdateNode(ctx, luo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{lengthtime.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
@@ -377,5 +377,5 @@ func (ltuo *LengthTimeUpdateOne) sqlSave(ctx context.Context) (lt *LengthTime, e
 		}
 		return nil, err
 	}
-	return lt, nil
+	return l, nil
 }

@@ -65,11 +65,11 @@ export interface EntEmployeeEdges {
      */
     jobposition?: EntJobposition;
     /**
-     * Leases holds the value of the leases edge.
+     * Leasess holds the value of the leasess edge.
      * @type {Array<EntLease>}
      * @memberof EntEmployeeEdges
      */
-    leases?: Array<EntLease>;
+    leasess?: Array<EntLease>;
     /**
      * Repairinvoices holds the value of the repairinvoices edge.
      * @type {Array<EntRepairinvoice>}
@@ -97,7 +97,7 @@ export function EntEmployeeEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
         'cleaningrooms': !exists(json, 'Cleaningrooms') ? undefined : ((json['Cleaningrooms'] as Array<any>).map(EntCleaningroomFromJSON)),
         'employees': !exists(json, 'Employees') ? undefined : ((json['Employees'] as Array<any>).map(EntDepositFromJSON)),
         'jobposition': !exists(json, 'Jobposition') ? undefined : EntJobpositionFromJSON(json['Jobposition']),
-        'leases': !exists(json, 'Leases') ? undefined : ((json['Leases'] as Array<any>).map(EntLeaseFromJSON)),
+        'leasess': !exists(json, 'Leasess') ? undefined : ((json['Leasess'] as Array<any>).map(EntLeaseFromJSON)),
         'repairinvoices': !exists(json, 'Repairinvoices') ? undefined : ((json['Repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
         'roomdetails': !exists(json, 'Roomdetails') ? undefined : ((json['Roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
@@ -115,7 +115,7 @@ export function EntEmployeeEdgesToJSON(value?: EntEmployeeEdges | null): any {
         'cleaningrooms': value.cleaningrooms === undefined ? undefined : ((value.cleaningrooms as Array<any>).map(EntCleaningroomToJSON)),
         'employees': value.employees === undefined ? undefined : ((value.employees as Array<any>).map(EntDepositToJSON)),
         'jobposition': EntJobpositionToJSON(value.jobposition),
-        'leases': value.leases === undefined ? undefined : ((value.leases as Array<any>).map(EntLeaseToJSON)),
+        'leasess': value.leasess === undefined ? undefined : ((value.leasess as Array<any>).map(EntLeaseToJSON)),
         'repairinvoices': value.repairinvoices === undefined ? undefined : ((value.repairinvoices as Array<any>).map(EntRepairinvoiceToJSON)),
         'roomdetails': value.roomdetails === undefined ? undefined : ((value.roomdetails as Array<any>).map(EntRoomdetailToJSON)),
     };

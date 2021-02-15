@@ -18,161 +18,195 @@ import (
 	"github.com/team15/app/ent/roomdetail"
 )
 
-// CleaningRoomUpdate is the builder for updating CleaningRoom entities.
-type CleaningRoomUpdate struct {
+// CleaningroomUpdate is the builder for updating Cleaningroom entities.
+type CleaningroomUpdate struct {
 	config
 	hooks      []Hook
-	mutation   *CleaningRoomMutation
-	predicates []predicate.CleaningRoom
+	mutation   *CleaningroomMutation
+	predicates []predicate.Cleaningroom
 }
 
 // Where adds a new predicate for the builder.
-func (cru *CleaningRoomUpdate) Where(ps ...predicate.CleaningRoom) *CleaningRoomUpdate {
-	cru.predicates = append(cru.predicates, ps...)
-	return cru
-}
-
-// SetDateandstarttime sets the dateandstarttime field.
-func (cru *CleaningRoomUpdate) SetDateandstarttime(t time.Time) *CleaningRoomUpdate {
-	cru.mutation.SetDateandstarttime(t)
-	return cru
+func (cu *CleaningroomUpdate) Where(ps ...predicate.Cleaningroom) *CleaningroomUpdate {
+	cu.predicates = append(cu.predicates, ps...)
+	return cu
 }
 
 // SetNote sets the note field.
-func (cru *CleaningRoomUpdate) SetNote(s string) *CleaningRoomUpdate {
-	cru.mutation.SetNote(s)
-	return cru
+func (cu *CleaningroomUpdate) SetNote(s string) *CleaningroomUpdate {
+	cu.mutation.SetNote(s)
+	return cu
+}
+
+// SetDateandstarttime sets the dateandstarttime field.
+func (cu *CleaningroomUpdate) SetDateandstarttime(t time.Time) *CleaningroomUpdate {
+	cu.mutation.SetDateandstarttime(t)
+	return cu
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (cu *CleaningroomUpdate) SetPhonenumber(s string) *CleaningroomUpdate {
+	cu.mutation.SetPhonenumber(s)
+	return cu
+}
+
+// SetNumofem sets the numofem field.
+func (cu *CleaningroomUpdate) SetNumofem(i int) *CleaningroomUpdate {
+	cu.mutation.ResetNumofem()
+	cu.mutation.SetNumofem(i)
+	return cu
+}
+
+// AddNumofem adds i to numofem.
+func (cu *CleaningroomUpdate) AddNumofem(i int) *CleaningroomUpdate {
+	cu.mutation.AddNumofem(i)
+	return cu
 }
 
 // SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (cru *CleaningRoomUpdate) SetRoomdetailID(id int) *CleaningRoomUpdate {
-	cru.mutation.SetRoomdetailID(id)
-	return cru
+func (cu *CleaningroomUpdate) SetRoomdetailID(id int) *CleaningroomUpdate {
+	cu.mutation.SetRoomdetailID(id)
+	return cu
 }
 
 // SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (cru *CleaningRoomUpdate) SetNillableRoomdetailID(id *int) *CleaningRoomUpdate {
+func (cu *CleaningroomUpdate) SetNillableRoomdetailID(id *int) *CleaningroomUpdate {
 	if id != nil {
-		cru = cru.SetRoomdetailID(*id)
+		cu = cu.SetRoomdetailID(*id)
 	}
-	return cru
+	return cu
 }
 
 // SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (cru *CleaningRoomUpdate) SetRoomdetail(r *Roomdetail) *CleaningRoomUpdate {
-	return cru.SetRoomdetailID(r.ID)
+func (cu *CleaningroomUpdate) SetRoomdetail(r *Roomdetail) *CleaningroomUpdate {
+	return cu.SetRoomdetailID(r.ID)
 }
 
-// SetCleanerNameID sets the CleanerName edge to CleanerName by id.
-func (cru *CleaningRoomUpdate) SetCleanerNameID(id int) *CleaningRoomUpdate {
-	cru.mutation.SetCleanerNameID(id)
-	return cru
+// SetCleanernameID sets the Cleanername edge to Cleanername by id.
+func (cu *CleaningroomUpdate) SetCleanernameID(id int) *CleaningroomUpdate {
+	cu.mutation.SetCleanernameID(id)
+	return cu
 }
 
-// SetNillableCleanerNameID sets the CleanerName edge to CleanerName by id if the given value is not nil.
-func (cru *CleaningRoomUpdate) SetNillableCleanerNameID(id *int) *CleaningRoomUpdate {
+// SetNillableCleanernameID sets the Cleanername edge to Cleanername by id if the given value is not nil.
+func (cu *CleaningroomUpdate) SetNillableCleanernameID(id *int) *CleaningroomUpdate {
 	if id != nil {
-		cru = cru.SetCleanerNameID(*id)
+		cu = cu.SetCleanernameID(*id)
 	}
-	return cru
+	return cu
 }
 
-// SetCleanerName sets the CleanerName edge to CleanerName.
-func (cru *CleaningRoomUpdate) SetCleanerName(c *CleanerName) *CleaningRoomUpdate {
-	return cru.SetCleanerNameID(c.ID)
+// SetCleanername sets the Cleanername edge to Cleanername.
+func (cu *CleaningroomUpdate) SetCleanername(c *Cleanername) *CleaningroomUpdate {
+	return cu.SetCleanernameID(c.ID)
 }
 
-// SetLengthTimeID sets the LengthTime edge to LengthTime by id.
-func (cru *CleaningRoomUpdate) SetLengthTimeID(id int) *CleaningRoomUpdate {
-	cru.mutation.SetLengthTimeID(id)
-	return cru
+// SetLengthtimeID sets the Lengthtime edge to Lengthtime by id.
+func (cu *CleaningroomUpdate) SetLengthtimeID(id int) *CleaningroomUpdate {
+	cu.mutation.SetLengthtimeID(id)
+	return cu
 }
 
-// SetNillableLengthTimeID sets the LengthTime edge to LengthTime by id if the given value is not nil.
-func (cru *CleaningRoomUpdate) SetNillableLengthTimeID(id *int) *CleaningRoomUpdate {
+// SetNillableLengthtimeID sets the Lengthtime edge to Lengthtime by id if the given value is not nil.
+func (cu *CleaningroomUpdate) SetNillableLengthtimeID(id *int) *CleaningroomUpdate {
 	if id != nil {
-		cru = cru.SetLengthTimeID(*id)
+		cu = cu.SetLengthtimeID(*id)
 	}
-	return cru
+	return cu
 }
 
-// SetLengthTime sets the LengthTime edge to LengthTime.
-func (cru *CleaningRoomUpdate) SetLengthTime(l *LengthTime) *CleaningRoomUpdate {
-	return cru.SetLengthTimeID(l.ID)
+// SetLengthtime sets the Lengthtime edge to Lengthtime.
+func (cu *CleaningroomUpdate) SetLengthtime(l *Lengthtime) *CleaningroomUpdate {
+	return cu.SetLengthtimeID(l.ID)
 }
 
 // SetEmployeeID sets the Employee edge to Employee by id.
-func (cru *CleaningRoomUpdate) SetEmployeeID(id int) *CleaningRoomUpdate {
-	cru.mutation.SetEmployeeID(id)
-	return cru
+func (cu *CleaningroomUpdate) SetEmployeeID(id int) *CleaningroomUpdate {
+	cu.mutation.SetEmployeeID(id)
+	return cu
 }
 
 // SetNillableEmployeeID sets the Employee edge to Employee by id if the given value is not nil.
-func (cru *CleaningRoomUpdate) SetNillableEmployeeID(id *int) *CleaningRoomUpdate {
+func (cu *CleaningroomUpdate) SetNillableEmployeeID(id *int) *CleaningroomUpdate {
 	if id != nil {
-		cru = cru.SetEmployeeID(*id)
+		cu = cu.SetEmployeeID(*id)
 	}
-	return cru
+	return cu
 }
 
 // SetEmployee sets the Employee edge to Employee.
-func (cru *CleaningRoomUpdate) SetEmployee(e *Employee) *CleaningRoomUpdate {
-	return cru.SetEmployeeID(e.ID)
+func (cu *CleaningroomUpdate) SetEmployee(e *Employee) *CleaningroomUpdate {
+	return cu.SetEmployeeID(e.ID)
 }
 
-// Mutation returns the CleaningRoomMutation object of the builder.
-func (cru *CleaningRoomUpdate) Mutation() *CleaningRoomMutation {
-	return cru.mutation
+// Mutation returns the CleaningroomMutation object of the builder.
+func (cu *CleaningroomUpdate) Mutation() *CleaningroomMutation {
+	return cu.mutation
 }
 
 // ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (cru *CleaningRoomUpdate) ClearRoomdetail() *CleaningRoomUpdate {
-	cru.mutation.ClearRoomdetail()
-	return cru
+func (cu *CleaningroomUpdate) ClearRoomdetail() *CleaningroomUpdate {
+	cu.mutation.ClearRoomdetail()
+	return cu
 }
 
-// ClearCleanerName clears the CleanerName edge to CleanerName.
-func (cru *CleaningRoomUpdate) ClearCleanerName() *CleaningRoomUpdate {
-	cru.mutation.ClearCleanerName()
-	return cru
+// ClearCleanername clears the Cleanername edge to Cleanername.
+func (cu *CleaningroomUpdate) ClearCleanername() *CleaningroomUpdate {
+	cu.mutation.ClearCleanername()
+	return cu
 }
 
-// ClearLengthTime clears the LengthTime edge to LengthTime.
-func (cru *CleaningRoomUpdate) ClearLengthTime() *CleaningRoomUpdate {
-	cru.mutation.ClearLengthTime()
-	return cru
+// ClearLengthtime clears the Lengthtime edge to Lengthtime.
+func (cu *CleaningroomUpdate) ClearLengthtime() *CleaningroomUpdate {
+	cu.mutation.ClearLengthtime()
+	return cu
 }
 
 // ClearEmployee clears the Employee edge to Employee.
-func (cru *CleaningRoomUpdate) ClearEmployee() *CleaningRoomUpdate {
-	cru.mutation.ClearEmployee()
-	return cru
+func (cu *CleaningroomUpdate) ClearEmployee() *CleaningroomUpdate {
+	cu.mutation.ClearEmployee()
+	return cu
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
-func (cru *CleaningRoomUpdate) Save(ctx context.Context) (int, error) {
+func (cu *CleaningroomUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := cu.mutation.Note(); ok {
+		if err := cleaningroom.NoteValidator(v); err != nil {
+			return 0, &ValidationError{Name: "note", err: fmt.Errorf("ent: validator failed for field \"note\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Phonenumber(); ok {
+		if err := cleaningroom.PhonenumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phonenumber", err: fmt.Errorf("ent: validator failed for field \"phonenumber\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Numofem(); ok {
+		if err := cleaningroom.NumofemValidator(v); err != nil {
+			return 0, &ValidationError{Name: "numofem", err: fmt.Errorf("ent: validator failed for field \"numofem\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
 		affected int
 	)
-	if len(cru.hooks) == 0 {
-		affected, err = cru.sqlSave(ctx)
+	if len(cu.hooks) == 0 {
+		affected, err = cu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleaningRoomMutation)
+			mutation, ok := m.(*CleaningroomMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			cru.mutation = mutation
-			affected, err = cru.sqlSave(ctx)
+			cu.mutation = mutation
+			affected, err = cu.sqlSave(ctx)
 			mutation.done = true
 			return affected, err
 		})
-		for i := len(cru.hooks) - 1; i >= 0; i-- {
-			mut = cru.hooks[i](mut)
+		for i := len(cu.hooks) - 1; i >= 0; i-- {
+			mut = cu.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, cru.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cu.mutation); err != nil {
 			return 0, err
 		}
 	}
@@ -180,8 +214,8 @@ func (cru *CleaningRoomUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cru *CleaningRoomUpdate) SaveX(ctx context.Context) int {
-	affected, err := cru.Save(ctx)
+func (cu *CleaningroomUpdate) SaveX(ctx context.Context) int {
+	affected, err := cu.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -189,19 +223,19 @@ func (cru *CleaningRoomUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (cru *CleaningRoomUpdate) Exec(ctx context.Context) error {
-	_, err := cru.Save(ctx)
+func (cu *CleaningroomUpdate) Exec(ctx context.Context) error {
+	_, err := cu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cru *CleaningRoomUpdate) ExecX(ctx context.Context) {
-	if err := cru.Exec(ctx); err != nil {
+func (cu *CleaningroomUpdate) ExecX(ctx context.Context) {
+	if err := cu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (cu *CleaningroomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   cleaningroom.Table,
@@ -212,28 +246,49 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			},
 		},
 	}
-	if ps := cru.predicates; len(ps) > 0 {
+	if ps := cu.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := cru.mutation.Dateandstarttime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: cleaningroom.FieldDateandstarttime,
-		})
-	}
-	if value, ok := cru.mutation.Note(); ok {
+	if value, ok := cu.mutation.Note(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: cleaningroom.FieldNote,
 		})
 	}
-	if cru.mutation.RoomdetailCleared() {
+	if value, ok := cu.mutation.Dateandstarttime(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: cleaningroom.FieldDateandstarttime,
+		})
+	}
+	if value, ok := cu.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: cleaningroom.FieldPhonenumber,
+		})
+	}
+	if value, ok := cu.mutation.Numofem(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cleaningroom.FieldNumofem,
+		})
+	}
+	if value, ok := cu.mutation.AddedNumofem(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cleaningroom.FieldNumofem,
+		})
+	}
+	if cu.mutation.RoomdetailCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -249,7 +304,7 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cru.mutation.RoomdetailIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -268,12 +323,12 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cru.mutation.CleanerNameCleared() {
+	if cu.mutation.CleanernameCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.CleanerNameTable,
-			Columns: []string{cleaningroom.CleanerNameColumn},
+			Table:   cleaningroom.CleanernameTable,
+			Columns: []string{cleaningroom.CleanernameColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -284,12 +339,12 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cru.mutation.CleanerNameIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.CleanernameIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.CleanerNameTable,
-			Columns: []string{cleaningroom.CleanerNameColumn},
+			Table:   cleaningroom.CleanernameTable,
+			Columns: []string{cleaningroom.CleanernameColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -303,12 +358,12 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cru.mutation.LengthTimeCleared() {
+	if cu.mutation.LengthtimeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.LengthTimeTable,
-			Columns: []string{cleaningroom.LengthTimeColumn},
+			Table:   cleaningroom.LengthtimeTable,
+			Columns: []string{cleaningroom.LengthtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -319,12 +374,12 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cru.mutation.LengthTimeIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.LengthtimeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.LengthTimeTable,
-			Columns: []string{cleaningroom.LengthTimeColumn},
+			Table:   cleaningroom.LengthtimeTable,
+			Columns: []string{cleaningroom.LengthtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -338,7 +393,7 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cru.mutation.EmployeeCleared() {
+	if cu.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -354,7 +409,7 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cru.mutation.EmployeeIDs(); len(nodes) > 0 {
+	if nodes := cu.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -373,7 +428,7 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if n, err = sqlgraph.UpdateNodes(ctx, cru.driver, _spec); err != nil {
+	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{cleaningroom.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
@@ -384,154 +439,188 @@ func (cru *CleaningRoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// CleaningRoomUpdateOne is the builder for updating a single CleaningRoom entity.
-type CleaningRoomUpdateOne struct {
+// CleaningroomUpdateOne is the builder for updating a single Cleaningroom entity.
+type CleaningroomUpdateOne struct {
 	config
 	hooks    []Hook
-	mutation *CleaningRoomMutation
-}
-
-// SetDateandstarttime sets the dateandstarttime field.
-func (cruo *CleaningRoomUpdateOne) SetDateandstarttime(t time.Time) *CleaningRoomUpdateOne {
-	cruo.mutation.SetDateandstarttime(t)
-	return cruo
+	mutation *CleaningroomMutation
 }
 
 // SetNote sets the note field.
-func (cruo *CleaningRoomUpdateOne) SetNote(s string) *CleaningRoomUpdateOne {
-	cruo.mutation.SetNote(s)
-	return cruo
+func (cuo *CleaningroomUpdateOne) SetNote(s string) *CleaningroomUpdateOne {
+	cuo.mutation.SetNote(s)
+	return cuo
+}
+
+// SetDateandstarttime sets the dateandstarttime field.
+func (cuo *CleaningroomUpdateOne) SetDateandstarttime(t time.Time) *CleaningroomUpdateOne {
+	cuo.mutation.SetDateandstarttime(t)
+	return cuo
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (cuo *CleaningroomUpdateOne) SetPhonenumber(s string) *CleaningroomUpdateOne {
+	cuo.mutation.SetPhonenumber(s)
+	return cuo
+}
+
+// SetNumofem sets the numofem field.
+func (cuo *CleaningroomUpdateOne) SetNumofem(i int) *CleaningroomUpdateOne {
+	cuo.mutation.ResetNumofem()
+	cuo.mutation.SetNumofem(i)
+	return cuo
+}
+
+// AddNumofem adds i to numofem.
+func (cuo *CleaningroomUpdateOne) AddNumofem(i int) *CleaningroomUpdateOne {
+	cuo.mutation.AddNumofem(i)
+	return cuo
 }
 
 // SetRoomdetailID sets the roomdetail edge to Roomdetail by id.
-func (cruo *CleaningRoomUpdateOne) SetRoomdetailID(id int) *CleaningRoomUpdateOne {
-	cruo.mutation.SetRoomdetailID(id)
-	return cruo
+func (cuo *CleaningroomUpdateOne) SetRoomdetailID(id int) *CleaningroomUpdateOne {
+	cuo.mutation.SetRoomdetailID(id)
+	return cuo
 }
 
 // SetNillableRoomdetailID sets the roomdetail edge to Roomdetail by id if the given value is not nil.
-func (cruo *CleaningRoomUpdateOne) SetNillableRoomdetailID(id *int) *CleaningRoomUpdateOne {
+func (cuo *CleaningroomUpdateOne) SetNillableRoomdetailID(id *int) *CleaningroomUpdateOne {
 	if id != nil {
-		cruo = cruo.SetRoomdetailID(*id)
+		cuo = cuo.SetRoomdetailID(*id)
 	}
-	return cruo
+	return cuo
 }
 
 // SetRoomdetail sets the roomdetail edge to Roomdetail.
-func (cruo *CleaningRoomUpdateOne) SetRoomdetail(r *Roomdetail) *CleaningRoomUpdateOne {
-	return cruo.SetRoomdetailID(r.ID)
+func (cuo *CleaningroomUpdateOne) SetRoomdetail(r *Roomdetail) *CleaningroomUpdateOne {
+	return cuo.SetRoomdetailID(r.ID)
 }
 
-// SetCleanerNameID sets the CleanerName edge to CleanerName by id.
-func (cruo *CleaningRoomUpdateOne) SetCleanerNameID(id int) *CleaningRoomUpdateOne {
-	cruo.mutation.SetCleanerNameID(id)
-	return cruo
+// SetCleanernameID sets the Cleanername edge to Cleanername by id.
+func (cuo *CleaningroomUpdateOne) SetCleanernameID(id int) *CleaningroomUpdateOne {
+	cuo.mutation.SetCleanernameID(id)
+	return cuo
 }
 
-// SetNillableCleanerNameID sets the CleanerName edge to CleanerName by id if the given value is not nil.
-func (cruo *CleaningRoomUpdateOne) SetNillableCleanerNameID(id *int) *CleaningRoomUpdateOne {
+// SetNillableCleanernameID sets the Cleanername edge to Cleanername by id if the given value is not nil.
+func (cuo *CleaningroomUpdateOne) SetNillableCleanernameID(id *int) *CleaningroomUpdateOne {
 	if id != nil {
-		cruo = cruo.SetCleanerNameID(*id)
+		cuo = cuo.SetCleanernameID(*id)
 	}
-	return cruo
+	return cuo
 }
 
-// SetCleanerName sets the CleanerName edge to CleanerName.
-func (cruo *CleaningRoomUpdateOne) SetCleanerName(c *CleanerName) *CleaningRoomUpdateOne {
-	return cruo.SetCleanerNameID(c.ID)
+// SetCleanername sets the Cleanername edge to Cleanername.
+func (cuo *CleaningroomUpdateOne) SetCleanername(c *Cleanername) *CleaningroomUpdateOne {
+	return cuo.SetCleanernameID(c.ID)
 }
 
-// SetLengthTimeID sets the LengthTime edge to LengthTime by id.
-func (cruo *CleaningRoomUpdateOne) SetLengthTimeID(id int) *CleaningRoomUpdateOne {
-	cruo.mutation.SetLengthTimeID(id)
-	return cruo
+// SetLengthtimeID sets the Lengthtime edge to Lengthtime by id.
+func (cuo *CleaningroomUpdateOne) SetLengthtimeID(id int) *CleaningroomUpdateOne {
+	cuo.mutation.SetLengthtimeID(id)
+	return cuo
 }
 
-// SetNillableLengthTimeID sets the LengthTime edge to LengthTime by id if the given value is not nil.
-func (cruo *CleaningRoomUpdateOne) SetNillableLengthTimeID(id *int) *CleaningRoomUpdateOne {
+// SetNillableLengthtimeID sets the Lengthtime edge to Lengthtime by id if the given value is not nil.
+func (cuo *CleaningroomUpdateOne) SetNillableLengthtimeID(id *int) *CleaningroomUpdateOne {
 	if id != nil {
-		cruo = cruo.SetLengthTimeID(*id)
+		cuo = cuo.SetLengthtimeID(*id)
 	}
-	return cruo
+	return cuo
 }
 
-// SetLengthTime sets the LengthTime edge to LengthTime.
-func (cruo *CleaningRoomUpdateOne) SetLengthTime(l *LengthTime) *CleaningRoomUpdateOne {
-	return cruo.SetLengthTimeID(l.ID)
+// SetLengthtime sets the Lengthtime edge to Lengthtime.
+func (cuo *CleaningroomUpdateOne) SetLengthtime(l *Lengthtime) *CleaningroomUpdateOne {
+	return cuo.SetLengthtimeID(l.ID)
 }
 
 // SetEmployeeID sets the Employee edge to Employee by id.
-func (cruo *CleaningRoomUpdateOne) SetEmployeeID(id int) *CleaningRoomUpdateOne {
-	cruo.mutation.SetEmployeeID(id)
-	return cruo
+func (cuo *CleaningroomUpdateOne) SetEmployeeID(id int) *CleaningroomUpdateOne {
+	cuo.mutation.SetEmployeeID(id)
+	return cuo
 }
 
 // SetNillableEmployeeID sets the Employee edge to Employee by id if the given value is not nil.
-func (cruo *CleaningRoomUpdateOne) SetNillableEmployeeID(id *int) *CleaningRoomUpdateOne {
+func (cuo *CleaningroomUpdateOne) SetNillableEmployeeID(id *int) *CleaningroomUpdateOne {
 	if id != nil {
-		cruo = cruo.SetEmployeeID(*id)
+		cuo = cuo.SetEmployeeID(*id)
 	}
-	return cruo
+	return cuo
 }
 
 // SetEmployee sets the Employee edge to Employee.
-func (cruo *CleaningRoomUpdateOne) SetEmployee(e *Employee) *CleaningRoomUpdateOne {
-	return cruo.SetEmployeeID(e.ID)
+func (cuo *CleaningroomUpdateOne) SetEmployee(e *Employee) *CleaningroomUpdateOne {
+	return cuo.SetEmployeeID(e.ID)
 }
 
-// Mutation returns the CleaningRoomMutation object of the builder.
-func (cruo *CleaningRoomUpdateOne) Mutation() *CleaningRoomMutation {
-	return cruo.mutation
+// Mutation returns the CleaningroomMutation object of the builder.
+func (cuo *CleaningroomUpdateOne) Mutation() *CleaningroomMutation {
+	return cuo.mutation
 }
 
 // ClearRoomdetail clears the roomdetail edge to Roomdetail.
-func (cruo *CleaningRoomUpdateOne) ClearRoomdetail() *CleaningRoomUpdateOne {
-	cruo.mutation.ClearRoomdetail()
-	return cruo
+func (cuo *CleaningroomUpdateOne) ClearRoomdetail() *CleaningroomUpdateOne {
+	cuo.mutation.ClearRoomdetail()
+	return cuo
 }
 
-// ClearCleanerName clears the CleanerName edge to CleanerName.
-func (cruo *CleaningRoomUpdateOne) ClearCleanerName() *CleaningRoomUpdateOne {
-	cruo.mutation.ClearCleanerName()
-	return cruo
+// ClearCleanername clears the Cleanername edge to Cleanername.
+func (cuo *CleaningroomUpdateOne) ClearCleanername() *CleaningroomUpdateOne {
+	cuo.mutation.ClearCleanername()
+	return cuo
 }
 
-// ClearLengthTime clears the LengthTime edge to LengthTime.
-func (cruo *CleaningRoomUpdateOne) ClearLengthTime() *CleaningRoomUpdateOne {
-	cruo.mutation.ClearLengthTime()
-	return cruo
+// ClearLengthtime clears the Lengthtime edge to Lengthtime.
+func (cuo *CleaningroomUpdateOne) ClearLengthtime() *CleaningroomUpdateOne {
+	cuo.mutation.ClearLengthtime()
+	return cuo
 }
 
 // ClearEmployee clears the Employee edge to Employee.
-func (cruo *CleaningRoomUpdateOne) ClearEmployee() *CleaningRoomUpdateOne {
-	cruo.mutation.ClearEmployee()
-	return cruo
+func (cuo *CleaningroomUpdateOne) ClearEmployee() *CleaningroomUpdateOne {
+	cuo.mutation.ClearEmployee()
+	return cuo
 }
 
 // Save executes the query and returns the updated entity.
-func (cruo *CleaningRoomUpdateOne) Save(ctx context.Context) (*CleaningRoom, error) {
+func (cuo *CleaningroomUpdateOne) Save(ctx context.Context) (*Cleaningroom, error) {
+	if v, ok := cuo.mutation.Note(); ok {
+		if err := cleaningroom.NoteValidator(v); err != nil {
+			return nil, &ValidationError{Name: "note", err: fmt.Errorf("ent: validator failed for field \"note\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Phonenumber(); ok {
+		if err := cleaningroom.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phonenumber", err: fmt.Errorf("ent: validator failed for field \"phonenumber\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Numofem(); ok {
+		if err := cleaningroom.NumofemValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numofem", err: fmt.Errorf("ent: validator failed for field \"numofem\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
-		node *CleaningRoom
+		node *Cleaningroom
 	)
-	if len(cruo.hooks) == 0 {
-		node, err = cruo.sqlSave(ctx)
+	if len(cuo.hooks) == 0 {
+		node, err = cuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleaningRoomMutation)
+			mutation, ok := m.(*CleaningroomMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			cruo.mutation = mutation
-			node, err = cruo.sqlSave(ctx)
+			cuo.mutation = mutation
+			node, err = cuo.sqlSave(ctx)
 			mutation.done = true
 			return node, err
 		})
-		for i := len(cruo.hooks) - 1; i >= 0; i-- {
-			mut = cruo.hooks[i](mut)
+		for i := len(cuo.hooks) - 1; i >= 0; i-- {
+			mut = cuo.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, cruo.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cuo.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -539,28 +628,28 @@ func (cruo *CleaningRoomUpdateOne) Save(ctx context.Context) (*CleaningRoom, err
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (cruo *CleaningRoomUpdateOne) SaveX(ctx context.Context) *CleaningRoom {
-	cr, err := cruo.Save(ctx)
+func (cuo *CleaningroomUpdateOne) SaveX(ctx context.Context) *Cleaningroom {
+	c, err := cuo.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return cr
+	return c
 }
 
 // Exec executes the query on the entity.
-func (cruo *CleaningRoomUpdateOne) Exec(ctx context.Context) error {
-	_, err := cruo.Save(ctx)
+func (cuo *CleaningroomUpdateOne) Exec(ctx context.Context) error {
+	_, err := cuo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cruo *CleaningRoomUpdateOne) ExecX(ctx context.Context) {
-	if err := cruo.Exec(ctx); err != nil {
+func (cuo *CleaningroomUpdateOne) ExecX(ctx context.Context) {
+	if err := cuo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoom, err error) {
+func (cuo *CleaningroomUpdateOne) sqlSave(ctx context.Context) (c *Cleaningroom, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table:   cleaningroom.Table,
@@ -571,26 +660,47 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 			},
 		},
 	}
-	id, ok := cruo.mutation.ID()
+	id, ok := cuo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing CleaningRoom.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Cleaningroom.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := cruo.mutation.Dateandstarttime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: cleaningroom.FieldDateandstarttime,
-		})
-	}
-	if value, ok := cruo.mutation.Note(); ok {
+	if value, ok := cuo.mutation.Note(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: cleaningroom.FieldNote,
 		})
 	}
-	if cruo.mutation.RoomdetailCleared() {
+	if value, ok := cuo.mutation.Dateandstarttime(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: cleaningroom.FieldDateandstarttime,
+		})
+	}
+	if value, ok := cuo.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: cleaningroom.FieldPhonenumber,
+		})
+	}
+	if value, ok := cuo.mutation.Numofem(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cleaningroom.FieldNumofem,
+		})
+	}
+	if value, ok := cuo.mutation.AddedNumofem(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cleaningroom.FieldNumofem,
+		})
+	}
+	if cuo.mutation.RoomdetailCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -606,7 +716,7 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cruo.mutation.RoomdetailIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.RoomdetailIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -625,12 +735,12 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cruo.mutation.CleanerNameCleared() {
+	if cuo.mutation.CleanernameCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.CleanerNameTable,
-			Columns: []string{cleaningroom.CleanerNameColumn},
+			Table:   cleaningroom.CleanernameTable,
+			Columns: []string{cleaningroom.CleanernameColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -641,12 +751,12 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cruo.mutation.CleanerNameIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.CleanernameIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.CleanerNameTable,
-			Columns: []string{cleaningroom.CleanerNameColumn},
+			Table:   cleaningroom.CleanernameTable,
+			Columns: []string{cleaningroom.CleanernameColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -660,12 +770,12 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cruo.mutation.LengthTimeCleared() {
+	if cuo.mutation.LengthtimeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.LengthTimeTable,
-			Columns: []string{cleaningroom.LengthTimeColumn},
+			Table:   cleaningroom.LengthtimeTable,
+			Columns: []string{cleaningroom.LengthtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -676,12 +786,12 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cruo.mutation.LengthTimeIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.LengthtimeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   cleaningroom.LengthTimeTable,
-			Columns: []string{cleaningroom.LengthTimeColumn},
+			Table:   cleaningroom.LengthtimeTable,
+			Columns: []string{cleaningroom.LengthtimeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -695,7 +805,7 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if cruo.mutation.EmployeeCleared() {
+	if cuo.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -711,7 +821,7 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := cruo.mutation.EmployeeIDs(); len(nodes) > 0 {
+	if nodes := cuo.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -730,10 +840,10 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	cr = &CleaningRoom{config: cruo.config}
-	_spec.Assign = cr.assignValues
-	_spec.ScanValues = cr.scanValues()
-	if err = sqlgraph.UpdateNode(ctx, cruo.driver, _spec); err != nil {
+	c = &Cleaningroom{config: cuo.config}
+	_spec.Assign = c.assignValues
+	_spec.ScanValues = c.scanValues()
+	if err = sqlgraph.UpdateNode(ctx, cuo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{cleaningroom.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
@@ -741,5 +851,5 @@ func (cruo *CleaningRoomUpdateOne) sqlSave(ctx context.Context) (cr *CleaningRoo
 		}
 		return nil, err
 	}
-	return cr, nil
+	return c, nil
 }

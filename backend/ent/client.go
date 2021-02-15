@@ -43,10 +43,10 @@ type Client struct {
 	Bedtype *BedtypeClient
 	// Bill is the client for interacting with the Bill builders.
 	Bill *BillClient
-	// CleanerName is the client for interacting with the CleanerName builders.
-	CleanerName *CleanerNameClient
-	// CleaningRoom is the client for interacting with the CleaningRoom builders.
-	CleaningRoom *CleaningRoomClient
+	// Cleanername is the client for interacting with the Cleanername builders.
+	Cleanername *CleanernameClient
+	// Cleaningroom is the client for interacting with the Cleaningroom builders.
+	Cleaningroom *CleaningroomClient
 	// Deposit is the client for interacting with the Deposit builders.
 	Deposit *DepositClient
 	// Employee is the client for interacting with the Employee builders.
@@ -55,8 +55,8 @@ type Client struct {
 	Jobposition *JobpositionClient
 	// Lease is the client for interacting with the Lease builders.
 	Lease *LeaseClient
-	// LengthTime is the client for interacting with the LengthTime builders.
-	LengthTime *LengthTimeClient
+	// Lengthtime is the client for interacting with the Lengthtime builders.
+	Lengthtime *LengthtimeClient
 	// Payment is the client for interacting with the Payment builders.
 	Payment *PaymentClient
 	// Petrule is the client for interacting with the Petrule builders.
@@ -92,13 +92,13 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Bedtype = NewBedtypeClient(c.config)
 	c.Bill = NewBillClient(c.config)
-	c.CleanerName = NewCleanerNameClient(c.config)
-	c.CleaningRoom = NewCleaningRoomClient(c.config)
+	c.Cleanername = NewCleanernameClient(c.config)
+	c.Cleaningroom = NewCleaningroomClient(c.config)
 	c.Deposit = NewDepositClient(c.config)
 	c.Employee = NewEmployeeClient(c.config)
 	c.Jobposition = NewJobpositionClient(c.config)
 	c.Lease = NewLeaseClient(c.config)
-	c.LengthTime = NewLengthTimeClient(c.config)
+	c.Lengthtime = NewLengthtimeClient(c.config)
 	c.Payment = NewPaymentClient(c.config)
 	c.Petrule = NewPetruleClient(c.config)
 	c.Pledge = NewPledgeClient(c.config)
@@ -143,13 +143,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:        cfg,
 		Bedtype:       NewBedtypeClient(cfg),
 		Bill:          NewBillClient(cfg),
-		CleanerName:   NewCleanerNameClient(cfg),
-		CleaningRoom:  NewCleaningRoomClient(cfg),
+		Cleanername:   NewCleanernameClient(cfg),
+		Cleaningroom:  NewCleaningroomClient(cfg),
 		Deposit:       NewDepositClient(cfg),
 		Employee:      NewEmployeeClient(cfg),
 		Jobposition:   NewJobpositionClient(cfg),
 		Lease:         NewLeaseClient(cfg),
-		LengthTime:    NewLengthTimeClient(cfg),
+		Lengthtime:    NewLengthtimeClient(cfg),
 		Payment:       NewPaymentClient(cfg),
 		Petrule:       NewPetruleClient(cfg),
 		Pledge:        NewPledgeClient(cfg),
@@ -177,13 +177,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:        cfg,
 		Bedtype:       NewBedtypeClient(cfg),
 		Bill:          NewBillClient(cfg),
-		CleanerName:   NewCleanerNameClient(cfg),
-		CleaningRoom:  NewCleaningRoomClient(cfg),
+		Cleanername:   NewCleanernameClient(cfg),
+		Cleaningroom:  NewCleaningroomClient(cfg),
 		Deposit:       NewDepositClient(cfg),
 		Employee:      NewEmployeeClient(cfg),
 		Jobposition:   NewJobpositionClient(cfg),
 		Lease:         NewLeaseClient(cfg),
-		LengthTime:    NewLengthTimeClient(cfg),
+		Lengthtime:    NewLengthtimeClient(cfg),
 		Payment:       NewPaymentClient(cfg),
 		Petrule:       NewPetruleClient(cfg),
 		Pledge:        NewPledgeClient(cfg),
@@ -224,13 +224,13 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.Bedtype.Use(hooks...)
 	c.Bill.Use(hooks...)
-	c.CleanerName.Use(hooks...)
-	c.CleaningRoom.Use(hooks...)
+	c.Cleanername.Use(hooks...)
+	c.Cleaningroom.Use(hooks...)
 	c.Deposit.Use(hooks...)
 	c.Employee.Use(hooks...)
 	c.Jobposition.Use(hooks...)
 	c.Lease.Use(hooks...)
-	c.LengthTime.Use(hooks...)
+	c.Lengthtime.Use(hooks...)
 	c.Payment.Use(hooks...)
 	c.Petrule.Use(hooks...)
 	c.Pledge.Use(hooks...)
@@ -473,250 +473,250 @@ func (c *BillClient) Hooks() []Hook {
 	return c.hooks.Bill
 }
 
-// CleanerNameClient is a client for the CleanerName schema.
-type CleanerNameClient struct {
+// CleanernameClient is a client for the Cleanername schema.
+type CleanernameClient struct {
 	config
 }
 
-// NewCleanerNameClient returns a client for the CleanerName from the given config.
-func NewCleanerNameClient(c config) *CleanerNameClient {
-	return &CleanerNameClient{config: c}
+// NewCleanernameClient returns a client for the Cleanername from the given config.
+func NewCleanernameClient(c config) *CleanernameClient {
+	return &CleanernameClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
 // A call to `Use(f, g, h)` equals to `cleanername.Hooks(f(g(h())))`.
-func (c *CleanerNameClient) Use(hooks ...Hook) {
-	c.hooks.CleanerName = append(c.hooks.CleanerName, hooks...)
+func (c *CleanernameClient) Use(hooks ...Hook) {
+	c.hooks.Cleanername = append(c.hooks.Cleanername, hooks...)
 }
 
-// Create returns a create builder for CleanerName.
-func (c *CleanerNameClient) Create() *CleanerNameCreate {
-	mutation := newCleanerNameMutation(c.config, OpCreate)
-	return &CleanerNameCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Cleanername.
+func (c *CleanernameClient) Create() *CleanernameCreate {
+	mutation := newCleanernameMutation(c.config, OpCreate)
+	return &CleanernameCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Update returns an update builder for CleanerName.
-func (c *CleanerNameClient) Update() *CleanerNameUpdate {
-	mutation := newCleanerNameMutation(c.config, OpUpdate)
-	return &CleanerNameUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Cleanername.
+func (c *CleanernameClient) Update() *CleanernameUpdate {
+	mutation := newCleanernameMutation(c.config, OpUpdate)
+	return &CleanernameUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *CleanerNameClient) UpdateOne(cn *CleanerName) *CleanerNameUpdateOne {
-	mutation := newCleanerNameMutation(c.config, OpUpdateOne, withCleanerName(cn))
-	return &CleanerNameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *CleanernameClient) UpdateOne(cl *Cleanername) *CleanernameUpdateOne {
+	mutation := newCleanernameMutation(c.config, OpUpdateOne, withCleanername(cl))
+	return &CleanernameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *CleanerNameClient) UpdateOneID(id int) *CleanerNameUpdateOne {
-	mutation := newCleanerNameMutation(c.config, OpUpdateOne, withCleanerNameID(id))
-	return &CleanerNameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *CleanernameClient) UpdateOneID(id int) *CleanernameUpdateOne {
+	mutation := newCleanernameMutation(c.config, OpUpdateOne, withCleanernameID(id))
+	return &CleanernameUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for CleanerName.
-func (c *CleanerNameClient) Delete() *CleanerNameDelete {
-	mutation := newCleanerNameMutation(c.config, OpDelete)
-	return &CleanerNameDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Cleanername.
+func (c *CleanernameClient) Delete() *CleanernameDelete {
+	mutation := newCleanernameMutation(c.config, OpDelete)
+	return &CleanernameDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *CleanerNameClient) DeleteOne(cn *CleanerName) *CleanerNameDeleteOne {
-	return c.DeleteOneID(cn.ID)
+func (c *CleanernameClient) DeleteOne(cl *Cleanername) *CleanernameDeleteOne {
+	return c.DeleteOneID(cl.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *CleanerNameClient) DeleteOneID(id int) *CleanerNameDeleteOne {
+func (c *CleanernameClient) DeleteOneID(id int) *CleanernameDeleteOne {
 	builder := c.Delete().Where(cleanername.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &CleanerNameDeleteOne{builder}
+	return &CleanernameDeleteOne{builder}
 }
 
-// Create returns a query builder for CleanerName.
-func (c *CleanerNameClient) Query() *CleanerNameQuery {
-	return &CleanerNameQuery{config: c.config}
+// Create returns a query builder for Cleanername.
+func (c *CleanernameClient) Query() *CleanernameQuery {
+	return &CleanernameQuery{config: c.config}
 }
 
-// Get returns a CleanerName entity by its id.
-func (c *CleanerNameClient) Get(ctx context.Context, id int) (*CleanerName, error) {
+// Get returns a Cleanername entity by its id.
+func (c *CleanernameClient) Get(ctx context.Context, id int) (*Cleanername, error) {
 	return c.Query().Where(cleanername.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *CleanerNameClient) GetX(ctx context.Context, id int) *CleanerName {
-	cn, err := c.Get(ctx, id)
+func (c *CleanernameClient) GetX(ctx context.Context, id int) *Cleanername {
+	cl, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return cn
+	return cl
 }
 
-// QueryCleaningrooms queries the cleaningrooms edge of a CleanerName.
-func (c *CleanerNameClient) QueryCleaningrooms(cn *CleanerName) *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: c.config}
+// QueryCleaningrooms queries the cleaningrooms edge of a Cleanername.
+func (c *CleanernameClient) QueryCleaningrooms(cl *Cleanername) *CleaningroomQuery {
+	query := &CleaningroomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := cn.ID
+		id := cl.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(cleanername.Table, cleanername.FieldID, id),
 			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, cleanername.CleaningroomsTable, cleanername.CleaningroomsColumn),
 		)
-		fromV = sqlgraph.Neighbors(cn.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *CleanerNameClient) Hooks() []Hook {
-	return c.hooks.CleanerName
+func (c *CleanernameClient) Hooks() []Hook {
+	return c.hooks.Cleanername
 }
 
-// CleaningRoomClient is a client for the CleaningRoom schema.
-type CleaningRoomClient struct {
+// CleaningroomClient is a client for the Cleaningroom schema.
+type CleaningroomClient struct {
 	config
 }
 
-// NewCleaningRoomClient returns a client for the CleaningRoom from the given config.
-func NewCleaningRoomClient(c config) *CleaningRoomClient {
-	return &CleaningRoomClient{config: c}
+// NewCleaningroomClient returns a client for the Cleaningroom from the given config.
+func NewCleaningroomClient(c config) *CleaningroomClient {
+	return &CleaningroomClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
 // A call to `Use(f, g, h)` equals to `cleaningroom.Hooks(f(g(h())))`.
-func (c *CleaningRoomClient) Use(hooks ...Hook) {
-	c.hooks.CleaningRoom = append(c.hooks.CleaningRoom, hooks...)
+func (c *CleaningroomClient) Use(hooks ...Hook) {
+	c.hooks.Cleaningroom = append(c.hooks.Cleaningroom, hooks...)
 }
 
-// Create returns a create builder for CleaningRoom.
-func (c *CleaningRoomClient) Create() *CleaningRoomCreate {
-	mutation := newCleaningRoomMutation(c.config, OpCreate)
-	return &CleaningRoomCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Cleaningroom.
+func (c *CleaningroomClient) Create() *CleaningroomCreate {
+	mutation := newCleaningroomMutation(c.config, OpCreate)
+	return &CleaningroomCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Update returns an update builder for CleaningRoom.
-func (c *CleaningRoomClient) Update() *CleaningRoomUpdate {
-	mutation := newCleaningRoomMutation(c.config, OpUpdate)
-	return &CleaningRoomUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Cleaningroom.
+func (c *CleaningroomClient) Update() *CleaningroomUpdate {
+	mutation := newCleaningroomMutation(c.config, OpUpdate)
+	return &CleaningroomUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *CleaningRoomClient) UpdateOne(cr *CleaningRoom) *CleaningRoomUpdateOne {
-	mutation := newCleaningRoomMutation(c.config, OpUpdateOne, withCleaningRoom(cr))
-	return &CleaningRoomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *CleaningroomClient) UpdateOne(cl *Cleaningroom) *CleaningroomUpdateOne {
+	mutation := newCleaningroomMutation(c.config, OpUpdateOne, withCleaningroom(cl))
+	return &CleaningroomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *CleaningRoomClient) UpdateOneID(id int) *CleaningRoomUpdateOne {
-	mutation := newCleaningRoomMutation(c.config, OpUpdateOne, withCleaningRoomID(id))
-	return &CleaningRoomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *CleaningroomClient) UpdateOneID(id int) *CleaningroomUpdateOne {
+	mutation := newCleaningroomMutation(c.config, OpUpdateOne, withCleaningroomID(id))
+	return &CleaningroomUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for CleaningRoom.
-func (c *CleaningRoomClient) Delete() *CleaningRoomDelete {
-	mutation := newCleaningRoomMutation(c.config, OpDelete)
-	return &CleaningRoomDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Cleaningroom.
+func (c *CleaningroomClient) Delete() *CleaningroomDelete {
+	mutation := newCleaningroomMutation(c.config, OpDelete)
+	return &CleaningroomDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *CleaningRoomClient) DeleteOne(cr *CleaningRoom) *CleaningRoomDeleteOne {
-	return c.DeleteOneID(cr.ID)
+func (c *CleaningroomClient) DeleteOne(cl *Cleaningroom) *CleaningroomDeleteOne {
+	return c.DeleteOneID(cl.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *CleaningRoomClient) DeleteOneID(id int) *CleaningRoomDeleteOne {
+func (c *CleaningroomClient) DeleteOneID(id int) *CleaningroomDeleteOne {
 	builder := c.Delete().Where(cleaningroom.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &CleaningRoomDeleteOne{builder}
+	return &CleaningroomDeleteOne{builder}
 }
 
-// Create returns a query builder for CleaningRoom.
-func (c *CleaningRoomClient) Query() *CleaningRoomQuery {
-	return &CleaningRoomQuery{config: c.config}
+// Create returns a query builder for Cleaningroom.
+func (c *CleaningroomClient) Query() *CleaningroomQuery {
+	return &CleaningroomQuery{config: c.config}
 }
 
-// Get returns a CleaningRoom entity by its id.
-func (c *CleaningRoomClient) Get(ctx context.Context, id int) (*CleaningRoom, error) {
+// Get returns a Cleaningroom entity by its id.
+func (c *CleaningroomClient) Get(ctx context.Context, id int) (*Cleaningroom, error) {
 	return c.Query().Where(cleaningroom.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *CleaningRoomClient) GetX(ctx context.Context, id int) *CleaningRoom {
-	cr, err := c.Get(ctx, id)
+func (c *CleaningroomClient) GetX(ctx context.Context, id int) *Cleaningroom {
+	cl, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return cr
+	return cl
 }
 
-// QueryRoomdetail queries the roomdetail edge of a CleaningRoom.
-func (c *CleaningRoomClient) QueryRoomdetail(cr *CleaningRoom) *RoomdetailQuery {
+// QueryRoomdetail queries the roomdetail edge of a Cleaningroom.
+func (c *CleaningroomClient) QueryRoomdetail(cl *Cleaningroom) *RoomdetailQuery {
 	query := &RoomdetailQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
+		id := cl.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
 			sqlgraph.To(roomdetail.Table, roomdetail.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.RoomdetailTable, cleaningroom.RoomdetailColumn),
 		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
-// QueryCleanerName queries the CleanerName edge of a CleaningRoom.
-func (c *CleaningRoomClient) QueryCleanerName(cr *CleaningRoom) *CleanerNameQuery {
-	query := &CleanerNameQuery{config: c.config}
+// QueryCleanername queries the Cleanername edge of a Cleaningroom.
+func (c *CleaningroomClient) QueryCleanername(cl *Cleaningroom) *CleanernameQuery {
+	query := &CleanernameQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
+		id := cl.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
 			sqlgraph.To(cleanername.Table, cleanername.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.CleanerNameTable, cleaningroom.CleanerNameColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.CleanernameTable, cleaningroom.CleanernameColumn),
 		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
-// QueryLengthTime queries the LengthTime edge of a CleaningRoom.
-func (c *CleaningRoomClient) QueryLengthTime(cr *CleaningRoom) *LengthTimeQuery {
-	query := &LengthTimeQuery{config: c.config}
+// QueryLengthtime queries the Lengthtime edge of a Cleaningroom.
+func (c *CleaningroomClient) QueryLengthtime(cl *Cleaningroom) *LengthtimeQuery {
+	query := &LengthtimeQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
+		id := cl.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
 			sqlgraph.To(lengthtime.Table, lengthtime.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.LengthTimeTable, cleaningroom.LengthTimeColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.LengthtimeTable, cleaningroom.LengthtimeColumn),
 		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
-// QueryEmployee queries the Employee edge of a CleaningRoom.
-func (c *CleaningRoomClient) QueryEmployee(cr *CleaningRoom) *EmployeeQuery {
+// QueryEmployee queries the Employee edge of a Cleaningroom.
+func (c *CleaningroomClient) QueryEmployee(cl *Cleaningroom) *EmployeeQuery {
 	query := &EmployeeQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := cr.ID
+		id := cl.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(cleaningroom.Table, cleaningroom.FieldID, id),
 			sqlgraph.To(employee.Table, employee.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, cleaningroom.EmployeeTable, cleaningroom.EmployeeColumn),
 		)
-		fromV = sqlgraph.Neighbors(cr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *CleaningRoomClient) Hooks() []Hook {
-	return c.hooks.CleaningRoom
+func (c *CleaningroomClient) Hooks() []Hook {
+	return c.hooks.Cleaningroom
 }
 
 // DepositClient is a client for the Deposit schema.
@@ -944,15 +944,15 @@ func (c *EmployeeClient) QueryEmployees(e *Employee) *DepositQuery {
 	return query
 }
 
-// QueryLeases queries the leases edge of a Employee.
-func (c *EmployeeClient) QueryLeases(e *Employee) *LeaseQuery {
+// QueryLeasess queries the leasess edge of a Employee.
+func (c *EmployeeClient) QueryLeasess(e *Employee) *LeaseQuery {
 	query := &LeaseQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, id),
 			sqlgraph.To(lease.Table, lease.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, employee.LeasesTable, employee.LeasesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.LeasessTable, employee.LeasessColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -1009,8 +1009,8 @@ func (c *EmployeeClient) QueryRepairinvoices(e *Employee) *RepairinvoiceQuery {
 }
 
 // QueryCleaningrooms queries the cleaningrooms edge of a Employee.
-func (c *EmployeeClient) QueryCleaningrooms(e *Employee) *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: c.config}
+func (c *EmployeeClient) QueryCleaningrooms(e *Employee) *CleaningroomQuery {
+	query := &CleaningroomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
@@ -1307,103 +1307,103 @@ func (c *LeaseClient) Hooks() []Hook {
 	return c.hooks.Lease
 }
 
-// LengthTimeClient is a client for the LengthTime schema.
-type LengthTimeClient struct {
+// LengthtimeClient is a client for the Lengthtime schema.
+type LengthtimeClient struct {
 	config
 }
 
-// NewLengthTimeClient returns a client for the LengthTime from the given config.
-func NewLengthTimeClient(c config) *LengthTimeClient {
-	return &LengthTimeClient{config: c}
+// NewLengthtimeClient returns a client for the Lengthtime from the given config.
+func NewLengthtimeClient(c config) *LengthtimeClient {
+	return &LengthtimeClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
 // A call to `Use(f, g, h)` equals to `lengthtime.Hooks(f(g(h())))`.
-func (c *LengthTimeClient) Use(hooks ...Hook) {
-	c.hooks.LengthTime = append(c.hooks.LengthTime, hooks...)
+func (c *LengthtimeClient) Use(hooks ...Hook) {
+	c.hooks.Lengthtime = append(c.hooks.Lengthtime, hooks...)
 }
 
-// Create returns a create builder for LengthTime.
-func (c *LengthTimeClient) Create() *LengthTimeCreate {
-	mutation := newLengthTimeMutation(c.config, OpCreate)
-	return &LengthTimeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Lengthtime.
+func (c *LengthtimeClient) Create() *LengthtimeCreate {
+	mutation := newLengthtimeMutation(c.config, OpCreate)
+	return &LengthtimeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Update returns an update builder for LengthTime.
-func (c *LengthTimeClient) Update() *LengthTimeUpdate {
-	mutation := newLengthTimeMutation(c.config, OpUpdate)
-	return &LengthTimeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Lengthtime.
+func (c *LengthtimeClient) Update() *LengthtimeUpdate {
+	mutation := newLengthtimeMutation(c.config, OpUpdate)
+	return &LengthtimeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *LengthTimeClient) UpdateOne(lt *LengthTime) *LengthTimeUpdateOne {
-	mutation := newLengthTimeMutation(c.config, OpUpdateOne, withLengthTime(lt))
-	return &LengthTimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *LengthtimeClient) UpdateOne(l *Lengthtime) *LengthtimeUpdateOne {
+	mutation := newLengthtimeMutation(c.config, OpUpdateOne, withLengthtime(l))
+	return &LengthtimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *LengthTimeClient) UpdateOneID(id int) *LengthTimeUpdateOne {
-	mutation := newLengthTimeMutation(c.config, OpUpdateOne, withLengthTimeID(id))
-	return &LengthTimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *LengthtimeClient) UpdateOneID(id int) *LengthtimeUpdateOne {
+	mutation := newLengthtimeMutation(c.config, OpUpdateOne, withLengthtimeID(id))
+	return &LengthtimeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for LengthTime.
-func (c *LengthTimeClient) Delete() *LengthTimeDelete {
-	mutation := newLengthTimeMutation(c.config, OpDelete)
-	return &LengthTimeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Lengthtime.
+func (c *LengthtimeClient) Delete() *LengthtimeDelete {
+	mutation := newLengthtimeMutation(c.config, OpDelete)
+	return &LengthtimeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *LengthTimeClient) DeleteOne(lt *LengthTime) *LengthTimeDeleteOne {
-	return c.DeleteOneID(lt.ID)
+func (c *LengthtimeClient) DeleteOne(l *Lengthtime) *LengthtimeDeleteOne {
+	return c.DeleteOneID(l.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *LengthTimeClient) DeleteOneID(id int) *LengthTimeDeleteOne {
+func (c *LengthtimeClient) DeleteOneID(id int) *LengthtimeDeleteOne {
 	builder := c.Delete().Where(lengthtime.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &LengthTimeDeleteOne{builder}
+	return &LengthtimeDeleteOne{builder}
 }
 
-// Create returns a query builder for LengthTime.
-func (c *LengthTimeClient) Query() *LengthTimeQuery {
-	return &LengthTimeQuery{config: c.config}
+// Create returns a query builder for Lengthtime.
+func (c *LengthtimeClient) Query() *LengthtimeQuery {
+	return &LengthtimeQuery{config: c.config}
 }
 
-// Get returns a LengthTime entity by its id.
-func (c *LengthTimeClient) Get(ctx context.Context, id int) (*LengthTime, error) {
+// Get returns a Lengthtime entity by its id.
+func (c *LengthtimeClient) Get(ctx context.Context, id int) (*Lengthtime, error) {
 	return c.Query().Where(lengthtime.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *LengthTimeClient) GetX(ctx context.Context, id int) *LengthTime {
-	lt, err := c.Get(ctx, id)
+func (c *LengthtimeClient) GetX(ctx context.Context, id int) *Lengthtime {
+	l, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return lt
+	return l
 }
 
-// QueryCleaningrooms queries the cleaningrooms edge of a LengthTime.
-func (c *LengthTimeClient) QueryCleaningrooms(lt *LengthTime) *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: c.config}
+// QueryCleaningrooms queries the cleaningrooms edge of a Lengthtime.
+func (c *LengthtimeClient) QueryCleaningrooms(l *Lengthtime) *CleaningroomQuery {
+	query := &CleaningroomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := lt.ID
+		id := l.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(lengthtime.Table, lengthtime.FieldID, id),
 			sqlgraph.To(cleaningroom.Table, cleaningroom.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, lengthtime.CleaningroomsTable, lengthtime.CleaningroomsColumn),
 		)
-		fromV = sqlgraph.Neighbors(lt.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *LengthTimeClient) Hooks() []Hook {
-	return c.hooks.LengthTime
+func (c *LengthtimeClient) Hooks() []Hook {
+	return c.hooks.Lengthtime
 }
 
 // PaymentClient is a client for the Payment schema.
@@ -2108,8 +2108,8 @@ func (c *RoomdetailClient) QueryRoomdetails(r *Roomdetail) *LeaseQuery {
 }
 
 // QueryCleaningrooms queries the cleaningrooms edge of a Roomdetail.
-func (c *RoomdetailClient) QueryCleaningrooms(r *Roomdetail) *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: c.config}
+func (c *RoomdetailClient) QueryCleaningrooms(r *Roomdetail) *CleaningroomQuery {
+	query := &CleaningroomQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(

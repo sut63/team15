@@ -62,7 +62,7 @@ type RoomdetailEdges struct {
 	// Roomdetails holds the value of the roomdetails edge.
 	Roomdetails *Lease
 	// Cleaningrooms holds the value of the cleaningrooms edge.
-	Cleaningrooms []*CleaningRoom
+	Cleaningrooms []*Cleaningroom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [8]bool
@@ -168,7 +168,7 @@ func (e RoomdetailEdges) RoomdetailsOrErr() (*Lease, error) {
 
 // CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
 // was not loaded in eager-loading.
-func (e RoomdetailEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+func (e RoomdetailEdges) CleaningroomsOrErr() ([]*Cleaningroom, error) {
 	if e.loadedTypes[7] {
 		return e.Cleaningrooms, nil
 	}
@@ -320,7 +320,7 @@ func (r *Roomdetail) QueryRoomdetails() *LeaseQuery {
 }
 
 // QueryCleaningrooms queries the cleaningrooms edge of the Roomdetail.
-func (r *Roomdetail) QueryCleaningrooms() *CleaningRoomQuery {
+func (r *Roomdetail) QueryCleaningrooms() *CleaningroomQuery {
 	return (&RoomdetailClient{config: r.config}).QueryCleaningrooms(r)
 }
 

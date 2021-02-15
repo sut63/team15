@@ -13,70 +13,70 @@ import (
 	"github.com/team15/app/ent/lengthtime"
 )
 
-// LengthTimeCreate is the builder for creating a LengthTime entity.
-type LengthTimeCreate struct {
+// LengthtimeCreate is the builder for creating a Lengthtime entity.
+type LengthtimeCreate struct {
 	config
-	mutation *LengthTimeMutation
+	mutation *LengthtimeMutation
 	hooks    []Hook
 }
 
 // SetLengthtime sets the lengthtime field.
-func (ltc *LengthTimeCreate) SetLengthtime(s string) *LengthTimeCreate {
-	ltc.mutation.SetLengthtime(s)
-	return ltc
+func (lc *LengthtimeCreate) SetLengthtime(s string) *LengthtimeCreate {
+	lc.mutation.SetLengthtime(s)
+	return lc
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
-func (ltc *LengthTimeCreate) AddCleaningroomIDs(ids ...int) *LengthTimeCreate {
-	ltc.mutation.AddCleaningroomIDs(ids...)
-	return ltc
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
+func (lc *LengthtimeCreate) AddCleaningroomIDs(ids ...int) *LengthtimeCreate {
+	lc.mutation.AddCleaningroomIDs(ids...)
+	return lc
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (ltc *LengthTimeCreate) AddCleaningrooms(c ...*CleaningRoom) *LengthTimeCreate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (lc *LengthtimeCreate) AddCleaningrooms(c ...*Cleaningroom) *LengthtimeCreate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return ltc.AddCleaningroomIDs(ids...)
+	return lc.AddCleaningroomIDs(ids...)
 }
 
-// Mutation returns the LengthTimeMutation object of the builder.
-func (ltc *LengthTimeCreate) Mutation() *LengthTimeMutation {
-	return ltc.mutation
+// Mutation returns the LengthtimeMutation object of the builder.
+func (lc *LengthtimeCreate) Mutation() *LengthtimeMutation {
+	return lc.mutation
 }
 
-// Save creates the LengthTime in the database.
-func (ltc *LengthTimeCreate) Save(ctx context.Context) (*LengthTime, error) {
-	if _, ok := ltc.mutation.Lengthtime(); !ok {
+// Save creates the Lengthtime in the database.
+func (lc *LengthtimeCreate) Save(ctx context.Context) (*Lengthtime, error) {
+	if _, ok := lc.mutation.Lengthtime(); !ok {
 		return nil, &ValidationError{Name: "lengthtime", err: errors.New("ent: missing required field \"lengthtime\"")}
 	}
-	if v, ok := ltc.mutation.Lengthtime(); ok {
+	if v, ok := lc.mutation.Lengthtime(); ok {
 		if err := lengthtime.LengthtimeValidator(v); err != nil {
 			return nil, &ValidationError{Name: "lengthtime", err: fmt.Errorf("ent: validator failed for field \"lengthtime\": %w", err)}
 		}
 	}
 	var (
 		err  error
-		node *LengthTime
+		node *Lengthtime
 	)
-	if len(ltc.hooks) == 0 {
-		node, err = ltc.sqlSave(ctx)
+	if len(lc.hooks) == 0 {
+		node, err = lc.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*LengthTimeMutation)
+			mutation, ok := m.(*LengthtimeMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			ltc.mutation = mutation
-			node, err = ltc.sqlSave(ctx)
+			lc.mutation = mutation
+			node, err = lc.sqlSave(ctx)
 			mutation.done = true
 			return node, err
 		})
-		for i := len(ltc.hooks) - 1; i >= 0; i-- {
-			mut = ltc.hooks[i](mut)
+		for i := len(lc.hooks) - 1; i >= 0; i-- {
+			mut = lc.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, ltc.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, lc.mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -84,30 +84,30 @@ func (ltc *LengthTimeCreate) Save(ctx context.Context) (*LengthTime, error) {
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (ltc *LengthTimeCreate) SaveX(ctx context.Context) *LengthTime {
-	v, err := ltc.Save(ctx)
+func (lc *LengthtimeCreate) SaveX(ctx context.Context) *Lengthtime {
+	v, err := lc.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func (ltc *LengthTimeCreate) sqlSave(ctx context.Context) (*LengthTime, error) {
-	lt, _spec := ltc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, ltc.driver, _spec); err != nil {
+func (lc *LengthtimeCreate) sqlSave(ctx context.Context) (*Lengthtime, error) {
+	l, _spec := lc.createSpec()
+	if err := sqlgraph.CreateNode(ctx, lc.driver, _spec); err != nil {
 		if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	lt.ID = int(id)
-	return lt, nil
+	l.ID = int(id)
+	return l, nil
 }
 
-func (ltc *LengthTimeCreate) createSpec() (*LengthTime, *sqlgraph.CreateSpec) {
+func (lc *LengthtimeCreate) createSpec() (*Lengthtime, *sqlgraph.CreateSpec) {
 	var (
-		lt    = &LengthTime{config: ltc.config}
+		l     = &Lengthtime{config: lc.config}
 		_spec = &sqlgraph.CreateSpec{
 			Table: lengthtime.Table,
 			ID: &sqlgraph.FieldSpec{
@@ -116,15 +116,15 @@ func (ltc *LengthTimeCreate) createSpec() (*LengthTime, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := ltc.mutation.Lengthtime(); ok {
+	if value, ok := lc.mutation.Lengthtime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lengthtime.FieldLengthtime,
 		})
-		lt.Lengthtime = value
+		l.Lengthtime = value
 	}
-	if nodes := ltc.mutation.CleaningroomsIDs(); len(nodes) > 0 {
+	if nodes := lc.mutation.CleaningroomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -143,5 +143,5 @@ func (ltc *LengthTimeCreate) createSpec() (*LengthTime, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	return lt, _spec
+	return l, _spec
 }

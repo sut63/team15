@@ -4,7 +4,7 @@ package lengthtime
 
 const (
 	// Label holds the string label denoting the lengthtime type in the database.
-	Label = "length_time"
+	Label = "lengthtime"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
 	// FieldLengthtime holds the string denoting the lengthtime field in the database.
@@ -14,12 +14,12 @@ const (
 	EdgeCleaningrooms = "cleaningrooms"
 
 	// Table holds the table name of the lengthtime in the database.
-	Table = "length_times"
+	Table = "lengthtimes"
 	// CleaningroomsTable is the table the holds the cleaningrooms relation/edge.
-	CleaningroomsTable = "cleaning_rooms"
-	// CleaningroomsInverseTable is the table name for the CleaningRoom entity.
+	CleaningroomsTable = "cleaningrooms"
+	// CleaningroomsInverseTable is the table name for the Cleaningroom entity.
 	// It exists in this package in order to avoid circular dependency with the "cleaningroom" package.
-	CleaningroomsInverseTable = "cleaning_rooms"
+	CleaningroomsInverseTable = "cleaningrooms"
 	// CleaningroomsColumn is the table column denoting the cleaningrooms relation/edge.
 	CleaningroomsColumn = "lengthtime_id"
 )

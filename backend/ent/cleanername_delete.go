@@ -13,43 +13,43 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// CleanerNameDelete is the builder for deleting a CleanerName entity.
-type CleanerNameDelete struct {
+// CleanernameDelete is the builder for deleting a Cleanername entity.
+type CleanernameDelete struct {
 	config
 	hooks      []Hook
-	mutation   *CleanerNameMutation
-	predicates []predicate.CleanerName
+	mutation   *CleanernameMutation
+	predicates []predicate.Cleanername
 }
 
 // Where adds a new predicate to the delete builder.
-func (cnd *CleanerNameDelete) Where(ps ...predicate.CleanerName) *CleanerNameDelete {
-	cnd.predicates = append(cnd.predicates, ps...)
-	return cnd
+func (cd *CleanernameDelete) Where(ps ...predicate.Cleanername) *CleanernameDelete {
+	cd.predicates = append(cd.predicates, ps...)
+	return cd
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (cnd *CleanerNameDelete) Exec(ctx context.Context) (int, error) {
+func (cd *CleanernameDelete) Exec(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
 	)
-	if len(cnd.hooks) == 0 {
-		affected, err = cnd.sqlExec(ctx)
+	if len(cd.hooks) == 0 {
+		affected, err = cd.sqlExec(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*CleanerNameMutation)
+			mutation, ok := m.(*CleanernameMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			cnd.mutation = mutation
-			affected, err = cnd.sqlExec(ctx)
+			cd.mutation = mutation
+			affected, err = cd.sqlExec(ctx)
 			mutation.done = true
 			return affected, err
 		})
-		for i := len(cnd.hooks) - 1; i >= 0; i-- {
-			mut = cnd.hooks[i](mut)
+		for i := len(cd.hooks) - 1; i >= 0; i-- {
+			mut = cd.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, cnd.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, cd.mutation); err != nil {
 			return 0, err
 		}
 	}
@@ -57,15 +57,15 @@ func (cnd *CleanerNameDelete) Exec(ctx context.Context) (int, error) {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cnd *CleanerNameDelete) ExecX(ctx context.Context) int {
-	n, err := cnd.Exec(ctx)
+func (cd *CleanernameDelete) ExecX(ctx context.Context) int {
+	n, err := cd.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (cnd *CleanerNameDelete) sqlExec(ctx context.Context) (int, error) {
+func (cd *CleanernameDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table: cleanername.Table,
@@ -75,24 +75,24 @@ func (cnd *CleanerNameDelete) sqlExec(ctx context.Context) (int, error) {
 			},
 		},
 	}
-	if ps := cnd.predicates; len(ps) > 0 {
+	if ps := cd.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	return sqlgraph.DeleteNodes(ctx, cnd.driver, _spec)
+	return sqlgraph.DeleteNodes(ctx, cd.driver, _spec)
 }
 
-// CleanerNameDeleteOne is the builder for deleting a single CleanerName entity.
-type CleanerNameDeleteOne struct {
-	cnd *CleanerNameDelete
+// CleanernameDeleteOne is the builder for deleting a single Cleanername entity.
+type CleanernameDeleteOne struct {
+	cd *CleanernameDelete
 }
 
 // Exec executes the deletion query.
-func (cndo *CleanerNameDeleteOne) Exec(ctx context.Context) error {
-	n, err := cndo.cnd.Exec(ctx)
+func (cdo *CleanernameDeleteOne) Exec(ctx context.Context) error {
+	n, err := cdo.cd.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -104,6 +104,6 @@ func (cndo *CleanerNameDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (cndo *CleanerNameDeleteOne) ExecX(ctx context.Context) {
-	cndo.cnd.ExecX(ctx)
+func (cdo *CleanernameDeleteOne) ExecX(ctx context.Context) {
+	cdo.cd.ExecX(ctx)
 }

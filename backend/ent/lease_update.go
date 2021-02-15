@@ -58,6 +58,19 @@ func (lu *LeaseUpdate) SetIdtenant(s string) *LeaseUpdate {
 	return lu
 }
 
+// SetAgetenant sets the agetenant field.
+func (lu *LeaseUpdate) SetAgetenant(i int) *LeaseUpdate {
+	lu.mutation.ResetAgetenant()
+	lu.mutation.SetAgetenant(i)
+	return lu
+}
+
+// AddAgetenant adds i to agetenant.
+func (lu *LeaseUpdate) AddAgetenant(i int) *LeaseUpdate {
+	lu.mutation.AddAgetenant(i)
+	return lu
+}
+
 // SetWifiID sets the Wifi edge to Wifi by id.
 func (lu *LeaseUpdate) SetWifiID(id int) *LeaseUpdate {
 	lu.mutation.SetWifiID(id)
@@ -207,6 +220,11 @@ func (lu *LeaseUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "idtenant", err: fmt.Errorf("ent: validator failed for field \"idtenant\": %w", err)}
 		}
 	}
+	if v, ok := lu.mutation.Agetenant(); ok {
+		if err := lease.AgetenantValidator(v); err != nil {
+			return 0, &ValidationError{Name: "agetenant", err: fmt.Errorf("ent: validator failed for field \"agetenant\": %w", err)}
+		}
+	}
 
 	if _, ok := lu.mutation.RoomdetailID(); lu.mutation.RoomdetailCleared() && !ok {
 		return 0, errors.New("ent: clearing a unique edge \"Roomdetail\"")
@@ -305,6 +323,20 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lease.FieldIdtenant,
+		})
+	}
+	if value, ok := lu.mutation.Agetenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: lease.FieldAgetenant,
+		})
+	}
+	if value, ok := lu.mutation.AddedAgetenant(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: lease.FieldAgetenant,
 		})
 	}
 	if lu.mutation.WifiCleared() {
@@ -530,6 +562,19 @@ func (luo *LeaseUpdateOne) SetIdtenant(s string) *LeaseUpdateOne {
 	return luo
 }
 
+// SetAgetenant sets the agetenant field.
+func (luo *LeaseUpdateOne) SetAgetenant(i int) *LeaseUpdateOne {
+	luo.mutation.ResetAgetenant()
+	luo.mutation.SetAgetenant(i)
+	return luo
+}
+
+// AddAgetenant adds i to agetenant.
+func (luo *LeaseUpdateOne) AddAgetenant(i int) *LeaseUpdateOne {
+	luo.mutation.AddAgetenant(i)
+	return luo
+}
+
 // SetWifiID sets the Wifi edge to Wifi by id.
 func (luo *LeaseUpdateOne) SetWifiID(id int) *LeaseUpdateOne {
 	luo.mutation.SetWifiID(id)
@@ -679,6 +724,11 @@ func (luo *LeaseUpdateOne) Save(ctx context.Context) (*Lease, error) {
 			return nil, &ValidationError{Name: "idtenant", err: fmt.Errorf("ent: validator failed for field \"idtenant\": %w", err)}
 		}
 	}
+	if v, ok := luo.mutation.Agetenant(); ok {
+		if err := lease.AgetenantValidator(v); err != nil {
+			return nil, &ValidationError{Name: "agetenant", err: fmt.Errorf("ent: validator failed for field \"agetenant\": %w", err)}
+		}
+	}
 
 	if _, ok := luo.mutation.RoomdetailID(); luo.mutation.RoomdetailCleared() && !ok {
 		return nil, errors.New("ent: clearing a unique edge \"Roomdetail\"")
@@ -775,6 +825,20 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: lease.FieldIdtenant,
+		})
+	}
+	if value, ok := luo.mutation.Agetenant(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: lease.FieldAgetenant,
+		})
+	}
+	if value, ok := luo.mutation.AddedAgetenant(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: lease.FieldAgetenant,
 		})
 	}
 	if luo.mutation.WifiCleared() {

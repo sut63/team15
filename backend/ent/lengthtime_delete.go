@@ -13,43 +13,43 @@ import (
 	"github.com/team15/app/ent/predicate"
 )
 
-// LengthTimeDelete is the builder for deleting a LengthTime entity.
-type LengthTimeDelete struct {
+// LengthtimeDelete is the builder for deleting a Lengthtime entity.
+type LengthtimeDelete struct {
 	config
 	hooks      []Hook
-	mutation   *LengthTimeMutation
-	predicates []predicate.LengthTime
+	mutation   *LengthtimeMutation
+	predicates []predicate.Lengthtime
 }
 
 // Where adds a new predicate to the delete builder.
-func (ltd *LengthTimeDelete) Where(ps ...predicate.LengthTime) *LengthTimeDelete {
-	ltd.predicates = append(ltd.predicates, ps...)
-	return ltd
+func (ld *LengthtimeDelete) Where(ps ...predicate.Lengthtime) *LengthtimeDelete {
+	ld.predicates = append(ld.predicates, ps...)
+	return ld
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (ltd *LengthTimeDelete) Exec(ctx context.Context) (int, error) {
+func (ld *LengthtimeDelete) Exec(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
 	)
-	if len(ltd.hooks) == 0 {
-		affected, err = ltd.sqlExec(ctx)
+	if len(ld.hooks) == 0 {
+		affected, err = ld.sqlExec(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*LengthTimeMutation)
+			mutation, ok := m.(*LengthtimeMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
-			ltd.mutation = mutation
-			affected, err = ltd.sqlExec(ctx)
+			ld.mutation = mutation
+			affected, err = ld.sqlExec(ctx)
 			mutation.done = true
 			return affected, err
 		})
-		for i := len(ltd.hooks) - 1; i >= 0; i-- {
-			mut = ltd.hooks[i](mut)
+		for i := len(ld.hooks) - 1; i >= 0; i-- {
+			mut = ld.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, ltd.mutation); err != nil {
+		if _, err := mut.Mutate(ctx, ld.mutation); err != nil {
 			return 0, err
 		}
 	}
@@ -57,15 +57,15 @@ func (ltd *LengthTimeDelete) Exec(ctx context.Context) (int, error) {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ltd *LengthTimeDelete) ExecX(ctx context.Context) int {
-	n, err := ltd.Exec(ctx)
+func (ld *LengthtimeDelete) ExecX(ctx context.Context) int {
+	n, err := ld.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (ltd *LengthTimeDelete) sqlExec(ctx context.Context) (int, error) {
+func (ld *LengthtimeDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
 			Table: lengthtime.Table,
@@ -75,24 +75,24 @@ func (ltd *LengthTimeDelete) sqlExec(ctx context.Context) (int, error) {
 			},
 		},
 	}
-	if ps := ltd.predicates; len(ps) > 0 {
+	if ps := ld.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	return sqlgraph.DeleteNodes(ctx, ltd.driver, _spec)
+	return sqlgraph.DeleteNodes(ctx, ld.driver, _spec)
 }
 
-// LengthTimeDeleteOne is the builder for deleting a single LengthTime entity.
-type LengthTimeDeleteOne struct {
-	ltd *LengthTimeDelete
+// LengthtimeDeleteOne is the builder for deleting a single Lengthtime entity.
+type LengthtimeDeleteOne struct {
+	ld *LengthtimeDelete
 }
 
 // Exec executes the deletion query.
-func (ltdo *LengthTimeDeleteOne) Exec(ctx context.Context) error {
-	n, err := ltdo.ltd.Exec(ctx)
+func (ldo *LengthtimeDeleteOne) Exec(ctx context.Context) error {
+	n, err := ldo.ld.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -104,6 +104,6 @@ func (ltdo *LengthTimeDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ltdo *LengthTimeDeleteOne) ExecX(ctx context.Context) {
-	ltdo.ltd.ExecX(ctx)
+func (ldo *LengthtimeDeleteOne) ExecX(ctx context.Context) {
+	ldo.ld.ExecX(ctx)
 }

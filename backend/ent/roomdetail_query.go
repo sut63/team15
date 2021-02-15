@@ -40,7 +40,7 @@ type RoomdetailQuery struct {
 	withJobposition   *JobpositionQuery
 	withStaytype      *StaytypeQuery
 	withRoomdetails   *LeaseQuery
-	withCleaningrooms *CleaningRoomQuery
+	withCleaningrooms *CleaningroomQuery
 	withFKs           bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -198,8 +198,8 @@ func (rq *RoomdetailQuery) QueryRoomdetails() *LeaseQuery {
 }
 
 // QueryCleaningrooms chains the current query on the cleaningrooms edge.
-func (rq *RoomdetailQuery) QueryCleaningrooms() *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: rq.config}
+func (rq *RoomdetailQuery) QueryCleaningrooms() *CleaningroomQuery {
+	query := &CleaningroomQuery{config: rq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -473,8 +473,8 @@ func (rq *RoomdetailQuery) WithRoomdetails(opts ...func(*LeaseQuery)) *Roomdetai
 
 //  WithCleaningrooms tells the query-builder to eager-loads the nodes that are connected to
 // the "cleaningrooms" edge. The optional arguments used to configure the query builder of the edge.
-func (rq *RoomdetailQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) *RoomdetailQuery {
-	query := &CleaningRoomQuery{config: rq.config}
+func (rq *RoomdetailQuery) WithCleaningrooms(opts ...func(*CleaningroomQuery)) *RoomdetailQuery {
+	query := &CleaningroomQuery{config: rq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -776,7 +776,7 @@ func (rq *RoomdetailQuery) sqlAll(ctx context.Context) ([]*Roomdetail, error) {
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.CleaningRoom(func(s *sql.Selector) {
+		query.Where(predicate.Cleaningroom(func(s *sql.Selector) {
 			s.Where(sql.InValues(roomdetail.CleaningroomsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)

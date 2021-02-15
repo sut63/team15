@@ -121,6 +121,13 @@ func Idtenant(v string) predicate.Lease {
 	})
 }
 
+// Agetenant applies equality check predicate on the "agetenant" field. It's identical to AgetenantEQ.
+func Agetenant(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAgetenant), v))
+	})
+}
+
 // AddedtimeEQ applies the EQ predicate on the "addedtime" field.
 func AddedtimeEQ(v time.Time) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
@@ -527,6 +534,82 @@ func IdtenantEqualFold(v string) predicate.Lease {
 func IdtenantContainsFold(v string) predicate.Lease {
 	return predicate.Lease(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldIdtenant), v))
+	})
+}
+
+// AgetenantEQ applies the EQ predicate on the "agetenant" field.
+func AgetenantEQ(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAgetenant), v))
+	})
+}
+
+// AgetenantNEQ applies the NEQ predicate on the "agetenant" field.
+func AgetenantNEQ(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAgetenant), v))
+	})
+}
+
+// AgetenantIn applies the In predicate on the "agetenant" field.
+func AgetenantIn(vs ...int) predicate.Lease {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Lease(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAgetenant), v...))
+	})
+}
+
+// AgetenantNotIn applies the NotIn predicate on the "agetenant" field.
+func AgetenantNotIn(vs ...int) predicate.Lease {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Lease(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAgetenant), v...))
+	})
+}
+
+// AgetenantGT applies the GT predicate on the "agetenant" field.
+func AgetenantGT(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAgetenant), v))
+	})
+}
+
+// AgetenantGTE applies the GTE predicate on the "agetenant" field.
+func AgetenantGTE(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAgetenant), v))
+	})
+}
+
+// AgetenantLT applies the LT predicate on the "agetenant" field.
+func AgetenantLT(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAgetenant), v))
+	})
+}
+
+// AgetenantLTE applies the LTE predicate on the "agetenant" field.
+func AgetenantLTE(v int) predicate.Lease {
+	return predicate.Lease(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAgetenant), v))
 	})
 }
 

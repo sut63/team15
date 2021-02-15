@@ -10,22 +10,22 @@ import (
 	"github.com/team15/app/ent/cleanername"
 )
 
-// CleanerName is the model entity for the CleanerName schema.
-type CleanerName struct {
+// Cleanername is the model entity for the Cleanername schema.
+type Cleanername struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Cleanername holds the value of the "cleanername" field.
 	Cleanername string `json:"cleanername,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the CleanerNameQuery when eager-loading is set.
-	Edges CleanerNameEdges `json:"edges"`
+	// The values are being populated by the CleanernameQuery when eager-loading is set.
+	Edges CleanernameEdges `json:"edges"`
 }
 
-// CleanerNameEdges holds the relations/edges for other nodes in the graph.
-type CleanerNameEdges struct {
+// CleanernameEdges holds the relations/edges for other nodes in the graph.
+type CleanernameEdges struct {
 	// Cleaningrooms holds the value of the cleaningrooms edge.
-	Cleaningrooms []*CleaningRoom
+	Cleaningrooms []*Cleaningroom
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
@@ -33,7 +33,7 @@ type CleanerNameEdges struct {
 
 // CleaningroomsOrErr returns the Cleaningrooms value or an error if the edge
 // was not loaded in eager-loading.
-func (e CleanerNameEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
+func (e CleanernameEdges) CleaningroomsOrErr() ([]*Cleaningroom, error) {
 	if e.loadedTypes[0] {
 		return e.Cleaningrooms, nil
 	}
@@ -41,7 +41,7 @@ func (e CleanerNameEdges) CleaningroomsOrErr() ([]*CleaningRoom, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*CleanerName) scanValues() []interface{} {
+func (*Cleanername) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // cleanername
@@ -49,8 +49,8 @@ func (*CleanerName) scanValues() []interface{} {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the CleanerName fields.
-func (cn *CleanerName) assignValues(values ...interface{}) error {
+// to the Cleanername fields.
+func (c *Cleanername) assignValues(values ...interface{}) error {
 	if m, n := len(values), len(cleanername.Columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -58,55 +58,55 @@ func (cn *CleanerName) assignValues(values ...interface{}) error {
 	if !ok {
 		return fmt.Errorf("unexpected type %T for field id", value)
 	}
-	cn.ID = int(value.Int64)
+	c.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field cleanername", values[0])
 	} else if value.Valid {
-		cn.Cleanername = value.String
+		c.Cleanername = value.String
 	}
 	return nil
 }
 
-// QueryCleaningrooms queries the cleaningrooms edge of the CleanerName.
-func (cn *CleanerName) QueryCleaningrooms() *CleaningRoomQuery {
-	return (&CleanerNameClient{config: cn.config}).QueryCleaningrooms(cn)
+// QueryCleaningrooms queries the cleaningrooms edge of the Cleanername.
+func (c *Cleanername) QueryCleaningrooms() *CleaningroomQuery {
+	return (&CleanernameClient{config: c.config}).QueryCleaningrooms(c)
 }
 
-// Update returns a builder for updating this CleanerName.
-// Note that, you need to call CleanerName.Unwrap() before calling this method, if this CleanerName
+// Update returns a builder for updating this Cleanername.
+// Note that, you need to call Cleanername.Unwrap() before calling this method, if this Cleanername
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (cn *CleanerName) Update() *CleanerNameUpdateOne {
-	return (&CleanerNameClient{config: cn.config}).UpdateOne(cn)
+func (c *Cleanername) Update() *CleanernameUpdateOne {
+	return (&CleanernameClient{config: c.config}).UpdateOne(c)
 }
 
 // Unwrap unwraps the entity that was returned from a transaction after it was closed,
 // so that all next queries will be executed through the driver which created the transaction.
-func (cn *CleanerName) Unwrap() *CleanerName {
-	tx, ok := cn.config.driver.(*txDriver)
+func (c *Cleanername) Unwrap() *Cleanername {
+	tx, ok := c.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: CleanerName is not a transactional entity")
+		panic("ent: Cleanername is not a transactional entity")
 	}
-	cn.config.driver = tx.drv
-	return cn
+	c.config.driver = tx.drv
+	return c
 }
 
 // String implements the fmt.Stringer.
-func (cn *CleanerName) String() string {
+func (c *Cleanername) String() string {
 	var builder strings.Builder
-	builder.WriteString("CleanerName(")
-	builder.WriteString(fmt.Sprintf("id=%v", cn.ID))
+	builder.WriteString("Cleanername(")
+	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
 	builder.WriteString(", cleanername=")
-	builder.WriteString(cn.Cleanername)
+	builder.WriteString(c.Cleanername)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// CleanerNames is a parsable slice of CleanerName.
-type CleanerNames []*CleanerName
+// Cleanernames is a parsable slice of Cleanername.
+type Cleanernames []*Cleanername
 
-func (cn CleanerNames) config(cfg config) {
-	for _i := range cn {
-		cn[_i].config = cfg
+func (c Cleanernames) config(cfg config) {
+	for _i := range c {
+		c[_i].config = cfg
 	}
 }

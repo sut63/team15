@@ -32,11 +32,11 @@ type EmployeeQuery struct {
 	predicates []predicate.Employee
 	// eager-loading edges.
 	withEmployees      *DepositQuery
-	withLeases         *LeaseQuery
+	withLeasess        *LeaseQuery
 	withRoomdetails    *RoomdetailQuery
 	withJobposition    *JobpositionQuery
 	withRepairinvoices *RepairinvoiceQuery
-	withCleaningrooms  *CleaningRoomQuery
+	withCleaningrooms  *CleaningroomQuery
 	withFKs            bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -85,8 +85,8 @@ func (eq *EmployeeQuery) QueryEmployees() *DepositQuery {
 	return query
 }
 
-// QueryLeases chains the current query on the leases edge.
-func (eq *EmployeeQuery) QueryLeases() *LeaseQuery {
+// QueryLeasess chains the current query on the leasess edge.
+func (eq *EmployeeQuery) QueryLeasess() *LeaseQuery {
 	query := &LeaseQuery{config: eq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := eq.prepareQuery(ctx); err != nil {
@@ -95,7 +95,7 @@ func (eq *EmployeeQuery) QueryLeases() *LeaseQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employee.Table, employee.FieldID, eq.sqlQuery()),
 			sqlgraph.To(lease.Table, lease.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, employee.LeasesTable, employee.LeasesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, employee.LeasessTable, employee.LeasessColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -158,8 +158,8 @@ func (eq *EmployeeQuery) QueryRepairinvoices() *RepairinvoiceQuery {
 }
 
 // QueryCleaningrooms chains the current query on the cleaningrooms edge.
-func (eq *EmployeeQuery) QueryCleaningrooms() *CleaningRoomQuery {
-	query := &CleaningRoomQuery{config: eq.config}
+func (eq *EmployeeQuery) QueryCleaningrooms() *CleaningroomQuery {
+	query := &CleaningroomQuery{config: eq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := eq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -365,14 +365,14 @@ func (eq *EmployeeQuery) WithEmployees(opts ...func(*DepositQuery)) *EmployeeQue
 	return eq
 }
 
-//  WithLeases tells the query-builder to eager-loads the nodes that are connected to
-// the "leases" edge. The optional arguments used to configure the query builder of the edge.
-func (eq *EmployeeQuery) WithLeases(opts ...func(*LeaseQuery)) *EmployeeQuery {
+//  WithLeasess tells the query-builder to eager-loads the nodes that are connected to
+// the "leasess" edge. The optional arguments used to configure the query builder of the edge.
+func (eq *EmployeeQuery) WithLeasess(opts ...func(*LeaseQuery)) *EmployeeQuery {
 	query := &LeaseQuery{config: eq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	eq.withLeases = query
+	eq.withLeasess = query
 	return eq
 }
 
@@ -411,8 +411,8 @@ func (eq *EmployeeQuery) WithRepairinvoices(opts ...func(*RepairinvoiceQuery)) *
 
 //  WithCleaningrooms tells the query-builder to eager-loads the nodes that are connected to
 // the "cleaningrooms" edge. The optional arguments used to configure the query builder of the edge.
-func (eq *EmployeeQuery) WithCleaningrooms(opts ...func(*CleaningRoomQuery)) *EmployeeQuery {
-	query := &CleaningRoomQuery{config: eq.config}
+func (eq *EmployeeQuery) WithCleaningrooms(opts ...func(*CleaningroomQuery)) *EmployeeQuery {
+	query := &CleaningroomQuery{config: eq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -489,7 +489,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		_spec       = eq.querySpec()
 		loadedTypes = [6]bool{
 			eq.withEmployees != nil,
-			eq.withLeases != nil,
+			eq.withLeasess != nil,
 			eq.withRoomdetails != nil,
 			eq.withJobposition != nil,
 			eq.withRepairinvoices != nil,
@@ -554,7 +554,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		}
 	}
 
-	if query := eq.withLeases; query != nil {
+	if query := eq.withLeasess; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[int]*Employee)
 		for i := range nodes {
@@ -563,7 +563,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 		}
 		query.withFKs = true
 		query.Where(predicate.Lease(func(s *sql.Selector) {
-			s.Where(sql.InValues(employee.LeasesColumn, fks...))
+			s.Where(sql.InValues(employee.LeasessColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
@@ -578,7 +578,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "employee_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.Leases = append(node.Edges.Leases, n)
+			node.Edges.Leasess = append(node.Edges.Leasess, n)
 		}
 	}
 
@@ -671,7 +671,7 @@ func (eq *EmployeeQuery) sqlAll(ctx context.Context) ([]*Employee, error) {
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
-		query.Where(predicate.CleaningRoom(func(s *sql.Selector) {
+		query.Where(predicate.Cleaningroom(func(s *sql.Selector) {
 			s.Where(sql.InValues(employee.CleaningroomsColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)

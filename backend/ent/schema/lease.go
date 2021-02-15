@@ -18,6 +18,7 @@ func (Lease) Fields() []ent.Field {
 		field.String("tenant").NotEmpty(),
 		field.String("numbtenant").MaxLen(12).MinLen(12),
 		field.String("idtenant").MaxLen(17).MinLen(17),
+		field.Int("agetenant").Min(1),
 	}
 }
 
@@ -31,7 +32,7 @@ func (Lease) Edges() []ent.Edge {
 			Ref("roomdetails").
 			Unique().
 			Required(),
-		edge.From("employee", Employee.Type).Ref("leases").Unique(),
+		edge.From("employee", Employee.Type).Ref("leasess").Unique(),
 		edge.To("leases", Deposit.Type).StorageKey(edge.Column("lease_id")),
 		edge.To("bill", Bill.Type).StorageKey(edge.Column("lease_id")),
 	}

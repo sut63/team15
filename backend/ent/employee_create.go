@@ -58,19 +58,19 @@ func (ec *EmployeeCreate) AddEmployees(d ...*Deposit) *EmployeeCreate {
 	return ec.AddEmployeeIDs(ids...)
 }
 
-// AddLeaseIDs adds the leases edge to Lease by ids.
-func (ec *EmployeeCreate) AddLeaseIDs(ids ...int) *EmployeeCreate {
-	ec.mutation.AddLeaseIDs(ids...)
+// AddLeasesIDs adds the leasess edge to Lease by ids.
+func (ec *EmployeeCreate) AddLeasesIDs(ids ...int) *EmployeeCreate {
+	ec.mutation.AddLeasesIDs(ids...)
 	return ec
 }
 
-// AddLeases adds the leases edges to Lease.
-func (ec *EmployeeCreate) AddLeases(l ...*Lease) *EmployeeCreate {
+// AddLeasess adds the leasess edges to Lease.
+func (ec *EmployeeCreate) AddLeasess(l ...*Lease) *EmployeeCreate {
 	ids := make([]int, len(l))
 	for i := range l {
 		ids[i] = l[i].ID
 	}
-	return ec.AddLeaseIDs(ids...)
+	return ec.AddLeasesIDs(ids...)
 }
 
 // AddRoomdetailIDs adds the roomdetails edge to Roomdetail by ids.
@@ -122,14 +122,14 @@ func (ec *EmployeeCreate) AddRepairinvoices(r ...*Repairinvoice) *EmployeeCreate
 	return ec.AddRepairinvoiceIDs(ids...)
 }
 
-// AddCleaningroomIDs adds the cleaningrooms edge to CleaningRoom by ids.
+// AddCleaningroomIDs adds the cleaningrooms edge to Cleaningroom by ids.
 func (ec *EmployeeCreate) AddCleaningroomIDs(ids ...int) *EmployeeCreate {
 	ec.mutation.AddCleaningroomIDs(ids...)
 	return ec
 }
 
-// AddCleaningrooms adds the cleaningrooms edges to CleaningRoom.
-func (ec *EmployeeCreate) AddCleaningrooms(c ...*CleaningRoom) *EmployeeCreate {
+// AddCleaningrooms adds the cleaningrooms edges to Cleaningroom.
+func (ec *EmployeeCreate) AddCleaningrooms(c ...*Cleaningroom) *EmployeeCreate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
@@ -271,12 +271,12 @@ func (ec *EmployeeCreate) createSpec() (*Employee, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ec.mutation.LeasesIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.LeasessIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   employee.LeasesTable,
-			Columns: []string{employee.LeasesColumn},
+			Table:   employee.LeasessTable,
+			Columns: []string{employee.LeasessColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

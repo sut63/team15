@@ -30,6 +30,12 @@ export interface ControllersLease {
      * @type {number}
      * @memberof ControllersLease
      */
+    agetenant?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersLease
+     */
     employee?: number;
     /**
      * 
@@ -74,6 +80,7 @@ export function ControllersLeaseFromJSONTyped(json: any, ignoreDiscriminator: bo
     return {
         
         'added': !exists(json, 'added') ? undefined : json['added'],
+        'agetenant': !exists(json, 'agetenant') ? undefined : json['agetenant'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
         'idtenant': !exists(json, 'idtenant') ? undefined : json['idtenant'],
         'numbtenant': !exists(json, 'numbtenant') ? undefined : json['numbtenant'],
@@ -93,6 +100,7 @@ export function ControllersLeaseToJSON(value?: ControllersLease | null): any {
     return {
         
         'added': value.added,
+        'agetenant': value.agetenant,
         'employee': value.employee,
         'idtenant': value.idtenant,
         'numbtenant': value.numbtenant,
