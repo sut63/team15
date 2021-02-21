@@ -2661,7 +2661,7 @@ var doc = `{
                     "type": "string"
                 },
                 "roomprice": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "roomtypename": {
                     "type": "string"
@@ -3282,7 +3282,7 @@ var doc = `{
                 },
                 "roomprice": {
                     "description": "Roomprice holds the value of the \"roomprice\" field.",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "roomtypename": {
                     "description": "Roomtypename holds the value of the \"roomtypename\" field.",

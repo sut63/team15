@@ -63,10 +63,10 @@ export interface ControllersRoomdetail {
     roomnumber?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ControllersRoomdetail
      */
-    roomprice?: string;
+    roomprice?: number;
     /**
      * 
      * @type {string}

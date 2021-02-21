@@ -1802,6 +1802,14 @@ export class DefaultApi extends runtime.BaseAPI {
     async listLeaseRaw(requestParameters: ListLeaseRequest): Promise<runtime.ApiResponse<Array<EntLease>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({

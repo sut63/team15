@@ -106,7 +106,7 @@ func Roomtypename(v string) predicate.Roomdetail {
 }
 
 // Roomprice applies equality check predicate on the "roomprice" field. It's identical to RoompriceEQ.
-func Roomprice(v string) predicate.Roomdetail {
+func Roomprice(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRoomprice), v))
 	})
@@ -356,21 +356,21 @@ func RoomtypenameContainsFold(v string) predicate.Roomdetail {
 }
 
 // RoompriceEQ applies the EQ predicate on the "roomprice" field.
-func RoompriceEQ(v string) predicate.Roomdetail {
+func RoompriceEQ(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldRoomprice), v))
 	})
 }
 
 // RoompriceNEQ applies the NEQ predicate on the "roomprice" field.
-func RoompriceNEQ(v string) predicate.Roomdetail {
+func RoompriceNEQ(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldRoomprice), v))
 	})
 }
 
 // RoompriceIn applies the In predicate on the "roomprice" field.
-func RoompriceIn(vs ...string) predicate.Roomdetail {
+func RoompriceIn(vs ...int) predicate.Roomdetail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -387,7 +387,7 @@ func RoompriceIn(vs ...string) predicate.Roomdetail {
 }
 
 // RoompriceNotIn applies the NotIn predicate on the "roomprice" field.
-func RoompriceNotIn(vs ...string) predicate.Roomdetail {
+func RoompriceNotIn(vs ...int) predicate.Roomdetail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -404,65 +404,30 @@ func RoompriceNotIn(vs ...string) predicate.Roomdetail {
 }
 
 // RoompriceGT applies the GT predicate on the "roomprice" field.
-func RoompriceGT(v string) predicate.Roomdetail {
+func RoompriceGT(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldRoomprice), v))
 	})
 }
 
 // RoompriceGTE applies the GTE predicate on the "roomprice" field.
-func RoompriceGTE(v string) predicate.Roomdetail {
+func RoompriceGTE(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldRoomprice), v))
 	})
 }
 
 // RoompriceLT applies the LT predicate on the "roomprice" field.
-func RoompriceLT(v string) predicate.Roomdetail {
+func RoompriceLT(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldRoomprice), v))
 	})
 }
 
 // RoompriceLTE applies the LTE predicate on the "roomprice" field.
-func RoompriceLTE(v string) predicate.Roomdetail {
+func RoompriceLTE(v int) predicate.Roomdetail {
 	return predicate.Roomdetail(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldRoomprice), v))
-	})
-}
-
-// RoompriceContains applies the Contains predicate on the "roomprice" field.
-func RoompriceContains(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldRoomprice), v))
-	})
-}
-
-// RoompriceHasPrefix applies the HasPrefix predicate on the "roomprice" field.
-func RoompriceHasPrefix(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldRoomprice), v))
-	})
-}
-
-// RoompriceHasSuffix applies the HasSuffix predicate on the "roomprice" field.
-func RoompriceHasSuffix(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldRoomprice), v))
-	})
-}
-
-// RoompriceEqualFold applies the EqualFold predicate on the "roomprice" field.
-func RoompriceEqualFold(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldRoomprice), v))
-	})
-}
-
-// RoompriceContainsFold applies the ContainsFold predicate on the "roomprice" field.
-func RoompriceContainsFold(v string) predicate.Roomdetail {
-	return predicate.Roomdetail(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldRoomprice), v))
 	})
 }
 

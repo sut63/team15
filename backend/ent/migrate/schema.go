@@ -332,7 +332,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "roomnumber", Type: field.TypeString, Unique: true},
 		{Name: "roomtypename", Type: field.TypeString},
-		{Name: "roomprice", Type: field.TypeString},
+		{Name: "roomprice", Type: field.TypeInt},
 		{Name: "phone", Type: field.TypeString, Size: 12},
 		{Name: "sleep", Type: field.TypeInt},
 		{Name: "bed", Type: field.TypeInt},

@@ -124,7 +124,7 @@ var (
 	// RoomtypenameValidator is a validator for the "roomtypename" field. It is called by the builders before save.
 	RoomtypenameValidator func(string) error
 	// RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
-	RoompriceValidator func(string) error
+	RoompriceValidator func(int) error
 	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
 	PhoneValidator func(string) error
 	// SleepValidator is a validator for the "sleep" field. It is called by the builders before save.
