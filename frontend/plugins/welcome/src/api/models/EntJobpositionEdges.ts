@@ -54,8 +54,8 @@ export function EntJobpositionEdgesFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'employees': !exists(json, 'employees') ? undefined : ((json['employees'] as Array<any>).map(EntEmployeeFromJSON)),
-        'roomdetails': !exists(json, 'roomdetails') ? undefined : ((json['roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
+        'employees': !exists(json, 'Employees') ? undefined : ((json['Employees'] as Array<any>).map(EntEmployeeFromJSON)),
+        'roomdetails': !exists(json, 'Roomdetails') ? undefined : ((json['Roomdetails'] as Array<any>).map(EntRoomdetailFromJSON)),
     };
 }
 

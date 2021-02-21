@@ -25,13 +25,7 @@ func (Roomdetail) Fields() []ent.Field {
 			return nil
 		}),
 		field.String("roomtypename").NotEmpty(),
-		field.String("roomprice").NotEmpty().Validate(func(s string) error {
-			match, _ := regexp.MatchString("^([0-9]{1})$|^([0-9]{2})$|^([0-9]{3})$|^(([0-9]{1}),([0-9]{3}))$|^(([0-9]{2}),([0-9]{3}))$|^(([0-9]{3}),([0-9]{3}))$", s)
-			if !match {
-				return errors.New("รูปแบบราคาไม่ถูกต้อง")
-			}
-			return nil
-		}),
+		field.Int("roomprice").Positive().Min(0),
 		field.String("phone").MaxLen(12).MinLen(12),
 		field.Int("sleep").Min(0).Max(10),
 		field.Int("bed").Min(0).Max(4),

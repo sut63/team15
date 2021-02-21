@@ -1,43 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Content,
-  Header,
   Page,
   pageTheme,
-  ContentHeader,
-  HeaderLabel,
   InfoCard,
-  Sidebar,
-  SidebarItem,
-  SidebarDivider,
-  SidebarSpace,
-  SidebarUserSettings,
-  SidebarThemeToggle,
-  SidebarPinButton,
 } from '@backstage/core';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import { Box, Chip, Grid, Link, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 import { DefaultApi } from '../../api/apis';
 
-
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import { EntStaytype, EntBedtype, EntPetrule, EntPledge } from '../../api';
-import RoomDetails from '.';
 import { EntRoomdetail } from '../../api/models/EntRoomdetail';
 import { EntEmployee } from '../../api/models/EntEmployee'; // import interface Employee
 import ComponanceRoomdetailsTable from '../RoomdetailsTable';
-import ComponanceSearchRoom from '../SearchRoom';
 
 // css style 
 const useStyles = makeStyles((theme: Theme) =>
@@ -113,7 +94,7 @@ export default function CreateRoomdetail() {
   const [errormessege, setErrorMessege] = useState(String);
   const [alerttype, setAlertType] = useState(String);
 
-  const [price, setRoomprice] = useState(String);
+  const [price, setRoomprice] = useState(Number);
   const [noroom, setRoomnumber] = useState(String);
   const [roomname, setRoomtypename] = useState(String);
   const [phone, setPhone] = useState(String);
@@ -211,8 +192,8 @@ export default function CreateRoomdetail() {
     return val.match("^([0-9]{3})-([0-9]{3})-([0-9]{4})$");
   }
 
-  const validatePrice = (val: string) => {
-    return val.match("^([0-9]{1})$|^([0-9]{2})$|^([0-9]{3})$|^(([0-9]{1}),([0-9]{3}))$|^(([0-9]{2}),([0-9]{3}))$|^(([0-9]{3}),([0-9]{3}))$");
+  const validatePrice = (val: number) => {
+    return val > 0 ? true:false
   }
 
 
@@ -236,7 +217,7 @@ export default function CreateRoomdetail() {
         validatePhone(value) ? setPhoneerror('') : setPhoneerror ('รูปแบบของหมายเลขโทรศัพท์ต้องเป็น xxx-xxx-xxxx');
       return;
       case 'roomprice':
-        validatePrice(value) ? setRoompriceerror('') : setRoompriceerror ('ใส่รูปแบบราคาไม่ถูกต้อง');
+        validatePrice(Number(value)) ? setRoompriceerror('') : setRoompriceerror ('ใส่รูปแบบราคาไม่ถูกต้อง ราคาต้องไม่เท่ากับ 0 หรือติดลบ');
       return;
         default:
           return;
@@ -244,12 +225,11 @@ export default function CreateRoomdetail() {
   }
 
 
-  const handleRoompriceChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
-    const id = event.target.id as  typeof price;
+  const handleRoompriceChange = (event: React.ChangeEvent<{ value: any }>) => {
     const { value } = event.target;
-    const validateValue = value.toString()
-    checkPattern(id, validateValue)
-    setRoomprice(event.target.value as string);
+    const validateValue = value
+    checkPattern('roomprice', validateValue)
+    setRoomprice(event.target.value as number);
   };
 
   const handleNoroomChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
@@ -320,11 +300,10 @@ export default function CreateRoomdetail() {
   };
 
   const clearData = () => {
-    setRoomprice('');
+    setRoomprice(0);
     setRoomnumber('');
     setRoomtypename('');
     setPhone('');
-    setRoomprice('');
     setBed(0);
     setSleep(0);
     setBedtype(0);
@@ -364,7 +343,6 @@ export default function CreateRoomdetail() {
    }
   }
 
-
   const checkCaseSaveError = (field: string) => {
     if (field == "bed") { setErrorMessege("ข้อมูลfield จำนวนเตียงผิด"); }
         else if (field == "sleep") { setErrorMessege("ข้อมูลfield จำนวนผู้เข้าพักผิด"); }
@@ -380,7 +358,7 @@ export default function CreateRoomdetail() {
       const apiUrl = 'http://localhost:8080/api/v1/roomdetails';
       const roomdetail = {
       roomnumber: noroom,
-      roomprice: price,
+      roomprice: Number(price),
       roomtypename: roomname,
       phone: phone,
       sleep: Number(sleep),
@@ -482,7 +460,7 @@ export default function CreateRoomdetail() {
                 label=""
                 variant="standard"
                 //color="secondary"
-                type="string"
+                //type="number"
                 size="medium"
                 helperText= {priceerror}
                 value={price}

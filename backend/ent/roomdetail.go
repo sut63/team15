@@ -27,7 +27,7 @@ type Roomdetail struct {
 	// Roomtypename holds the value of the "roomtypename" field.
 	Roomtypename string `json:"roomtypename,omitempty"`
 	// Roomprice holds the value of the "roomprice" field.
-	Roomprice string `json:"roomprice,omitempty"`
+	Roomprice int `json:"roomprice,omitempty"`
 	// Phone holds the value of the "phone" field.
 	Phone string `json:"phone,omitempty"`
 	// Sleep holds the value of the "sleep" field.
@@ -181,7 +181,7 @@ func (*Roomdetail) scanValues() []interface{} {
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // roomnumber
 		&sql.NullString{}, // roomtypename
-		&sql.NullString{}, // roomprice
+		&sql.NullInt64{},  // roomprice
 		&sql.NullString{}, // phone
 		&sql.NullInt64{},  // sleep
 		&sql.NullInt64{},  // bed
@@ -222,10 +222,10 @@ func (r *Roomdetail) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		r.Roomtypename = value.String
 	}
-	if value, ok := values[2].(*sql.NullString); !ok {
+	if value, ok := values[2].(*sql.NullInt64); !ok {
 		return fmt.Errorf("unexpected type %T for field roomprice", values[2])
 	} else if value.Valid {
-		r.Roomprice = value.String
+		r.Roomprice = int(value.Int64)
 	}
 	if value, ok := values[3].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field phone", values[3])
@@ -352,7 +352,7 @@ func (r *Roomdetail) String() string {
 	builder.WriteString(", roomtypename=")
 	builder.WriteString(r.Roomtypename)
 	builder.WriteString(", roomprice=")
-	builder.WriteString(r.Roomprice)
+	builder.WriteString(fmt.Sprintf("%v", r.Roomprice))
 	builder.WriteString(", phone=")
 	builder.WriteString(r.Phone)
 	builder.WriteString(", sleep=")

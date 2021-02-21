@@ -247,13 +247,13 @@ func init() {
 	// roomdetailDescRoomprice is the schema descriptor for roomprice field.
 	roomdetailDescRoomprice := roomdetailFields[2].Descriptor()
 	// roomdetail.RoompriceValidator is a validator for the "roomprice" field. It is called by the builders before save.
-	roomdetail.RoompriceValidator = func() func(string) error {
+	roomdetail.RoompriceValidator = func() func(int) error {
 		validators := roomdetailDescRoomprice.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
 		}
-		return func(roomprice string) error {
+		return func(roomprice int) error {
 			for _, fn := range fns {
 				if err := fn(roomprice); err != nil {
 					return err

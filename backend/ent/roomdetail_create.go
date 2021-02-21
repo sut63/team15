@@ -40,8 +40,8 @@ func (rc *RoomdetailCreate) SetRoomtypename(s string) *RoomdetailCreate {
 }
 
 // SetRoomprice sets the roomprice field.
-func (rc *RoomdetailCreate) SetRoomprice(s string) *RoomdetailCreate {
-	rc.mutation.SetRoomprice(s)
+func (rc *RoomdetailCreate) SetRoomprice(i int) *RoomdetailCreate {
+	rc.mutation.SetRoomprice(i)
 	return rc
 }
 
@@ -344,7 +344,7 @@ func (rc *RoomdetailCreate) createSpec() (*Roomdetail, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := rc.mutation.Roomprice(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldRoomprice,
 		})

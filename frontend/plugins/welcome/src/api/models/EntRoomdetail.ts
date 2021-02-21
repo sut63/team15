@@ -58,10 +58,10 @@ export interface EntRoomdetail {
     roomnumber?: string;
     /**
      * Roomprice holds the value of the "roomprice" field.
-     * @type {string}
+     * @type {number}
      * @memberof EntRoomdetail
      */
-    roomprice?: string;
+    roomprice?: number;
     /**
      * Roomtypename holds the value of the "roomtypename" field.
      * @type {string}

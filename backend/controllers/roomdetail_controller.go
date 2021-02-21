@@ -23,7 +23,7 @@ type RoomdetailController struct {
 type Roomdetail struct {
 	Roomnumber   string
 	Roomtypename string
-	Roomprice    string
+	Roomprice    int
 	Phone        string
 	Sleep        int
 	Bed          int

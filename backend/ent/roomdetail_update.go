@@ -48,8 +48,15 @@ func (ru *RoomdetailUpdate) SetRoomtypename(s string) *RoomdetailUpdate {
 }
 
 // SetRoomprice sets the roomprice field.
-func (ru *RoomdetailUpdate) SetRoomprice(s string) *RoomdetailUpdate {
-	ru.mutation.SetRoomprice(s)
+func (ru *RoomdetailUpdate) SetRoomprice(i int) *RoomdetailUpdate {
+	ru.mutation.ResetRoomprice()
+	ru.mutation.SetRoomprice(i)
+	return ru
+}
+
+// AddRoomprice adds i to roomprice.
+func (ru *RoomdetailUpdate) AddRoomprice(i int) *RoomdetailUpdate {
+	ru.mutation.AddRoomprice(i)
 	return ru
 }
 
@@ -411,7 +418,14 @@ func (ru *RoomdetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Roomprice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldRoomprice,
+		})
+	}
+	if value, ok := ru.mutation.AddedRoomprice(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldRoomprice,
 		})
@@ -765,8 +779,15 @@ func (ruo *RoomdetailUpdateOne) SetRoomtypename(s string) *RoomdetailUpdateOne {
 }
 
 // SetRoomprice sets the roomprice field.
-func (ruo *RoomdetailUpdateOne) SetRoomprice(s string) *RoomdetailUpdateOne {
-	ruo.mutation.SetRoomprice(s)
+func (ruo *RoomdetailUpdateOne) SetRoomprice(i int) *RoomdetailUpdateOne {
+	ruo.mutation.ResetRoomprice()
+	ruo.mutation.SetRoomprice(i)
+	return ruo
+}
+
+// AddRoomprice adds i to roomprice.
+func (ruo *RoomdetailUpdateOne) AddRoomprice(i int) *RoomdetailUpdateOne {
+	ruo.mutation.AddRoomprice(i)
 	return ruo
 }
 
@@ -1126,7 +1147,14 @@ func (ruo *RoomdetailUpdateOne) sqlSave(ctx context.Context) (r *Roomdetail, err
 	}
 	if value, ok := ruo.mutation.Roomprice(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomdetail.FieldRoomprice,
+		})
+	}
+	if value, ok := ruo.mutation.AddedRoomprice(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: roomdetail.FieldRoomprice,
 		})

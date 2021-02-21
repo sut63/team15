@@ -7303,7 +7303,8 @@ type RoomdetailMutation struct {
 	id                   *int
 	roomnumber           *string
 	roomtypename         *string
-	roomprice            *string
+	roomprice            *int
+	addroomprice         *int
 	phone                *string
 	sleep                *int
 	addsleep             *int
@@ -7484,12 +7485,13 @@ func (m *RoomdetailMutation) ResetRoomtypename() {
 }
 
 // SetRoomprice sets the roomprice field.
-func (m *RoomdetailMutation) SetRoomprice(s string) {
-	m.roomprice = &s
+func (m *RoomdetailMutation) SetRoomprice(i int) {
+	m.roomprice = &i
+	m.addroomprice = nil
 }
 
 // Roomprice returns the roomprice value in the mutation.
-func (m *RoomdetailMutation) Roomprice() (r string, exists bool) {
+func (m *RoomdetailMutation) Roomprice() (r int, exists bool) {
 	v := m.roomprice
 	if v == nil {
 		return
@@ -7501,7 +7503,7 @@ func (m *RoomdetailMutation) Roomprice() (r string, exists bool) {
 // If the Roomdetail object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoomdetailMutation) OldRoomprice(ctx context.Context) (v string, err error) {
+func (m *RoomdetailMutation) OldRoomprice(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldRoomprice is allowed only on UpdateOne operations")
 	}
@@ -7515,9 +7517,28 @@ func (m *RoomdetailMutation) OldRoomprice(ctx context.Context) (v string, err er
 	return oldValue.Roomprice, nil
 }
 
+// AddRoomprice adds i to roomprice.
+func (m *RoomdetailMutation) AddRoomprice(i int) {
+	if m.addroomprice != nil {
+		*m.addroomprice += i
+	} else {
+		m.addroomprice = &i
+	}
+}
+
+// AddedRoomprice returns the value that was added to the roomprice field in this mutation.
+func (m *RoomdetailMutation) AddedRoomprice() (r int, exists bool) {
+	v := m.addroomprice
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetRoomprice reset all changes of the "roomprice" field.
 func (m *RoomdetailMutation) ResetRoomprice() {
 	m.roomprice = nil
+	m.addroomprice = nil
 }
 
 // SetPhone sets the phone field.
@@ -8084,7 +8105,7 @@ func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 		m.SetRoomtypename(v)
 		return nil
 	case roomdetail.FieldRoomprice:
-		v, ok := value.(string)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -8119,6 +8140,9 @@ func (m *RoomdetailMutation) SetField(name string, value ent.Value) error {
 // or decremented during this mutation.
 func (m *RoomdetailMutation) AddedFields() []string {
 	var fields []string
+	if m.addroomprice != nil {
+		fields = append(fields, roomdetail.FieldRoomprice)
+	}
 	if m.addsleep != nil {
 		fields = append(fields, roomdetail.FieldSleep)
 	}
@@ -8133,6 +8157,8 @@ func (m *RoomdetailMutation) AddedFields() []string {
 // that this field was not set, or was not define in the schema.
 func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case roomdetail.FieldRoomprice:
+		return m.AddedRoomprice()
 	case roomdetail.FieldSleep:
 		return m.AddedSleep()
 	case roomdetail.FieldBed:
@@ -8146,6 +8172,13 @@ func (m *RoomdetailMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *RoomdetailMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case roomdetail.FieldRoomprice:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRoomprice(v)
+		return nil
 	case roomdetail.FieldSleep:
 		v, ok := value.(int)
 		if !ok {
