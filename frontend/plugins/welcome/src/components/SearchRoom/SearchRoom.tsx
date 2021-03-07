@@ -107,7 +107,7 @@ export default function SearchRoom() {
     
 
     const [namesearch, setRoomtypenameSearch] = useState(String);
-    const [pricesearch, setRoompriceSearch] = useState(String);
+    const [pricesearch, setRoompriceSearch] = useState(Number);
     const [staytypesearch, setStaytypeSearch] = useState(Number);
     const [bedtypesearch, setBedtypeSearch] = useState(Number);
     const [petrulesearch, setPetruleSearch] = useState(Number);
@@ -151,129 +151,32 @@ export default function SearchRoom() {
 
     }, [loading]);
 
-    const ListRoomdetais = async () => {
-        const res = await api.listRoomdetail();
-          setLoading(false);
-          setRoomdetail(res);
-        };
-        //getRoomdetais();
-
-    const SearchRoomdetail = async () => {
-        const res = await api.listRoomdetail();
-        const pricesearch = PriceSearch(res);
-        const namesearch = RoomNameSearch(pricesearch);
-        const bedtypesearch = BedTypeSearch(namesearch);
-        const petrulesearch = PetRuleSearch(bedtypesearch);
-        const staytypesearch = StayTypeSearch(petrulesearch);
-        
-        setErrorMessege("ไม่พบข้อมูลที่ค้นหา");
-        setAlertType("error");
-        setRoomdetail([]);
-        if(staytypesearch.length > 0){
-            Object.entries(searchcheck).map(([key, value]) =>{
-                if (value == true){
-                    setErrorMessege("พบข้อมูลที่ค้นหา");
-                    setAlertType("success");
-                    setRoomdetail(staytypesearch);
-                }
-            })
+        const SearchRoomdetail = async () => {
+            const apiUrl = `http://localhost:8080/api/v1/searchroomdetails?price=${pricesearch}&roomtypename=${namesearch}&bedtype=${bedtypesearch}&staytype=${staytypesearch}&petrule=${petrulesearch}`;
+            const requestOptions = {
+                method: 'GET',
+            };
+            fetch(apiUrl, requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.data)
+                    setErrorMessege("ไม่พบข้อมูลที่ค้นหา");
+                    setAlertType("error");
+                    setRoomdetail([]);
+                    if (data.data != null) {
+                        if(data.data.length >= 1) {
+                            setErrorMessege("พบข้อมูลที่ค้นหา");
+                            setAlertType("success");
+                            console.log(data.data)
+                            setRoomdetail(data.data);
+                        }
+                    }
+    
+                    setStatus(true);
+                });
+    
         }
-
-        setStatus(true);
-        ResetSearchCheck();
-    }
-
-    const ResetSearchCheck = () => {
-        searchcheck.namesearchcheck = true;
-        searchcheck.pricesearchcheck = true;
-        searchcheck.staytypesearchcheck = true;
-        searchcheck.bedtypesearchcheck = true;
-        searchcheck.petrulesearchcheck = true;
-    }
-    const PriceSearch = (res: any) => {
-        const data = res.filter((filter: EntRoomdetail) => filter.roomprice?.includes(pricesearch))
-       // console.log(data.length)
-        if (data.length != 0 && pricesearch != "") {
-            return data;
-        }
-        else {
-            searchcheck.pricesearchcheck = false;
-            if(pricesearch == ""){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
-
-    const RoomNameSearch = (res: any) => {
-        const data = res.filter((filter: EntRoomdetail) => filter.roomtypename?.includes(namesearch))
-        //console.log(data.length)
-        if (data.length != 0 && namesearch != "") {
-            return data;
-        }
-        else {
-            searchcheck.namesearchcheck = false;
-            if(namesearch == ""){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
-
-    const StayTypeSearch = (res: any) => {
-        const data = res.filter((filter: EntRoomdetail) => filter.edges?.staytype?.id == staytypesearch)
-        //console.log(data.length)
-        if (data.length != 0) {
-            return data;
-        }
-        else {
-            searchcheck.staytypesearchcheck = false;
-            if(staytypesearch == 0){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
-
-    const BedTypeSearch = (res: any) => {
-        const data = res.filter((filter: EntRoomdetail) => filter.edges?.bedtype?.id == bedtypesearch)
-        //console.log(data.length)
-        if (data.length != 0) {
-            return data;
-        }
-        else {
-            searchcheck.bedtypesearchcheck = false;
-            if(bedtypesearch == 0){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
-
-    const PetRuleSearch = (res: any) => {
-        const data = res.filter((filter: EntRoomdetail) => filter.edges?.petrule?.id == petrulesearch)
-        //console.log(data.length)
-        if (data.length != 0) {
-            return data;
-        }
-        else {
-            searchcheck.petrulesearchcheck = false;
-            if(petrulesearch == 0){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
+    
 
     const StaytypehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setStaytypeSearch(event.target.value as number);
@@ -288,7 +191,7 @@ export default function SearchRoom() {
     };
 
     const PriceSearchhandleChange = (event: any) => {
-        setRoompriceSearch(event.target.value as string);
+        setRoompriceSearch(event.target.value as number);
     };
 
     const NameSearchhandleChange = (event: any) => {
@@ -325,7 +228,7 @@ export default function SearchRoom() {
                     <TextField
                         id="pricesearch"
                        // label="ค้นหาเลขห้อง"
-                        type="string"
+                        type="number"
                         size="medium"
                         value={pricesearch}
                         onChange={PriceSearchhandleChange}
@@ -394,7 +297,7 @@ export default function SearchRoom() {
                     className={classes.margin}
                 >
                     <Button
-                style={{ width: 165, backgroundColor: "#5319e7"}}
+                style={{ width: 165, backgroundColor: "#5319e7", marginTop: 20}}
                 onClick={() => {
                   SearchRoomdetail();
                 }}
@@ -404,18 +307,7 @@ export default function SearchRoom() {
               >
                 ค้นหาข้อมูลห้องพัก
              </Button>
-
-             <Button
-                style={{ width: 165, backgroundColor: "#adf279",marginTop: 5}}
-                onClick={() => {
-                    ListRoomdetais();
-                }}
-                variant="contained"
-                color="primary"
-              >
-                แสดงข้อมูลห้องทั้งหมด
-             </Button>
-           
+             
                 </FormControl>
         
              <div><br></br></div>
@@ -438,11 +330,11 @@ export default function SearchRoom() {
                                 <TableRow key={item.id}>
                                     <TableCell align="center">{item.roomnumber}</TableCell>
                                     <TableCell align="center">{item.roomtypename}</TableCell>
-                                    <TableCell align="center">{item.roomprice} / {item.edges?.staytype?.staytype}</TableCell>
+                                    <TableCell align="center">{item.roomprice} / {item.edges?.Staytype?.staytype}</TableCell>
                                     <TableCell align="center">{item.sleep} คน</TableCell>
-                                    <TableCell align="center">{item.edges?.bedtype?.bedtypename} / {item.bed} เตียง</TableCell>
-                                    <TableCell align="center">{item.edges?.pledge?.provision}</TableCell>
-                                    <TableCell align="center">{item.edges?.petrule?.petrule}</TableCell>
+                                    <TableCell align="center">{item.edges?.Bedtype?.bedtypename} / {item.bed} เตียง</TableCell>
+                                    <TableCell align="center">{item.edges?.Pledge?.provision}</TableCell>
+                                    <TableCell align="center">{item.edges?.Petrule?.petrule}</TableCell>
                                     <TableCell align="center">{item.phone}</TableCell>
                                 
                                 </TableRow>

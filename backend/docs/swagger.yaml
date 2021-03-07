@@ -1901,6 +1901,51 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a roomdetail entity by ID
+  /searchroomdetails:
+    get:
+      description: get roomdetail by Roomname
+      operationId: get-roomdetail-by-roomname
+      parameters:
+      - description: Roomname Search
+        in: query
+        name: roomtypename
+        type: string
+      - description: Price Search
+        in: query
+        name: price
+        type: integer
+      - description: Bedtype Search
+        in: query
+        name: bedtype
+        type: integer
+      - description: Staytype Search
+        in: query
+        name: staytype
+        type: integer
+      - description: Petrule Search
+        in: query
+        name: petrule
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Roomdetail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a roomdetail entity by Roomname
   /situation/{id}:
     delete:
       description: get situation by ID
