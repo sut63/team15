@@ -1787,6 +1787,74 @@ var doc = `{
                 }
             }
         },
+        "/searchroomdetails": {
+            "get": {
+                "description": "get roomdetail by Roomname",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a roomdetail entity by Roomname",
+                "operationId": "get-roomdetail-by-roomname",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Roomname Search",
+                        "name": "roomtypename",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Price Search",
+                        "name": "price",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Bedtype Search",
+                        "name": "bedtype",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Staytype Search",
+                        "name": "staytype",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Petrule Search",
+                        "name": "petrule",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Roomdetail"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/situation/{id}": {
             "delete": {
                 "description": "get situation by ID",

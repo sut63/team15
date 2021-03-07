@@ -215,6 +215,91 @@ func (ctl *RoomdetailController) GetRoomdetail(c *gin.Context) {
 	c.JSON(200, rd)
 }
 
+// GetRoomdetailBySearch handles GET requests to retrieve a roomdetail entity
+// @Summary Get a roomdetail entity by Roomname
+// @Description get roomdetail by Roomname
+// @ID get-roomdetail-by-roomname
+// @Produce  json
+// @Param roomtypename query string false "Roomname Search"
+// @Param price query int false "Price Search"
+// @Param bedtype query int false "Bedtype Search"
+// @Param staytype query int false "Staytype Search"
+// @Param petrule query int false "Petrule Search"
+// @Success 200 {object} ent.Roomdetail
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchroomdetails [get]
+func (ctl *RoomdetailController) GetRoomdetailBySearch(c *gin.Context) {
+	nsearch := c.Query("roomtypename")
+	//psearch := c.Query("price")
+	psearch, err := strconv.Atoi(c.Query("price"))
+
+	btsearch, err := strconv.ParseInt(c.Query("bedtype"), 10, 64)
+	stsearch, err := strconv.ParseInt(c.Query("staytype"), 10, 64)
+	prsearch, err := strconv.ParseInt(c.Query("petrule"), 10, 64)
+
+	bedtypes := ""
+	bt, err := ctl.client.Bedtype.
+		Query().
+		Where(bedtype.IDEQ(int(btsearch))).
+		Only(context.Background())
+
+	if bt != nil {
+		bedtypes = bt.Bedtypename
+	}
+
+	staytypes := ""
+	st, err := ctl.client.Staytype.
+		Query().
+		Where(staytype.IDEQ(int(stsearch))).
+		Only(context.Background())
+
+	if st != nil {
+		staytypes = st.Staytype
+	}
+
+	petrules := ""
+	pr, err := ctl.client.Petrule.
+		Query().
+		Where(petrule.IDEQ(int(prsearch))).
+		Only(context.Background())
+
+	if pr != nil {
+		petrules = pr.Petrule
+	}
+
+	rd, err := ctl.client.Roomdetail.
+		Query().
+		WithStaytype().
+		WithBedtype().
+		WithPetrule().
+		WithPledge().
+		Where(roomdetail.RoomtypenameContains(nsearch)).
+		Where(roomdetail.RoompriceGTE(psearch)).
+		Where(roomdetail.HasBedtypeWith(bedtype.BedtypenameContains(bedtypes))).
+		Where(roomdetail.HasStaytypeWith(staytype.StaytypeContains(staytypes))).
+		Where(roomdetail.HasPetruleWith(petrule.PetruleContains(petrules))).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if psearch == 0 && nsearch == "" && btsearch == 0 && stsearch == 0 && prsearch == 0 {
+		c.JSON(200, gin.H{
+			"data": nil,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": rd,
+	})
+}
+
 // ListRoomdetail handles request to get a list of roomdetail entities
 // @Summary List roomdetail entities
 // @Description list roomdetail entities
@@ -260,9 +345,12 @@ func NewRoomdetailController(router gin.IRouter, client *ent.Client) *Roomdetail
 
 func (ctl *RoomdetailController) register() {
 	roomdetails := ctl.router.Group("/roomdetails")
+	roomdetailsearch := ctl.router.Group("/searchroomdetails")
 
 	roomdetails.POST("", ctl.CreateRoomdetail)
 	roomdetails.GET("", ctl.ListRoomdetail)
 	roomdetails.DELETE(":id", ctl.DeleteRoomdetail)
+
+	roomdetailsearch.GET("", ctl.GetRoomdetailBySearch)
 
 }
