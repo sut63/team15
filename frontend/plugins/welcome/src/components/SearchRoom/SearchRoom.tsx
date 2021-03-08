@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
      justifyContent: 'center',
    },
    margin: {
-      margin: theme.spacing(2),
+      margin: theme.spacing(1.5),
    },
    insideLabel: {
     margin: theme.spacing(1),
@@ -224,7 +224,7 @@ export default function SearchRoom() {
                     className={classes.margin}
                     variant="standard"
                 >
-                    <div className={classes.paper}><strong>ราคาห้องพัก(Price)</strong></div>
+                    <div className={classes.paper}><strong>ราคาห้องพักเริ่มต้น(Price)</strong></div>
                     <TextField
                         id="pricesearch"
                        // label="ค้นหาเลขห้อง"
@@ -232,7 +232,7 @@ export default function SearchRoom() {
                         size="medium"
                         value={pricesearch}
                         onChange={PriceSearchhandleChange}
-                        style={{ width: 115,marginLeft: 8}}
+                        style={{ width: 150,marginLeft: 8}}
                     />
                 </FormControl>
 
