@@ -181,7 +181,7 @@ export default function CreateRoomdetail() {
   }
 
   const validateNoroom = (val: string) => {
-    return val.match("[ABD]\\d{3}");
+    return val.match("^[ABD]{1}[0-9]{3}$");
   }
 
   const validateRoomname = (val: string) => {

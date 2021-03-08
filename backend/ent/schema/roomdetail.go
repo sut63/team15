@@ -18,7 +18,7 @@ type Roomdetail struct {
 func (Roomdetail) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("roomnumber").Unique().Validate(func(s string) error {
-			match, _ := regexp.MatchString("[ABD]\\d{3}", s)
+			match, _ := regexp.MatchString("^[ABD]{1}[0-9]{3}$", s)
 			if !match {
 				return errors.New("รูปแบบเลขห้องไม่ถูกต้อง")
 			}
@@ -26,7 +26,13 @@ func (Roomdetail) Fields() []ent.Field {
 		}),
 		field.String("roomtypename").NotEmpty(),
 		field.Int("roomprice").Positive().Min(0),
-		field.String("phone").MaxLen(12).MinLen(12),
+		field.String("phone").MaxLen(12).MinLen(12).Validate(func(s string) error {
+			match, _ := regexp.MatchString("^([0-9]{3})-([0-9]{3})-([0-9]{4})$", s)
+			if !match {
+				return errors.New("รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง")
+			}
+			return nil
+		}),
 		field.Int("sleep").Min(0).Max(10),
 		field.Int("bed").Min(0).Max(4),
 	}
