@@ -1787,6 +1787,62 @@ var doc = `{
                 }
             }
         },
+        "/searchdeposits": {
+            "get": {
+                "description": "get deposit by Depositid",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a deposit entity by Depositid",
+                "operationId": "get-deposit-by-depositid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Parcelcode Search",
+                        "name": "parcelcode",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Lease Search",
+                        "name": "lease",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Statusd Search",
+                        "name": "statusd",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Deposit"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/searchroomdetails": {
             "get": {
                 "description": "get roomdetail by Roomname",
@@ -2635,7 +2691,7 @@ var doc = `{
                 "added": {
                     "type": "string"
                 },
-                "depositor": {
+                "depositorname": {
                     "type": "string"
                 },
                 "depositortell": {
@@ -2914,8 +2970,8 @@ var doc = `{
                     "description": "Addedtime holds the value of the \"addedtime\" field.",
                     "type": "string"
                 },
-                "depositor": {
-                    "description": "Depositor holds the value of the \"depositor\" field.",
+                "depositorname": {
+                    "description": "Depositorname holds the value of the \"depositorname\" field.",
                     "type": "string"
                 },
                 "depositortell": {

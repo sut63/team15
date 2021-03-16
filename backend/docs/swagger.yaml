@@ -42,7 +42,7 @@ definitions:
     properties:
       added:
         type: string
-      depositor:
+      depositorname:
         type: string
       depositortell:
         type: string
@@ -245,8 +245,8 @@ definitions:
       addedtime:
         description: Addedtime holds the value of the "addedtime" field.
         type: string
-      depositor:
-        description: Depositor holds the value of the "depositor" field.
+      depositorname:
+        description: Depositorname holds the value of the "depositorname" field.
         type: string
       depositortell:
         description: Depositortell holds the value of the "depositortell" field.
@@ -1901,6 +1901,43 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a roomdetail entity by ID
+  /searchdeposits:
+    get:
+      description: get deposit by Depositid
+      operationId: get-deposit-by-depositid
+      parameters:
+      - description: Parcelcode Search
+        in: query
+        name: parcelcode
+        type: string
+      - description: Lease Search
+        in: query
+        name: lease
+        type: integer
+      - description: Statusd Search
+        in: query
+        name: statusd
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Deposit'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a deposit entity by Depositid
   /searchroomdetails:
     get:
       description: get roomdetail by Roomname

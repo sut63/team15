@@ -118,10 +118,10 @@ func init() {
 	depositDescInfo := depositFields[1].Descriptor()
 	// deposit.InfoValidator is a validator for the "info" field. It is called by the builders before save.
 	deposit.InfoValidator = depositDescInfo.Validators[0].(func(string) error)
-	// depositDescDepositor is the schema descriptor for depositor field.
-	depositDescDepositor := depositFields[2].Descriptor()
-	// deposit.DepositorValidator is a validator for the "depositor" field. It is called by the builders before save.
-	deposit.DepositorValidator = depositDescDepositor.Validators[0].(func(string) error)
+	// depositDescDepositorname is the schema descriptor for depositorname field.
+	depositDescDepositorname := depositFields[2].Descriptor()
+	// deposit.DepositornameValidator is a validator for the "depositorname" field. It is called by the builders before save.
+	deposit.DepositornameValidator = depositDescDepositorname.Validators[0].(func(string) error)
 	// depositDescDepositortell is the schema descriptor for depositortell field.
 	depositDescDepositortell := depositFields[3].Descriptor()
 	// deposit.DepositortellValidator is a validator for the "depositortell" field. It is called by the builders before save.

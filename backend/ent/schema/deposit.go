@@ -19,7 +19,7 @@ func (Deposit) Fields() []ent.Field {
 	return []ent.Field{
 	   field.Time("addedtime"),
 	   field.String("info").NotEmpty(),
-	   field.String("depositor").NotEmpty(),
+	   field.String("depositorname").NotEmpty(),
 	   field.String("depositortell").MaxLen(12).MinLen(12),
 	   field.String("recipienttell").MaxLen(12).MinLen(12),
 	   field.String("parcelcode").Validate(func(s string) error {

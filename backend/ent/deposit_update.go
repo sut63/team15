@@ -43,9 +43,9 @@ func (du *DepositUpdate) SetInfo(s string) *DepositUpdate {
 	return du
 }
 
-// SetDepositor sets the depositor field.
-func (du *DepositUpdate) SetDepositor(s string) *DepositUpdate {
-	du.mutation.SetDepositor(s)
+// SetDepositorname sets the depositorname field.
+func (du *DepositUpdate) SetDepositorname(s string) *DepositUpdate {
+	du.mutation.SetDepositorname(s)
 	return du
 }
 
@@ -154,9 +154,9 @@ func (du *DepositUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
 		}
 	}
-	if v, ok := du.mutation.Depositor(); ok {
-		if err := deposit.DepositorValidator(v); err != nil {
-			return 0, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+	if v, ok := du.mutation.Depositorname(); ok {
+		if err := deposit.DepositornameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "depositorname", err: fmt.Errorf("ent: validator failed for field \"depositorname\": %w", err)}
 		}
 	}
 	if v, ok := du.mutation.Depositortell(); ok {
@@ -256,11 +256,11 @@ func (du *DepositUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: deposit.FieldInfo,
 		})
 	}
-	if value, ok := du.mutation.Depositor(); ok {
+	if value, ok := du.mutation.Depositorname(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: deposit.FieldDepositor,
+			Column: deposit.FieldDepositorname,
 		})
 	}
 	if value, ok := du.mutation.Depositortell(); ok {
@@ -419,9 +419,9 @@ func (duo *DepositUpdateOne) SetInfo(s string) *DepositUpdateOne {
 	return duo
 }
 
-// SetDepositor sets the depositor field.
-func (duo *DepositUpdateOne) SetDepositor(s string) *DepositUpdateOne {
-	duo.mutation.SetDepositor(s)
+// SetDepositorname sets the depositorname field.
+func (duo *DepositUpdateOne) SetDepositorname(s string) *DepositUpdateOne {
+	duo.mutation.SetDepositorname(s)
 	return duo
 }
 
@@ -530,9 +530,9 @@ func (duo *DepositUpdateOne) Save(ctx context.Context) (*Deposit, error) {
 			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
 		}
 	}
-	if v, ok := duo.mutation.Depositor(); ok {
-		if err := deposit.DepositorValidator(v); err != nil {
-			return nil, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+	if v, ok := duo.mutation.Depositorname(); ok {
+		if err := deposit.DepositornameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositorname", err: fmt.Errorf("ent: validator failed for field \"depositorname\": %w", err)}
 		}
 	}
 	if v, ok := duo.mutation.Depositortell(); ok {
@@ -630,11 +630,11 @@ func (duo *DepositUpdateOne) sqlSave(ctx context.Context) (d *Deposit, err error
 			Column: deposit.FieldInfo,
 		})
 	}
-	if value, ok := duo.mutation.Depositor(); ok {
+	if value, ok := duo.mutation.Depositorname(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: deposit.FieldDepositor,
+			Column: deposit.FieldDepositorname,
 		})
 	}
 	if value, ok := duo.mutation.Depositortell(); ok {
