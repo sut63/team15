@@ -11,8 +11,8 @@ const (
 	FieldAddedtime = "addedtime"
 	// FieldInfo holds the string denoting the info field in the database.
 	FieldInfo = "info"
-	// FieldDepositor holds the string denoting the depositor field in the database.
-	FieldDepositor = "depositor"
+	// FieldDepositorname holds the string denoting the depositorname field in the database.
+	FieldDepositorname = "depositorname"
 	// FieldDepositortell holds the string denoting the depositortell field in the database.
 	FieldDepositortell = "depositortell"
 	// FieldRecipienttell holds the string denoting the recipienttell field in the database.
@@ -57,7 +57,7 @@ var Columns = []string{
 	FieldID,
 	FieldAddedtime,
 	FieldInfo,
-	FieldDepositor,
+	FieldDepositorname,
 	FieldDepositortell,
 	FieldRecipienttell,
 	FieldParcelcode,
@@ -73,8 +73,8 @@ var ForeignKeys = []string{
 var (
 	// InfoValidator is a validator for the "info" field. It is called by the builders before save.
 	InfoValidator func(string) error
-	// DepositorValidator is a validator for the "depositor" field. It is called by the builders before save.
-	DepositorValidator func(string) error
+	// DepositornameValidator is a validator for the "depositorname" field. It is called by the builders before save.
+	DepositornameValidator func(string) error
 	// DepositortellValidator is a validator for the "depositortell" field. It is called by the builders before save.
 	DepositortellValidator func(string) error
 	// RecipienttellValidator is a validator for the "recipienttell" field. It is called by the builders before save.

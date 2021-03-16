@@ -23,8 +23,8 @@ type Deposit struct {
 	Addedtime time.Time `json:"addedtime,omitempty"`
 	// Info holds the value of the "info" field.
 	Info string `json:"info,omitempty"`
-	// Depositor holds the value of the "depositor" field.
-	Depositor string `json:"depositor,omitempty"`
+	// Depositorname holds the value of the "depositorname" field.
+	Depositorname string `json:"depositorname,omitempty"`
 	// Depositortell holds the value of the "depositortell" field.
 	Depositortell string `json:"depositortell,omitempty"`
 	// Recipienttell holds the value of the "recipienttell" field.
@@ -100,7 +100,7 @@ func (*Deposit) scanValues() []interface{} {
 		&sql.NullInt64{},  // id
 		&sql.NullTime{},   // addedtime
 		&sql.NullString{}, // info
-		&sql.NullString{}, // depositor
+		&sql.NullString{}, // depositorname
 		&sql.NullString{}, // depositortell
 		&sql.NullString{}, // recipienttell
 		&sql.NullString{}, // parcelcode
@@ -139,9 +139,9 @@ func (d *Deposit) assignValues(values ...interface{}) error {
 		d.Info = value.String
 	}
 	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field depositor", values[2])
+		return fmt.Errorf("unexpected type %T for field depositorname", values[2])
 	} else if value.Valid {
-		d.Depositor = value.String
+		d.Depositorname = value.String
 	}
 	if value, ok := values[3].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field depositortell", values[3])
@@ -224,8 +224,8 @@ func (d *Deposit) String() string {
 	builder.WriteString(d.Addedtime.Format(time.ANSIC))
 	builder.WriteString(", info=")
 	builder.WriteString(d.Info)
-	builder.WriteString(", depositor=")
-	builder.WriteString(d.Depositor)
+	builder.WriteString(", depositorname=")
+	builder.WriteString(d.Depositorname)
 	builder.WriteString(", depositortell=")
 	builder.WriteString(d.Depositortell)
 	builder.WriteString(", recipienttell=")

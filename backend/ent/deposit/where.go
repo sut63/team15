@@ -107,10 +107,10 @@ func Info(v string) predicate.Deposit {
 	})
 }
 
-// Depositor applies equality check predicate on the "depositor" field. It's identical to DepositorEQ.
-func Depositor(v string) predicate.Deposit {
+// Depositorname applies equality check predicate on the "depositorname" field. It's identical to DepositornameEQ.
+func Depositorname(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDepositor), v))
+		s.Where(sql.EQ(s.C(FieldDepositorname), v))
 	})
 }
 
@@ -322,22 +322,22 @@ func InfoContainsFold(v string) predicate.Deposit {
 	})
 }
 
-// DepositorEQ applies the EQ predicate on the "depositor" field.
-func DepositorEQ(v string) predicate.Deposit {
+// DepositornameEQ applies the EQ predicate on the "depositorname" field.
+func DepositornameEQ(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDepositor), v))
+		s.Where(sql.EQ(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorNEQ applies the NEQ predicate on the "depositor" field.
-func DepositorNEQ(v string) predicate.Deposit {
+// DepositornameNEQ applies the NEQ predicate on the "depositorname" field.
+func DepositornameNEQ(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDepositor), v))
+		s.Where(sql.NEQ(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorIn applies the In predicate on the "depositor" field.
-func DepositorIn(vs ...string) predicate.Deposit {
+// DepositornameIn applies the In predicate on the "depositorname" field.
+func DepositornameIn(vs ...string) predicate.Deposit {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -349,12 +349,12 @@ func DepositorIn(vs ...string) predicate.Deposit {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldDepositor), v...))
+		s.Where(sql.In(s.C(FieldDepositorname), v...))
 	})
 }
 
-// DepositorNotIn applies the NotIn predicate on the "depositor" field.
-func DepositorNotIn(vs ...string) predicate.Deposit {
+// DepositornameNotIn applies the NotIn predicate on the "depositorname" field.
+func DepositornameNotIn(vs ...string) predicate.Deposit {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -366,70 +366,70 @@ func DepositorNotIn(vs ...string) predicate.Deposit {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldDepositor), v...))
+		s.Where(sql.NotIn(s.C(FieldDepositorname), v...))
 	})
 }
 
-// DepositorGT applies the GT predicate on the "depositor" field.
-func DepositorGT(v string) predicate.Deposit {
+// DepositornameGT applies the GT predicate on the "depositorname" field.
+func DepositornameGT(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDepositor), v))
+		s.Where(sql.GT(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorGTE applies the GTE predicate on the "depositor" field.
-func DepositorGTE(v string) predicate.Deposit {
+// DepositornameGTE applies the GTE predicate on the "depositorname" field.
+func DepositornameGTE(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDepositor), v))
+		s.Where(sql.GTE(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorLT applies the LT predicate on the "depositor" field.
-func DepositorLT(v string) predicate.Deposit {
+// DepositornameLT applies the LT predicate on the "depositorname" field.
+func DepositornameLT(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDepositor), v))
+		s.Where(sql.LT(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorLTE applies the LTE predicate on the "depositor" field.
-func DepositorLTE(v string) predicate.Deposit {
+// DepositornameLTE applies the LTE predicate on the "depositorname" field.
+func DepositornameLTE(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDepositor), v))
+		s.Where(sql.LTE(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorContains applies the Contains predicate on the "depositor" field.
-func DepositorContains(v string) predicate.Deposit {
+// DepositornameContains applies the Contains predicate on the "depositorname" field.
+func DepositornameContains(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDepositor), v))
+		s.Where(sql.Contains(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorHasPrefix applies the HasPrefix predicate on the "depositor" field.
-func DepositorHasPrefix(v string) predicate.Deposit {
+// DepositornameHasPrefix applies the HasPrefix predicate on the "depositorname" field.
+func DepositornameHasPrefix(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDepositor), v))
+		s.Where(sql.HasPrefix(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorHasSuffix applies the HasSuffix predicate on the "depositor" field.
-func DepositorHasSuffix(v string) predicate.Deposit {
+// DepositornameHasSuffix applies the HasSuffix predicate on the "depositorname" field.
+func DepositornameHasSuffix(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDepositor), v))
+		s.Where(sql.HasSuffix(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorEqualFold applies the EqualFold predicate on the "depositor" field.
-func DepositorEqualFold(v string) predicate.Deposit {
+// DepositornameEqualFold applies the EqualFold predicate on the "depositorname" field.
+func DepositornameEqualFold(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDepositor), v))
+		s.Where(sql.EqualFold(s.C(FieldDepositorname), v))
 	})
 }
 
-// DepositorContainsFold applies the ContainsFold predicate on the "depositor" field.
-func DepositorContainsFold(v string) predicate.Deposit {
+// DepositornameContainsFold applies the ContainsFold predicate on the "depositorname" field.
+func DepositornameContainsFold(v string) predicate.Deposit {
 	return predicate.Deposit(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDepositor), v))
+		s.Where(sql.ContainsFold(s.C(FieldDepositorname), v))
 	})
 }
 

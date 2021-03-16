@@ -125,7 +125,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "addedtime", Type: field.TypeTime},
 		{Name: "info", Type: field.TypeString},
-		{Name: "depositor", Type: field.TypeString},
+		{Name: "depositorname", Type: field.TypeString},
 		{Name: "depositortell", Type: field.TypeString, Size: 12},
 		{Name: "recipienttell", Type: field.TypeString, Size: 12},
 		{Name: "parcelcode", Type: field.TypeString},

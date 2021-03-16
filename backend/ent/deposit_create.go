@@ -35,9 +35,9 @@ func (dc *DepositCreate) SetInfo(s string) *DepositCreate {
 	return dc
 }
 
-// SetDepositor sets the depositor field.
-func (dc *DepositCreate) SetDepositor(s string) *DepositCreate {
-	dc.mutation.SetDepositor(s)
+// SetDepositorname sets the depositorname field.
+func (dc *DepositCreate) SetDepositorname(s string) *DepositCreate {
+	dc.mutation.SetDepositorname(s)
 	return dc
 }
 
@@ -134,12 +134,12 @@ func (dc *DepositCreate) Save(ctx context.Context) (*Deposit, error) {
 			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
 		}
 	}
-	if _, ok := dc.mutation.Depositor(); !ok {
-		return nil, &ValidationError{Name: "depositor", err: errors.New("ent: missing required field \"depositor\"")}
+	if _, ok := dc.mutation.Depositorname(); !ok {
+		return nil, &ValidationError{Name: "depositorname", err: errors.New("ent: missing required field \"depositorname\"")}
 	}
-	if v, ok := dc.mutation.Depositor(); ok {
-		if err := deposit.DepositorValidator(v); err != nil {
-			return nil, &ValidationError{Name: "depositor", err: fmt.Errorf("ent: validator failed for field \"depositor\": %w", err)}
+	if v, ok := dc.mutation.Depositorname(); ok {
+		if err := deposit.DepositornameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "depositorname", err: fmt.Errorf("ent: validator failed for field \"depositorname\": %w", err)}
 		}
 	}
 	if _, ok := dc.mutation.Depositortell(); !ok {
@@ -242,13 +242,13 @@ func (dc *DepositCreate) createSpec() (*Deposit, *sqlgraph.CreateSpec) {
 		})
 		d.Info = value
 	}
-	if value, ok := dc.mutation.Depositor(); ok {
+	if value, ok := dc.mutation.Depositorname(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: deposit.FieldDepositor,
+			Column: deposit.FieldDepositorname,
 		})
-		d.Depositor = value
+		d.Depositorname = value
 	}
 	if value, ok := dc.mutation.Depositortell(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
