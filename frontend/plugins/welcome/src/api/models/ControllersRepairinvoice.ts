@@ -33,6 +33,24 @@ export interface ControllersRepairinvoice {
     employee?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersRepairinvoice
+     */
+    emtell?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersRepairinvoice
+     */
+    lease?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersRepairinvoice
+     */
+    num?: number;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersRepairinvoice
      */
@@ -51,6 +69,9 @@ export function ControllersRepairinvoiceFromJSONTyped(json: any, ignoreDiscrimin
         
         'bequipment': !exists(json, 'bequipment') ? undefined : json['bequipment'],
         'employee': !exists(json, 'employee') ? undefined : json['employee'],
+        'emtell': !exists(json, 'emtell') ? undefined : json['emtell'],
+        'lease': !exists(json, 'lease') ? undefined : json['lease'],
+        'num': !exists(json, 'num') ? undefined : json['num'],
         'rentalstatus': !exists(json, 'rentalstatus') ? undefined : json['rentalstatus'],
     };
 }
@@ -66,6 +87,9 @@ export function ControllersRepairinvoiceToJSON(value?: ControllersRepairinvoice 
         
         'bequipment': value.bequipment,
         'employee': value.employee,
+        'emtell': value.emtell,
+        'lease': value.lease,
+        'num': value.num,
         'rentalstatus': value.rentalstatus,
     };
 }

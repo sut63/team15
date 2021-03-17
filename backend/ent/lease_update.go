@@ -16,6 +16,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
+	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/wifi"
 )
@@ -150,6 +151,21 @@ func (lu *LeaseUpdate) AddBill(b ...*Bill) *LeaseUpdate {
 	return lu.AddBillIDs(ids...)
 }
 
+// AddRepairinvoiceIDs adds the repairinvoices edge to Repairinvoice by ids.
+func (lu *LeaseUpdate) AddRepairinvoiceIDs(ids ...int) *LeaseUpdate {
+	lu.mutation.AddRepairinvoiceIDs(ids...)
+	return lu
+}
+
+// AddRepairinvoices adds the repairinvoices edges to Repairinvoice.
+func (lu *LeaseUpdate) AddRepairinvoices(r ...*Repairinvoice) *LeaseUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return lu.AddRepairinvoiceIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (lu *LeaseUpdate) Mutation() *LeaseMutation {
 	return lu.mutation
@@ -201,6 +217,21 @@ func (lu *LeaseUpdate) RemoveBill(b ...*Bill) *LeaseUpdate {
 		ids[i] = b[i].ID
 	}
 	return lu.RemoveBillIDs(ids...)
+}
+
+// RemoveRepairinvoiceIDs removes the repairinvoices edge to Repairinvoice by ids.
+func (lu *LeaseUpdate) RemoveRepairinvoiceIDs(ids ...int) *LeaseUpdate {
+	lu.mutation.RemoveRepairinvoiceIDs(ids...)
+	return lu
+}
+
+// RemoveRepairinvoices removes repairinvoices edges to Repairinvoice.
+func (lu *LeaseUpdate) RemoveRepairinvoices(r ...*Repairinvoice) *LeaseUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return lu.RemoveRepairinvoiceIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -520,6 +551,44 @@ func (lu *LeaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := lu.mutation.RemovedRepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.RepairinvoicesTable,
+			Columns: []string{lease.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := lu.mutation.RepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.RepairinvoicesTable,
+			Columns: []string{lease.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, lu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{lease.Label}
@@ -654,6 +723,21 @@ func (luo *LeaseUpdateOne) AddBill(b ...*Bill) *LeaseUpdateOne {
 	return luo.AddBillIDs(ids...)
 }
 
+// AddRepairinvoiceIDs adds the repairinvoices edge to Repairinvoice by ids.
+func (luo *LeaseUpdateOne) AddRepairinvoiceIDs(ids ...int) *LeaseUpdateOne {
+	luo.mutation.AddRepairinvoiceIDs(ids...)
+	return luo
+}
+
+// AddRepairinvoices adds the repairinvoices edges to Repairinvoice.
+func (luo *LeaseUpdateOne) AddRepairinvoices(r ...*Repairinvoice) *LeaseUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return luo.AddRepairinvoiceIDs(ids...)
+}
+
 // Mutation returns the LeaseMutation object of the builder.
 func (luo *LeaseUpdateOne) Mutation() *LeaseMutation {
 	return luo.mutation
@@ -705,6 +789,21 @@ func (luo *LeaseUpdateOne) RemoveBill(b ...*Bill) *LeaseUpdateOne {
 		ids[i] = b[i].ID
 	}
 	return luo.RemoveBillIDs(ids...)
+}
+
+// RemoveRepairinvoiceIDs removes the repairinvoices edge to Repairinvoice by ids.
+func (luo *LeaseUpdateOne) RemoveRepairinvoiceIDs(ids ...int) *LeaseUpdateOne {
+	luo.mutation.RemoveRepairinvoiceIDs(ids...)
+	return luo
+}
+
+// RemoveRepairinvoices removes repairinvoices edges to Repairinvoice.
+func (luo *LeaseUpdateOne) RemoveRepairinvoices(r ...*Repairinvoice) *LeaseUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return luo.RemoveRepairinvoiceIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -1014,6 +1113,44 @@ func (luo *LeaseUpdateOne) sqlSave(ctx context.Context) (l *Lease, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: bill.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := luo.mutation.RemovedRepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.RepairinvoicesTable,
+			Columns: []string{lease.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := luo.mutation.RepairinvoicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   lease.RepairinvoicesTable,
+			Columns: []string{lease.RepairinvoicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: repairinvoice.FieldID,
 				},
 			},
 		}

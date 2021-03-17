@@ -1302,6 +1302,22 @@ func (c *LeaseClient) QueryBill(l *Lease) *BillQuery {
 	return query
 }
 
+// QueryRepairinvoices queries the repairinvoices edge of a Lease.
+func (c *LeaseClient) QueryRepairinvoices(l *Lease) *RepairinvoiceQuery {
+	query := &RepairinvoiceQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(lease.Table, lease.FieldID, id),
+			sqlgraph.To(repairinvoice.Table, repairinvoice.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, lease.RepairinvoicesTable, lease.RepairinvoicesColumn),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *LeaseClient) Hooks() []Hook {
 	return c.hooks.Lease
@@ -1905,6 +1921,22 @@ func (c *RepairinvoiceClient) QueryRentalstatus(r *Repairinvoice) *RentalstatusQ
 			sqlgraph.From(repairinvoice.Table, repairinvoice.FieldID, id),
 			sqlgraph.To(rentalstatus.Table, rentalstatus.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, repairinvoice.RentalstatusTable, repairinvoice.RentalstatusColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLease queries the Lease edge of a Repairinvoice.
+func (c *RepairinvoiceClient) QueryLease(r *Repairinvoice) *LeaseQuery {
+	query := &LeaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(repairinvoice.Table, repairinvoice.FieldID, id),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, repairinvoice.LeaseTable, repairinvoice.LeaseColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil

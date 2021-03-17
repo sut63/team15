@@ -193,7 +193,7 @@ export default function Search() {
                     <div className={classes.paper}><strong>Parcel Code</strong></div>
                     <TextField
                         id="parcelcodesearch"
-                       // label="¤é¹ËÒàÅ¢ËéÍ§"
+                       // label="ï¿½ï¿½ï¿½ï¿½ï¿½Å¢ï¿½ï¿½Í§"
                         type="string"
                         size="medium"
                         value={parcelcodesearch}

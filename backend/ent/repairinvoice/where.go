@@ -98,6 +98,20 @@ func Bequipment(v string) predicate.Repairinvoice {
 	})
 }
 
+// Emtell applies equality check predicate on the "emtell" field. It's identical to EmtellEQ.
+func Emtell(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmtell), v))
+	})
+}
+
+// Num applies equality check predicate on the "num" field. It's identical to NumEQ.
+func Num(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNum), v))
+	})
+}
+
 // BequipmentEQ applies the EQ predicate on the "bequipment" field.
 func BequipmentEQ(v string) predicate.Repairinvoice {
 	return predicate.Repairinvoice(func(s *sql.Selector) {
@@ -209,6 +223,193 @@ func BequipmentContainsFold(v string) predicate.Repairinvoice {
 	})
 }
 
+// EmtellEQ applies the EQ predicate on the "emtell" field.
+func EmtellEQ(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellNEQ applies the NEQ predicate on the "emtell" field.
+func EmtellNEQ(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellIn applies the In predicate on the "emtell" field.
+func EmtellIn(vs ...string) predicate.Repairinvoice {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEmtell), v...))
+	})
+}
+
+// EmtellNotIn applies the NotIn predicate on the "emtell" field.
+func EmtellNotIn(vs ...string) predicate.Repairinvoice {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEmtell), v...))
+	})
+}
+
+// EmtellGT applies the GT predicate on the "emtell" field.
+func EmtellGT(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellGTE applies the GTE predicate on the "emtell" field.
+func EmtellGTE(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellLT applies the LT predicate on the "emtell" field.
+func EmtellLT(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellLTE applies the LTE predicate on the "emtell" field.
+func EmtellLTE(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellContains applies the Contains predicate on the "emtell" field.
+func EmtellContains(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellHasPrefix applies the HasPrefix predicate on the "emtell" field.
+func EmtellHasPrefix(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellHasSuffix applies the HasSuffix predicate on the "emtell" field.
+func EmtellHasSuffix(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellEqualFold applies the EqualFold predicate on the "emtell" field.
+func EmtellEqualFold(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEmtell), v))
+	})
+}
+
+// EmtellContainsFold applies the ContainsFold predicate on the "emtell" field.
+func EmtellContainsFold(v string) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEmtell), v))
+	})
+}
+
+// NumEQ applies the EQ predicate on the "num" field.
+func NumEQ(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNum), v))
+	})
+}
+
+// NumNEQ applies the NEQ predicate on the "num" field.
+func NumNEQ(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNum), v))
+	})
+}
+
+// NumIn applies the In predicate on the "num" field.
+func NumIn(vs ...int) predicate.Repairinvoice {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNum), v...))
+	})
+}
+
+// NumNotIn applies the NotIn predicate on the "num" field.
+func NumNotIn(vs ...int) predicate.Repairinvoice {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNum), v...))
+	})
+}
+
+// NumGT applies the GT predicate on the "num" field.
+func NumGT(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNum), v))
+	})
+}
+
+// NumGTE applies the GTE predicate on the "num" field.
+func NumGTE(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNum), v))
+	})
+}
+
+// NumLT applies the LT predicate on the "num" field.
+func NumLT(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNum), v))
+	})
+}
+
+// NumLTE applies the LTE predicate on the "num" field.
+func NumLTE(v int) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNum), v))
+	})
+}
+
 // HasEmployee applies the HasEdge predicate on the "employee" edge.
 func HasEmployee() predicate.Repairinvoice {
 	return predicate.Repairinvoice(func(s *sql.Selector) {
@@ -256,6 +457,34 @@ func HasRentalstatusWith(preds ...predicate.Rentalstatus) predicate.Repairinvoic
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(RentalstatusInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, RentalstatusTable, RentalstatusColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasLease applies the HasEdge predicate on the "Lease" edge.
+func HasLease() predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LeaseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, LeaseTable, LeaseColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasLeaseWith applies the HasEdge predicate on the "Lease" edge with a given conditions (other predicates).
+func HasLeaseWith(preds ...predicate.Lease) predicate.Repairinvoice {
+	return predicate.Repairinvoice(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(LeaseInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, LeaseTable, LeaseColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

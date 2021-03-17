@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/rentalstatus"
 	"github.com/team15/app/ent/repairinvoice"
@@ -28,6 +29,7 @@ type RepairinvoiceQuery struct {
 	// eager-loading edges.
 	withEmployee     *EmployeeQuery
 	withRentalstatus *RentalstatusQuery
+	withLease        *LeaseQuery
 	withFKs          bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -87,6 +89,24 @@ func (rq *RepairinvoiceQuery) QueryRentalstatus() *RentalstatusQuery {
 			sqlgraph.From(repairinvoice.Table, repairinvoice.FieldID, rq.sqlQuery()),
 			sqlgraph.To(rentalstatus.Table, rentalstatus.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, repairinvoice.RentalstatusTable, repairinvoice.RentalstatusColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryLease chains the current query on the Lease edge.
+func (rq *RepairinvoiceQuery) QueryLease() *LeaseQuery {
+	query := &LeaseQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(repairinvoice.Table, repairinvoice.FieldID, rq.sqlQuery()),
+			sqlgraph.To(lease.Table, lease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, repairinvoice.LeaseTable, repairinvoice.LeaseColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,6 +315,17 @@ func (rq *RepairinvoiceQuery) WithRentalstatus(opts ...func(*RentalstatusQuery))
 	return rq
 }
 
+//  WithLease tells the query-builder to eager-loads the nodes that are connected to
+// the "Lease" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *RepairinvoiceQuery) WithLease(opts ...func(*LeaseQuery)) *RepairinvoiceQuery {
+	query := &LeaseQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withLease = query
+	return rq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -362,12 +393,13 @@ func (rq *RepairinvoiceQuery) sqlAll(ctx context.Context) ([]*Repairinvoice, err
 		nodes       = []*Repairinvoice{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			rq.withEmployee != nil,
 			rq.withRentalstatus != nil,
+			rq.withLease != nil,
 		}
 	)
-	if rq.withEmployee != nil || rq.withRentalstatus != nil {
+	if rq.withEmployee != nil || rq.withRentalstatus != nil || rq.withLease != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -443,6 +475,31 @@ func (rq *RepairinvoiceQuery) sqlAll(ctx context.Context) ([]*Repairinvoice, err
 			}
 			for i := range nodes {
 				nodes[i].Edges.Rentalstatus = n
+			}
+		}
+	}
+
+	if query := rq.withLease; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Repairinvoice)
+		for i := range nodes {
+			if fk := nodes[i].lease_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(lease.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "lease_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Lease = n
 			}
 		}
 	}

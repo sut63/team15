@@ -231,6 +231,12 @@ export interface GetRentalstatusRequest {
     id: number;
 }
 
+export interface GetRepairinvoiceByRepairinvoiceidRequest {
+    parcelcode?: string;
+    lease?: number;
+    statusd?: number;
+}
+
 export interface GetRoomdetailRequest {
     id: number;
 }
@@ -1498,6 +1504,46 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get repairinvoice by Repairinvoiceid
+     * Get a repairinvoice entity by Repairinvoiceid
+     */
+    async getRepairinvoiceByRepairinvoiceidRaw(requestParameters: GetRepairinvoiceByRepairinvoiceidRequest): Promise<runtime.ApiResponse<EntRepairinvoice>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.parcelcode !== undefined) {
+            queryParameters['parcelcode'] = requestParameters.parcelcode;
+        }
+
+        if (requestParameters.lease !== undefined) {
+            queryParameters['lease'] = requestParameters.lease;
+        }
+
+        if (requestParameters.statusd !== undefined) {
+            queryParameters['statusd'] = requestParameters.statusd;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchrepairinvoices`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntRepairinvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     * get repairinvoice by Repairinvoiceid
+     * Get a repairinvoice entity by Repairinvoiceid
+     */
+    async getRepairinvoiceByRepairinvoiceid(requestParameters: GetRepairinvoiceByRepairinvoiceidRequest): Promise<EntRepairinvoice> {
+        const response = await this.getRepairinvoiceByRepairinvoiceidRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get roomdetail by ID
      * Get a roomdetail entity by ID
      */
@@ -1740,6 +1786,14 @@ export class DefaultApi extends runtime.BaseAPI {
     async listBillRaw(requestParameters: ListBillRequest): Promise<runtime.ApiResponse<Array<EntBill>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -1895,6 +1949,14 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listLeaseRaw(requestParameters: ListLeaseRequest): Promise<runtime.ApiResponse<Array<EntLease>>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -2087,6 +2149,14 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listRepairinvoiceRaw(requestParameters: ListRepairinvoiceRequest): Promise<runtime.ApiResponse<Array<EntRepairinvoice>>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

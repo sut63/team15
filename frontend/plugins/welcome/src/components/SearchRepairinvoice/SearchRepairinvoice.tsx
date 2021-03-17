@@ -114,31 +114,29 @@ export default function Search() {
     }, [loading]);
 
     const SearchRepairinvoice = async () => {
-        const res = await api.listRepairinvoice();
-        const leasesearch = LeaseSearch(res);
-		const bequipmentsearch = ReBequipmentSearch(leasesearch);
-		
-        
-        setErrorMessege("not found");
-        setAlertType("error");
+		const apiUrl = `http://localhost:8080/api/v1/searchrepairinvoices?lease=${leasesearch}&bequipment=${bequipmentsearch}`;
+		const requestOptions = {
+			method: 'GET',
+		};
+		fetch(apiUrl, requestOptions)
+		.then(response => response.json())
+		.then(data => {
+		console.log(data.data)
+		setErrorMessege("not found");
+		setAlertType("error");
         setRepairinvoice([]);
-        if(leasesearch.length > 0){
-            Object.entries(searchcheck).map(([key, value]) =>{
-                if (value == true){
-                    setErrorMessege("search found");
-                    setAlertType("success");
-                    setRepairinvoice(leasesearch);
+        if (data.data != null) {
+			if(data.data.length >= 1) {
+				setErrorMessege("search found");
+                setAlertType("success");
+                console.log(data.data)
+                setRepairinvoice(data.data);
                 }
-            })
-        }
-        setStatus(true);
-        ResetSearchCheck();
-    }
-
-    const ResetSearchCheck = () => {
-        searchcheck.bequipmentsearchcheck = true;
-        searchcheck.leasesearchcheck = true;
-    }
+            }
+            setStatus(true);
+        });
+    
+     }
 
     const ReBequipmentSearch = (res: any) => {
         const data = res.filter((filter: EntRepairinvoice) => filter.bequipment?.includes(bequipmentsearch))
@@ -241,8 +239,7 @@ export default function Search() {
 
 			 <Button style={{ width: 100,marginTop: 49,marginLeft: 20}} 
 			 component={RouterLink} to="/DormEmployee" variant="contained" startIcon={<CancelRoundedIcon/>}>  Home </Button>
-
-			 </div>
+          </div>
         
              <div><br></br></div>
              <TableContainer component={Paper}>
@@ -250,11 +247,10 @@ export default function Search() {
                             <TableHead>
                                 <TableRow>
                                 <TableCell align="center">ลำดับ</TableCell>
-           <TableCell align="center">พนักงาน</TableCell>
+           <TableCell align="center">ผู้เช่า</TableCell>
            <TableCell align="center">อุปกรณ์ที่ชำรุด</TableCell>
            <TableCell align="center">เบอร์โทรศัพท์ของพนักงาน</TableCell>
            <TableCell align="center">จำนวนอุปกรณ์ที่ชำรุด</TableCell>
-           <TableCell align="center">สถานะการเข้าพัก</TableCell>
            
                                 </TableRow>
                             </TableHead>
@@ -262,11 +258,11 @@ export default function Search() {
                                 {repairinvoice.map((item:any ) => (
                                 <TableRow key={item.id}>
                                     <TableCell align="center">{item.id}</TableCell>
-             <TableCell align="center">{item.edges?.employee?.name}</TableCell>
+             <TableCell align="center">{item.edges?.Lease?.tenant}</TableCell>
              <TableCell align="center">{item.bequipment}</TableCell>
              <TableCell align="center">{item.emtell}</TableCell>
-             <TableCell align="center">{item.num}</TableCell>
-             <TableCell align="center">{item.edges?.rentalstatus?.rentalstatus}</TableCell>                      
+             <TableCell align="center">{item.num}</TableCell>   
+                    
                                 </TableRow>
                                 ))}
                             </TableBody>

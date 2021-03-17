@@ -11,6 +11,7 @@ import (
 	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/lengthtime"
 	"github.com/team15/app/ent/payment"
+	"github.com/team15/app/ent/repairinvoice"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/schema"
 	"github.com/team15/app/ent/situation"
@@ -234,6 +235,48 @@ func init() {
 	paymentDescPaymentname := paymentFields[0].Descriptor()
 	// payment.PaymentnameValidator is a validator for the "paymentname" field. It is called by the builders before save.
 	payment.PaymentnameValidator = paymentDescPaymentname.Validators[0].(func(string) error)
+	repairinvoiceFields := schema.Repairinvoice{}.Fields()
+	_ = repairinvoiceFields
+	// repairinvoiceDescBequipment is the schema descriptor for bequipment field.
+	repairinvoiceDescBequipment := repairinvoiceFields[0].Descriptor()
+	// repairinvoice.BequipmentValidator is a validator for the "bequipment" field. It is called by the builders before save.
+	repairinvoice.BequipmentValidator = repairinvoiceDescBequipment.Validators[0].(func(string) error)
+	// repairinvoiceDescEmtell is the schema descriptor for emtell field.
+	repairinvoiceDescEmtell := repairinvoiceFields[1].Descriptor()
+	// repairinvoice.EmtellValidator is a validator for the "emtell" field. It is called by the builders before save.
+	repairinvoice.EmtellValidator = func() func(string) error {
+		validators := repairinvoiceDescEmtell.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(emtell string) error {
+			for _, fn := range fns {
+				if err := fn(emtell); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// repairinvoiceDescNum is the schema descriptor for num field.
+	repairinvoiceDescNum := repairinvoiceFields[2].Descriptor()
+	// repairinvoice.NumValidator is a validator for the "num" field. It is called by the builders before save.
+	repairinvoice.NumValidator = func() func(int) error {
+		validators := repairinvoiceDescNum.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(num int) error {
+			for _, fn := range fns {
+				if err := fn(num); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	roomdetailFields := schema.Roomdetail{}.Fields()
 	_ = roomdetailFields
 	// roomdetailDescRoomnumber is the schema descriptor for roomnumber field.
