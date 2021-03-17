@@ -74,10 +74,10 @@ export function EntCleaningroomEdgesFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'cleanername': !exists(json, 'Cleanername') ? undefined : EntCleanernameFromJSON(json['Cleanername']),
-        'employee': !exists(json, 'Employee') ? undefined : EntEmployeeFromJSON(json['Employee']),
-        'lengthtime': !exists(json, 'Lengthtime') ? undefined : EntLengthtimeFromJSON(json['Lengthtime']),
-        'roomdetail': !exists(json, 'Roomdetail') ? undefined : EntRoomdetailFromJSON(json['Roomdetail']),
+        'cleanername': !exists(json, 'cleanername') ? undefined : EntCleanernameFromJSON(json['cleanername']),
+        'employee': !exists(json, 'employee') ? undefined : EntEmployeeFromJSON(json['employee']),
+        'lengthtime': !exists(json, 'lengthtime') ? undefined : EntLengthtimeFromJSON(json['lengthtime']),
+        'roomdetail': !exists(json, 'roomdetail') ? undefined : EntRoomdetailFromJSON(json['roomdetail']),
     };
 }
 

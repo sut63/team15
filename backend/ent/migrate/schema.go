@@ -302,7 +302,10 @@ var (
 	RepairinvoicesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "bequipment", Type: field.TypeString},
+		{Name: "emtell", Type: field.TypeString, Size: 12},
+		{Name: "num", Type: field.TypeInt},
 		{Name: "employee_id", Type: field.TypeInt, Nullable: true},
+		{Name: "lease_id", Type: field.TypeInt, Nullable: true},
 		{Name: "rentalstatus_repairinvoices", Type: field.TypeInt, Nullable: true},
 	}
 	// RepairinvoicesTable holds the schema information for the "repairinvoices" table.
@@ -313,14 +316,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "repairinvoices_employees_repairinvoices",
-				Columns: []*schema.Column{RepairinvoicesColumns[2]},
+				Columns: []*schema.Column{RepairinvoicesColumns[4]},
 
 				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
+				Symbol:  "repairinvoices_leases_repairinvoices",
+				Columns: []*schema.Column{RepairinvoicesColumns[5]},
+
+				RefColumns: []*schema.Column{LeasesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "repairinvoices_rentalstatuses_repairinvoices",
-				Columns: []*schema.Column{RepairinvoicesColumns[3]},
+				Columns: []*schema.Column{RepairinvoicesColumns[6]},
 
 				RefColumns: []*schema.Column{RentalstatusesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -481,7 +491,8 @@ func init() {
 	LeasesTable.ForeignKeys[1].RefTable = RoomdetailsTable
 	LeasesTable.ForeignKeys[2].RefTable = WifisTable
 	RepairinvoicesTable.ForeignKeys[0].RefTable = EmployeesTable
-	RepairinvoicesTable.ForeignKeys[1].RefTable = RentalstatusesTable
+	RepairinvoicesTable.ForeignKeys[1].RefTable = LeasesTable
+	RepairinvoicesTable.ForeignKeys[2].RefTable = RentalstatusesTable
 	RoomdetailsTable.ForeignKeys[0].RefTable = BedtypesTable
 	RoomdetailsTable.ForeignKeys[1].RefTable = EmployeesTable
 	RoomdetailsTable.ForeignKeys[2].RefTable = JobpositionsTable

@@ -44,7 +44,7 @@ export function EntRentalstatusEdgesFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'repairinvoices': !exists(json, 'repairinvoices') ? undefined : ((json['repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
+        'repairinvoices': !exists(json, 'Repairinvoices') ? undefined : ((json['Repairinvoices'] as Array<any>).map(EntRepairinvoiceFromJSON)),
     };
 }
 

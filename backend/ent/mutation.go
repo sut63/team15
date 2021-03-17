@@ -4171,28 +4171,30 @@ func (m *JobpositionMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type LeaseMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	addedtime          *time.Time
-	tenant             *string
-	numbtenant         *string
-	idtenant           *string
-	agetenant          *int
-	addagetenant       *int
-	clearedFields      map[string]struct{}
-	_Wifi              *int
-	cleared_Wifi       bool
-	_Roomdetail        *int
-	cleared_Roomdetail bool
-	employee           *int
-	clearedemployee    bool
-	leases             map[int]struct{}
-	removedleases      map[int]struct{}
-	bill               map[int]struct{}
-	removedbill        map[int]struct{}
-	done               bool
-	oldValue           func(context.Context) (*Lease, error)
+	op                    Op
+	typ                   string
+	id                    *int
+	addedtime             *time.Time
+	tenant                *string
+	numbtenant            *string
+	idtenant              *string
+	agetenant             *int
+	addagetenant          *int
+	clearedFields         map[string]struct{}
+	_Wifi                 *int
+	cleared_Wifi          bool
+	_Roomdetail           *int
+	cleared_Roomdetail    bool
+	employee              *int
+	clearedemployee       bool
+	leases                map[int]struct{}
+	removedleases         map[int]struct{}
+	bill                  map[int]struct{}
+	removedbill           map[int]struct{}
+	repairinvoices        map[int]struct{}
+	removedrepairinvoices map[int]struct{}
+	done                  bool
+	oldValue              func(context.Context) (*Lease, error)
 }
 
 var _ ent.Mutation = (*LeaseMutation)(nil)
@@ -4680,6 +4682,48 @@ func (m *LeaseMutation) ResetBill() {
 	m.removedbill = nil
 }
 
+// AddRepairinvoiceIDs adds the repairinvoices edge to Repairinvoice by ids.
+func (m *LeaseMutation) AddRepairinvoiceIDs(ids ...int) {
+	if m.repairinvoices == nil {
+		m.repairinvoices = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.repairinvoices[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveRepairinvoiceIDs removes the repairinvoices edge to Repairinvoice by ids.
+func (m *LeaseMutation) RemoveRepairinvoiceIDs(ids ...int) {
+	if m.removedrepairinvoices == nil {
+		m.removedrepairinvoices = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedrepairinvoices[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRepairinvoices returns the removed ids of repairinvoices.
+func (m *LeaseMutation) RemovedRepairinvoicesIDs() (ids []int) {
+	for id := range m.removedrepairinvoices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RepairinvoicesIDs returns the repairinvoices ids in the mutation.
+func (m *LeaseMutation) RepairinvoicesIDs() (ids []int) {
+	for id := range m.repairinvoices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRepairinvoices reset all changes of the "repairinvoices" edge.
+func (m *LeaseMutation) ResetRepairinvoices() {
+	m.repairinvoices = nil
+	m.removedrepairinvoices = nil
+}
+
 // Op returns the operation name.
 func (m *LeaseMutation) Op() Op {
 	return m.op
@@ -4878,7 +4922,7 @@ func (m *LeaseMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *LeaseMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m._Wifi != nil {
 		edges = append(edges, lease.EdgeWifi)
 	}
@@ -4893,6 +4937,9 @@ func (m *LeaseMutation) AddedEdges() []string {
 	}
 	if m.bill != nil {
 		edges = append(edges, lease.EdgeBill)
+	}
+	if m.repairinvoices != nil {
+		edges = append(edges, lease.EdgeRepairinvoices)
 	}
 	return edges
 }
@@ -4925,6 +4972,12 @@ func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case lease.EdgeRepairinvoices:
+		ids := make([]ent.Value, 0, len(m.repairinvoices))
+		for id := range m.repairinvoices {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -4932,12 +4985,15 @@ func (m *LeaseMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *LeaseMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.removedleases != nil {
 		edges = append(edges, lease.EdgeLeases)
 	}
 	if m.removedbill != nil {
 		edges = append(edges, lease.EdgeBill)
+	}
+	if m.removedrepairinvoices != nil {
+		edges = append(edges, lease.EdgeRepairinvoices)
 	}
 	return edges
 }
@@ -4958,6 +5014,12 @@ func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case lease.EdgeRepairinvoices:
+		ids := make([]ent.Value, 0, len(m.removedrepairinvoices))
+		for id := range m.removedrepairinvoices {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -4965,7 +5027,7 @@ func (m *LeaseMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *LeaseMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.cleared_Wifi {
 		edges = append(edges, lease.EdgeWifi)
 	}
@@ -5028,6 +5090,9 @@ func (m *LeaseMutation) ResetEdge(name string) error {
 		return nil
 	case lease.EdgeBill:
 		m.ResetBill()
+		return nil
+	case lease.EdgeRepairinvoices:
+		m.ResetRepairinvoices()
 		return nil
 	}
 	return fmt.Errorf("unknown Lease edge %s", name)
@@ -6881,11 +6946,16 @@ type RepairinvoiceMutation struct {
 	typ                  string
 	id                   *int
 	bequipment           *string
+	emtell               *string
+	num                  *int
+	addnum               *int
 	clearedFields        map[string]struct{}
 	employee             *int
 	clearedemployee      bool
 	_Rentalstatus        *int
 	cleared_Rentalstatus bool
+	_Lease               *int
+	cleared_Lease        bool
 	done                 bool
 	oldValue             func(context.Context) (*Repairinvoice, error)
 }
@@ -7006,6 +7076,100 @@ func (m *RepairinvoiceMutation) ResetBequipment() {
 	m.bequipment = nil
 }
 
+// SetEmtell sets the emtell field.
+func (m *RepairinvoiceMutation) SetEmtell(s string) {
+	m.emtell = &s
+}
+
+// Emtell returns the emtell value in the mutation.
+func (m *RepairinvoiceMutation) Emtell() (r string, exists bool) {
+	v := m.emtell
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmtell returns the old emtell value of the Repairinvoice.
+// If the Repairinvoice object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RepairinvoiceMutation) OldEmtell(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEmtell is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEmtell requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmtell: %w", err)
+	}
+	return oldValue.Emtell, nil
+}
+
+// ResetEmtell reset all changes of the "emtell" field.
+func (m *RepairinvoiceMutation) ResetEmtell() {
+	m.emtell = nil
+}
+
+// SetNum sets the num field.
+func (m *RepairinvoiceMutation) SetNum(i int) {
+	m.num = &i
+	m.addnum = nil
+}
+
+// Num returns the num value in the mutation.
+func (m *RepairinvoiceMutation) Num() (r int, exists bool) {
+	v := m.num
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNum returns the old num value of the Repairinvoice.
+// If the Repairinvoice object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *RepairinvoiceMutation) OldNum(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldNum is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldNum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNum: %w", err)
+	}
+	return oldValue.Num, nil
+}
+
+// AddNum adds i to num.
+func (m *RepairinvoiceMutation) AddNum(i int) {
+	if m.addnum != nil {
+		*m.addnum += i
+	} else {
+		m.addnum = &i
+	}
+}
+
+// AddedNum returns the value that was added to the num field in this mutation.
+func (m *RepairinvoiceMutation) AddedNum() (r int, exists bool) {
+	v := m.addnum
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetNum reset all changes of the "num" field.
+func (m *RepairinvoiceMutation) ResetNum() {
+	m.num = nil
+	m.addnum = nil
+}
+
 // SetEmployeeID sets the employee edge to Employee by id.
 func (m *RepairinvoiceMutation) SetEmployeeID(id int) {
 	m.employee = &id
@@ -7084,6 +7248,45 @@ func (m *RepairinvoiceMutation) ResetRentalstatus() {
 	m.cleared_Rentalstatus = false
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (m *RepairinvoiceMutation) SetLeaseID(id int) {
+	m._Lease = &id
+}
+
+// ClearLease clears the Lease edge to Lease.
+func (m *RepairinvoiceMutation) ClearLease() {
+	m.cleared_Lease = true
+}
+
+// LeaseCleared returns if the edge Lease was cleared.
+func (m *RepairinvoiceMutation) LeaseCleared() bool {
+	return m.cleared_Lease
+}
+
+// LeaseID returns the Lease id in the mutation.
+func (m *RepairinvoiceMutation) LeaseID() (id int, exists bool) {
+	if m._Lease != nil {
+		return *m._Lease, true
+	}
+	return
+}
+
+// LeaseIDs returns the Lease ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// LeaseID instead. It exists only for internal usage by the builders.
+func (m *RepairinvoiceMutation) LeaseIDs() (ids []int) {
+	if id := m._Lease; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetLease reset all changes of the "Lease" edge.
+func (m *RepairinvoiceMutation) ResetLease() {
+	m._Lease = nil
+	m.cleared_Lease = false
+}
+
 // Op returns the operation name.
 func (m *RepairinvoiceMutation) Op() Op {
 	return m.op
@@ -7098,9 +7301,15 @@ func (m *RepairinvoiceMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *RepairinvoiceMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 3)
 	if m.bequipment != nil {
 		fields = append(fields, repairinvoice.FieldBequipment)
+	}
+	if m.emtell != nil {
+		fields = append(fields, repairinvoice.FieldEmtell)
+	}
+	if m.num != nil {
+		fields = append(fields, repairinvoice.FieldNum)
 	}
 	return fields
 }
@@ -7112,6 +7321,10 @@ func (m *RepairinvoiceMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case repairinvoice.FieldBequipment:
 		return m.Bequipment()
+	case repairinvoice.FieldEmtell:
+		return m.Emtell()
+	case repairinvoice.FieldNum:
+		return m.Num()
 	}
 	return nil, false
 }
@@ -7123,6 +7336,10 @@ func (m *RepairinvoiceMutation) OldField(ctx context.Context, name string) (ent.
 	switch name {
 	case repairinvoice.FieldBequipment:
 		return m.OldBequipment(ctx)
+	case repairinvoice.FieldEmtell:
+		return m.OldEmtell(ctx)
+	case repairinvoice.FieldNum:
+		return m.OldNum(ctx)
 	}
 	return nil, fmt.Errorf("unknown Repairinvoice field %s", name)
 }
@@ -7139,6 +7356,20 @@ func (m *RepairinvoiceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetBequipment(v)
 		return nil
+	case repairinvoice.FieldEmtell:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmtell(v)
+		return nil
+	case repairinvoice.FieldNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNum(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Repairinvoice field %s", name)
 }
@@ -7146,13 +7377,21 @@ func (m *RepairinvoiceMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *RepairinvoiceMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addnum != nil {
+		fields = append(fields, repairinvoice.FieldNum)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *RepairinvoiceMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case repairinvoice.FieldNum:
+		return m.AddedNum()
+	}
 	return nil, false
 }
 
@@ -7161,6 +7400,13 @@ func (m *RepairinvoiceMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *RepairinvoiceMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case repairinvoice.FieldNum:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddNum(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Repairinvoice numeric field %s", name)
 }
@@ -7192,6 +7438,12 @@ func (m *RepairinvoiceMutation) ResetField(name string) error {
 	case repairinvoice.FieldBequipment:
 		m.ResetBequipment()
 		return nil
+	case repairinvoice.FieldEmtell:
+		m.ResetEmtell()
+		return nil
+	case repairinvoice.FieldNum:
+		m.ResetNum()
+		return nil
 	}
 	return fmt.Errorf("unknown Repairinvoice field %s", name)
 }
@@ -7199,12 +7451,15 @@ func (m *RepairinvoiceMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *RepairinvoiceMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.employee != nil {
 		edges = append(edges, repairinvoice.EdgeEmployee)
 	}
 	if m._Rentalstatus != nil {
 		edges = append(edges, repairinvoice.EdgeRentalstatus)
+	}
+	if m._Lease != nil {
+		edges = append(edges, repairinvoice.EdgeLease)
 	}
 	return edges
 }
@@ -7221,6 +7476,10 @@ func (m *RepairinvoiceMutation) AddedIDs(name string) []ent.Value {
 		if id := m._Rentalstatus; id != nil {
 			return []ent.Value{*id}
 		}
+	case repairinvoice.EdgeLease:
+		if id := m._Lease; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -7228,7 +7487,7 @@ func (m *RepairinvoiceMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *RepairinvoiceMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
@@ -7243,12 +7502,15 @@ func (m *RepairinvoiceMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *RepairinvoiceMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.clearedemployee {
 		edges = append(edges, repairinvoice.EdgeEmployee)
 	}
 	if m.cleared_Rentalstatus {
 		edges = append(edges, repairinvoice.EdgeRentalstatus)
+	}
+	if m.cleared_Lease {
+		edges = append(edges, repairinvoice.EdgeLease)
 	}
 	return edges
 }
@@ -7261,6 +7523,8 @@ func (m *RepairinvoiceMutation) EdgeCleared(name string) bool {
 		return m.clearedemployee
 	case repairinvoice.EdgeRentalstatus:
 		return m.cleared_Rentalstatus
+	case repairinvoice.EdgeLease:
+		return m.cleared_Lease
 	}
 	return false
 }
@@ -7274,6 +7538,9 @@ func (m *RepairinvoiceMutation) ClearEdge(name string) error {
 		return nil
 	case repairinvoice.EdgeRentalstatus:
 		m.ClearRentalstatus()
+		return nil
+	case repairinvoice.EdgeLease:
+		m.ClearLease()
 		return nil
 	}
 	return fmt.Errorf("unknown Repairinvoice unique edge %s", name)
@@ -7289,6 +7556,9 @@ func (m *RepairinvoiceMutation) ResetEdge(name string) error {
 		return nil
 	case repairinvoice.EdgeRentalstatus:
 		m.ResetRentalstatus()
+		return nil
+	case repairinvoice.EdgeLease:
+		m.ResetLease()
 		return nil
 	}
 	return fmt.Errorf("unknown Repairinvoice edge %s", name)

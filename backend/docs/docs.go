@@ -1843,6 +1843,62 @@ var doc = `{
                 }
             }
         },
+        "/searchrepairinvoices": {
+            "get": {
+                "description": "get repairinvoice by Repairinvoiceid",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a repairinvoice entity by Repairinvoiceid",
+                "operationId": "get-repairinvoice-by-repairinvoiceid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Parcelcode Search",
+                        "name": "parcelcode",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Lease Search",
+                        "name": "lease",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Statusd Search",
+                        "name": "statusd",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Repairinvoice"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/searchroomdetails": {
             "get": {
                 "description": "get roomdetail by Roomname",
@@ -2755,6 +2811,15 @@ var doc = `{
                 "employee": {
                     "type": "integer"
                 },
+                "emtell": {
+                    "type": "string"
+                },
+                "lease": {
+                    "type": "integer"
+                },
+                "num": {
+                    "type": "integer"
+                },
                 "rentalstatus": {
                     "type": "integer"
                 }
@@ -3185,6 +3250,13 @@ var doc = `{
                         "$ref": "#/definitions/ent.Deposit"
                     }
                 },
+                "repairinvoices": {
+                    "description": "Repairinvoices holds the value of the repairinvoices edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Repairinvoice"
+                    }
+                },
                 "roomdetail": {
                     "description": "Roomdetail holds the value of the Roomdetail edge.",
                     "type": "object",
@@ -3359,8 +3431,16 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.RepairinvoiceEdges"
                 },
+                "emtell": {
+                    "description": "Emtell holds the value of the \"emtell\" field.",
+                    "type": "string"
+                },
                 "id": {
                     "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "num": {
+                    "description": "Num holds the value of the \"num\" field.",
                     "type": "integer"
                 }
             }
@@ -3372,6 +3452,11 @@ var doc = `{
                     "description": "Employee holds the value of the employee edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Employee"
+                },
+                "lease": {
+                    "description": "Lease holds the value of the Lease edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Lease"
                 },
                 "rentalstatus": {
                     "description": "Rentalstatus holds the value of the Rentalstatus edge.",

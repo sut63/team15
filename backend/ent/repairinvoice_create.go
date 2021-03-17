@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/rentalstatus"
 	"github.com/team15/app/ent/repairinvoice"
 )
@@ -24,6 +25,18 @@ type RepairinvoiceCreate struct {
 // SetBequipment sets the bequipment field.
 func (rc *RepairinvoiceCreate) SetBequipment(s string) *RepairinvoiceCreate {
 	rc.mutation.SetBequipment(s)
+	return rc
+}
+
+// SetEmtell sets the emtell field.
+func (rc *RepairinvoiceCreate) SetEmtell(s string) *RepairinvoiceCreate {
+	rc.mutation.SetEmtell(s)
+	return rc
+}
+
+// SetNum sets the num field.
+func (rc *RepairinvoiceCreate) SetNum(i int) *RepairinvoiceCreate {
+	rc.mutation.SetNum(i)
 	return rc
 }
 
@@ -65,6 +78,25 @@ func (rc *RepairinvoiceCreate) SetRentalstatus(r *Rentalstatus) *RepairinvoiceCr
 	return rc.SetRentalstatusID(r.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (rc *RepairinvoiceCreate) SetLeaseID(id int) *RepairinvoiceCreate {
+	rc.mutation.SetLeaseID(id)
+	return rc
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (rc *RepairinvoiceCreate) SetNillableLeaseID(id *int) *RepairinvoiceCreate {
+	if id != nil {
+		rc = rc.SetLeaseID(*id)
+	}
+	return rc
+}
+
+// SetLease sets the Lease edge to Lease.
+func (rc *RepairinvoiceCreate) SetLease(l *Lease) *RepairinvoiceCreate {
+	return rc.SetLeaseID(l.ID)
+}
+
 // Mutation returns the RepairinvoiceMutation object of the builder.
 func (rc *RepairinvoiceCreate) Mutation() *RepairinvoiceMutation {
 	return rc.mutation
@@ -74,6 +106,27 @@ func (rc *RepairinvoiceCreate) Mutation() *RepairinvoiceMutation {
 func (rc *RepairinvoiceCreate) Save(ctx context.Context) (*Repairinvoice, error) {
 	if _, ok := rc.mutation.Bequipment(); !ok {
 		return nil, &ValidationError{Name: "bequipment", err: errors.New("ent: missing required field \"bequipment\"")}
+	}
+	if v, ok := rc.mutation.Bequipment(); ok {
+		if err := repairinvoice.BequipmentValidator(v); err != nil {
+			return nil, &ValidationError{Name: "bequipment", err: fmt.Errorf("ent: validator failed for field \"bequipment\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Emtell(); !ok {
+		return nil, &ValidationError{Name: "emtell", err: errors.New("ent: missing required field \"emtell\"")}
+	}
+	if v, ok := rc.mutation.Emtell(); ok {
+		if err := repairinvoice.EmtellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "emtell", err: fmt.Errorf("ent: validator failed for field \"emtell\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Num(); !ok {
+		return nil, &ValidationError{Name: "num", err: errors.New("ent: missing required field \"num\"")}
+	}
+	if v, ok := rc.mutation.Num(); ok {
+		if err := repairinvoice.NumValidator(v); err != nil {
+			return nil, &ValidationError{Name: "num", err: fmt.Errorf("ent: validator failed for field \"num\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -143,6 +196,22 @@ func (rc *RepairinvoiceCreate) createSpec() (*Repairinvoice, *sqlgraph.CreateSpe
 		})
 		r.Bequipment = value
 	}
+	if value, ok := rc.mutation.Emtell(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: repairinvoice.FieldEmtell,
+		})
+		r.Emtell = value
+	}
+	if value, ok := rc.mutation.Num(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: repairinvoice.FieldNum,
+		})
+		r.Num = value
+	}
 	if nodes := rc.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -173,6 +242,25 @@ func (rc *RepairinvoiceCreate) createSpec() (*Repairinvoice, *sqlgraph.CreateSpe
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: rentalstatus.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   repairinvoice.LeaseTable,
+			Columns: []string{repairinvoice.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/rentalstatus"
 	"github.com/team15/app/ent/repairinvoice"
 )
@@ -19,10 +20,15 @@ type Repairinvoice struct {
 	ID int `json:"id,omitempty"`
 	// Bequipment holds the value of the "bequipment" field.
 	Bequipment string `json:"bequipment,omitempty"`
+	// Emtell holds the value of the "emtell" field.
+	Emtell string `json:"emtell,omitempty"`
+	// Num holds the value of the "num" field.
+	Num int `json:"num,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RepairinvoiceQuery when eager-loading is set.
 	Edges                       RepairinvoiceEdges `json:"edges"`
 	employee_id                 *int
+	lease_id                    *int
 	rentalstatus_repairinvoices *int
 }
 
@@ -32,9 +38,11 @@ type RepairinvoiceEdges struct {
 	Employee *Employee
 	// Rentalstatus holds the value of the Rentalstatus edge.
 	Rentalstatus *Rentalstatus
+	// Lease holds the value of the Lease edge.
+	Lease *Lease
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // EmployeeOrErr returns the Employee value or an error if the edge
@@ -65,11 +73,27 @@ func (e RepairinvoiceEdges) RentalstatusOrErr() (*Rentalstatus, error) {
 	return nil, &NotLoadedError{edge: "Rentalstatus"}
 }
 
+// LeaseOrErr returns the Lease value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e RepairinvoiceEdges) LeaseOrErr() (*Lease, error) {
+	if e.loadedTypes[2] {
+		if e.Lease == nil {
+			// The edge Lease was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: lease.Label}
+		}
+		return e.Lease, nil
+	}
+	return nil, &NotLoadedError{edge: "Lease"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Repairinvoice) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // bequipment
+		&sql.NullString{}, // emtell
+		&sql.NullInt64{},  // num
 	}
 }
 
@@ -77,6 +101,7 @@ func (*Repairinvoice) scanValues() []interface{} {
 func (*Repairinvoice) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // employee_id
+		&sql.NullInt64{}, // lease_id
 		&sql.NullInt64{}, // rentalstatus_repairinvoices
 	}
 }
@@ -98,7 +123,17 @@ func (r *Repairinvoice) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		r.Bequipment = value.String
 	}
-	values = values[1:]
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field emtell", values[1])
+	} else if value.Valid {
+		r.Emtell = value.String
+	}
+	if value, ok := values[2].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field num", values[2])
+	} else if value.Valid {
+		r.Num = int(value.Int64)
+	}
+	values = values[3:]
 	if len(values) == len(repairinvoice.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field employee_id", value)
@@ -107,6 +142,12 @@ func (r *Repairinvoice) assignValues(values ...interface{}) error {
 			*r.employee_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field lease_id", value)
+		} else if value.Valid {
+			r.lease_id = new(int)
+			*r.lease_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field rentalstatus_repairinvoices", value)
 		} else if value.Valid {
 			r.rentalstatus_repairinvoices = new(int)
@@ -124,6 +165,11 @@ func (r *Repairinvoice) QueryEmployee() *EmployeeQuery {
 // QueryRentalstatus queries the Rentalstatus edge of the Repairinvoice.
 func (r *Repairinvoice) QueryRentalstatus() *RentalstatusQuery {
 	return (&RepairinvoiceClient{config: r.config}).QueryRentalstatus(r)
+}
+
+// QueryLease queries the Lease edge of the Repairinvoice.
+func (r *Repairinvoice) QueryLease() *LeaseQuery {
+	return (&RepairinvoiceClient{config: r.config}).QueryLease(r)
 }
 
 // Update returns a builder for updating this Repairinvoice.
@@ -151,6 +197,10 @@ func (r *Repairinvoice) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
 	builder.WriteString(", bequipment=")
 	builder.WriteString(r.Bequipment)
+	builder.WriteString(", emtell=")
+	builder.WriteString(r.Emtell)
+	builder.WriteString(", num=")
+	builder.WriteString(fmt.Sprintf("%v", r.Num))
 	builder.WriteByte(')')
 	return builder.String()
 }

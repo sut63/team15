@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/team15/app/ent/employee"
+	"github.com/team15/app/ent/lease"
 	"github.com/team15/app/ent/predicate"
 	"github.com/team15/app/ent/rentalstatus"
 	"github.com/team15/app/ent/repairinvoice"
@@ -32,6 +33,25 @@ func (ru *RepairinvoiceUpdate) Where(ps ...predicate.Repairinvoice) *Repairinvoi
 // SetBequipment sets the bequipment field.
 func (ru *RepairinvoiceUpdate) SetBequipment(s string) *RepairinvoiceUpdate {
 	ru.mutation.SetBequipment(s)
+	return ru
+}
+
+// SetEmtell sets the emtell field.
+func (ru *RepairinvoiceUpdate) SetEmtell(s string) *RepairinvoiceUpdate {
+	ru.mutation.SetEmtell(s)
+	return ru
+}
+
+// SetNum sets the num field.
+func (ru *RepairinvoiceUpdate) SetNum(i int) *RepairinvoiceUpdate {
+	ru.mutation.ResetNum()
+	ru.mutation.SetNum(i)
+	return ru
+}
+
+// AddNum adds i to num.
+func (ru *RepairinvoiceUpdate) AddNum(i int) *RepairinvoiceUpdate {
+	ru.mutation.AddNum(i)
 	return ru
 }
 
@@ -73,6 +93,25 @@ func (ru *RepairinvoiceUpdate) SetRentalstatus(r *Rentalstatus) *RepairinvoiceUp
 	return ru.SetRentalstatusID(r.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (ru *RepairinvoiceUpdate) SetLeaseID(id int) *RepairinvoiceUpdate {
+	ru.mutation.SetLeaseID(id)
+	return ru
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (ru *RepairinvoiceUpdate) SetNillableLeaseID(id *int) *RepairinvoiceUpdate {
+	if id != nil {
+		ru = ru.SetLeaseID(*id)
+	}
+	return ru
+}
+
+// SetLease sets the Lease edge to Lease.
+func (ru *RepairinvoiceUpdate) SetLease(l *Lease) *RepairinvoiceUpdate {
+	return ru.SetLeaseID(l.ID)
+}
+
 // Mutation returns the RepairinvoiceMutation object of the builder.
 func (ru *RepairinvoiceUpdate) Mutation() *RepairinvoiceMutation {
 	return ru.mutation
@@ -90,8 +129,29 @@ func (ru *RepairinvoiceUpdate) ClearRentalstatus() *RepairinvoiceUpdate {
 	return ru
 }
 
+// ClearLease clears the Lease edge to Lease.
+func (ru *RepairinvoiceUpdate) ClearLease() *RepairinvoiceUpdate {
+	ru.mutation.ClearLease()
+	return ru
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RepairinvoiceUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Bequipment(); ok {
+		if err := repairinvoice.BequipmentValidator(v); err != nil {
+			return 0, &ValidationError{Name: "bequipment", err: fmt.Errorf("ent: validator failed for field \"bequipment\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Emtell(); ok {
+		if err := repairinvoice.EmtellValidator(v); err != nil {
+			return 0, &ValidationError{Name: "emtell", err: fmt.Errorf("ent: validator failed for field \"emtell\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Num(); ok {
+		if err := repairinvoice.NumValidator(v); err != nil {
+			return 0, &ValidationError{Name: "num", err: fmt.Errorf("ent: validator failed for field \"num\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -167,6 +227,27 @@ func (ru *RepairinvoiceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: repairinvoice.FieldBequipment,
 		})
 	}
+	if value, ok := ru.mutation.Emtell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: repairinvoice.FieldEmtell,
+		})
+	}
+	if value, ok := ru.mutation.Num(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: repairinvoice.FieldNum,
+		})
+	}
+	if value, ok := ru.mutation.AddedNum(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: repairinvoice.FieldNum,
+		})
+	}
 	if ru.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -237,6 +318,41 @@ func (ru *RepairinvoiceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   repairinvoice.LeaseTable,
+			Columns: []string{repairinvoice.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   repairinvoice.LeaseTable,
+			Columns: []string{repairinvoice.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{repairinvoice.Label}
@@ -258,6 +374,25 @@ type RepairinvoiceUpdateOne struct {
 // SetBequipment sets the bequipment field.
 func (ruo *RepairinvoiceUpdateOne) SetBequipment(s string) *RepairinvoiceUpdateOne {
 	ruo.mutation.SetBequipment(s)
+	return ruo
+}
+
+// SetEmtell sets the emtell field.
+func (ruo *RepairinvoiceUpdateOne) SetEmtell(s string) *RepairinvoiceUpdateOne {
+	ruo.mutation.SetEmtell(s)
+	return ruo
+}
+
+// SetNum sets the num field.
+func (ruo *RepairinvoiceUpdateOne) SetNum(i int) *RepairinvoiceUpdateOne {
+	ruo.mutation.ResetNum()
+	ruo.mutation.SetNum(i)
+	return ruo
+}
+
+// AddNum adds i to num.
+func (ruo *RepairinvoiceUpdateOne) AddNum(i int) *RepairinvoiceUpdateOne {
+	ruo.mutation.AddNum(i)
 	return ruo
 }
 
@@ -299,6 +434,25 @@ func (ruo *RepairinvoiceUpdateOne) SetRentalstatus(r *Rentalstatus) *Repairinvoi
 	return ruo.SetRentalstatusID(r.ID)
 }
 
+// SetLeaseID sets the Lease edge to Lease by id.
+func (ruo *RepairinvoiceUpdateOne) SetLeaseID(id int) *RepairinvoiceUpdateOne {
+	ruo.mutation.SetLeaseID(id)
+	return ruo
+}
+
+// SetNillableLeaseID sets the Lease edge to Lease by id if the given value is not nil.
+func (ruo *RepairinvoiceUpdateOne) SetNillableLeaseID(id *int) *RepairinvoiceUpdateOne {
+	if id != nil {
+		ruo = ruo.SetLeaseID(*id)
+	}
+	return ruo
+}
+
+// SetLease sets the Lease edge to Lease.
+func (ruo *RepairinvoiceUpdateOne) SetLease(l *Lease) *RepairinvoiceUpdateOne {
+	return ruo.SetLeaseID(l.ID)
+}
+
 // Mutation returns the RepairinvoiceMutation object of the builder.
 func (ruo *RepairinvoiceUpdateOne) Mutation() *RepairinvoiceMutation {
 	return ruo.mutation
@@ -316,8 +470,29 @@ func (ruo *RepairinvoiceUpdateOne) ClearRentalstatus() *RepairinvoiceUpdateOne {
 	return ruo
 }
 
+// ClearLease clears the Lease edge to Lease.
+func (ruo *RepairinvoiceUpdateOne) ClearLease() *RepairinvoiceUpdateOne {
+	ruo.mutation.ClearLease()
+	return ruo
+}
+
 // Save executes the query and returns the updated entity.
 func (ruo *RepairinvoiceUpdateOne) Save(ctx context.Context) (*Repairinvoice, error) {
+	if v, ok := ruo.mutation.Bequipment(); ok {
+		if err := repairinvoice.BequipmentValidator(v); err != nil {
+			return nil, &ValidationError{Name: "bequipment", err: fmt.Errorf("ent: validator failed for field \"bequipment\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Emtell(); ok {
+		if err := repairinvoice.EmtellValidator(v); err != nil {
+			return nil, &ValidationError{Name: "emtell", err: fmt.Errorf("ent: validator failed for field \"emtell\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Num(); ok {
+		if err := repairinvoice.NumValidator(v); err != nil {
+			return nil, &ValidationError{Name: "num", err: fmt.Errorf("ent: validator failed for field \"num\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -391,6 +566,27 @@ func (ruo *RepairinvoiceUpdateOne) sqlSave(ctx context.Context) (r *Repairinvoic
 			Column: repairinvoice.FieldBequipment,
 		})
 	}
+	if value, ok := ruo.mutation.Emtell(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: repairinvoice.FieldEmtell,
+		})
+	}
+	if value, ok := ruo.mutation.Num(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: repairinvoice.FieldNum,
+		})
+	}
+	if value, ok := ruo.mutation.AddedNum(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: repairinvoice.FieldNum,
+		})
+	}
 	if ruo.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -453,6 +649,41 @@ func (ruo *RepairinvoiceUpdateOne) sqlSave(ctx context.Context) (r *Repairinvoic
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: rentalstatus.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.LeaseCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   repairinvoice.LeaseTable,
+			Columns: []string{repairinvoice.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.LeaseIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   repairinvoice.LeaseTable,
+			Columns: []string{repairinvoice.LeaseColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: lease.FieldID,
 				},
 			},
 		}

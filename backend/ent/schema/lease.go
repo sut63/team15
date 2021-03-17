@@ -35,5 +35,6 @@ func (Lease) Edges() []ent.Edge {
 		edge.From("employee", Employee.Type).Ref("leasess").Unique(),
 		edge.To("leases", Deposit.Type).StorageKey(edge.Column("lease_id")),
 		edge.To("bill", Bill.Type).StorageKey(edge.Column("lease_id")),
+		edge.To("repairinvoices", Repairinvoice.Type).StorageKey(edge.Column("lease_id")),
 	}
 }

@@ -49,9 +49,11 @@ type LeaseEdges struct {
 	Leases []*Deposit
 	// Bill holds the value of the bill edge.
 	Bill []*Bill
+	// Repairinvoices holds the value of the repairinvoices edge.
+	Repairinvoices []*Repairinvoice
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // WifiOrErr returns the Wifi value or an error if the edge
@@ -112,6 +114,15 @@ func (e LeaseEdges) BillOrErr() ([]*Bill, error) {
 		return e.Bill, nil
 	}
 	return nil, &NotLoadedError{edge: "bill"}
+}
+
+// RepairinvoicesOrErr returns the Repairinvoices value or an error if the edge
+// was not loaded in eager-loading.
+func (e LeaseEdges) RepairinvoicesOrErr() ([]*Repairinvoice, error) {
+	if e.loadedTypes[5] {
+		return e.Repairinvoices, nil
+	}
+	return nil, &NotLoadedError{edge: "repairinvoices"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -219,6 +230,11 @@ func (l *Lease) QueryLeases() *DepositQuery {
 // QueryBill queries the bill edge of the Lease.
 func (l *Lease) QueryBill() *BillQuery {
 	return (&LeaseClient{config: l.config}).QueryBill(l)
+}
+
+// QueryRepairinvoices queries the repairinvoices edge of the Lease.
+func (l *Lease) QueryRepairinvoices() *RepairinvoiceQuery {
+	return (&LeaseClient{config: l.config}).QueryRepairinvoices(l)
 }
 
 // Update returns a builder for updating this Lease.

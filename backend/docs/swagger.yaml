@@ -84,6 +84,12 @@ definitions:
         type: string
       employee:
         type: integer
+      emtell:
+        type: string
+      lease:
+        type: integer
+      num:
+        type: integer
       rentalstatus:
         type: integer
     type: object
@@ -409,6 +415,11 @@ definitions:
         items:
           $ref: '#/definitions/ent.Deposit'
         type: array
+      repairinvoices:
+        description: Repairinvoices holds the value of the repairinvoices edge.
+        items:
+          $ref: '#/definitions/ent.Repairinvoice'
+        type: array
       roomdetail:
         $ref: '#/definitions/ent.Roomdetail'
         description: Roomdetail holds the value of the Roomdetail edge.
@@ -544,8 +555,14 @@ definitions:
           Edges holds the relations/edges for other nodes in the graph.
           The values are being populated by the RepairinvoiceQuery when eager-loading is set.
         type: object
+      emtell:
+        description: Emtell holds the value of the "emtell" field.
+        type: string
       id:
         description: ID of the ent.
+        type: integer
+      num:
+        description: Num holds the value of the "num" field.
         type: integer
     type: object
   ent.RepairinvoiceEdges:
@@ -553,6 +570,10 @@ definitions:
       employee:
         $ref: '#/definitions/ent.Employee'
         description: Employee holds the value of the employee edge.
+        type: object
+      lease:
+        $ref: '#/definitions/ent.Lease'
+        description: Lease holds the value of the Lease edge.
         type: object
       rentalstatus:
         $ref: '#/definitions/ent.Rentalstatus'
@@ -1938,6 +1959,43 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a deposit entity by Depositid
+  /searchrepairinvoices:
+    get:
+      description: get repairinvoice by Repairinvoiceid
+      operationId: get-repairinvoice-by-repairinvoiceid
+      parameters:
+      - description: Parcelcode Search
+        in: query
+        name: parcelcode
+        type: string
+      - description: Lease Search
+        in: query
+        name: lease
+        type: integer
+      - description: Statusd Search
+        in: query
+        name: statusd
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Repairinvoice'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a repairinvoice entity by Repairinvoiceid
   /searchroomdetails:
     get:
       description: get roomdetail by Roomname

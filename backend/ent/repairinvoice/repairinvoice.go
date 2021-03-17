@@ -9,11 +9,17 @@ const (
 	FieldID = "id"
 	// FieldBequipment holds the string denoting the bequipment field in the database.
 	FieldBequipment = "bequipment"
+	// FieldEmtell holds the string denoting the emtell field in the database.
+	FieldEmtell = "emtell"
+	// FieldNum holds the string denoting the num field in the database.
+	FieldNum = "num"
 
 	// EdgeEmployee holds the string denoting the employee edge name in mutations.
 	EdgeEmployee = "employee"
 	// EdgeRentalstatus holds the string denoting the rentalstatus edge name in mutations.
 	EdgeRentalstatus = "Rentalstatus"
+	// EdgeLease holds the string denoting the lease edge name in mutations.
+	EdgeLease = "Lease"
 
 	// Table holds the table name of the repairinvoice in the database.
 	Table = "repairinvoices"
@@ -31,16 +37,35 @@ const (
 	RentalstatusInverseTable = "rentalstatuses"
 	// RentalstatusColumn is the table column denoting the Rentalstatus relation/edge.
 	RentalstatusColumn = "rentalstatus_repairinvoices"
+	// LeaseTable is the table the holds the Lease relation/edge.
+	LeaseTable = "repairinvoices"
+	// LeaseInverseTable is the table name for the Lease entity.
+	// It exists in this package in order to avoid circular dependency with the "lease" package.
+	LeaseInverseTable = "leases"
+	// LeaseColumn is the table column denoting the Lease relation/edge.
+	LeaseColumn = "lease_id"
 )
 
 // Columns holds all SQL columns for repairinvoice fields.
 var Columns = []string{
 	FieldID,
 	FieldBequipment,
+	FieldEmtell,
+	FieldNum,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Repairinvoice type.
 var ForeignKeys = []string{
 	"employee_id",
+	"lease_id",
 	"rentalstatus_repairinvoices",
 }
+
+var (
+	// BequipmentValidator is a validator for the "bequipment" field. It is called by the builders before save.
+	BequipmentValidator func(string) error
+	// EmtellValidator is a validator for the "emtell" field. It is called by the builders before save.
+	EmtellValidator func(string) error
+	// NumValidator is a validator for the "num" field. It is called by the builders before save.
+	NumValidator func(int) error
+)
