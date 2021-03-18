@@ -188,6 +188,61 @@ func (ctl *CleaningroomController) ListCleaningroom(c *gin.Context) {
 	c.JSON(200, cleaningrooms)
 }
 
+// GetCleaningroomBySearch handles GET requests to retrieve a cleaningroom entity
+// @Summary Get a cleaningroom entity by Roomnumber
+// @Description get cleaningroom by Roomnumber
+// @ID get-cleaningroom-by-roomnumber
+// @Produce  json
+// @Param roomdetail query string false "Roomnumber Search"
+// @Param phonenumber query int false "Phonenumber Search"
+// @Success 200 {object} ent.Cleaningroom
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchcleaningrooms [get]
+func (ctl *CleaningroomController) GetCleaningroomBySearch(c *gin.Context) {
+	nsearch := c.Query("phonenumber")
+	rdsearch, err := strconv.ParseInt(c.Query("roomdetail"), 10, 64)
+
+	roomdetails := ""
+	rd, err := ctl.client.Roomdetail.
+		Query().
+		Where(roomdetail.IDEQ(int(rdsearch))).
+		Only(context.Background())
+
+	if rd != nil {
+		roomdetails = rd.Roomnumber
+	}
+
+
+	cr, err := ctl.client.Cleaningroom.
+		Query().
+		WithEmployee().
+		WithCleanername().
+		WithLengthtime().
+		WithRoomdetail().
+		Where(cleaningroom.PhonenumberContains(nsearch)).
+		Where(cleaningroom.HasRoomdetailWith(roomdetail.RoomnumberContains(roomdetails))).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if nsearch == "" && rdsearch == 0 {
+		c.JSON(200, gin.H{
+			"data": nil,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": cr,
+	})
+}
+
 
 // NewCleaningroomController creates and registers handles for the cleaningroom controller
 func NewCleaningroomController(router gin.IRouter, client *ent.Client) *CleaningroomController {
@@ -201,9 +256,11 @@ func NewCleaningroomController(router gin.IRouter, client *ent.Client) *Cleaning
 
 func (ctl *CleaningroomController) register() {
 	cleaningrooms := ctl.router.Group("/cleaningrooms")
+	cleaningroomsearch := ctl.router.Group("/searchcleaningrooms")
 
 	
 	cleaningrooms.POST("", ctl.CreateCleaningroom)
 	cleaningrooms.GET("", ctl.ListCleaningroom)
 	cleaningrooms.GET(":id", ctl.GetCleaningroom)
+	cleaningroomsearch.GET("", ctl.GetCleaningroomBySearch)
 }
