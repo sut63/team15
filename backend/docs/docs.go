@@ -1843,6 +1843,62 @@ var doc = `{
                 }
             }
         },
+        "/searchleases": {
+            "get": {
+                "description": "get lease by Leaseid",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a lease entity by Leaseid",
+                "operationId": "get-lease-by-leaseid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tenant Search",
+                        "name": "tenant",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Roomdetail Search",
+                        "name": "roomdetail",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Wifi Search",
+                        "name": "wifi",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Lease"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/searchrepairinvoices": {
             "get": {
                 "description": "get repairinvoice by Repairinvoiceid",

@@ -1959,6 +1959,43 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a deposit entity by Depositid
+  /searchleases:
+    get:
+      description: get lease by Leaseid
+      operationId: get-lease-by-leaseid
+      parameters:
+      - description: Tenant Search
+        in: query
+        name: tenant
+        type: string
+      - description: Roomdetail Search
+        in: query
+        name: roomdetail
+        type: integer
+      - description: Wifi Search
+        in: query
+        name: wifi
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Lease'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a lease entity by Leaseid
   /searchrepairinvoices:
     get:
       description: get repairinvoice by Repairinvoiceid

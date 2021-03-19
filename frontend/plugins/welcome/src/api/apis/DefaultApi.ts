@@ -211,6 +211,12 @@ export interface GetEmployeeRequest {
     id: number;
 }
 
+export interface GetLeaseByLeaseidRequest {
+    tenant?: string;
+    roomdetail?: number;
+    wifi?: number;
+}
+
 export interface GetLengthtimeRequest {
     id: number;
 }
@@ -1340,6 +1346,46 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getEmployee(requestParameters: GetEmployeeRequest): Promise<EntEmployee> {
         const response = await this.getEmployeeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get lease by Leaseid
+     * Get a lease entity by Leaseid
+     */
+    async getLeaseByLeaseidRaw(requestParameters: GetLeaseByLeaseidRequest): Promise<runtime.ApiResponse<EntLease>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.tenant !== undefined) {
+            queryParameters['tenant'] = requestParameters.tenant;
+        }
+
+        if (requestParameters.roomdetail !== undefined) {
+            queryParameters['roomdetail'] = requestParameters.roomdetail;
+        }
+
+        if (requestParameters.wifi !== undefined) {
+            queryParameters['wifi'] = requestParameters.wifi;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchleases`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntLeaseFromJSON(jsonValue));
+    }
+
+    /**
+     * get lease by Leaseid
+     * Get a lease entity by Leaseid
+     */
+    async getLeaseByLeaseid(requestParameters: GetLeaseByLeaseidRequest): Promise<EntLease> {
+        const response = await this.getLeaseByLeaseidRaw(requestParameters);
         return await response.value();
     }
 

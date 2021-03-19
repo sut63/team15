@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/team15/app/ent/employee"
 	"github.com/team15/app/ent/roomdetail"
 	"github.com/team15/app/ent/wifi"
+	"github.com/team15/app/ent/lease"
 )
 
 // LeaseController defines the struct for the lease controller
@@ -97,16 +99,83 @@ func (ctl *LeaseController) CreateLease(c *gin.Context) {
 		SetWifi(wf).
 		SetEmployee(em).
 		Save(context.Background())
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(400, gin.H{
+				"status": false,
+				"error":  err,
+			})
+			return
+		}
+
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   lea,
+	})
+}
+
+// GetLeaseBySearch handles GET requests to retrieve a lease entity
+// @Summary Get a lease entity by Leaseid
+// @Description get lease by Leaseid
+// @ID get-lease-by-leaseid
+// @Produce  json
+// @Param lease query string false "Lease Search"
+// @Param roomdetail query int false "Roomdetail Search"
+// @Param wifi query int false "Wifi Search"
+// @Success 200 {object} ent.Lease
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchleases [get]
+func (ctl *LeaseController) GetLeaseBySearch(c *gin.Context) {
+	tensearch := c.Query("lease")
+	rdcsearch, err := strconv.ParseInt(c.Query("roomdetail"), 10, 64)
+	wfsearch, err := strconv.ParseInt(c.Query("wifi"), 10, 64)
+
+	roomdetails := ""
+	rdc, err := ctl.client.Roomdetail.
+		Query().
+		Where(roomdetail.IDEQ(int(rdcsearch))).
+		Only(context.Background())
+
+	if rdc != nil {
+		roomdetails = rdc.Roomnumber
+	}
+
+	wifis := ""
+	wf, err := ctl.client.Wifi.
+		Query().
+		Where(wifi.IDEQ(int(wfsearch))).
+		Only(context.Background())
+
+	if wf != nil {
+		wifis = wf.Wifiname
+	}
+
+	le, err := ctl.client.Lease.
+		Query().
+		WithWifi().
+		WithRoomdetail().
+		Where(lease.TenantContains(tensearch)).
+		Where(lease.HasRoomdetailWith(roomdetail.RoomnumberContains(roomdetails))).
+		Where(lease.HasWifiWith(wifi.WifinameContains(wifis))).
+		All(context.Background())
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "saving failed",
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if rdcsearch == 0 && tensearch == "" && wfsearch == 0 {
+		c.JSON(200, gin.H{
+			"data": nil,
 		})
 		return
 	}
 
 	c.JSON(200, gin.H{
-		"status": true,
-		"data":   lea,
+		"data": le,
 	})
 }
 
@@ -173,8 +242,11 @@ func NewLeaseController(router gin.IRouter, client *ent.Client) *LeaseController
 
 func (ctl *LeaseController) register() {
 	leases := ctl.router.Group("/leases")
+	leasesearch := ctl.router.Group("/searchleases")
 
 	leases.POST("", ctl.CreateLease)
 	leases.GET("", ctl.ListLease)
+
+	leasesearch.GET("", ctl.GetLeaseBySearch)
 
 }
