@@ -124,84 +124,30 @@ export default function Search() {
     }, [loading]);
 
     const SearchLease = async () => {
-        const res = await api.listLease();
-		const tenantsearch = TenantSearch(res);
-		const roomdetailsearch = RoomdetailSearch(tenantsearch);
-        const wifisearch = WifiSearch(roomdetailsearch);
-        
-        setErrorMessege("not found");
-        setAlertType("error");
+		const apiUrl = `http://localhost:8080/api/v1/searchleases?lease=${tenantsearch}&roomdetail=${roomdetailsearch}&wifi=${wifisearch}`;
+		const requestOptions = {
+			method: 'GET',
+		};
+		fetch(apiUrl, requestOptions)
+		.then(response => response.json())
+		.then(data => {
+		console.log(data.data)
+		setErrorMessege("not found");
+		setAlertType("error");
         setLease([]);
-        if(wifisearch.length > 0){
-            Object.entries(searchcheck).map(([key, value]) =>{
-                if (value == true){
-                    setErrorMessege("found");
-                    setAlertType("success");
-                    setLease(wifisearch);
+        if (data.data != null) {
+			if(data.data.length >= 1) {
+				setErrorMessege("search found");
+                setAlertType("success");
+                console.log(data.data)
+                setLease(data.data);
                 }
-            })
-        }
-
-        setStatus(true);
-        ResetSearchCheck();
-    }
-
-    const ResetSearchCheck = () => {
-        searchcheck.tenantsearchcheck = true;
-        searchcheck.roomdetailsearchcheck = true;
-		searchcheck.wifisearchcheck = true;
-    }
-
-    const TenantSearch = (res: any) => {
-        const data = res.filter((filter: EntLease) => filter.tenant?.includes(tenantsearch))
-        //console.log(data.length)
-        if (data.length != 0 && tenantsearch != "") {
-            return data;
-        }
-        else {
-            searchcheck.tenantsearchcheck = false;
-            if(tenantsearch == ""){
-                return res;
             }
-            else{
-                return data;
-            }
-        }
-    }
-
-    const WifiSearch = (res: any) => {
-        const data = res.filter((filter: EntLease) => filter.edges?.wifi?.id == wifisearch)
-        //console.log(data.length)
-        if (data.length != 0) {
-            return data;
-        }
-        else {
-            searchcheck.wifisearchcheck = false;
-            if(wifisearch == 0){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
-
-	const RoomdetailSearch = (res: any) => {
-        const data = res.filter((filter: EntLease) => filter.edges?.roomdetail?.id == roomdetailsearch)
-        //console.log(data.length)
-        if (data.length != 0) {
-            return data;
-        }
-        else {
-            searchcheck.roomdetailsearchcheck = false;
-            if(roomdetailsearch == 0){
-                return res;
-            }
-            else{
-                return data;
-            }
-        }
-    }
+    
+            setStatus(true);
+        });
+    
+     }
 
     const WifihandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setWifiSearch(event.target.value as number);
@@ -314,12 +260,12 @@ export default function Search() {
                                 {lease.map((item:any ) => (
                                 <TableRow key={item.id}>
                                      <TableCell align="center">{item.id}</TableCell>
-                                    <TableCell align="center">{item.edges?.roomdetail?.roomnumber}</TableCell>
+                                    <TableCell align="center">{item.edges?.Roomdetail?.roomnumber}</TableCell>
                                      <TableCell align="center">{item.tenant}</TableCell>
                                     <TableCell align="center">{item.agetenant}</TableCell>
                                      <TableCell align="center">{item.idtenant}</TableCell>
                                     <TableCell align="center">{item.numbtenant}</TableCell>
-                                    <TableCell align="center">{item.edges?.wifi?.wifiname}</TableCell>
+                                    <TableCell align="center">{item.edges?.Wifi?.wifiname}</TableCell>
 			                        <TableCell align="center">{item.addedtime}</TableCell>                         
                                 </TableRow>
                                 ))}
